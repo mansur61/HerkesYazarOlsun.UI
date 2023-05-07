@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Views\Kitaplar\" />
+    <Folder Include="Views\Shared\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Cbddo.eYazisma">
+      <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net7.0\HerkesYazarOlsun.Model.dll</HintPath>
+    </Reference>
+   <!-- C:\Users\umpg0020097\Desktop\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net7.0\HerkesYazarOlsun.Model.dll -->
+  </ItemGroup>
+
+</Project>
