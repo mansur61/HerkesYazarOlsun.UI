@@ -9,7 +9,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             return View();
         }
-
+        public ActionResult Index2()
+        {
+            return View();
+        }
         // GET: HomeController/Details/5
         public ActionResult Details(int id)
         {
