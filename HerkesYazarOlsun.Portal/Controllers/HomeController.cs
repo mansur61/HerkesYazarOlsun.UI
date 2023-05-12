@@ -7,18 +7,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
         // GET: HomeController
         public ActionResult Index()
         {
-            return View();
+            List<string> kitaplar = new List<string>();
+            kitaplar.Add("Yayına En Yakon Olan Kitaplar");
+            kitaplar.Add("En Çok Okunan  Kitaplar");
+            kitaplar.Add("En Çok Beğenilen Kitaplar");
+            return View(kitaplar);
         }
-        public ActionResult Index2()
-        {
-            return View();
-        }
+     
         // GET: HomeController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
-
+       
         // GET: HomeController/Create
         public ActionResult Create()
         {
