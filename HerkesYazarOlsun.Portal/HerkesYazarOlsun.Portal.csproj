@@ -71,6 +71,19 @@
     <None Include="wwwroot\js\jquery-1.10.2.js" />
     <None Include="wwwroot\js\plugins.js" />
     <None Include="wwwroot\js\switcher\switcher.js" />
+    <None Include="wwwroot\wowbook\fonts\BebasNeue-webfont.svg" />
+    <None Include="wwwroot\wowbook\js\dd_belatedpng.js" />
+    <None Include="wwwroot\wowbook\js\jquery-1.9.1.min.js" />
+    <None Include="wwwroot\wowbook\js\jquery.js" />
+    <None Include="wwwroot\wowbook\js\modernizr-1.6.min.js" />
+    <None Include="wwwroot\wowbook\js\plugins.js" />
+    <None Include="wwwroot\wowbook\js\script.js" />
+    <None Include="wwwroot\wowbook\LICENSE" />
+    <None Include="wwwroot\wowbook\README.md" />
+    <None Include="wwwroot\wowbook\sound\page-flip.mp3" />
+    <None Include="wwwroot\wowbook\sound\page-flip.ogg" />
+    <None Include="wwwroot\wowbook\wow_book.js" />
+    <None Include="wwwroot\wowbook\wow_book.min.js" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,5 +8,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             return View();
         }
+
+        public IActionResult KitapOku()
+        {
+            return View();
+        }
     }
 }

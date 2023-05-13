@@ -725,6 +725,262 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\Index2.html",
+      "PackagePath": "staticwebassets\\wowbook\\Index2.html"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\LICENSE",
+      "PackagePath": "staticwebassets\\wowbook"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\README.md",
+      "PackagePath": "staticwebassets\\wowbook\\README.md"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\css\\handheld.css",
+      "PackagePath": "staticwebassets\\wowbook\\css\\handheld.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\css\\preview.css",
+      "PackagePath": "staticwebassets\\wowbook\\css\\preview.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\css\\style.css",
+      "PackagePath": "staticwebassets\\wowbook\\css\\style.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\css\\wow_book.css",
+      "PackagePath": "staticwebassets\\wowbook\\css\\wow_book.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\fonts\\BebasNeue-webfont.svg",
+      "PackagePath": "staticwebassets\\wowbook\\fonts\\BebasNeue-webfont.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\fonts\\BebasNeue-webfont.ttf",
+      "PackagePath": "staticwebassets\\wowbook\\fonts\\BebasNeue-webfont.ttf"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\fonts\\BebasNeue-webfont.woff",
+      "PackagePath": "staticwebassets\\wowbook\\fonts\\BebasNeue-webfont.woff"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\arrow_down.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\arrow_down.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\arrow_up.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\arrow_up.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\back.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\back.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\browser_logos-32.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\browser_logos-32.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\chain.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\chain.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\click_to_open.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\click_to_open.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\cover.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\cover.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\cover_last.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\cover_last.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\design.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\design.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\easy.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\easy.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\flash.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\flash.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\fold_gradient.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\fold_gradient.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\fold_gradient_flip_h.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\fold_gradient_flip_h.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\gutter_shadow_left.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\gutter_shadow_left.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\gutter_shadow_right.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\gutter_shadow_right.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\arrow_double_left.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\arrow_double_left.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\arrow_double_right.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\arrow_double_right.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\arrow_left.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\arrow_left.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\arrow_right.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\arrow_right.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\fullscreen_off.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\fullscreen_off.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\fullscreen_on.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\fullscreen_on.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\slideshow_pause.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\slideshow_pause.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\slideshow_play.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\slideshow_play.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\sound_off.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\sound_off.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\sound_on.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\sound_on.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\thumbs.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\thumbs.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\zoom_in.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\zoom_in.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\icons\\zoom_out.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\icons\\zoom_out.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\more.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\more.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\page_left_background.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\page_left_background.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\page_right_background.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\page_right_background.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\person.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\person.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\person\\1.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\person\\1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\person\\2.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\person\\2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\person\\3.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\person\\3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\person\\4.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\person\\4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\person\\5.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\person\\5.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\projector.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\projector.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\shadow_fold.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\shadow_fold.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\shadow_fold_flip_h.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\shadow_fold_flip_h.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\shadow_internal_fold.png",
+      "PackagePath": "staticwebassets\\wowbook\\images\\shadow_internal_fold.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\wood.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\wood.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\images\\zoom.jpg",
+      "PackagePath": "staticwebassets\\wowbook\\images\\zoom.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\js\\dd_belatedpng.js",
+      "PackagePath": "staticwebassets\\wowbook\\js\\dd_belatedpng.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\js\\jquery-1.9.1.min.js",
+      "PackagePath": "staticwebassets\\wowbook\\js\\jquery-1.9.1.min.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\js\\jquery.js",
+      "PackagePath": "staticwebassets\\wowbook\\js\\jquery.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\js\\modernizr-1.6.min.js",
+      "PackagePath": "staticwebassets\\wowbook\\js\\modernizr-1.6.min.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\js\\plugins.js",
+      "PackagePath": "staticwebassets\\wowbook\\js\\plugins.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\js\\script.js",
+      "PackagePath": "staticwebassets\\wowbook\\js\\script.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\light.html",
+      "PackagePath": "staticwebassets\\wowbook\\light.html"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\sound\\page-flip.mp3",
+      "PackagePath": "staticwebassets\\wowbook\\sound\\page-flip.mp3"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\sound\\page-flip.ogg",
+      "PackagePath": "staticwebassets\\wowbook\\sound\\page-flip.ogg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\wow_book.js",
+      "PackagePath": "staticwebassets\\wowbook\\wow_book.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\wowbook\\wow_book.min.js",
+      "PackagePath": "staticwebassets\\wowbook\\wow_book.min.js"
+    },
+    {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.HerkesYazarOlsun.Portal.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
