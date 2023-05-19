@@ -10,8 +10,8 @@ let succcessDiv = document.getElementById('success');
 form.onsubmit = () => {
     return false
 }
-let current_step = 0;
-let stepCount = 6
+var current_step = 0;
+var stepCount = 2
 step[current_step].classList.add('d-block');
 step[current_step].style.display = "block";
 if (current_step == 0) {
@@ -24,24 +24,26 @@ const progress = (value) => {
 }
 nextBtn.addEventListener('click', () => {
     current_step++;
-    let previous_step = current_step - 1;
+    var previous_step = current_step - 1;
     if ((current_step > 0) && (current_step <= stepCount)) {
-        prevBtn.classList.remove('d-none');
-        prevBtn.classList.add('d-inline-block');
-
-        step[current_step].classList.remove('d-none');
-        step[current_step].style.display = "none";
-
-        step[current_step].classList.add('d-block');
-        step[current_step].style.display = "block";
-
-        step[previous_step].classList.remove('d-block');
-        step[previous_step].style.display = "block";
-
-        step[previous_step].classList.add('d-none');
-        step[previous_step].style.display = "none";
+       
 
         if (current_step == stepCount) {
+            prevBtn.classList.remove('d-none');
+            prevBtn.classList.add('d-inline-block');
+
+            step[current_step].classList.remove('d-none');
+            step[current_step].style.display = "none";
+
+            step[current_step].classList.add('d-block');
+            step[current_step].style.display = "block";
+
+            step[previous_step].classList.remove('d-block');
+            step[previous_step].style.display = "block";
+
+            step[previous_step].classList.add('d-none');
+            step[previous_step].style.display = "none";
+
             submitBtn.classList.remove('d-none');
             submitBtn.classList.add('d-inline-block');
             nextBtn.classList.remove('d-inline-block');

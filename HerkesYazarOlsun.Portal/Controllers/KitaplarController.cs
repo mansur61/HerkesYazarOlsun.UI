@@ -13,5 +13,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             return View();
         }
+
+        public JsonResult KitapEkle()
+        {
+
+            return Json(2);
+        }
     }
 }

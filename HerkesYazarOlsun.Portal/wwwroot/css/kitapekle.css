@@ -123,6 +123,7 @@ label {
 
 button#prev-btn,
 button#next-btn,
+button#sayfa-kaydet-btn,
 button#submit-btn {
     font-size: 17px;
     font-weight: bold;
@@ -149,6 +150,7 @@ button#submit-btn {
 
     button#prev-btn:after,
     button#next-btn:after,
+    button#sayfa-kaydet-btn:after,
     button#submit-btn:after {
         position: absolute;
         top: 90%;
@@ -163,6 +165,7 @@ button#submit-btn {
 
     button#prev-btn:hover::after,
     button#next-btn:hover::after,
+    button#sayfa-kaydet-btn::after,
     button#submit-btn:hover::after {
         transform: translateY(-80%);
         transition: transform .3s;
