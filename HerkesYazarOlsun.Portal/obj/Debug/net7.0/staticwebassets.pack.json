@@ -1,12 +1,392 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\theme-rtl.css",
+      "PackagePath": "staticwebassets\\assets\\css\\theme-rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\theme-rtl.css.map",
+      "PackagePath": "staticwebassets\\assets\\css\\theme-rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\theme-rtl.min.css",
+      "PackagePath": "staticwebassets\\assets\\css\\theme-rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\theme-rtl.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\css\\theme-rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\theme.css",
+      "PackagePath": "staticwebassets\\assets\\css\\theme.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\theme.css.map",
+      "PackagePath": "staticwebassets\\assets\\css\\theme.css.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\theme.min.css",
+      "PackagePath": "staticwebassets\\assets\\css\\theme.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\theme.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\css\\theme.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\user-rtl.css",
+      "PackagePath": "staticwebassets\\assets\\css\\user-rtl.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\user-rtl.css.map",
+      "PackagePath": "staticwebassets\\assets\\css\\user-rtl.css.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\user-rtl.min.css",
+      "PackagePath": "staticwebassets\\assets\\css\\user-rtl.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\user-rtl.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\css\\user-rtl.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\user.css",
+      "PackagePath": "staticwebassets\\assets\\css\\user.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\user.css.map",
+      "PackagePath": "staticwebassets\\assets\\css\\user.css.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\user.min.css",
+      "PackagePath": "staticwebassets\\assets\\css\\user.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\css\\user.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\css\\user.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\android-chrome-192x192.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\android-chrome-192x192.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\android-chrome-512x512.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\android-chrome-512x512.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\apple-touch-icon.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\apple-touch-icon.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\browserconfig.xml",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\browserconfig.xml"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\favicon-16x16.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\favicon-16x16.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\favicon-32x32.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\favicon-32x32.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\favicon-96x96.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\favicon-96x96.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\favicon.ico",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\manifest.json",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\manifest.json"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\ms-icon-150x150.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\ms-icon-150x150.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\ms-icon-310x310.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\ms-icon-310x310.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\favicons\\site.webmanifest",
+      "PackagePath": "staticwebassets\\assets\\img\\favicons\\site.webmanifest"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\albrecht.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\albrecht.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\art-craft.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\art-craft.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\art-lovers.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\art-lovers.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\art-masterclass.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\art-masterclass.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\artistic.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\artistic.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\cal-arts.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\cal-arts.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\chemistry.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\chemistry.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\classroom.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\classroom.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\collectives.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\collectives.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\color-theory.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\color-theory.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\david.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\david.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\davinci.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\davinci.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\electricity.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\electricity.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\header-slider-1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\header-slider-1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\header-slider-1.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\header-slider-1.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\header-slider-2.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\header-slider-2.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\header-slider-3.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\header-slider-3.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\hero-header-bg.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\hero-header-bg.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\john.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\john.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\moma.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\moma.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\oriental-art.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\oriental-art.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\peter.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\peter.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\physics.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\physics.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\premiere.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\premiere.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\quotation.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\quotation.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\rectangle-s.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\rectangle-s.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\rectangle.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\rectangle.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\school-physics.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\school-physics.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\school.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\school.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\statistics.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\statistics.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\student-review.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\student-review.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\visual-art.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\visual-art.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\writing-tips.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\writing-tips.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\gallery\\y.png",
+      "PackagePath": "staticwebassets\\assets\\img\\gallery\\y.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\business.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\business.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\business.svg",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\business.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\data-science.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\data-science.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\data-science.svg",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\data-science.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\design.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\design.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\design.svg",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\design.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\facebook.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\facebook.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\film.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\film.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\film.svg",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\film.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\health.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\health.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\health.svg",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\health.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\information.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\information.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\information.svg",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\information.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\instagram.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\instagram.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\language.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\language.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\language.svg",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\language.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\math.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\math.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\math.svg",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\math.svg"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\icons\\twitter.png",
+      "PackagePath": "staticwebassets\\assets\\img\\icons\\twitter.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\illustrations\\bg-circle.png",
+      "PackagePath": "staticwebassets\\assets\\img\\illustrations\\bg-circle.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\illustrations\\cta.png",
+      "PackagePath": "staticwebassets\\assets\\img\\illustrations\\cta.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\illustrations\\happy-learners.png",
+      "PackagePath": "staticwebassets\\assets\\img\\illustrations\\happy-learners.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\illustrations\\instructors.png",
+      "PackagePath": "staticwebassets\\assets\\img\\illustrations\\instructors.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\illustrations\\search.png",
+      "PackagePath": "staticwebassets\\assets\\img\\illustrations\\search.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\illustrations\\top-course.png",
+      "PackagePath": "staticwebassets\\assets\\img\\illustrations\\top-course.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\logos\\logo-footer.png",
+      "PackagePath": "staticwebassets\\assets\\img\\logos\\logo-footer.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\img\\logos\\logo.png",
+      "PackagePath": "staticwebassets\\assets\\img\\logos\\logo.png"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\js\\theme.js",
+      "PackagePath": "staticwebassets\\assets\\js\\theme.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\js\\theme.js.map",
+      "PackagePath": "staticwebassets\\assets\\js\\theme.js.map"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\js\\theme.min.js",
+      "PackagePath": "staticwebassets\\assets\\js\\theme.min.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\assets\\js\\theme.min.js.map",
+      "PackagePath": "staticwebassets\\assets\\js\\theme.min.js.map"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\bootstrap.css",
       "PackagePath": "staticwebassets\\css\\bootstrap.css"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\custom.css",
+      "PackagePath": "staticwebassets\\css\\custom.css"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\font-awesome.min.css",
       "PackagePath": "staticwebassets\\css\\font-awesome.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\fontawesome.min.css",
+      "PackagePath": "staticwebassets\\css\\fontawesome.min.css"
     },
     {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\fonts\\font-awesome\\fontawesome-webfontba72.eot",
@@ -173,8 +553,28 @@
       "PackagePath": "staticwebassets\\css\\kitapekle.css"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\slick-theme.css",
+      "PackagePath": "staticwebassets\\css\\slick-theme.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\slick-theme.min.css",
+      "PackagePath": "staticwebassets\\css\\slick-theme.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\slick.min.css",
+      "PackagePath": "staticwebassets\\css\\slick.min.css"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\style.css",
       "PackagePath": "staticwebassets\\css\\style.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\templatemo.css",
+      "PackagePath": "staticwebassets\\css\\templatemo.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\css\\templatemo.min.css",
+      "PackagePath": "staticwebassets\\css\\templatemo.min.css"
     },
     {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\favicon.ico",
@@ -285,12 +685,28 @@
       "PackagePath": "staticwebassets\\js\\banzhow.js"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\js\\bootstrap.bundle.min.js"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\bootstrap.js",
       "PackagePath": "staticwebassets\\js\\bootstrap.js"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\custom.js",
+      "PackagePath": "staticwebassets\\js\\custom.js"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\jquery-1.10.2.js",
       "PackagePath": "staticwebassets\\js\\jquery-1.10.2.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\jquery-1.11.0.min.js",
+      "PackagePath": "staticwebassets\\js\\jquery-1.11.0.min.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\jquery-migrate-1.2.1.min.js",
+      "PackagePath": "staticwebassets\\js\\jquery-migrate-1.2.1.min.js"
     },
     {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\kitapekle.js",
@@ -301,12 +717,24 @@
       "PackagePath": "staticwebassets\\js\\plugins.js"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\slick.min.js",
+      "PackagePath": "staticwebassets\\js\\slick.min.js"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\switcher\\switcher.css",
       "PackagePath": "staticwebassets\\js\\switcher\\switcher.css"
     },
     {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\switcher\\switcher.js",
       "PackagePath": "staticwebassets\\js\\switcher\\switcher.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\templatemo.js",
+      "PackagePath": "staticwebassets\\js\\templatemo.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\templatemo.min.js",
+      "PackagePath": "staticwebassets\\js\\templatemo.min.js"
     },
     {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\LICENSE",

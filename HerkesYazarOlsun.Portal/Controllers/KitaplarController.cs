@@ -19,5 +19,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             return Json(2);
         }
+
+        public IActionResult KitapArama()
+        {
+            return View();
+        }
     }
 }
