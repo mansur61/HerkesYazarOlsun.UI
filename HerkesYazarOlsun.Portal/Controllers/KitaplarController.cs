@@ -24,5 +24,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             return View();
         }
+
+        public IActionResult KitapDetay()
+        {
+            return View();
+        }
+
+        public IActionResult KitapDetaySayfasi()
+        {
+            return View();
+        }
     }
 }

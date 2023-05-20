@@ -36,6 +36,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBBcmFtYS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapDetay.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBEZXRheS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapDetay2.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBEZXRheTIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapDetaySayfasi.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBEZXRheVNheWZhc2kuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapKayit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBLYXlpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -54,6 +66,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_Footer.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Gb290ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_Header2.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9IZWFkZXIyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_KitapDetayMesajBolumleri.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9LaXRhcERldGF5TWVzYWpCb2x1bWxlcmkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_KitapSliderGosterimleri.cshtml]
