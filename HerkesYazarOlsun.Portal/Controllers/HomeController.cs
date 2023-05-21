@@ -8,7 +8,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public ActionResult Index()
         {
             List<string> kitaplar = new List<string>();
-            kitaplar.Add("Yayına En Yakon Olan Kitaplar");
+            kitaplar.Add("Yayına En Yakın Olan Kitaplar");
             kitaplar.Add("En Çok Okunan  Kitaplar");
             kitaplar.Add("En Çok Beğenilen Kitaplar");
             return View(kitaplar);
