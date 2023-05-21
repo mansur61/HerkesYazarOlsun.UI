@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,22 +10,26 @@
 
     <title>Herkes Yazar Olsun</title>
 
-    <!-- font-awesome -->
-    
-    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+      <!-- font-awesome -->
    
+    <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
     <!-- Bootstrap core CSS -->
-   
-    <link href="~/css/bootstrap.css" rel="stylesheet" />
+ 
+    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
     <!-- custom CSS -->
+
+    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" />
+
+    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
     
-    <link href="~/css/style.css" rel="stylesheet" />
-    <script src="~/js/jquery-1.10.2.js"></script>
-    <script src="~/js/bootstrap.js"></script>
-    <script src="~/js/plugins.js"></script>
-   
-    <script src="~/js/banzhow.js"></script>
-    <link href="~/vendors/css/style.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap/dist/js/herkesyazarolsun-bootstrap.js"></script>
+    <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/herkesyazarolsun.js"></script>
+
+    <link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />
+
+
 </head>
 
 <body>
@@ -37,10 +41,13 @@
 
     <div class="container container-int">
 
-        <ol class="breadcrumb">
+        @*<ol class="breadcrumb">
             <li><a href="index.html">Home</a></li>
             <li><a href="portfolio-1-col.html">Portfolio</a></li>
             <li class="active">Banzhow Template</li>
+        </ol>*@
+        <ol class="breadcrumb">
+            <li>Kitap Detay</li>
         </ol>
 
         <div class="row">
@@ -58,14 +65,17 @@
                 <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
 
             </div>
+            
+            <div class="col-md-12 text-right">
+                <button type="submit" value="submit" class="btn btn-primary">Kitabı Oku</button>
+            </div>
 
         </div>
         
         @Html.Partial("_KitapDetayMesajBolumleri")
-	</div><!-- /.container -->
+	</div
     @Html.Partial("_Footer")
    
 </body>
 
-<!-- Mirrored from labs.segelsoft.com/banzhow/portfolio-item.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 24 Jul 2017 18:50:57 GMT -->
 </html>
