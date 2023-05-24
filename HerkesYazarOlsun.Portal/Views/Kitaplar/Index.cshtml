@@ -4,8 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link href="css/kitapekle.css" rel="stylesheet">
-
+<link href="~/lib/bootstrap/dist/css/kitapekle.css" rel="stylesheet" />
 <br />
 <br />
 
@@ -33,7 +32,7 @@
                 <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%"></div>
             </div>
             <div id="qbox-container">
-                <form class="needs-validation" id="form-wrapper" method="post" name="form-wrapper" novalidate="">
+                @*<form class="needs-validation" id="form-wrapper" method="post" name="form-wrapper" novalidate="">*@
                     <div id="steps-container">
 
                         <div class="step">
@@ -119,10 +118,10 @@
                     <div id="q-box__buttons">
                         <button id="prev-btn" type="button">Geri</button>
                         <button id="next-btn" type="button">İleri</button>
-                        <button id="submit-btn" type="submit">Kaydet</button>
+                        <button id="submit-btn" type="submit" onclick="Kaydet()">Kaydet</button>
                         @*<button id="sayfa-kaydet-btn" type="button">Satfa Kaydet</button>*@
                     </div>
-                </form>
+                @*</form>*@
             </div>
         </div>
     </div>
@@ -135,8 +134,14 @@
 </div>
 <br />
 <br />
+
 @*<script type="text/javascript" src="js/kitapekle.js"></script>*@
+
 <script>
+
+   
+
+
     let step = document.getElementsByClassName('step');
     let prevBtn = document.getElementById('prev-btn');
     let nextBtn = document.getElementById('next-btn');
@@ -144,14 +149,12 @@
     let form = document.getElementsByTagName('form')[0];
     let preloader = document.getElementById('preloader-wrapper');
     let bodyElement = document.querySelector('body');
-    //let succcessDiv = document.getElementById('success');
+    
 
-    //let sayfaKaydet = document.getElementById('sayfa-kaydet-btn');
+    //form.onsubmit = () => {
+    //    return false
+    //}
 
-
-    form.onsubmit = () => {
-        return false
-    }
     var current_step = 0;
     var stepCount = step.length;
     step[current_step].classList.add('d-block');
@@ -209,51 +212,6 @@
         }
         progress((100 / stepCount) * current_step);
     });
-
-    //nextBtn.addEventListener('click', () => {
-    //    current_step++;
-    //    console.log("nextBtn current_step:" + current_step);
-    //    var previous_step = current_step - 1;
-    //    console.log("previous_step:" + previous_step);
-
-    //    if ((current_step > 0) && (current_step <= stepCount)) {
-
-    //        if (current_step == stepCount) {
-
-    //            submitBtn.classList.remove('d-none');
-    //            submitBtn.classList.add('d-inline-block');
-
-    //            nextBtn.classList.remove('d-inline-block');
-    //            nextBtn.classList.add('d-none');
-    //        }
-    //        else {
-    //            prevBtn.classList.remove('d-none');
-    //            prevBtn.classList.add('d-inline-block');
-
-
-    //            step[current_step].classList.remove('d-none');
-    //            step[current_step].style.display = "none";
-
-    //            step[current_step].classList.add('d-block');
-    //            step[current_step].style.display = "block";
-
-    //            step[previous_step].classList.remove('d-block');
-    //            step[previous_step].style.display = "block";
-
-    //            step[previous_step].classList.add('d-none');
-    //            step[previous_step].style.display = "none";
-
-    //        }
-    //    } else {
-
-    //        if (current_step > stepCount) {
-    //            form.onsubmit = () => {
-    //                return true
-    //            }
-    //        }
-    //    }
-    //    progress((100 / stepCount) * current_step);
-    //});
 
 
     prevBtn.addEventListener('click', () => {
@@ -329,17 +287,15 @@
             })
 
     });
-</script>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#submit-btn").click(function () {
 
-            $.get("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")", {}, function (data) {
-                console.log("data: " + data);
-                $("#sayfaSayisi").html(data);
-            });
-
+    function Kaydet(){
+        $.get("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")", {}, function (data) {
+            console.log("data: " + data);
+            $("#sayfaSayisi").html(data);
         });
-    });
+
+    }
+
 </script>
+

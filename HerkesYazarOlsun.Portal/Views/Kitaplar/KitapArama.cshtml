@@ -61,7 +61,7 @@
                 display: inline-block;
                 text-align: center;
                 margin: 10px 10px;
-                background: #acc;
+                /* background: #acc;*/
                 width: 45px;
                 height: 45px;
                 border-radius: 20%;
@@ -73,9 +73,10 @@
                 transition: background-position 0.5s;
             }
 
-                .containerPagination > ul li.activite {
-                    color: #fff;
-                    background-image: lineer-gradient(45deg,#10358,#4700bc);
+                .containerPagination > ul li.active {
+                    color:#410358;
+                    background-color: #3e8e41;
+                    /* background-image: lineer-gradient(45deg,#410358,#4700bc);*/
                     background-repeat: no-repeat;
                     background-position: 0 0px;
                 }
@@ -528,44 +529,12 @@
             event.target.classList.add("active");
             currentValue = event.target.value;
 
-            if (currentValue <= durum.length) {
-                let previous_step = currentValue - 1;
-                console.log("previous_step: " + previous_step);
-                console.log("currentValue: if kosul " + currentValue);
-
-                if (currentValue == durum.length) {
-                    console.log("ff");
-                    durum[previous_step - 1].style.display = "none";
-                    durum[currentValue - 1].style.display = "block";
-                } else {
-                    if (currentValue == 1) {
-                        durum[previous_step].style.display = "block";
-                        durum[currentValue].style.display = "none";
-                    } else {
-                        durum[previous_step].style.display = "none";
-                        durum[currentValue].style.display = "block";
-                    }
-
-                }
-
-            }
-
+            sayfaGoster(currentValue);
+   
             console.log("currentValue: " + currentValue);
         }
 
         function backBtn() {
-
-            //if (currentIndex > 0) {
-            //    currentIndex--;
-            //    let previous_step = currentIndex + 1;
-
-            //    if (previous_step < stepCount) {
-
-            //        durum[previous_step].style.display = "block";
-            //        durum[previous_step].style.display = "none";
-            //    }
-            //}
-
             if (currentValue > 1) {
                 for (l of pageItem) {
                     l.classList.remove("active");
@@ -573,27 +542,49 @@
                 currentValue--;
                 pageItem[currentValue - 1].classList.add("active");
                 console.log("currentValue backBtn: " + currentValue);
+
+                sayfaGoster(currentValue);
             }
 
         }
 
         function nextBtn() {
             currentIndex++;
-            //var previous_step = currentIndex - 1;
-            //if ((currentIndex > 0) && (currentIndex < durum.length)) {
-
-            //    durum[currentIndex].style.display = "block";
-            //    durum[previous_step].style.display = "none";
-            //}
-
+           
             if (currentValue < 6) {
                 for (l of pageItem) {
                     l.classList.remove("active");
                 }
-                currentValue++;
-                pageItem[currentValue - 1].classList.add("active");
                 console.log("currentValue nextBtn: " + currentValue);
+                pageItem[currentValue - 1].classList.add("active");
+                currentValue++;
+                sayfaGoster(currentValue);
+               
+            }
+        }
 
+        function sayfaGoster(sayfaIndex){
+
+
+            if (sayfaIndex <= durum.length) {
+                let previous_step = currentValue - 1;
+                console.log("previous_step: " + previous_step);
+                console.log("currentValue: if kosul " + sayfaIndex);
+
+                if (sayfaIndex == durum.length) {
+
+                    durum[previous_step - 1].style.display = "none";
+                    durum[sayfaIndex - 1].style.display = "block";
+                } else {
+                    if (sayfaIndex == 1) {
+                        durum[previous_step].style.display = "block";
+                        durum[sayfaIndex].style.display = "none";
+                    } else {
+                        durum[previous_step].style.display = "none";
+                        durum[sayfaIndex].style.display = "block";
+                    }
+
+                }
 
             }
         }
