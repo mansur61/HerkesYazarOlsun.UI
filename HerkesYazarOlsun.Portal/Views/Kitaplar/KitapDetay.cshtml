@@ -1,81 +1,41 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    ViewData["Title"] = "Kitap Detay";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Herkes Yazar Olsun</title>
-
-      <!-- font-awesome -->
-   
-    <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
-    <!-- Bootstrap core CSS -->
- 
-    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
-    <!-- custom CSS -->
-
-    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" />
-
-    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-    
-    <script src="~/lib/bootstrap/dist/js/herkesyazarolsun-bootstrap.js"></script>
-    <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/herkesyazarolsun.js"></script>
-
+@section Styles {
     <link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />
+}
 
+@Html.Partial("_Navbar")
+<br />
+<br />
 
-</head>
+<br />
+<div class="row">
 
-<body>
+    <div class="col-md-5">
+        <img class="img-responsive" src="~/lib/img/portfolio_1.png" alt="Portfolio 1">
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5">
+        <h3><small>Yazılma Tarihi</small></h3>
+        <small>30.05.2023</small>
+        <h3><small>Yazarı</small></h3>
+        <p><small>Mansur Emin Kaya</small></p>
+        <h3>Kitap Özeti</h3>
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+
+    </div>
+
+    <div class="col-md-12 text-right">
+        <button type="submit" value="submit" class="btn btn-ligth"><a href="/Kitaplar/KitapOku">Kitabı Oku</a></button>
+        
+    </div>
 
     
-    @Html.Partial("_Navbar")
-    <br />
-    <br />
 
-    <div class="container container-int">
+</div>
 
-        @*<ol class="breadcrumb">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="portfolio-1-col.html">Portfolio</a></li>
-            <li class="active">Banzhow Template</li>
-        </ol>*@
-        <ol class="breadcrumb">
-            <li>Kitap Detay</li>
-        </ol>
+@Html.Partial("_KitapDetayMesajBolumleri")
 
-        <div class="row">
-          
-            <div class="col-md-5">
-                <img class="img-responsive" src="~/lib/img/portfolio_1.png" alt="Portfolio 1">
-            </div>
-            <div class="col-md-2"></div>
-            <div class="col-md-5">
-                <h3><small>Date</small></h3>
-                <small>January 2014</small>
-                <h3><small>Client</small></h3>
-                <p><small>Banzhow</small></p>
-                <h3>Description</h3>
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-
-            </div>
-            
-            <div class="col-md-12 text-right">
-                <button type="submit" value="submit" class="btn btn-primary">Kitabı Oku</button>
-            </div>
-
-        </div>
-        
-        @Html.Partial("_KitapDetayMesajBolumleri")
-	</div
-    @Html.Partial("_Footer")
-   
-</body>
-
-</html>

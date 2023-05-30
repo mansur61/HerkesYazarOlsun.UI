@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "kdd6ZV36P8ShXYV711KB3aNZe6gB0WpLvjwr3Gd69Rw=",
+  "Hash": "sFkB4UxzLMGwxjNJGb9ERmoBpmQMHFUT7KlhR/1plS4=",
   "Source": "HerkesYazarOlsun.Portal",
   "BasePath": "_content/HerkesYazarOlsun.Portal",
   "Mode": "Default",
@@ -2567,6 +2567,40 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\kitapekle.css"
     },
     {
+      "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\lineericaon_style.css",
+      "SourceId": "HerkesYazarOlsun.Portal",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\",
+      "BasePath": "_content/HerkesYazarOlsun.Portal",
+      "RelativePath": "lib/bootstrap/dist/css/lineericaon_style.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\lineericaon_style.css"
+    },
+    {
+      "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\main_aroma_template.css",
+      "SourceId": "HerkesYazarOlsun.Portal",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\",
+      "BasePath": "_content/HerkesYazarOlsun.Portal",
+      "RelativePath": "lib/bootstrap/dist/css/main_aroma_template.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\main_aroma_template.css"
+    },
+    {
       "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\nice-select.css",
       "SourceId": "HerkesYazarOlsun.Portal",
       "SourceType": "Discovered",
@@ -2582,6 +2616,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\nice-select.css"
+    },
+    {
+      "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\nouislider.min.css",
+      "SourceId": "HerkesYazarOlsun.Portal",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\",
+      "BasePath": "_content/HerkesYazarOlsun.Portal",
+      "RelativePath": "lib/bootstrap/dist/css/nouislider.min.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\nouislider.min.css"
     },
     {
       "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\owl.carousel.min.css",
@@ -2635,6 +2686,23 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\style.css"
     },
     {
+      "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\style_aroma_template.css",
+      "SourceId": "HerkesYazarOlsun.Portal",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\",
+      "BasePath": "_content/HerkesYazarOlsun.Portal",
+      "RelativePath": "lib/bootstrap/dist/css/style_aroma_template.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\style_aroma_template.css"
+    },
+    {
       "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\style_kitap_detay.css",
       "SourceId": "HerkesYazarOlsun.Portal",
       "SourceType": "Discovered",
@@ -2650,6 +2718,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\style_kitap_detay.css"
+    },
+    {
+      "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\themify-icons.css",
+      "SourceId": "HerkesYazarOlsun.Portal",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\",
+      "BasePath": "_content/HerkesYazarOlsun.Portal",
+      "RelativePath": "lib/bootstrap/dist/css/themify-icons.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\css\\themify-icons.css"
     },
     {
       "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
@@ -3043,6 +3128,23 @@
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\main.js"
     },
     {
+      "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\main_aroma_template.js",
+      "SourceId": "HerkesYazarOlsun.Portal",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\",
+      "BasePath": "_content/HerkesYazarOlsun.Portal",
+      "RelativePath": "lib/bootstrap/dist/js/main_aroma_template.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\main_aroma_template.js"
+    },
+    {
       "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\main2.js",
       "SourceId": "HerkesYazarOlsun.Portal",
       "SourceType": "Discovered",
@@ -3075,6 +3177,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\mixitup.min.js"
+    },
+    {
+      "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\nouislider.min.js",
+      "SourceId": "HerkesYazarOlsun.Portal",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\",
+      "BasePath": "_content/HerkesYazarOlsun.Portal",
+      "RelativePath": "lib/bootstrap/dist/js/nouislider.min.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\lib\\bootstrap\\dist\\js\\nouislider.min.js"
     },
     {
       "Identity": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\owl.carousel.min.js",

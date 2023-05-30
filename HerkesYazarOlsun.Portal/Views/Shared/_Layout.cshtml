@@ -14,22 +14,35 @@
     <title>Herkes Yazar Olsun</title>
 
     <!-- font-awesome -->
-   
+
     <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
     <!-- Bootstrap core CSS -->
- 
-    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
-    <!-- custom CSS -->
 
+    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
+
+    <link href="~/lib/bootstrap/dist/css/themify-icons.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/lineericaon_style.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/nice-select.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/nouislider.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+
+    @RenderSection("Styles",false)
+
+    <!-- custom CSS -->
     <link href="~/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" />
 
     <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-    
+
     <script src="~/lib/bootstrap/dist/js/herkesyazarolsun-bootstrap.js"></script>
     <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
 
-    <script src="~/lib/bootstrap/dist/js/herkesyazarolsun.js"></script>
+    @*Bu kodlar her yerde çalışmadığında yorum satırına alındı. Kullanım alanları olabilir.*@
+    @* <script src="~/lib/bootstrap/dist/js/herkesyazarolsun.js"></script>*@
+    @*<script src="~/lib/bootstrap/dist/js/main_aroma_template.js"></script>*@
 
+    <script src="~/lib/bootstrap/dist/js/skrollr.min.js"></script>
+    @RenderSection("scripts",false)
 
     <style>
         .col-item {
@@ -131,17 +144,17 @@
 
     @*<div class="container">
 
-        <div class="row">
-            <div class="col-md-3">
-                <br />
-               MANSUR
+    <div class="row">
+    <div class="col-md-3">
+    <br />
+    MANSUR
 
-            </div>
-            <div class="col-md-9">
-                @Html.Partial("_Carousel")
+    </div>
+    <div class="col-md-9">
+    @Html.Partial("_Carousel")
 
-            </div>
-        </div>
+    </div>
+    </div>
     </div>*@
 
     <div class="container">
@@ -149,7 +162,7 @@
 
     </div>
 
-   @* @Html.Partial("_Sponsorlar")
+    @* @Html.Partial("_Sponsorlar")
     <br />*@
     @Html.Partial("_Footer")
 </body>

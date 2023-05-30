@@ -1,0 +1,48 @@
+﻿@{
+	ViewData["Title"] = "Login";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="login_box_area section-margin">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="login_box_img">
+					<div class="hover">
+						<h4>Herkes Yazar Olsun' da Kaydın Var Mı? </h4>
+						<p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyaoruz.</p>
+						<a class="button button-account" href="/Home/Login">Giriş Yap</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="login_form_inner register_form_inner">
+					<h3>Kayıt Olunuz</h3>
+					<form class="row login_form" action="#/" id="register_form">
+						<div class="col-md-12 form-group">
+							<input type="text" class="form-control" id="name" name="name" placeholder="Kullanici Adi" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Kullanici Adi'">
+						</div>
+						<div class="col-md-12 form-group">
+							<input type="text" class="form-control" id="email" name="email" placeholder="Email Adres" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adres'">
+						</div>
+						<div class="col-md-12 form-group">
+							<input type="text" class="form-control" id="password" name="password" placeholder="Şifre" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre'">
+						</div>
+						<div class="col-md-12 form-group">
+							<input type="text" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Şifre Tekrar" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre Tekrar'">
+						</div>
+						<div class="col-md-12 form-group">
+							<div class="creat_account">
+								<input type="checkbox" id="f-option2" name="selector">
+								<label for="f-option2">Oturumumu açık tut</label>
+							</div>
+						</div>
+						<div class="col-md-12 form-group">
+							<button type="submit" value="submit" class="button button-register w-100">Kayıt Ol</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

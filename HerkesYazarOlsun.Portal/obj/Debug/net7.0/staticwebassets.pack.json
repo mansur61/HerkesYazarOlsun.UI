@@ -605,8 +605,20 @@
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\kitapekle.css"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\lineericaon_style.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\lineericaon_style.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\main_aroma_template.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\main_aroma_template.css"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\nice-select.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\nice-select.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\nouislider.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\nouislider.min.css"
     },
     {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\owl.carousel.min.css",
@@ -621,8 +633,16 @@
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\style.css"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\style_aroma_template.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\style_aroma_template.css"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\style_kitap_detay.css",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\style_kitap_detay.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\css\\themify-icons.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\themify-icons.css"
     },
     {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
@@ -721,8 +741,16 @@
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\main2.js"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\main_aroma_template.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\main_aroma_template.js"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\mixitup.min.js",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\mixitup.min.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\nouislider.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\nouislider.min.js"
     },
     {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\dist\\js\\owl.carousel.min.js",
