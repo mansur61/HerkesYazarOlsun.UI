@@ -3,6 +3,10 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles{
+
+	<link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+}
 <section class="login_box_area section-margin">
 	<div class="container">
 		<div class="row">
@@ -46,3 +50,8 @@
 		</div>
 	</div>
 </section>
+
+@section scripts{
+
+	<script src="~/lib/bootstrap/dist/js/main_aroma_template.js"></script>
+}

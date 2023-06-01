@@ -1,50 +1,31 @@
-﻿
-<!doctype html>
+﻿@{
+    ViewData["Title"] = "Kitap Oku";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!-->
-<html lang="en" class="no-js">
-<!--<![endif]-->
-<head>
-    <script>(function (H) { H.className = H.className.replace(/\bno-js\b/, 'js') })(document.documentElement)</script>
-    <meta charset="utf-8">
+@section Styles{
     <style>
         .js #features {
             margin-left: -12000px;
             width: 100%;
         }
+
+        #gozukecekMiNavbar{
+            display:none;
+        }
+        #gozukecekMiFooter{
+            display: none;
+        }
+
     </style>
-    <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-       Remove this if you use the .htaccess -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-    <title></title>
-    <meta name="description" content="">
-    <meta name="author" content="Marcio Aguiar">
-
-    <!--  Mobile viewport optimized: j.mp/bplateviewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- CSS : implied media="all" -->
     <link href="~/wowbook/css/style.css" rel="stylesheet" />
     <link href="~/wowbook/css/wow_book.css" rel="stylesheet" />
     <link href="~/wowbook/css/preview.css" rel="stylesheet" />
     <link href="~/wowbook/css/handheld.css" rel="stylesheet" />
-
-    <script src="~/wowbook/js/modernizr-1.6.min.js"></script>
-    <!-- Uncomment if you are specifically targeting less enabled mobile browsers
-    <link rel="stylesheet" media="handheld" href="css/handheld.css?v=2">  -->
-
-    <link href='//fonts.googleapis.com/css?family=News+Cycle' rel='stylesheet' type='text/css'>
-    <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
+    <link href="~/wowbook/css/handheld.css?v=2" rel="stylesheet" />
+}
 
 
-</head>
-<body>
     <div id="container">
         <nav>
             <ul>
@@ -224,15 +205,15 @@
                     <p>It's possible to use flash (like youtube videos) in your books, but the page that contains the flash object will be limited to the "basic flipping effect" (and ONLY that page).</p>
                     <p>Currently, most browsers do not handle well the css transformations used by wowbook when applied to a flash object.</p>
                 </div>
-                <div class='feature  wowbook-basic-page flash-demo'>
+               @* <div class='feature  wowbook-basic-page flash-demo'>
                     <object width="350" height="263">
                         <param name="wmode" value="transparent">
-                        <param name="movie" value="//www.youtube.com/v/mfg7QJoa3o4?hl=en_US&amp;version=3"></param>
+                        <param name="movie" value="//www.youtube.com/v/mfg7QJoa3o4?hl=en_US&amp;version=3" ></param>
                         <param name="allowFullScreen" value="true"></param>
                         <param name="allowscriptaccess" value="always"></param>
                         <embed src="//www.youtube.com/v/mfg7QJoa3o4?hl=en_US&amp;version=3" type="application/x-shockwave-flash" width="350" height="263" wmode="transparent" allowscriptaccess="always" allowfullscreen="true"></embed>
                     </object>
-                </div>
+                </div>*@
 
 
                 <div class='feature more'>
@@ -257,15 +238,11 @@
             </div> <!-- features -->
 
         </div>
-        <div id='thumbs_holder'>
-        </div>
-        <footer>
-        </footer>
-    </div> <!--! end of #container -->
-    @*</div>*@
+    
+    </div> 
+   
+    @section scripts{
 
-    <!-- Javascript at the bottom for fast page loading -->
-    <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>!window.jQuery && document.write(unescape('%3Cscript src="./js/libs/jquery-1.9.1.min.js"%3E%3C/script%3E'))</script>
 
@@ -346,15 +323,10 @@
         });
     </script>
 
-    <!-- scripts concatenated and minified via ant build script-->
+
     <script src="~/wowbook/js/plugins.js"></script>
     <script src="~/wowbook/js/script.js"></script>
-    <!-- end concatenated and minified scripts-->
-    <!--[if lt IE 7 ]>
-    <script src="js/dd_belatedpng.js"></script>
-    <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
-    <![endif]-->
+}
 
-</body>
-</html>
+
 

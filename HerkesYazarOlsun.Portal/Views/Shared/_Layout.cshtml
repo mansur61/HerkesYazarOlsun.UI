@@ -4,6 +4,8 @@
 
 <!DOCTYPE html>
 <html lang="en">
+@*class="no-js"*@
+
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <head>
     <meta charset="utf-8">
@@ -13,8 +15,9 @@
 
     <title>Herkes Yazar Olsun</title>
 
-    <!-- font-awesome -->
+    <script>(function (H) { H.className = H.className.replace(/\bno-js\b/, 'js') })(document.documentElement)</script>
 
+    <!-- font-awesome -->
     <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
     <!-- Bootstrap core CSS -->
 
@@ -25,7 +28,6 @@
     <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/nice-select.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/nouislider.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
 
     @RenderSection("Styles",false)
 
@@ -37,9 +39,9 @@
     <script src="~/lib/bootstrap/dist/js/herkesyazarolsun-bootstrap.js"></script>
     <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
 
-    @*Bu kodlar her yerde çalışmadığında yorum satırına alındı. Kullanım alanları olabilir.*@
+    @*Aşğıdaki kodlar her yerde çalışmadığında yorum satırına alındı. Kullanım alanları olabilir.*@
     @* <script src="~/lib/bootstrap/dist/js/herkesyazarolsun.js"></script>*@
-    @*<script src="~/lib/bootstrap/dist/js/main_aroma_template.js"></script>*@
+   
 
     <script src="~/lib/bootstrap/dist/js/skrollr.min.js"></script>
     @RenderSection("scripts",false)
@@ -142,28 +144,11 @@
 <body>
     @Html.Partial("_Navbar")
 
-    @*<div class="container">
-
-    <div class="row">
-    <div class="col-md-3">
-    <br />
-    MANSUR
-
-    </div>
-    <div class="col-md-9">
-    @Html.Partial("_Carousel")
-
-    </div>
-    </div>
-    </div>*@
-
     <div class="container">
         @RenderBody()
 
     </div>
 
-    @* @Html.Partial("_Sponsorlar")
-    <br />*@
     @Html.Partial("_Footer")
 </body>
 </html>
