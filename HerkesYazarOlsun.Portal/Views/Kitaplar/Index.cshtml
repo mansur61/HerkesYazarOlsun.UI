@@ -1,4 +1,6 @@
 ﻿@using HerkesYazarOlsun.Portal.Controllers;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+
 @{
     ViewData["Title"] = "Kitap Ekle";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -47,94 +49,95 @@
             </div>
             <div id="qbox-container">
                 @*<form class="needs-validation" id="form-wrapper" method="post" name="form-wrapper" novalidate="">*@
-                    <div id="steps-container">
+                <div id="steps-container">
 
-                        <div class="step">
-                            <h1><strong>Kitabınızı Yazmaya Başlayınız </strong> </h1>
-                            <h4>Kitabınız İçin Önbilgileri Formlardan Doldurunuz ... </h4>
-                            <br />
-                            <div class="conrainer">
+                    <div class="step">
+                        <h1><strong>Kitabınızı Yazmaya Başlayınız </strong> </h1>
+                        <h4>Kitabınız İçin Önbilgileri Formlardan Doldurunuz ... </h4>
+                        <br />
+                        <div class="conrainer">
 
-                                <div class="mb-3">
-                                    <h5>Kitabınızın Adını Belirleyiniz</h5>
-                                    <input class="form-control" type="text" id="kitapAdi" multiple>
+                            <div class="mb-3">
+                                <h5>Kitabınızın Adını Belirleyiniz</h5>
+                                <input class="form-control" type="text" id="kitapAdi" multiple>
 
-                                </div>
-
-                                <div class="mb-3">
-                                    <h5>Kitabınızın Ön Kapağını Seçiniz</h5>
-                                    <input class="form-control" type="file" id="formFileMultipleOnkapak" multiple>
-
-                                </div>
-                                <div class="mb-3">
-                                    <h5>Kitabınızın Arka Kapağını Seçiniz</h5>
-                                    <input class="form-control" type="file" id="formFileMultipleArkakapak" multiple>
-                                </div>
-                                <div class="mb-3">
-                                    <h5>Kitabınızın Önsöz'ünü giriniz</h5>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" cols="50"></textarea>
-                                    <div id="help" class="form-text" style="color:cadetblue">500 karakteri geçmeyiniz.</div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <h5>Kitabınızın Arkakapak yazısını giriniz</h5>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" cols="50"></textarea>
-                                    <div id="help" class="form-text" style="color:cadetblue">200 karakteri geçmeyiniz.</div>
-                                </div>
-                                <h5>Kitabın Kategorisini seçiniz</h5>
-                                <div class="row-cols-3">
-                                </div>
-
-                                <select class="form-select" style="width:500px;height:30px">
-                                    <option selected>Köşe Yazarı</option>
-                                    <option value="1">Hikaye</option>
-                                    <option value="2">Masal</option>
-                                    <option value="3">Şiir</option>
-                                    <option value="3">Roman</option>
-                                </select>
                             </div>
-                            @* <div class="form-check ps-0 q-box" style="border:1px solid red;">
-                            <div class="q-box__question">
-                            <input class="form-check-input question__input" id="q_1_yes" name="q_1" type="radio" value="Yes">
-                            <label class="form-check-label question__label" for="q_1_yes">Yes</label>
-                            </div>
-                            <div class="q-box__question" >
 
-                            <input checked class="form-check-input question__input" id="q_1_no" name="q_1" type="radio" value="No">
-                            <label class="form-check-label question__label" for="q_1_no">No</label>
+                            <div class="mb-3">
+                                <h5>Kitabınızın Ön Kapağını Seçiniz</h5>
+                                <input class="form-control" type="file" id="formFileMultipleOnkapak" multiple>
+
                             </div>
-                            </div>*@
+                            <div class="mb-3">
+                                <h5>Kitabınızın Arka Kapağını Seçiniz</h5>
+                                <input class="form-control" type="file" id="formFileMultipleArkakapak" multiple>
+                            </div>
+                            <div class="mb-3">
+                                <h5>Kitabınızın Önsöz'ünü giriniz</h5>
+                                <textarea class="form-control" id="onsoz" rows="5" cols="50"></textarea>
+                                <div id="help" class="form-text" style="color:cadetblue">500 karakteri geçmeyiniz.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <h5>Kitabınızın Arkakapak yazısını giriniz</h5>
+                                <textarea class="form-control" id="arkaKapakYazi" rows="5" cols="50"></textarea>
+                                <div id="help" class="form-text" style="color:cadetblue">200 karakteri geçmeyiniz.</div>
+                            </div>
+                            <h5>Kitabın Kategorisini seçiniz</h5>
+                            <div class="row-cols-3">
+                            </div>
+
+                            <select class="form-select" style="width:500px;height:30px" id="kitapKetogri">
+                                <option selected>Köşe Yazarı</option>
+                                <option value="1">Hikaye</option>
+                                <option value="2">Masal</option>
+                                <option value="3">Şiir</option>
+                                <option value="3">Roman</option>
+                            </select>
                         </div>
+                        @* <div class="form-check ps-0 q-box" style="border:1px solid red;">
+                        <div class="q-box__question">
+                        <input class="form-check-input question__input" id="q_1_yes" name="q_1" type="radio" value="Yes">
+                        <label class="form-check-label question__label" for="q_1_yes">Yes</label>
+                        </div>
+                        <div class="q-box__question" >
 
-                        <div class="step">
-                            <h1><strong>Kitabınızın Sayfalarını Oluşturunuz.</strong> </h1>
-                            <p id="sayfaSayisi">1</p>
-                            <br />
-                            <div class="conrainer">
-                                <div class="mb-3">
-                                    <h5>İlgili sayfaya resim koyabilirsiniz</h5>
-                                    <input class="form-control" type="file" id="formFileMultipleIlgiliSayfa" multiple>
+                        <input checked class="form-check-input question__input" id="q_1_no" name="q_1" type="radio" value="No">
+                        <label class="form-check-label question__label" for="q_1_no">No</label>
+                        </div>
+                        </div>*@
+                    </div>
 
-                                </div>
-
-                                <div class="mb-3">
-                                    <h5>İlgili Sayfayı yazınız</h5>
-                                    <div id="help" class="form-text" style="color:cadetblue">1000 karakteri geçmeyiniz.</div>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="30" cols="50"></textarea>
-
-                                </div>
+                    <div class="step">
+                        <h1><strong>Kitabınızın Sayfalarını Oluşturunuz.</strong> </h1>
+                        <p>Kitabta Yazılan İlgili Sayfa No : <span id="sayfaSayisi">1</span>  </p>
+                        <input class="form-control" type="hidden" id="BOOKSID" value="@Model.ID">
+                        <br />
+                        <div class="conrainer">
+                            <div class="mb-3">
+                                <h5>İlgili sayfaya resim koyabilirsiniz</h5>
+                                <input class="form-control" type="file" id="formFileMultipleIlgiliSayfa" multiple>
 
                             </div>
-                        </div>
-                       
 
+                            <div class="mb-3">
+                                <h5>İlgili Sayfayı yazınız</h5>
+                                <div id="help" class="form-text" style="color:cadetblue">1000 karakteri geçmeyiniz.</div>
+                                <textarea class="form-control" id="sayfaYazi" rows="30" cols="50"></textarea>
+
+                            </div>
+
+                        </div>
                     </div>
-                    <div id="q-box__buttons">
-                        <button id="prev-btn" type="button">Geri</button>
-                        <button id="next-btn" type="button">İleri</button>
-                        <button id="submit-btn" type="submit" onclick="Kaydet()">Kaydet</button>
-                        @*<button id="sayfa-kaydet-btn" type="button">Satfa Kaydet</button>*@
-                    </div>
+
+
+                </div>
+                <div id="q-box__buttons">
+                    <button id="prev-btn" type="button">Geri</button>
+                    <button id="next-btn" type="button">İleri</button>
+                    <button id="submit-btn" type="submit" onclick="Kaydet()">Kaydet</button>
+                    @*<button id="sayfa-kaydet-btn" type="button">Satfa Kaydet</button>*@
+                </div>
                 @*</form>*@
             </div>
         </div>
@@ -160,7 +163,7 @@
     let form = document.getElementsByTagName('form')[0];
     let preloader = document.getElementById('preloader-wrapper');
     let bodyElement = document.querySelector('body');
-    
+
 
     //form.onsubmit = () => {
     //    return false
@@ -300,11 +303,44 @@
     });
 
 
-    function Kaydet(){
-        $.get("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")", {}, function (data) {
-            console.log("data: " + data);
-            $("#sayfaSayisi").html(data);
-        });
+    function Kaydet() {
+        var kitapId = $("#BOOKSID").val();
+        console.log("kitapId:"+kitapId);
+        var onKapak = $("#formFileMultipleOnkapak").val();
+        var arkaKapak = $("#formFileMultipleArkakapak").val();
+        var kitapAdi = $("#kitapAdi").val();
+        var onsoz = $("#onsoz").val();
+        var arkaKapakYazi = $("#arkaKapakYazi").val();
+        var kategori = $("#kitapKetogri").val();
+        var sayfaResim = $("#formFileMultipleIlgiliSayfa").val();
+        var sayfaYazi = $("#sayfaYazi").val();
+
+        console.log("onKapak: " + onKapak + " arkaKapak: " + arkaKapak + " kitapAdi:" + kitapAdi + " onsoz:" + onsoz + " arkaKapakYazi:" + arkaKapakYazi
+            + " kategori:" + kategori + " sayfaResim:" + sayfaResim + " sayfaYazi:" + sayfaYazi
+        );
+        $.post("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")",
+            {
+                "ID": kitapId,
+                "Name": kitapAdi,
+                "onsoz": onsoz,
+                "ONKAPAKFOTO": onKapak,
+                "ARKAKAPAKFOTO": arkaKapak,
+                "ARKAKAPAKYAZISI": arkaKapakYazi,
+                "CategoriId": kategori,
+                "KITAPSAYFAFOTO": sayfaResim,
+                "SAYFAYAZI": sayfaYazi
+            },
+
+            function (data) {
+                console.log("data: " + data);
+                $("#BOOKSID").val(data);
+                console.log("BOOKSID: " + $("#BOOKSID").val());
+                $("#sayfaSayisi").html(data);
+                $("#sayfaYazi").text = "";
+                $("#sayfaYazi").val = "";
+
+
+            });
 
     }
 
