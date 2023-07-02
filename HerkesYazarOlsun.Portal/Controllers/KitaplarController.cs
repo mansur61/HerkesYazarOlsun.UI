@@ -27,40 +27,68 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public JsonResult KitapEkle(VM_BOOKS input)
         {
             int kitapId = 0;
-            var getBook = new BooksService().GetBooks(input.ID);
-            if (getBook != null)
+        
+            //var getBook = new BooksService().GetBooks(input.ID);
+            if (input.ID != 0)
             {
-                var bookPages = new BooksPagesService().PostSaveBooksPages(new BooksPages()
+                var getBook = new BooksService().GetBooks(input.ID);
+                var _booksPage = new BooksPagesService().GetPagesByBooks(getBook != null ?  getBook.ID : 0);
+                if (_booksPage != null && _booksPage.Count() != 0)
                 {
-                    BooksId = getBook.ID,
-                    PageWrite = input.SAYFAYAZI,
-                    PageFoto = input.KITAPSAYFAFOTO
+                    var enSonKitapKaydi = _booksPage.OrderByDescending(p => p.ID).SingleOrDefault();
+                    if (enSonKitapKaydi != null)
+                    {
+                        kitapId = (int)enSonKitapKaydi.ID;
+                    }
+                }
+                else
+                {
+                    var bookPages = new BooksPagesService().PostSaveBooksPages(new BooksPages()
+                    {
+                        BooksId = getBook.ID,
+                        PageWrite = input.SAYFAYAZI,
+                        PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
 
-                });
+                    });
+                    if (bookPages != null)
+                    {
+                        kitapId = (int)bookPages.ID;
+                    }
+                }
+
+
             }
             else
             {
                 var book = new BooksService().PostSaveBook(new Books()
                 {
-                    ARKAKAPAKFOTO = input.ARKAKAPAKFOTO,
+                    ARKAKAPAKFOTO = input.ARKAKAPAKFOTO != null ? input.ARKAKAPAKFOTO : "",
                     ONSOZ = input.ONSOZ,
-                    ONKAPAKFOTO = input.ONKAPAKFOTO,
+                    ONKAPAKFOTO = input.ONKAPAKFOTO != null ? input.ONKAPAKFOTO : "",
                     CategoriId = input.CategoriId,
+                    Name = input.Name != null ? input.Name : "",
+                    ARKAKAPAKYAZISI = input.ARKAKAPAKYAZISI != null ? input.ARKAKAPAKYAZISI : ""
 
                 });
-
-                var bookPages = new BooksPagesService().PostSaveBooksPages(new BooksPages()
+                if (book?.ID != 0 && book != null)
                 {
-                    BooksId = book.ID,
-                    PageWrite = input.SAYFAYAZI,
-                    PageFoto = input.KITAPSAYFAFOTO
+                    var bookPages = new BooksPagesService().PostSaveBooksPages(new BooksPages()
+                    {
+                        BooksId = book.ID,
+                        PageWrite = input.SAYFAYAZI,
+                        PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
 
-                });
+                    });
+                    if (bookPages != null && bookPages.ID != 0)
+                    {
+                        input.ID = bookPages.ID;
+                        kitapId = (int)bookPages.ID;
+                    }
 
-                input.ID = bookPages.ID;
-                kitapId = (int)bookPages.ID;
+                }
+
             }
-            return Json(kitapId);
+            return Json(kitapId + 1);
         }
 
         public IActionResult KitapArama()

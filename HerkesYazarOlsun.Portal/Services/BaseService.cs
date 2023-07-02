@@ -1,6 +1,7 @@
 ﻿using HerkesYazarOlsun.Portal.Helpers;
-using HerkesYazarOlsun.Portal.Helpers.Extensions;
-//using Microsoft.Web.Infrastructure;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Net.Http.Headers;
 
 namespace HerkesYazarOlsun.Portal.Services
@@ -9,13 +10,12 @@ namespace HerkesYazarOlsun.Portal.Services
     {
 
         protected string UriService { get; set; }
-        protected readonly HttpContext _httpContextAccessor;
+        protected readonly HttpContext? _httpContextAccessor;
 
         public BaseService()
         {
             UriService = AppSettings.ApiPath;
-            _httpContextAccessor = 
-                new HttpContextAccessor().HttpContext;
+            _httpContextAccessor = new HttpContextAccessor().HttpContext;
                 //HttpContextHelper.Current;
         }
 
@@ -75,16 +75,20 @@ namespace HerkesYazarOlsun.Portal.Services
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
             //client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
+           
             client.BaseAddress = new Uri(UriService);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             //client.Timeout = TimeSpan.FromMinutes(10);
 
+            HttpContent content = new StringContent(stringData);
+
+            content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");
+
             var contentData = new StringContent(stringData, System.Text.Encoding.UTF8, "application/json");
 
-            Task<HttpResponseMessage> serviceCallResponse = client.PostAsync(url, contentData);
 
-          
+            Task<HttpResponseMessage> serviceCallResponse = client.PostAsync(url, contentData);
             Task.WaitAll(serviceCallResponse);
 
             var httpresponse = serviceCallResponse.Result;
@@ -94,6 +98,16 @@ namespace HerkesYazarOlsun.Portal.Services
             if (httpresponse.StatusCode == System.Net.HttpStatusCode.NotFound) { jsonContent = ""; }
 
             return jsonContent;
+
+            //HttpResponseMessage response = await client.PostAsync(url, content);
+
+            //string responseContent = await response.Content.ReadAsStringAsync();
+
+
+            //if (response.StatusCode == System.Net.HttpStatusCode.NotFound) { responseContent = ""; }
+
+            //return responseContent;
+
         }
 
     }

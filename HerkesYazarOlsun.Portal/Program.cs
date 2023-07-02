@@ -1,12 +1,21 @@
 using HerkesYazarOlsun.Portal.Helpers;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddMvc();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpClient();
+
+
 var app = builder.Build();
+
+
+//IHostingEnvironment env = new HostingEnvironment();
+//RotativaConfiguration.Setup(env);
 
 AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
 

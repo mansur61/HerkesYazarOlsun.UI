@@ -24,7 +24,7 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public Books PostSaveBook(Books book)
+        public Books? PostSaveBook(Books book)
         {
             string stringData = JsonConvert.SerializeObject(book);
             Task<string> jsonContent = PostData("api/Books/PostSaveBook", stringData);
