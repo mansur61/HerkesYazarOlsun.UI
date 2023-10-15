@@ -2,6 +2,7 @@
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
+using HerkesYazarOlsun.Model.Utils;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -16,9 +17,14 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View(input);
         }
 
-        public IActionResult KitapOku()
+        public IActionResult KitapOku(long kitapId)
         {
-            return View();
+            var getBook = new BooksService().GetBooks(kitapId);
+            var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
+            var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
+            getBookPage = getBookPage ?? null;
+            vmBook.BooksPageList = ObjectMapper.MapList(getBookPage!, new List<VM_BOOKS_PAGES>());
+            return View(vmBook);
         }
 
 
@@ -27,12 +33,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public JsonResult KitapEkle(VM_BOOKS input)
         {
             int kitapId = 0;
-        
+
             //var getBook = new BooksService().GetBooks(input.ID);
             if (input.ID != 0)
             {
                 var getBook = new BooksService().GetBooks(input.ID);
-                var _booksPage = new BooksPagesService().GetPagesByBooks(getBook != null ?  getBook.ID : 0);
+                var _booksPage = new BooksPagesService().GetPagesByBooks(getBook != null ? getBook.ID : 0);
                 if (_booksPage != null && _booksPage.Count() != 0)
                 {
                     var enSonKitapKaydi = _booksPage.OrderByDescending(p => p.ID).SingleOrDefault();
@@ -96,14 +102,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View();
         }
 
-        public IActionResult KitapDetay()
+        public IActionResult KitapDetay(long kitapId)
         {
-            return View();
+            var getBookDetay = new BooksService().GetBooks(kitapId);
+            return View(getBookDetay);
         }
 
-        public IActionResult KitapDetaySayfasi()
-        {
-            return View();
-        }
+
     }
 }

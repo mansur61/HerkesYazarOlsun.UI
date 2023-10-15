@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "DMyrtSu0ufIyAK0tlJKuXzYDQWL1W9Z5aDyY28FV0gjvOIJ276GPO0+/hMStfUvdBnq4/2OzH81Z2TqDe95ipw==",
+  "dgSpecHash": "AIKSBuCwZwVC21JfxCcxQGUIwVMQ5+d3yS20ppvXab0oW2d/9/n0VfwkBQ2K7XzdxLOxJXsVsw+veIBF7lVChg==",
   "success": true,
   "projectFilePath": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\HerkesYazarOlsun.Portal.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\umpg0020097\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\bootstrap\\5.2.3\\bootstrap.5.2.3.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.11\\microsoft.aspnetcore.razor.language.6.0.11.nupkg.sha512",

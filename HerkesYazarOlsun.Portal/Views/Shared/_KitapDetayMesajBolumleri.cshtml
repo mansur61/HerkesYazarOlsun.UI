@@ -1,25 +1,24 @@
-﻿
-
+﻿@model HerkesYazarOlsun.Model.Entity.Books
 <section class="product_description_area">
     <div class="container">
 
 
         <ul class="nav nav-tabs" id="myTab" role="tablist" >
 
-            <li class="nav-item">
-                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+            <li class="nav-item ">
+                <a class="nav-link active" id="aciklama-tab" data-toggle="tab" href="#aciklama" role="tab" aria-controls="aciklama" aria-selected="false">Açıklama</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                   aria-selected="false">Specification</a>
+                <a class="nav-link" id="ozellikler-tab" data-toggle="tab" href="#ozellikler" role="tab" aria-controls="ozellikler"
+                   aria-selected="false">Kitap Özellikleri</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-                   aria-selected="false">Comments</a>
+                <a class="nav-link" id="yorumlar-tab" data-toggle="tab" href="#yorumlar" role="tab" aria-controls="yorumlar"
+                   aria-selected="false">Yorumlar</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
-                   aria-selected="false">Reviews</a>
+                <a class="nav-link " id="degerlendirme-tab" data-toggle="tab" href="#degerlendirme" role="tab" aria-controls="degerlendirme"
+                   aria-selected="false">Değerlendirmeler</a>
             </li>
 
 
@@ -27,34 +26,20 @@
 
 
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="tab-pane fade show active" id="aciklama" role="tabpanel" aria-labelledby="aciklama-tab">
                 <p>
-                    Beryl Cook is one of Britain’s most talented and amusing artists .Beryl’s pictures feature women of all shapes
-                    and sizes enjoying themselves .Born between the two world wars, Beryl Cook eventually left Kendrick School in
-                    Reading at the age of 15, where she went to secretarial school and then into an insurance office. After moving to
-                    London and then Hampton, she eventually married her next door neighbour from Reading, John Cook. He was an
-                    officer in the Merchant Navy and after he left the sea in 1956, they bought a pub for a year before John took a
-                    job in Southern Rhodesia with a motor company. Beryl bought their young son a box of watercolours, and when
-                    showing him how to use it, she decided that she herself quite enjoyed painting. John subsequently bought her a
-                    child’s painting set for her birthday and it was with this that she produced her first significant work, a
-                    half-length portrait of a dark-skinned lady with a vacant expression and large drooping breasts. It was aptly
-                    named ‘Hangover’ by Beryl’s husband and
+                    @Model.ARKAKAPAKYAZISI
                 </p>
-                <p>
-                    It is often frustrating to attempt to plan meals that are designed for one. Despite this fact, we are seeing
-                    more and more recipe books and Internet websites that are dedicated to the act of cooking for one. Divorce and
-                    the death of spouses or grown children leaving for college are all reasons that someone accustomed to cooking for
-                    more than one would suddenly need to learn how to adjust all the cooking practices utilized before into a
-                    streamlined plan of cooking that is more efficient for one person creating less
-                </p>
+              
             </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="tab-pane fade" id="ozellikler" role="tabpanel" aria-labelledby="ozellikler-tab">
                 <div class="table-responsive">
                     <table class="table">
                         <tbody>
+
                             <tr>
                                 <td>
-                                    <h5>Width</h5>
+                                    <h5>Genişlik</h5>
                                 </td>
                                 <td>
                                     <h5>128mm</h5>
@@ -62,7 +47,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <h5>Height</h5>
+                                    <h5>Yükseklik</h5>
                                 </td>
                                 <td>
                                     <h5>508mm</h5>
@@ -70,57 +55,26 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <h5>Depth</h5>
+                                    <h5>Sayfa Sayısı</h5>
                                 </td>
                                 <td>
-                                    <h5>85mm</h5>
+                                    <h5>10</h5>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <h5>Weight</h5>
+                                    <h5>Konusu</h5>
                                 </td>
                                 <td>
-                                    <h5>52gm</h5>
+                                    <h5>Hikaye</h5>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <h5>Quality checking</h5>
-                                </td>
-                                <td>
-                                    <h5>yes</h5>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h5>Freshness Duration</h5>
-                                </td>
-                                <td>
-                                    <h5>03days</h5>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h5>When packeting</h5>
-                                </td>
-                                <td>
-                                    <h5>Without touch of hand</h5>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h5>Each Box contains</h5>
-                                </td>
-                                <td>
-                                    <h5>60pcs</h5>
-                                </td>
-                            </tr>
+                           
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="tab-pane fade" id="yorumlar" role="tabpanel" aria-labelledby="yorumlar-tab">
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="comment_list">
@@ -179,7 +133,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="review_box">
-                            <h4>Post a comment</h4>
+                            <h4>Yorum Yaz</h4>
                             <form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -202,14 +156,14 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-right">
-                                    <button type="submit" value="submit" class="btn primary-btn">Submit Now</button>
+                                    <button type="submit" value="submit" class="btn primary-btn">Gönder</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+            <div class="tab-pane fade " id="degerlendirme" role="tabpanel" aria-labelledby="degerlendirme-tab">
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="row total_rate">
@@ -318,16 +272,16 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="review_box">
-                            <h4>Add a Review</h4>
-                            <p>Your Rating:</p>
+                            <h4>Kitabı Değerlendiriniz</h4>
+                            <p>Yıldız:</p>
                             <ul class="list">
                                 <li><a href="#"><i class="fa fa-star"></i></a></li>
                                 <li><a href="#"><i class="fa fa-star"></i></a></li>
                                 <li><a href="#"><i class="fa fa-star"></i></a></li>
                                 <li><a href="#"><i class="fa fa-star"></i></a></li>
                                 <li><a href="#"><i class="fa fa-star"></i></a></li>
-                            </ul>
-                            <p>Outstanding</p>
+                            </ul><br />
+                            <p>Değerlendime giriniz</p>
                             <form action="#/" class="form-contact form-review mt-3">
                                 <div class="form-group">
                                     <input class="form-control" name="name" type="text" placeholder="Enter your name" required>
@@ -342,7 +296,7 @@
                                     <textarea class="form-control different-control w-100" name="textarea" id="textarea" cols="30" rows="5" placeholder="Enter Message"></textarea>
                                 </div>
                                 <div class="form-group text-center text-md-right mt-3">
-                                    <button type="submit" class="button button--active button-review">Submit Now</button>
+                                    <button type="submit" class="button button--active button-review">Değerlendir</button>
                                 </div>
                             </form>
                         </div>

@@ -10,7 +10,7 @@
 @Html.Partial("_Navbar")
 <br />
 <br />
-
+@model HerkesYazarOlsun.Model.Entity.Books
 <br />
 <div class="row">
 
@@ -20,16 +20,18 @@
     <div class="col-md-2"></div>
     <div class="col-md-5">
         <h3><small>Yazılma Tarihi</small></h3>
-        <small>30.05.2023</small>
+        <small>@Model.CREATE_AT</small>
         <h3><small>Yazarı</small></h3>
         <p><small>Mansur Emin Kaya</small></p>
         <h3>Kitap Özeti</h3>
-        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+        <p>
+            @Model.ONSOZ
+        </p>
 
     </div>
 
     <div class="col-md-12 text-right">
-        <button type="submit" value="submit" class="btn btn-ligth"><a href="/Kitaplar/KitapOku">Kitabı Oku</a></button>
+        <button type="submit" value="submit" class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitapId=@Model.ID">Kitabı Oku</a></button>
         
     </div>
 
@@ -37,5 +39,5 @@
 
 </div>
 
-@Html.Partial("_KitapDetayMesajBolumleri")
+@Html.Partial("_KitapDetayMesajBolumleri",@Model)
 

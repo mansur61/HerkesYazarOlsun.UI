@@ -17,7 +17,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult GetKisiByTC(long id)
         {
-            KISILER kisi = new KisiService().GetKisiByTC(id);
+            Users kisi = new KisiService().GetKisiByTC(id);
             return View(kisi);
         }
     }

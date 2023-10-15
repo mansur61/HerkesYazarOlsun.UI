@@ -1,22 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "AnaSayfa";
+    ViewData["Title"] = "Ana Sayfa";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
 <br />
 
-@model List<string>;
-
+@model List<HerkesYazarOlsun.Model.Entity.Books>
 
 <div class="container">
 
     <div class="row">
         <div class="col-md-3">
             <br />
-           
+
             <ul class="list-group list-group-horizontal">
-                
+
                 <li class="list-group-item"><a href="">Tüm Kitaplar</a> </li>
                 <li class="list-group-item"><a href="">Tüm Yazarlar</a></li>
                 <li class="list-group-item"><a href="">Yayın Evini Kazanan Kitaplar</a></li>
@@ -29,12 +28,44 @@
     </div>
 </div>
 
-@foreach (var item in @Model)
-{
-    @Html.Partial("_KitapSliderGosterimleri",@item)
+<br />
 
-   
-}
+<div class="row">
+    <div class="col-md-9">
+        <h3>
+            Yayına En Yakın Olan Kitaplar
+        </h3>
+    </div>
+</div>
+
+@Html.Partial("_KitapSliderGosterimleri",@Model)
+<br />
+
+<div class="row">
+    <div class="col-md-9">
+        <h3>
+            En Çok Beğenilen Kitaplar
+        </h3>
+    </div>
+</div>
+
+@Html.Partial("_KitapSliderGosterimleri",@Model)
+<br />
+
+<div class="row">
+    <div class="col-md-9">
+        <h3>
+            En Çok Okunan  Kitaplar
+        </h3>
+    </div>
+</div>
+
+@Html.Partial("_KitapSliderGosterimleri",@Model)
+<br />
+
+
+
 
 @Html.Partial("_Sponsorlar")
 <br />
+

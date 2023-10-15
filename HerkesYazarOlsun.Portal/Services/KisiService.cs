@@ -1,4 +1,5 @@
-﻿using HerkesYazarOlsun.Model.Entity;
+﻿
+using HerkesYazarOlsun.Model.Entity;
 using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
@@ -6,12 +7,12 @@ namespace HerkesYazarOlsun.Portal.Services
     
     public class KisiService : BaseService
     {
-        public KISILER GetKisiByTC(long id)
+        public Users GetKisiByTC(long id)
         {
-            Task<string> jsonContent = GetData("api/Kisi/GetKisiByTC?" + "id=" + id);
+            Task<string> jsonContent = GetData("api/Users/GetKisiByTC?" + "id=" + id);
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<KISILER>(jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<Users>(jsonContent.Result);
             return result;
         }
         //Örnek post kullanımı

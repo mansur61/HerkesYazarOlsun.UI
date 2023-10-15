@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "HerkesYazarOlsun.Portal/1.0.0": {
         "dependencies": {
+          "AutoMapper": "12.0.1",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "7.0.6",
           "Microsoft.Web.Infrastructure": "2.0.0",
           "Newtonsoft.Json": "13.0.3",
@@ -16,6 +17,17 @@
         },
         "runtime": {
           "HerkesYazarOlsun.Portal.dll": {}
+        }
+      },
+      "AutoMapper/12.0.1": {
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.1/AutoMapper.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.1.0"
+          }
         }
       },
       "bootstrap/5.2.3": {},
@@ -1939,6 +1951,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AutoMapper/12.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hvV62vl6Hp/WfQ24yzo3Co9+OPl8wH8hApwVtgWpiAynVJkUcs7xvehnSftawL8Pe8FrPffBRM3hwzLQqWDNjA==",
+      "path": "automapper/12.0.1",
+      "hashPath": "automapper.12.0.1.nupkg.sha512"
     },
     "bootstrap/5.2.3": {
       "type": "package",

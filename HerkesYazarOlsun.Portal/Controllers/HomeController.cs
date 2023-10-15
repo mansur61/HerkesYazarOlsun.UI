@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HerkesYazarOlsun.Portal.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -7,11 +8,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
         // GET: HomeController
         public ActionResult Index()
         {
+
+            var getBookList = new BooksService().GetBooksList();
             List<string> kitaplar = new List<string>();
             kitaplar.Add("Yayına En Yakın Olan Kitaplar");
             kitaplar.Add("En Çok Okunan  Kitaplar");
             kitaplar.Add("En Çok Beğenilen Kitaplar");
-            return View(kitaplar);
+            return View(getBookList);
         }
      
         // GET: HomeController/Details/5

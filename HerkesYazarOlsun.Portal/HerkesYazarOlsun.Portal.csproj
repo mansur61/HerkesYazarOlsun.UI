@@ -51,6 +51,7 @@
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
+    <Content Remove="Helpers\YedekDosyalar\KitapOkuYdk.cshtml" />
     <Content Remove="wwwroot\lib\img\blog\.DS_Store" />
     <Content Remove="wwwroot\lib\img\gallery\.DS_Store" />
   </ItemGroup>
@@ -158,6 +159,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Helpers\YedekDosyalar\KitapOkuYdk.cshtml" />
     <None Include="wwwroot\lib\img\blog\.DS_Store" />
     <None Include="wwwroot\lib\img\gallery\.DS_Store" />
     <None Include="wwwroot\lib\bootstrap\dist\js\herkesyazarolsun-bootstrap.js" />
@@ -181,16 +183,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="bootstrap" Version="5.2.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.6" />
     <PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
+  </ItemGroup>  
   <ItemGroup>
-    <Reference Include="Cbddo.eYazisma">
+    <Reference Include="HerkesYazarOlsun.Model">
       <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net7.0\HerkesYazarOlsun.Model.dll</HintPath>
     </Reference>
-   <!-- C:\Users\umpg0020097\Desktop\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net7.0\HerkesYazarOlsun.Model.dll -->
   </ItemGroup>
   <ItemGroup>
     <Content Update="wwwroot\lib\img\logo.png">
