@@ -10,7 +10,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
     {
         // private readonly BooksService booksService;
 
-
+        //Kitap ekleme ana sayfası açılır
         public IActionResult Index(VM_BOOKS input)
         {
 
@@ -32,36 +32,34 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [Route("KitapEkle")]
         public JsonResult KitapEkle(VM_BOOKS input)
         {
-            int kitapId = 0;
-
+            int sayfaId = 0;
+            int sayfaCount = 0;
+            VM_KITAP_EKLE vmKitap = new VM_KITAP_EKLE();
             //var getBook = new BooksService().GetBooks(input.ID);
             if (input.ID != 0)
             {
-                var getBook = new BooksService().GetBooks(input.ID);
-                var _booksPage = new BooksPagesService().GetPagesByBooks(getBook != null ? getBook.ID : 0);
-                if (_booksPage != null && _booksPage.Count() != 0)
-                {
-                    var enSonKitapKaydi = _booksPage.OrderByDescending(p => p.ID).SingleOrDefault();
-                    if (enSonKitapKaydi != null)
-                    {
-                        kitapId = (int)enSonKitapKaydi.ID;
-                    }
-                }
-                else
-                {
-                    var bookPages = new BooksPagesService().PostSaveBooksPages(new BooksPages()
-                    {
-                        BooksId = getBook.ID,
-                        PageWrite = input.SAYFAYAZI,
-                        PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
+               
+                var _book = ObjectMapper.Map(input, new Books());
+                var updaterBook = new BooksService().UpdateBook(_book);
 
-                    });
-                    if (bookPages != null)
-                    {
-                        kitapId = (int)bookPages.ID;
-                    }
+                var bookPages = new BooksPagesService().PostSaveBooksPages(new BooksPages()
+                {
+                    BooksId = input.ID,
+                    PageWrite = input.SAYFAYAZI,
+                    PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
+
+                });
+                if (bookPages != null)
+                {
+                    sayfaCount = new BooksPagesService().GetPagesByBooks(input.ID)!.Count();
+                    sayfaId = (int)bookPages.ID;
+
                 }
 
+                vmKitap.BookID = input.ID;
+                vmKitap.BooksPageCount = sayfaCount + 1;
+                vmKitap.BooksPageID = sayfaId;
+                
 
             }
             else
@@ -88,13 +86,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     if (bookPages != null && bookPages.ID != 0)
                     {
                         input.ID = bookPages.ID;
-                        kitapId = (int)bookPages.ID;
+                        sayfaId = (int)bookPages.ID;                       
+                        sayfaCount = new BooksPagesService().GetPagesByBooks(book.ID)!.Where(p => p.BooksId == book.ID).Count();
                     }
 
+                    vmKitap.BookID = book!.ID;
+                    vmKitap.BooksPageID = sayfaId;
+                    vmKitap.BooksPageCount = sayfaCount + 1;
                 }
+               
 
             }
-            return Json(kitapId + 1);
+            return Json(vmKitap);
         }
 
         public IActionResult KitapArama()

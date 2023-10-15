@@ -4,8 +4,17 @@
 @{
     ViewData["Title"] = "Kitap Ekle";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
 
+    
+     
+}
+@*@{
+    int sayfaId = 0;
+    @if (@Model != null)
+    {
+        sayfaId = @Model.BooksPageList.Where(p => p.BooksId == @Model.ID).Count();
+    }
+}*@
 @section Styles{
 
     <link href="~/lib/bootstrap/dist/css/kitapekle.css" rel="stylesheet" />
@@ -112,6 +121,7 @@
                         <h1><strong>Kitabınızın Sayfalarını Oluşturunuz.</strong> </h1>
                         <p>Kitabta Yazılan İlgili Sayfa No : <span id="sayfaSayisi">1</span>  </p>
                         <input class="form-control" type="hidden" id="BOOKSID" value="@Model.ID">
+                        <input class="form-control" type="hidden" id="BOOKPAGESID" value="0">
                         <br />
                         <div class="conrainer">
                             <div class="mb-3">
@@ -305,7 +315,9 @@
 
     function Kaydet() {
         var kitapId = $("#BOOKSID").val();
-        console.log("kitapId:"+kitapId);
+        console.log("kitapId:" + kitapId);
+        var sayfaId = $("#BOOKPAGESID").val();
+        console.log("sayfaId:" + sayfaId);
         var onKapak = $("#formFileMultipleOnkapak").val();
         var arkaKapak = $("#formFileMultipleArkakapak").val();
         var kitapAdi = $("#kitapAdi").val();
@@ -332,12 +344,13 @@
             },
 
             function (data) {
-                console.log("data: " + data);
-                $("#BOOKSID").val(data);
-                console.log("BOOKSID: " + $("#BOOKSID").val());
-                $("#sayfaSayisi").html(data);
-                $("#sayfaYazi").text = "";
-                $("#sayfaYazi").val = "";
+             
+                $("#BOOKSID").val(data.bookID);
+                $("#BOOKPAGESID").val(data.booksPageID);
+                console.log("BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
+                $("#sayfaSayisi").html(data.booksPageCount);
+                //$("#sayfaYazi").text = "";
+                //$("#sayfaYazi").val = "";
 
 
             });
