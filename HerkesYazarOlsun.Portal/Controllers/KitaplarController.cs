@@ -26,6 +26,20 @@ namespace HerkesYazarOlsun.Portal.Controllers
             vmBook.BooksPageList = ObjectMapper.MapList(getBookPage!, new List<VM_BOOKS_PAGES>());
             return View(vmBook);
         }
+        [HttpPost]
+        [Route("KitabiFavorilereEkle")]
+        public JsonResult KitabiFavorilereEkle(long id)
+        {
+            FAVORILER fAVORILER = new FAVORILER()
+            {
+                BOOKS_ID = id,
+                USER_ID = 1
+            };
+            var getFavori = new BooksService().PostFavoriSaveBook(fAVORILER);
+
+            
+            return Json(getFavori);
+        }
 
 
         [HttpPost]
@@ -38,7 +52,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             //var getBook = new BooksService().GetBooks(input.ID);
             if (input.ID != 0)
             {
-               
+
                 var _book = ObjectMapper.Map(input, new Books());
                 var updaterBook = new BooksService().UpdateBook(_book);
 
@@ -59,7 +73,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 vmKitap.BookID = input.ID;
                 vmKitap.BooksPageCount = sayfaCount + 1;
                 vmKitap.BooksPageID = sayfaId;
-                
+
 
             }
             else
@@ -86,7 +100,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     if (bookPages != null && bookPages.ID != 0)
                     {
                         input.ID = bookPages.ID;
-                        sayfaId = (int)bookPages.ID;                       
+                        sayfaId = (int)bookPages.ID;
                         sayfaCount = new BooksPagesService().GetPagesByBooks(book.ID)!.Where(p => p.BooksId == book.ID).Count();
                     }
 
@@ -94,15 +108,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     vmKitap.BooksPageID = sayfaId;
                     vmKitap.BooksPageCount = sayfaCount + 1;
                 }
-               
+
 
             }
             return Json(vmKitap);
         }
 
-        public IActionResult KitapArama()
+        public IActionResult KitapArama(VM_ARAMA_INPUT arama)
         {
-            return View();
+            VM_BOOKS vM_BOOKS = new VM_BOOKS();
+
+            var getBookList = new BooksService().GetBooksList();
+            vM_BOOKS.BooksList = getBookList!;
+            return View(vM_BOOKS);
         }
 
         public IActionResult KitapDetay(long kitapId)

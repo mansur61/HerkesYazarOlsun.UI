@@ -1,4 +1,6 @@
-﻿@model HerkesYazarOlsun.Model.Entity.Books
+﻿@*@model HerkesYazarOlsun.Model.Entity.Books*@
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@using HerkesYazarOlsun.Portal.Controllers;
 
 <div class="col-lg-4" style="margin-bottom:15px;margin-top:25px;">
     <div class="col-item">
@@ -24,8 +26,8 @@
             </div>
         </div>
         <div class="separator clear-left">
-            <p class="btn-add">
-                <i class="fa fa-heart"></i><a href="" class="hidden-sm">Favorilere Ekle</a>
+            <p class="btn-add" style="cursor:pointer" onclick='FavorilereEkle(@Model.ID,"@Model.Tip")'>
+                <i class="fa fa-heart"></i><a class="hidden-sm">Favorilere Ekle</a>
             </p>
             <p class="btn-details">
                 <i class="fa fa-list"></i><a href="/Kitaplar/KitapDetay?kitapId=@Model.ID" class="hidden-sm">Kitap Detay</a>
@@ -36,3 +38,29 @@
         @*</div>*@
     </div>
 </div>
+@*
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+}
+
+
+@section Styles{
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+}*@
+
+<script>
+
+    function FavorilereEkle(kitapId, tip) {
+
+        $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", { "id": kitapId, }, function (data) {
+            if (data) {
+                $("#basarili-" + tip).css("display", "block");
+            } else {
+                $("#uyari-" + tip).css("display", "block");
+            }
+
+
+        });
+    }
+
+</script>

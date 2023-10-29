@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "AIKSBuCwZwVC21JfxCcxQGUIwVMQ5+d3yS20ppvXab0oW2d/9/n0VfwkBQ2K7XzdxLOxJXsVsw+veIBF7lVChg==",
+  "dgSpecHash": "316Bx43MJ/g32Nec4SYtzxjszCVBavxSzc0ey2AMILZ2dWVABrHlV5qmLi9mD9KPEprtd2Z0H7cF1UrzlHGdRQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\HerkesYazarOlsun.Portal.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umpg0020097\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\bootstrap\\5.2.3\\bootstrap.5.2.3.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\umpg0020097\\.nuget\\packages\\jquery\\1.6.3\\jquery.1.6.3.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.11\\microsoft.aspnetcore.razor.language.6.0.11.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\microsoft.build\\17.3.2\\microsoft.build.17.3.2.nupkg.sha512",
@@ -151,7 +152,8 @@
     "C:\\Users\\umpg0020097\\.nuget\\packages\\system.threading.timer\\4.3.0\\system.threading.timer.4.3.0.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
     "C:\\Users\\umpg0020097\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "C:\\Users\\umpg0020097\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512"
+    "C:\\Users\\umpg0020097\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\umpg0020097\\.nuget\\packages\\toastr\\2.1.1\\toastr.2.1.1.nupkg.sha512"
   ],
   "logs": [
     {

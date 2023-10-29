@@ -1,0 +1,60 @@
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@using HerkesYazarOlsun.Portal.Controllers;
+
+@{
+    int sliderdaGosterilecekKayit = 6;
+
+    int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+
+    int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
+
+}
+<div class="row">
+
+
+    @{
+       int start = 0;
+    }
+    @for (int i = 0; i < @sliderSayisi; i++)
+    {
+        <div class="durum">
+
+
+            @foreach (var item in @Model.BooksList.Take(range: new Range(start, sliderdaGosterilecekKayit)))
+            {
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="http://placehold.it/350x260">
+                            <ul class="product__item__pic__hover">
+                                <li><a href="#" onclick='FavorilereEkle(@item.ID)'><i class="fa fa-heart"></i></a></li>
+
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="/Kitaplar/KitapDetay?kitapId=@item.ID">@item.Name </a></h6>
+                            <div class="row">
+                                <div class="rating hidden-sm col-sm-7">
+                                    <i class="price-text-color fa fa-star"></i>
+                                    <i class="price-text-color fa fa-star"> </i>
+                                    <i class="price-text-color fa fa-star"></i>
+                                    <i class="price-text-color fa fa-star"> </i>
+                                    <i class="price-text-color fa fa-star"> </i>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+            @{
+                start = sliderdaGosterilecekKayit;
+                sliderdaGosterilecekKayit = 2 * sliderdaGosterilecekKayit;
+            }
+        </div>
+
+    }
+
+</div>

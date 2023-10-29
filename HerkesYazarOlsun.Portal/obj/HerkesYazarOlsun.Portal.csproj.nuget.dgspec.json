@@ -64,6 +64,10 @@
             "bootstrap": {
               "target": "Package",
               "version": "[5.2.3, )"
+            },
+            "toastr": {
+              "target": "Package",
+              "version": "[2.1.1, )"
             }
           },
           "imports": [

@@ -11,6 +11,24 @@
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
 }
 
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@using HerkesYazarOlsun.Portal.Controllers;
+
+@{
+    int sidebardaGosterilecekKayit = 3;
+
+    int sidebarKalan = (@Model.BooksList.Count() % sidebardaGosterilecekKayit);
+    int sidebarBolum = (@Model.BooksList.Count() / sidebardaGosterilecekKayit);
+    int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
+
+    int sliderdaGosterilecekKayit = 6;
+
+    int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+
+    int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
+}
+
 <style>
     .containerPagination {
         width: 200px;
@@ -133,71 +151,9 @@
                         </div>
 
                     </div>
-                    <div class="sidebar__item">
-                        <div class="latest-product__text">
-                            <h4>En Yeniler </h4>
-                            <div class="latest-product__slider owl-carousel">
-                                <div class="latest-prdouct__slider__item">
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="https://localhost:44360/lib/img/latest-product/lp-1.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="https://localhost:44360/lib/img/latest-product/lp-2.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="https://localhost:44360/lib/img/latest-product/lp-3.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="latest-prdouct__slider__item">
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="https://localhost:44360/lib/img/latest-product/lp-1.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="https://localhost:44360/lib/img/latest-product/lp-2.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="https://localhost:44360/lib/img/latest-product/lp-3.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  
+                    <!--slider sidebar-->
+                    @Html.Partial("_SideBarItem",@Model)
                 </div>
 
 
@@ -241,324 +197,58 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="alert alert-success" id="basarili" style="display:none;">
+                    <strong>Başarılı!</strong> Favorilere Eklendi
+                    <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
+                </div>
+                <br />
+                <div class="alert alert-info" id="uyari" style="display:none;">
+                    <strong>Bilgi!</strong> Favorilere Eklenemedi
+                    <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
+                </div>
+                <br />
+
                 <div class="row">
-                    <div class="durum">
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-1.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-2.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-3.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-4.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-5.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-6.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="durum">
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-7.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-8.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-9.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-10.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-11.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://localhost:44360/lib/img/product/product-12.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Crab Pool Security</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @Html.Partial("_Pagination",@Model)
 
                 </div>
-                @*  <div class="product__pagination">
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#"><i class="fa fa-long-arrow-right"></i></a>
-                </div>*@
-
-                <div class="containerPagination">
-                    @*<div class="row">*@
-                    <button class="btn1" onclick="backBtn()">Geri</button>
-                    <ul class="pagination">
-                        <li class="page-item active" onclick="activeLink()" value="1">
-                            1
-
-                        </li>
-                        <li class="page-item" onclick="activeLink()" value="2">
-                            2
-                            @*<a class="page-link" href="#">1</a>*@
-                        </li>
-                        <li class="page-item" onclick="activeLink()" value="3">
-                            3
-                            @*<a class="page-link" href="#">2</a>*@
-                        </li>
-                        <li class="page-item" onclick="activeLink()" value="4">
-                            4
-                            @*<a class="page-link" href="#">3</a>*@
-                        </li>
-                        <li class="page-item" onclick="activeLink()" value="5">
-                            5
-
-                        </li>
-                    </ul>
-                    <button class="btn2" onclick="nextBtn()">İleri</button>
-                    @*</div>*@
-
-                </div>
-
             </div>
-
-
         </div>
+
+        @Html.Partial("_PaginationButonlar",@sliderSayisi)
+
+       
     </div>
 </section>
 
 
 
 <script>
-    let pageItem = document.getElementsByClassName("page-item");
-    let durum = document.getElementsByClassName("durum");
 
-    console.log("pageItem: " + pageItem.length);
+    function FavorilereEkle(kitapId) {
 
-    for (l of durum) {
-        l.style.display = "none";
-    }
-
-
-    let currentValue = 1;
-    var currentIndex = 0;
-    durum[currentIndex].style.display = "block";
-
-
-    function activeLink() {
-        for (l of pageItem) {
-            l.classList.remove("active");
-        }
-        event.target.classList.add("active");
-        currentValue = event.target.value;
-
-        sayfaGoster(currentValue);
-
-        console.log("currentValue: " + currentValue);
-    }
-
-    function backBtn() {
-        if (currentValue > 1) {
-            for (l of pageItem) {
-                l.classList.remove("active");
-            }
-            currentValue--;
-            pageItem[currentValue - 1].classList.add("active");
-            console.log("currentValue backBtn: " + currentValue);
-
-            sayfaGoster(currentValue);
-        }
-
-    }
-
-    function nextBtn() {
-        currentIndex++;
-
-        if (currentValue < 6) {
-            for (l of pageItem) {
-                l.classList.remove("active");
-            }
-            console.log("currentValue nextBtn: " + currentValue);
-            pageItem[currentValue - 1].classList.add("active");
-            currentValue++;
-            sayfaGoster(currentValue);
-
-        }
-    }
-
-    function sayfaGoster(sayfaIndex) {
-
-
-        if (sayfaIndex <= durum.length) {
-            let previous_step = currentValue - 1;
-            console.log("previous_step: " + previous_step);
-            console.log("currentValue: if kosul " + sayfaIndex);
-
-            if (sayfaIndex == durum.length) {
-
-                durum[previous_step - 1].style.display = "none";
-                durum[sayfaIndex - 1].style.display = "block";
+        $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", { "id": kitapId, }, function (data) {
+            if (data) {
+                $("#basarili").css("display", "block");
             } else {
-                if (sayfaIndex == 1) {
-                    durum[previous_step].style.display = "block";
-                    durum[sayfaIndex].style.display = "none";
-                } else {
-                    durum[previous_step].style.display = "none";
-                    durum[sayfaIndex].style.display = "block";
-                }
-
+                $("#uyari").css("display", "block");
             }
 
-        }
+
+        });
     }
+
+    function Kapat() {
+        $("#basarili").css("display", "none");
+        $("#uyari").css("display", "none");
+    }
+
+
+
 </script>
+
 <script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>

@@ -6,8 +6,8 @@
 
 <br />
 
-@model List<HerkesYazarOlsun.Model.Entity.Books>
-
+@*@model List<HerkesYazarOlsun.Model.Entity.Books>*@
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
 <div class="container">
 
     <div class="row">
@@ -30,7 +30,9 @@
 </div>
 
 <br />
-
+@{
+    string tipsec = "";
+}
 <div class="row">
     <div class="col-md-9">
         <h3>
@@ -39,8 +41,13 @@
     </div>
 </div>
 
+@{
+    tipsec = "yayin";
+    Model.Tip = @tipsec;
+}
 @Html.Partial("_KitapSliderGosterimleri",@Model)
-<br />
+
+<div style="height:50px;"></div>
 
 <div class="row">
     <div class="col-md-9">
@@ -50,8 +57,14 @@
     </div>
 </div>
 
+@{
+    tipsec = "begenilen";
+    Model.Tip = @tipsec;
+}
 @Html.Partial("_KitapSliderGosterimleri",@Model)
-<br />
+
+<div style="height:50px;"></div>
+
 
 <div class="row">
     <div class="col-md-9">
@@ -61,10 +74,14 @@
     </div>
 </div>
 
+@{
+    tipsec = "okunan";
+    Model.Tip = @tipsec;
+}
 @Html.Partial("_KitapSliderGosterimleri",@Model)
-<br />
 
 
+<div style="height:100px;"></div>
 
 
 @Html.Partial("_Sponsorlar")

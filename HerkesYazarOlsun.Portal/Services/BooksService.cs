@@ -23,7 +23,15 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<List<Books>>(jsonContent.Result);
             return result;
         }
+        public FAVORILER PostFavoriSaveBook(FAVORILER fav)
+        {
+            string stringData = JsonConvert.SerializeObject(fav);
+            Task<string> jsonContent = PostData("api/Books/PostFavoriSaveBook", stringData);
+            Task.WaitAll(jsonContent);
 
+            var result = JsonConvert.DeserializeObject<FAVORILER>(jsonContent.Result);
+            return result;
+        }
         public Books? PostSaveBook(Books book)
         {
             string stringData = JsonConvert.SerializeObject(book);
