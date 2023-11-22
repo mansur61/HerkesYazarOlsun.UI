@@ -3,6 +3,7 @@ using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
 using HerkesYazarOlsun.Model.Utils;
+using System.Linq;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -113,7 +114,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
             return Json(vmKitap);
         }
-
+        /// <summary>
+        /// Kaldırılabilir.
+        /// </summary>
+        /// <param name="arama"></param>
+        /// <returns></returns>
         public IActionResult KitapArama(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
@@ -129,6 +134,25 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View(getBookDetay);
         }
 
+        public IActionResult TumKitaplar(VM_ARAMA_INPUT arama)
+        {
+            VM_BOOKS vM_BOOKS = new VM_BOOKS();
+            vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+            var getBookList = new BooksService().GetBooksList();//       TumKitaplar(arama);
+            vM_BOOKS.BooksList = getBookList!; vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+            return View(vM_BOOKS);
+        }
+        public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
+        {
+            VM_BOOKS vM_BOOKS = new VM_BOOKS();
+            List<Books>? bookList;
+            vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+           
+            bookList = new BooksService().GetBooksList()?.ToList();
+            vM_BOOKS.BooksList = bookList!;
+            
+            return View(vM_BOOKS);
+        }
 
     }
 }

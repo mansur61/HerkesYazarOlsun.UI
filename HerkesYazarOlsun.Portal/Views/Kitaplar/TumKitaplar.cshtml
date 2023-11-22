@@ -1,0 +1,226 @@
+﻿@{
+    ViewData["Title"] = "Tüm Kitaplar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+}
+@section Styles{
+    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
+}
+
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@using HerkesYazarOlsun.Portal.Controllers;
+
+
+
+<style>
+    .containerPagination {
+        width: 200px;
+        height: 100%;
+        background: lineer-gradient(45deg,#410358,#4700bc);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        color: #383838;
+        padding: 10px 10px;
+        border-radius: 6px;
+    }
+
+    .containerPagination > ul {
+        margin: 20px 30px;
+    }
+
+        .containerPagination > ul li {
+            display: inline-block;
+            text-align: center;
+            margin: 10px 10px;
+            /* background: #acc;*/
+            width: 45px;
+            height: 45px;
+            border-radius: 20%;
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 45px;
+            cursor: pointer;
+            background-position: 0 -45px;
+            transition: background-position 0.5s;
+        }
+
+            .containerPagination > ul li.active {
+                color: #410358;
+                background-color: #3e8e41;
+                /* background-image: lineer-gradient(45deg,#410358,#4700bc);*/
+                background-repeat: no-repeat;
+                background-position: 0 0px;
+            }
+
+    .btn1, .btn2 {
+        display: inline-flex;
+        align-items: center;
+        font-size: 22px;
+        font-weight: 500;
+        color: #383838;
+        background: transparent;
+        outline: none;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
+<h3 style="margin: 50px auto;">Tüm Kitaplar</h3>
+<h6><span>@Model.BooksList.Count()</span> Kayıt Var </h6>
+<hr />
+
+@*filteleme kısımları*@
+<div class="container" style="border:1px solid blue;margin: 0px auto;width:auto">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="filter__item">
+                <div class="row">
+                    <div class="col-lg-4 col-md-5">
+                        <div style="height:15px"></div>
+                        <div class="filter__sort">
+                            <input type="text" class="form-control" name="yazar_ara" id="yazar_ara" placeholder="Kitap Adı Ara" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-3">
+                        Listelenecek Kayıt Sayısı Seç
+                        <select class="wide" name="kayit_sayisi" id="kayit_sayisi">
+                            <option value="0" selected> Seçiniz...</option>
+                            <option value="10"> İlk 10 Kayıt</option>
+                            <option value="20">İlk 20 Kayıt</option>
+                            <option value="30">İlk 30 Kayıt</option>
+                            <option value="40">İlk 40 Kayıt</option>
+                            <option value="50">İlk 50 Kayıt</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4">
+                        <button type="button" class="btn btn-danger">Temizle</button>
+                        <button type="button" onclick="Ara()" class="btn btn-primary">Ara</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-success" id="basarili" style="display:none;">
+                <strong>Başarılı!</strong> Favorilere Eklendi
+                <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
+            </div>
+            <br />
+            <div class="alert alert-info" id="uyari" style="display:none;">
+                <strong>Bilgi!</strong> Favorilere Eklenemedi
+                <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
+            </div>
+            <br />
+        </div>
+    </div>
+</div>
+
+<div id="tumkitaplar">
+    @{
+
+        int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 10 : Model.sliderdaGosterilecekKayit;
+
+        int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
+        int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+
+        int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
+
+        Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
+        Model.kalan = @kalan;
+        Model.bolum = @bolum;
+        Model.sliderSayisi = @sliderSayisi;
+        Model.sliderSayiDivTagName = "tumkitaplar";
+    }
+
+    @Html.Partial("Kitaplar",@Model)
+    @Html.Partial("_PaginationButonlar",@Model)
+   
+</div>
+
+<div id="arabutonfiltre">
+
+</div>
+
+
+
+
+
+
+<script>
+
+    $("#arabutonfiltre").css("display", "none");
+    // $("#tumkitaplar").css("display", "none");
+    function Ara() {
+
+        var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
+
+        if(listelenecek_kayit_sayisi == 0){
+           // alert("ddd");
+            return ;
+        }
+
+
+        if (listelenecek_kayit_sayisi == null) {
+            listelenecek_kayit_sayisi = 10;
+        }
+
+        var yazar_ara = $("#yazar_ara").val();
+
+       // alert(listelenecek_kayit_sayisi + " " + yazar_ara);
+        $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")", {
+            "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
+            "KITAP_ADI": yazar_ara
+        }, function (data) {
+            if (data) {
+                //alert("başarılı");
+                $("#arabutonfiltre").html(data);
+                $("#arabutonfiltre").css("display", "block");
+                //$("#tumkitaplar").html("");
+                $("#tumkitaplar").css("display", "none");
+
+                //const nodeList = document.querySelectorAll("#gozukecekMiFooter");
+                //for (let i = 0; i < nodeList.length; i++) {
+                //    nodeList[i].style.display = "none";
+                //}
+
+
+            } else {
+                alert("olumsuz");
+                $("#tumkitaplar").css("display", "block");
+                $("#arabutonfiltre").css("display", "block");
+            }
+
+        });
+    }
+
+
+    function Kapat() {
+        $("#basarili").css("display", "none");
+        $("#uyari").css("display", "none");
+    }
+</script>
+
+<script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
+<script src="~/lib/bootstrap/dist/js/mixitup.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/kitap-arama.js"></script>
+
+
+
+

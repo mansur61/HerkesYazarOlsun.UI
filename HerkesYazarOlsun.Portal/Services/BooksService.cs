@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.ViewModel;
 using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
@@ -32,6 +33,17 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<FAVORILER>(jsonContent.Result);
             return result;
         }
+
+        public List<Books>? TumKitaplar(VM_ARAMA_INPUT arama)
+        {
+            string stringData = JsonConvert.SerializeObject(arama);
+            Task<string> jsonContent = PostData("api/Books/TumKitaplar", stringData);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<List<Books>?>(jsonContent.Result);
+            return result;
+        }
+
         public Books? PostSaveBook(Books book)
         {
             string stringData = JsonConvert.SerializeObject(book);

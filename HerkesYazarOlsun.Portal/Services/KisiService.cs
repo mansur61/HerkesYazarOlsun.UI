@@ -1,5 +1,6 @@
 ﻿
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.ViewModel;
 using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
@@ -15,7 +16,20 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<Users>(jsonContent.Result);
             return result;
         }
-        //Örnek post kullanımı
+
+        public List<Users> GetKisiler(VM_ARAMA_INPUT arama)
+        {
+            string stringData = JsonConvert.SerializeObject(arama);
+            Task<string> jsonContent = PostData("api/Users/GetKisiler", stringData);
+
+           //Task<string> jsonContent = GetData("api/Users/GetKisiler");
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<List<Users>>(jsonContent.Result);
+            return result;
+        }
+
+       
         //public string PostTelefonDogru(VM_TELEFON telefon)
         //{
         //    string stringData = JsonConvert.SerializeObject(telefon);

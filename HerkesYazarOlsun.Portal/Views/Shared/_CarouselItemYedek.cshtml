@@ -1,0 +1,58 @@
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@using HerkesYazarOlsun.Portal.Controllers;
+
+
+<div class="col-lg-4" style="margin-bottom:15px;margin-top:25px;">
+    <div class="col-item">
+        <div class="photo">
+            <img src="http://placehold.it/350x260" style="width:auto;height:350px" class="img-responsive" alt="a" />
+        </div>
+
+        <div class="row">
+            <div class="price col-md-6">
+                <center>
+                    <h5>
+                        @Model.Name
+                    </h5>
+                </center>
+            </div>
+            <div class="rating hidden-sm col-sm-6">
+                <i class="price-text-color fa fa-star"></i>
+                <i class="price-text-color fa fa-star"> </i>
+                <i class="price-text-color fa fa-star"></i>
+                <i class="price-text-color fa fa-star"> </i>
+                <i class="price-text-color fa fa-star"> </i>
+
+            </div>
+        </div>
+        <div class="separator clear-left">
+            <p class="btn-add" style="cursor:pointer" onclick='FavorilereEkle(@Model.ID,"@Model.Tip")'>
+                <i class="fa fa-heart"></i><a class="hidden-sm">Favorilere Ekle</a>
+            </p>
+            <p class="btn-details">
+                <i class="fa fa-list"></i><a href="/Kitaplar/KitapDetay?kitapId=@Model.ID" class="hidden-sm">Kitap Detay</a>
+            </p>
+        </div>
+        <div class="clearfix">
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+    function FavorilereEkle(kitapId, tip) {
+
+        $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", { "id": kitapId, }, function (data) {
+            if (data) {
+                $("#basarili-" + tip).css("display", "block");
+            } else {
+                $("#uyari-" + tip).css("display", "block");
+            }
+
+
+        });
+    }
+
+</script>

@@ -1,21 +1,22 @@
 ﻿
-@model int 
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+
 <div class="containerPagination" style="margin:10px auto;">
 
     <button class="btn1" onclick="backBtn()">Geri</button>
 
     <ul class="pagination">
-        @for (int i = 0; i < @Model; i++)
+        @for (int i = 0; i < @Model.sliderSayisi; i++)
         {
             @if (i == 0)
             {
-                <li class="page-item active" onclick="activeLink()" value="@(i)">
+                <li class="page-item-@Model.sliderSayiDivTagName active" onclick="activeLink()" value="@(i)">
                     @(i + 1)
                 </li>
             }
             else
             {
-                <li class="page-item " onclick="activeLink()" value="@(i)">
+                <li class="page-item-@Model.sliderSayiDivTagName " onclick="activeLink()" value="@(i)">
                     @(i + 1)
                 </li>
             }
@@ -30,8 +31,9 @@
 
 
 <script>
-    let pageItem = document.getElementsByClassName("page-item");
-    let durum = document.getElementsByClassName("durum");
+    
+    var pageItem = document.getElementsByClassName("page-item-@Model.sliderSayiDivTagName");
+    var durum = document.getElementsByClassName("durum_@Model.sliderSayiDivTagName");
 
     console.log("pageItem: " + pageItem.length + " durum :" + durum.length);
 
@@ -40,7 +42,7 @@
     }
 
     var isActive = false;
-    let currentValue = 1;
+    var currentValue = 1;
     var currentIndex = 0;
     durum[currentIndex].style.display = "block";
 

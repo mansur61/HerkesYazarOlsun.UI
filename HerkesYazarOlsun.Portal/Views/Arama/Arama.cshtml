@@ -15,6 +15,7 @@
 @using HerkesYazarOlsun.Portal.Controllers;
 
 @{
+   
     int sidebardaGosterilecekKayit = 3;
 
     int sidebarKalan = (@Model.BooksList.Count() % sidebardaGosterilecekKayit);
@@ -27,6 +28,12 @@
     int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
+   
+    Model.kalan = @kalan;
+    Model.bolum = @bolum;
+    Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
+    Model.sliderSayisi = @sliderSayisi;
+    Model.sliderSayiDivTagName = "arama";
 }
 
 <style>
@@ -151,7 +158,7 @@
                         </div>
 
                     </div>
-                  
+
                     <!--slider sidebar-->
                     @Html.Partial("_SideBarItem",@Model)
                 </div>
@@ -210,16 +217,16 @@
                 <br />
 
                 <div class="row">
-
+                    <p>@Model.BooksList.Count()</p>
                     @Html.Partial("_Pagination",@Model)
 
                 </div>
             </div>
         </div>
 
-        @Html.Partial("_PaginationButonlar",@sliderSayisi)
+        @Html.Partial("_PaginationButonlar",@Model)
 
-       
+
     </div>
 </section>
 
@@ -227,7 +234,7 @@
 
 <script>
 
-    function Yazarlar(yazarId){
+    function Yazarlar(yazarId) {
 
     }
     function FavorilereEkle(kitapId) {

@@ -1,60 +1,76 @@
 ﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
 @using HerkesYazarOlsun.Portal.Controllers;
 
+
 @{
-    int sliderdaGosterilecekKayit = 6;
-
-    int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
-
-    int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-
+    int gosterilecekKayit = Model.sliderdaGosterilecekKayit;
 }
-<div class="row">
+@for (int i = 0; i < @Model.sliderSayisi; i++)
+{
+    <div class="durum_@Model.sliderSayiDivTagName">
 
+       
+        @foreach (var item in @Model.BooksList.Take(range: new Range(Model.Start, @gosterilecekKayit)))
+        {
 
-    @{
-       int start = 0;
-    }
-    @for (int i = 0; i < @sliderSayisi; i++)
-    {
-        <div class="durum">
+            <div class="col-lg-4 col-md-6 col-sm-6" style="border: 1px dotted blue;height:auto;width:200px;margin:5px 5px;padding:5px">
+                <div class="product__item">
+                    <div class="product__item__pic set-bg" data-setbg="http://placehold.it/350x260">
+                        <ul class="product__item__pic__hover">
+                            <li><a href="#" onclick='FavorilereEkle(@item.ID)'><i class="fa fa-heart"></i></a></li>
+                            <li><a href="#" onclick='Yazarlar(@Model.YAZAR_ID)'><i class="fa fa-user"></i></a></li>
 
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a href="/Kitaplar/KitapDetay?kitapId=@item.ID">@item.Name </a></h6>
+                        <div class="row">
+                            <div class="rating hidden-sm col-sm-7">
+                                <i class="price-text-color fa fa-star"></i>
+                                <i class="price-text-color fa fa-star"> </i>
+                                <i class="price-text-color fa fa-star"></i>
+                                <i class="price-text-color fa fa-star"> </i>
+                                <i class="price-text-color fa fa-star"> </i>
 
-            @foreach (var item in @Model.BooksList.Take(range: new Range(start, sliderdaGosterilecekKayit)))
-            {
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="http://placehold.it/350x260">
-                            <ul class="product__item__pic__hover">
-                                <li><a href="#" onclick='FavorilereEkle(@item.ID)'><i class="fa fa-heart"></i></a></li>
-
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6><a href="/Kitaplar/KitapDetay?kitapId=@item.ID">@item.Name </a></h6>
-                            <div class="row">
-                                <div class="rating hidden-sm col-sm-7">
-                                    <i class="price-text-color fa fa-star"></i>
-                                    <i class="price-text-color fa fa-star"> </i>
-                                    <i class="price-text-color fa fa-star"></i>
-                                    <i class="price-text-color fa fa-star"> </i>
-                                    <i class="price-text-color fa fa-star"> </i>
-
-                                </div>
                             </div>
-
                         </div>
 
                     </div>
+
                 </div>
-            }
-            @{
-                start = sliderdaGosterilecekKayit;
-                sliderdaGosterilecekKayit = 2 * sliderdaGosterilecekKayit;
-            }
-        </div>
+            </div>
+        }
+        @{
+            Model.Start = Model.sliderdaGosterilecekKayit;
+            gosterilecekKayit = 2 * Model.sliderdaGosterilecekKayit;
+            Model.sliderdaGosterilecekKayit = gosterilecekKayit;
+        }
+    </div>
+
+}
+
+
+<script>
+
+    function Yazarlar(yazarId) {
 
     }
+    function FavorilereEkle(kitapId) {
 
-</div>
+        $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", { "id": kitapId, }, function (data) {
+            if (data) {
+                $("#basarili").css("display", "block");
+            } else {
+                $("#uyari").css("display", "block");
+            }
+
+
+        });
+    }
+
+    function Kapat() {
+        $("#basarili").css("display", "none");
+        $("#uyari").css("display", "none");
+    }
+
+</script>
