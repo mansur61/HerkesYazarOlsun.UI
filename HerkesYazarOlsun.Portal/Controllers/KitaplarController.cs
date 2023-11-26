@@ -114,19 +114,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
             return Json(vmKitap);
         }
-        /// <summary>
-        /// Kaldırılabilir.
-        /// </summary>
-        /// <param name="arama"></param>
-        /// <returns></returns>
-        public IActionResult KitapArama(VM_ARAMA_INPUT arama)
-        {
-            VM_BOOKS vM_BOOKS = new VM_BOOKS();
-
-            var getBookList = new BooksService().GetBooksList();
-            vM_BOOKS.BooksList = getBookList!;
-            return View(vM_BOOKS);
-        }
+    
 
         public IActionResult KitapDetay(long kitapId)
         {
@@ -138,7 +126,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
             vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
-            var getBookList = new BooksService().GetBooksList();//       TumKitaplar(arama);
+            var getBookList = new BooksService().TumKitaplar(arama);
             vM_BOOKS.BooksList = getBookList!; vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
             return View(vM_BOOKS);
         }
@@ -148,7 +136,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             List<Books>? bookList;
             vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
            
-            bookList = new BooksService().GetBooksList()?.ToList();
+            bookList = new BooksService().TumKitaplar(arama);
             vM_BOOKS.BooksList = bookList!;
             
             return View(vM_BOOKS);

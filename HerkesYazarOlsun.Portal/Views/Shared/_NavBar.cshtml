@@ -1,8 +1,10 @@
-﻿<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation" id="gozukecekMiNavbar">
+﻿@using HerkesYazarOlsun.Portal.Controllers;
+
+<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation" id="gozukecekMiNavbar">
     <div class="container">
 
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="navbar-header">
                     @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -14,15 +16,17 @@
                 </div>
             </div>
             <div style="margin-top:20px"></div>
-            <div class="col-md-3">
-                <form>
-                    <input class="form-control form-eduprixsearch-control rounded-pill" id="formGroupExampleInput" type="text" 
-                    placeholder="Kitap veya yazar aratınız.." />
-                </form>
+           <div class="col-md-1">
+                <span style="color:blue;font-size:30px;display:none;" id="arabutonu"><strong>ARA</strong></span>
+
+               @*  <form>
+                    <input class="form-control form-eduprixsearch-control rounded-pill" id="inputVeri" type="text" 
+                    placeholder="Harf veya Kelime giriniz..." />
+                </form>*@
             </div>
             <div class="col-sm-1">
-                <a href="/Arama/Arama">
-                    <img class="input-box-icon" src="~/lib/img/arama2.png" alt="" width="40" />
+                <a href="/Arama/Arama">                   
+                    <img class="input-box-icon" src="~/lib/img/arama2.png" alt="" width="40" onmouseover="bigImg(this)" onmouseout="normalImg(this)" />            
                 </a>
             </div>
 
@@ -42,24 +46,15 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="">Kişisel Bilgiler</a></li>
-                                <li><a href="">Favori Kitaplarım</a></li>
-                                <li><a href="">Favori Yazarlarım</a></li>
-                                <li><a href="">Yazdığım/Tamamlanan Kitaplar</a></li>
-                                <li><a href="">Henüz Tamamlanmayan Kitaplarım</a></li>
-                                <li><a href="">Yayınlanan Kitaplarım</a></li>
+                                <li><a href="/Kitaplar/TumKitaplar?FavoriKitaplar=true">Favori Kitaplarım</a></li>
+                                <li><a href="/Kisi/TumYazarlar?FavoriYazarlar=true">Favori Yazarlarım</a></li>
+                                <li><a href="/Kitaplar/TumKitaplar?BitenKitaplar=true">Yazdığım/Tamamlanan Kitaplar</a></li>
+                                <li><a href="/Kitaplar/TumKitaplar?DevamEdenKitaplar=true">Henüz Tamamlanmayan Kitaplarım</a></li>
+                                <li><a href="/Kitaplar/TumKitaplar?YayinlananKitaplar=true">Yayınlanan Kitaplarım</a></li>
                                 <li><a href="">Ayarlar</a></li>
                             </ul>
                         </li>
-                        @* <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">Other Pages <i class="fa fa-angle-down"></i></a>
-                        <ul class="dropdown-menu">
-                        <li><a href="full-width.html">Full Width Page</a></li>
-                        <li><a href="sidebar.html">Sidebar Page</a></li>
-                        <li><a href="faq.html">FAQ</a></li>
-                        <li><a href="404.html">404</a></li>
-                        </ul>
-                        </li>*@
-
+                      
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div>
@@ -68,3 +63,37 @@
     </div><!-- /.container -->
 </nav>
 
+<script>
+    function bigImg(x) {
+        $("#arabutonu").css("display","block");
+        x.style.height = "64px";
+        x.style.width = "64px";
+    }
+
+    function normalImg(x) {
+        $("#arabutonu").css("display", "none");
+        x.style.height = "32px";
+        x.style.width = "32px";
+    }
+    function AramaYap(){
+
+        var inputVeri = $("#kitap_ara").val();
+        $.get("@Url.Action(nameof(AramaController.Arama), "Arama")", {
+            "KITAP_ADI": inputVeri,
+            "YAZAR_ADI": inputVeri
+            }, function (data) {
+               
+                if (data) {
+                $("#tumaramaalar").css("display", "block");
+                $("#arabutonfiltre").css("display", "block");
+
+
+                } else {
+                $("#tumaramaalar").css("display", "block");
+                $("#arabutonfiltre").css("display", "block");
+                }
+
+            });
+    }
+
+</script>

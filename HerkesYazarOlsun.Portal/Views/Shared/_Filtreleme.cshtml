@@ -1,0 +1,34 @@
+﻿
+
+<div class="filter__item">
+    <div class="row">
+        <div class="col-lg-4 col-md-5">
+            <div style="height:15px"></div>
+            <div class="filter__sort">
+                <span>Sıralama</span>
+                <select class="small" id="siralama" name="siralama">
+                    <option value="0">Azalan</option>
+                    <option value="1">Artan</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <div style="height:15px"></div>
+            <div class="filter__found">
+                <h6><span>@Model.BooksList.Count() </span> Ürün Bulunmaktadır.</h6>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-3">
+            @* Listelenecek Kayıt Sayısı Seç*@
+            <select class="wide" name="kayit_sayisi" id="kayit_sayisi">
+                <option value="0" selected> Seçiniz...</option>
+                <option value="10"> İlk 10 Kayıt</option>
+                <option value="20">İlk 20 Kayıt</option>
+                <option value="30">İlk 30 Kayıt</option>
+                <option value="40">İlk 40 Kayıt</option>
+                <option value="50">İlk 50 Kayıt</option>
+
+            </select>
+        </div>
+    </div>
+</div>

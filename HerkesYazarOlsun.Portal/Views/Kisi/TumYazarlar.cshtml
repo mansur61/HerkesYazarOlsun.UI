@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Tüm Kitaplar";
+﻿
+@{
+    ViewData["Title"] = "Tüm Yazarlar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,59 +12,53 @@
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
 }
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+
+@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
 @using HerkesYazarOlsun.Portal.Controllers;
 
-
-<h3 style="margin: 50px auto;">Tüm Kitaplar</h3>
-<h6><span>@Model.BooksList.Count()</span> Kayıt Var </h6>
+<h3 style="margin: 50px auto;">Tüm Yazarlar</h3>
+<h6><span>@Model.UsersList.Count()</span> Kayıt Var </h6>
 <hr />
 
-@Html.Partial("_KitapFiltreleme")
+@Html.Partial("_YazarFiltreleme")
 
-<div id="tumkitaplar">
+<div id="tumyazarlar">
     @{
 
-        int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
+        int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 10 : Model.sliderdaGosterilecekKayit;
 
-        int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
-        int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+        int kalan = (@Model.UsersList.Count() % sliderdaGosterilecekKayit);
+        int bolum = (@Model.UsersList.Count() / sliderdaGosterilecekKayit);
 
         int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
         Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
         Model.kalan = @kalan;
         Model.bolum = @bolum;
-        //Model.sliderSayisi = @sliderSayisi;
+       // Model.sliderSayisi = @sliderSayisi;
         Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
-        Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumkitaplar";
+        Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumyazarlar";
         Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
     }
 
-    @Html.Partial("Kitaplar",@Model)
+    @Html.Partial("Yazarlar",@Model)
     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)
-   
-</div>
-
-<div id="arabutonfiltre">
 
 </div>
 
 
-
-
-
+<div id="arabutonfiltre"></div>
+                
 
 <script>
 
     $("#arabutonfiltre").css("display", "none");
-    // $("#tumkitaplar").css("display", "none");
+   
     function Ara() {
 
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
 
         if(listelenecek_kayit_sayisi == 0){
-           // alert("ddd");
             return ;
         }
 
@@ -74,17 +69,17 @@
 
         var kitap_ara = $("#kitap_ara").val();
 
-       // alert(listelenecek_kayit_sayisi + " " + kitap_ara);
-        $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")", {
+      
+        $.post("@Url.Action(nameof(KisiController.AraButonFiltrelemeYazarlar), "Kisi")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
-            "KITAP_ADI": kitap_ara
+            "YAZAR_ADI": kitap_ara
         }, function (data) {
             if (data) {
-                //alert("başarılı");
+                
                 $("#arabutonfiltre").html(data);
                 $("#arabutonfiltre").css("display", "block");
-                //$("#tumkitaplar").html("");
-                $("#tumkitaplar").css("display", "none");
+               
+                $("#tumyazarlar").css("display", "none");
 
                 //const nodeList = document.querySelectorAll("#gozukecekMiFooter");
                 //for (let i = 0; i < nodeList.length; i++) {
@@ -94,7 +89,7 @@
 
             } else {
                 alert("olumsuz");
-                $("#tumkitaplar").css("display", "block");
+                $("#tumyazarlar").css("display", "block");
                 $("#arabutonfiltre").css("display", "block");
             }
 
@@ -116,7 +111,3 @@
 <script src="~/lib/bootstrap/dist/js/mixitup.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/kitap-arama.js"></script>
-
-
-
-

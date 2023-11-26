@@ -17,6 +17,16 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public FAVORI_YAZARLAR PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav_yazar)
+        {
+            string stringData = JsonConvert.SerializeObject(fav_yazar);
+            Task<string> jsonContent = PostData("api/Users/PostFavoriSaveWriter", stringData);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<FAVORI_YAZARLAR > (jsonContent.Result);
+            return result;
+        }
+
         public List<Users> GetKisiler(VM_ARAMA_INPUT arama)
         {
             string stringData = JsonConvert.SerializeObject(arama);
@@ -29,7 +39,6 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-       
         //public string PostTelefonDogru(VM_TELEFON telefon)
         //{
         //    string stringData = JsonConvert.SerializeObject(telefon);
