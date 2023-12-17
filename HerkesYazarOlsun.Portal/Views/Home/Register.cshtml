@@ -1,57 +1,115 @@
 ﻿@{
-	ViewData["Title"] = "Login";
-	Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
+@using HerkesYazarOlsun.Portal.Controllers;
 @section Styles{
 
-	<link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
 }
 <section class="login_box_area section-margin">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-6">
-				<div class="login_box_img">
-					<div class="hover">
-						<h4>Herkes Yazar Olsun' da Kaydın Var Mı? </h4>
-						<p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyaoruz.</p>
-						<a class="button button-account" href="/Home/Login">Giriş Yap</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-6">
-				<div class="login_form_inner register_form_inner">
-					<h3>Kayıt Olunuz</h3>
-					<form class="row login_form" action="#/" id="register_form">
-						<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="name" name="name" placeholder="Kullanici Adi" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Kullanici Adi'">
-						</div>
-						<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="email" name="email" placeholder="Email Adres" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adres'">
-						</div>
-						<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="password" name="password" placeholder="Şifre" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre'">
-						</div>
-						<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Şifre Tekrar" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre Tekrar'">
-						</div>
-						<div class="col-md-12 form-group">
-							<div class="creat_account">
-								<input type="checkbox" id="f-option2" name="selector">
-								<label for="f-option2">Oturumumu açık tut</label>
-							</div>
-						</div>
-						<div class="col-md-12 form-group">
-							<button type="submit" value="submit" class="button button-register w-100">Kayıt Ol</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <div class="hover">
+                        <h4>Herkes Yazar Olsun' da Kaydın Var Mı? </h4>
+                        <p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyaoruz.</p>
+                        <a class="button button-account" href="/Home/Login">Giriş Yap</a>
+                        <a class="button button-account" href="/Home/Dogrulama">Doğrulamalar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="login_form_inner register_form_inner">
+                    <h3>Kayıt Olunuz</h3>
 
+
+                    <div id="register_form" class="row login_form">
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="username" name="USERNAME" placeholder="Kullanici Adi" asp-for="USERNAME"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Kullanici Adi'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" id="telno" name="TELNO" placeholder="Tel No" asp-for="TELNO"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tel No'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="email" name="EMAIL" placeholder="Email Adres" asp-for="EMAIL"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adres'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="password" name="PASSWORD" placeholder="Şifre" asp-for="PASSWORD"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre'">
+                        </div>
+                        @*<div class="col-md-12 form-group">
+                        <input type="text" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Şifre Tekrar" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre Tekrar'">
+                        </div>*@
+
+
+
+                        <div class="col-md-12 form-group">
+                            <button type="submit" class="button button-register w-100" onclick="KayitOl()">Kayıt Ol</button>
+                        </div>
+                    </div>
+                    @Html.Partial("_AlertMesaj")
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@*
 @section scripts{
 
-	<script src="~/lib/bootstrap/dist/js/main_aroma_template.js"></script>
+    <script src="~/lib/bootstrap/dist/js/main_aroma_template.js"></script>
 }
+*@
+
+<script>
+    function KayitOl() {
+
+        var uername = $("#username").val();
+        var email = $("#email").val();
+        var password = $("#password").val();
+        var telno = $("#telno").val();
+        
+        $.post("@Url.Action(nameof(HomeController.SaveRegister), "Home")", {
+            "username": uername,
+            "email": email,
+            "password": password,
+            "telno": telno
+        }, function (data) {
+            console.log(data);
+            if (data.state == 1) {
+                $("#basarili").css("display", "block");
+                $("#basarili #mesaj").html(data.message);
+
+                $("#bilgi").css("display", "none");
+                $("#uyari").css("display", "none");
+            }
+            else if (data.state == 3) {
+                $("#bilgi").css("display", "block");
+                $("#bilgi #mesaj").html(data.message);
+
+                $("#basarili").css("display", "none");
+                $("#uyari").css("display", "none");
+            }
+            else {
+                $("#uyari").css("display", "block");
+                $("#bilgi").css("display", "none");
+                $("#basarili").css("display", "none");
+                $("#uyari #mesaj").html(data.message);
+            }
+
+        });
+
+
+    }
+
+    function Register_Failed() {
+        alert("hata");
+    }
+</script>

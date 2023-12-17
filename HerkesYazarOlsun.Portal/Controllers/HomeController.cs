@@ -1,6 +1,11 @@
-﻿using HerkesYazarOlsun.Model.ViewModel;
+﻿using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
+using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
+
+using System.Security.Cryptography;
+using System.Text;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -10,10 +15,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public ActionResult Index()
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
-          
-            var getBookList = new BooksService().GetBooksList();
-            vM_BOOKS.BooksList = getBookList!;
 
+            var getBookList = new BooksService().GetBooksList();
+            vM_BOOKS.VMBooksList = getBookList!;
+            
 
             List<string> kitaplar = new List<string>();
             kitaplar.Add("Yayına En Yakın Olan Kitaplar");
@@ -21,86 +26,72 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitaplar.Add("En Çok Beğenilen Kitaplar");
             return View(vM_BOOKS);
         }
-     
-        // GET: HomeController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-       
+
         public ActionResult Login()
         {
             return View();
         }
-
+        public ActionResult Dogrulama()
+        {
+            return View();
+        }
         public ActionResult Register()
         {
-            return View();
+            VM_USERS vmUsers = new VM_USERS();
+            return View(vmUsers);
         }
 
-
-        // GET: HomeController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: HomeController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public JsonResult SaveRegister(VM_USERS user)
         {
-            try
+            ServiceResult result = new ServiceResult();
+            if (user.USERNAME == null)
             {
-                return RedirectToAction(nameof(Index));
+                result.State = MessageResultState.WARNING;
+                result.Message = "Kullanıcı Adı Boş GEÇİLEMEZ";
+                return Json(result);
             }
-            catch
+            if (user.PASSWORD == null)
             {
-                return View();
+                result.State = MessageResultState.WARNING;
+                result.Message = "Şifre Belirleyiniz";
+                return Json(result);
+
             }
+            if (user.EMAIL == null)
+            {
+                result.State = MessageResultState.WARNING;
+                result.Message = "Email Boş GEÇİLEMEZ";
+                return Json(result);
+
+            }
+
+            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+
+            byte[] dizi = Encoding.UTF8.GetBytes(user.PASSWORD);
+
+            dizi = md5.ComputeHash(dizi);
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (byte ba in dizi)
+            {
+                sb.Append(ba.ToString("x2").ToLower());
+            }
+
+            user.PASSWORD = sb.ToString();
+
+            result = new KisiService().PostKisiSave(user);
+
+            return Json(result);
+
         }
 
-        // GET: HomeController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult SifremiUnuttum()
         {
             return View();
         }
 
-        // POST: HomeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HomeController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

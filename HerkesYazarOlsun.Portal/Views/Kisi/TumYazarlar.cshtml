@@ -17,18 +17,25 @@
 @using HerkesYazarOlsun.Portal.Controllers;
 
 <h3 style="margin: 50px auto;">Tüm Yazarlar</h3>
-<h6><span>@Model.UsersList.Count()</span> Kayıt Var </h6>
+<h6><span>@Model.VMUsersList.Count()</span> Kayıt Var </h6>
 <hr />
 
 @Html.Partial("_YazarFiltreleme")
+
+@{
+    Model.Tip = "tumyazarlar";
+}
+
+@Html.Partial("_AlertMesaj",@Model.Tip)
+
 
 <div id="tumyazarlar">
     @{
 
         int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 10 : Model.sliderdaGosterilecekKayit;
 
-        int kalan = (@Model.UsersList.Count() % sliderdaGosterilecekKayit);
-        int bolum = (@Model.UsersList.Count() / sliderdaGosterilecekKayit);
+        int kalan = (@Model.VMUsersList.Count() % sliderdaGosterilecekKayit);
+        int bolum = (@Model.VMUsersList.Count() / sliderdaGosterilecekKayit);
 
         int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
@@ -97,10 +104,10 @@
     }
 
 
-    function Kapat() {
-        $("#basarili").css("display", "none");
-        $("#uyari").css("display", "none");
-    }
+    //function Kapat() {
+    //    $("#basarili").css("display", "none");
+    //    $("#uyari").css("display", "none");
+    //}
 </script>
 
 <script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>

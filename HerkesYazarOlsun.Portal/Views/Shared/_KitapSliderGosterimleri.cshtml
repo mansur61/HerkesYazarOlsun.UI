@@ -1,9 +1,4 @@
-﻿@*@{
-    ViewData["Title"] = "Ana Sayfa";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}*@
-
-
+﻿
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
 @using HerkesYazarOlsun.Model.Utils;
@@ -14,25 +9,28 @@
 
     int sliderdaGosterilecekKayit = 5;
 
-    int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+    int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
     int start = 0;
-    int end = 5;
-}
+   // int end = 5;
 
+
+    Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
+    Model.Start = @start;
+}
 
 <div id="my-pics-@Model.Tip" class="carousel slide" data-ride="carousel"
      style="width:1050px;margin:5px auto;background-color:aliceblue;height:430px">
 
 
-    <ol class="carousel-indicators">
+    <ol class="carousel-indicators" >
         @for (int i = 0; i < @sliderSayisi; i++)
         {
             @if (i == 0)
             {
-                <li data-target="#my-pics-@Model.Tip" data-slide-to="@i" class="active"></li>
+                <li data-target="#my-pics-@Model.Tip" data-slide-to="@i"  class="active"></li>
             }
             else
             {
@@ -42,31 +40,35 @@
     </ol>
 
     <!-- Content -->
-    <div class="carousel-inner" role="listbox" style="width:%100">
+    <div class="carousel-inner" role="listbox" style="width:100%">
+
+        @*@Html.Partial("Kitaplar",@Model)*@
+        @*@Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)*@
 
         @for (int i = 0; i < @sliderSayisi; i++)
         {
 
             @if (i == 0)
             {
-                Model.Start = start;
-                Model.End = end;
+               
                 <div class="item active">
-                    @Html.Partial("_CarouselItem",@Model)
+                 
+                    @Html.Partial("_KitaplarItem",@Model)
 
                 </div>
             }
             else
             {
-                Model.Start = Model.End;
-                Model.End = 2 * end;
                 <div class="item">
-                    @Html.Partial("_CarouselItem",@Model)
+                  
+                    @Html.Partial("_KitaplarItem",@Model)
 
                 </div>
             }
 
         }
+      
+
     </div>
 
     <!-- Previous/Next controls -->
@@ -81,7 +83,9 @@
 
     </a>
 
-    <br />
+    @Html.Partial("_AlertMesaj",@Model.Tip)
+
+   @* <br />
     <div class="alert alert-success" id="basarili-@Model.Tip" style="display:none;">
         <strong>Başarılı!</strong> Favorilere Eklendi
         <button type="button" class="btn btn-info" onclick='Kapat("@Model.Tip")'>Kapat</button>
@@ -91,21 +95,16 @@
         <strong>Bilgi!</strong> Favorilere Eklenemedi
         <button type="button" class="btn btn-info" onclick='Kapat("@Model.Tip")'>Kapat</button>
     </div>
-    <br />
+    <br />*@
 </div>
 
 
-<script>
+@*<script>
 
- 
-   
+    
     function Kapat(tip) {
         $("#basarili-" + tip).css("display", "none");
         $("#uyari-" + tip).css("display", "none");
     }
 
-
-
-</script>
-
-
+</script>*@

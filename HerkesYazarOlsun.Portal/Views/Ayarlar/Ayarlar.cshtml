@@ -1,0 +1,307 @@
+﻿@{
+    ViewData["Title"] = "Kitap Arama";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container light-style flex-grow-1 container-p-y" style="margin-top:50px">
+
+    <h1 class="font-weight-bold py-3 mb-4">
+       Ayarlar
+    </h1>
+    <br />
+    <div class="card overflow-hidden">
+        <div class="row no-gutters row-bordered row-border-light">
+            <div class="col-md-3 pt-0">
+                <ul class="nav nav-tabs" role="tablist">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#account-general" role="tab" aria-selected="false">
+                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                            <span class="hidden-xs-down font-weight-bold">Genel Ayarlar</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#account-info" role="tab" aria-selected="false">
+                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                            <span class="hidden-xs-down font-weight-bold">Bilgiler </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#account-change-password" role="tab" aria-selected="false">
+                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                            <span class="hidden-xs-down font-weight-bold">Şifre Değiştir.</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#account-social-links" role="tab" aria-selected="false">
+                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                            <span class="hidden-xs-down font-weight-bold">Linkler</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#account-profil" role="tab" aria-selected="false">
+                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                            <span class="hidden-xs-down font-weight-bold">Profil Ayarları</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#account-notifications" role="tab" aria-selected="false">
+                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                            <span class="hidden-xs-down font-weight-bold">Bildirimler</span>
+                        </a>
+                    </li>
+                </ul>
+                
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <div class="tab-pane p-20 active" id="account-general" role="tabpanel">
+                        <div class="card-body media align-items-center">
+                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="d-block ui-w-80">
+                            <div class="media-body ml-4">
+                                <label class="btn btn-outline-primary">
+                                    Fotoğraf Yükle
+                                    <input type="file" class="account-settings-fileinput">
+                                </label> &nbsp;
+                                <button type="button" class="btn btn-info md-btn-flat">Sil</button>
+
+                                <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
+                            </div>
+                        </div>
+                        <hr class="border-light m-0">
+
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Kullanıcı Adı</label>
+                                <input type="text" class="form-control mb-1" value="nmaxwell">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Adınız</label>
+                                <input type="text" class="form-control" value="Nelle Maxwell">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">E-mail</label>
+                                <input type="text" class="form-control mb-1" value="nmaxwell@mail.com">
+                                <div class="alert alert-warning mt-3">
+                                    E-postanız onaylanmadı. Lütfen gelen kutunuzu kontrol edin.<br>
+                                    <a href="javascript:void(0)">Doğrulamayı tekrar gönder</a>
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                    </div>
+                    <div class="tab-pane p-20" id="account-change-password" role="tabpanel">
+                        <div class="card-body pb-2">
+
+                            <div class="form-group">
+                                <label class="form-label">Mevcur şifre</label>
+                                <input type="password" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yeni şifre</label>
+                                <input type="password" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yeni şifreyi tekrar gir</label>
+                                <input type="password" class="form-control">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane p-20" id="account-info" role="tabpanel">
+                        <div class="card-body pb-2">
+
+                            <div class="form-group">
+                                <label class="form-label">Hakkında Yazısı</label>
+                                <textarea class="form-control" rows="5">Hakkında yazısı değiştirilebiblir.</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Doğum tarihi</label>
+                                <input type="text" class="form-control" value="May 3, 1995">
+                            </div>
+                           @* <div class="form-group">
+                                <label class="form-label">Ülke</label>
+                                <select class="wide">
+                                    <option>USA</option>
+                                    <option selected="">Canada</option>
+                                    <option>UK</option>
+                                    <option>Germany</option>
+                                    <option>France</option>
+                                </select>
+                            </div>*@
+
+
+                        </div>
+                        <hr class="border-light m-0">
+                        <div class="card-body pb-2">
+
+                            <h6 class="mb-4">Telefonu Güncelle</h6>
+                            <div class="form-group">
+                                <label class="form-label">Tel</label>
+                                <input type="text" class="form-control" value="+0 (123) 456 7891">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Siteniz</label>
+                                <input type="text" class="form-control" value="">
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane p-20" id="account-social-links" role="tabpanel">
+                        <div class="card-body pb-2">
+
+                            <div class="form-group">
+                                <label class="form-label">Twitter</label>
+                                <input type="text" class="form-control" value="https://twitter.com/user">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Facebook</label>
+                                <input type="text" class="form-control" value="https://www.facebook.com/user">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">LinkedIn</label>
+                                <input type="text" class="form-control" value="">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Instagram</label>
+                                <input type="text" class="form-control" value="https://www.instagram.com/user">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane p-20" id="account-profil" role="tabpanel">
+                       
+                        <hr class="border-light m-0">
+                        <div class="card-body">
+                            <h5 class="mb-2">
+                                Profil Arkaplan Rengini Ayarla
+                            </h5>
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <span id="seciim">Seçiniz</span>
+                                   
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="renkler" id="#AFEEEE" name="Pale Turkuaz" onclick="RenkSec(0) ">Pale Turkuaz</a></li>
+                                    <li><a class="renkler" id="#E0FFFF" name="Açık Cam Göbeği" onclick="RenkSec(1)">Açık Cam Göbeği</a></li>
+                                    <li><a class="renkler" id="# ADD8E6" name="Açık Mavi" onclick="RenkSec(2)">Açık Mavi</a></li>
+                                </ul>
+                            </div>
+                           
+                           
+                        </div>
+                        
+                    </div>
+                    <div class="tab-pane p-20" id="account-notifications" role="tabpanel">
+                        <div class="card-body pb-2">
+                            Burası dursun zamanla ilgili kuralı eklersin..
+                            <h6 class="mb-4">Activity</h6>
+
+                            <div class="form-group">
+                                <label class="switcher">
+                                    <input type="checkbox" class="switcher-input" checked="">
+                                    <span class="switcher-indicator">
+                                        <span class="switcher-yes"></span>
+                                        <span class="switcher-no"></span>
+                                    </span>
+                                    <span class="switcher-label">Birisi makaleme yorum yaptığında bana e-posta gönder</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="switcher">
+                                    <input type="checkbox" class="switcher-input" checked="">
+                                    <span class="switcher-indicator">
+                                        <span class="switcher-yes"></span>
+                                        <span class="switcher-no"></span>
+                                    </span>
+                                    <span class="switcher-label">Birisi forum başlığıma yanıt verdiğinde bana e-posta gönder</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="switcher">
+                                    <input type="checkbox" class="switcher-input">
+                                    <span class="switcher-indicator">
+                                        <span class="switcher-yes"></span>
+                                        <span class="switcher-no"></span>
+                                    </span>
+                                    <span class="switcher-label">Birisi beni takip ettiğinde bana e-posta gönder</span>
+                                </label>
+                            </div>
+                        </div>
+                        <hr class="border-light m-0">
+                        <div class="card-body pb-2">
+
+                            <h6 class="mb-4">Application</h6>
+
+                            <div class="form-group">
+                                <label class="switcher">
+                                    <input type="checkbox" class="switcher-input" checked="">
+                                    <span class="switcher-indicator">
+                                        <span class="switcher-yes"></span>
+                                        <span class="switcher-no"></span>
+                                    </span>
+                                    <span class="switcher-label">News and announcements</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="switcher">
+                                    <input type="checkbox" class="switcher-input">
+                                    <span class="switcher-indicator">
+                                        <span class="switcher-yes"></span>
+                                        <span class="switcher-no"></span>
+                                    </span>
+                                    <span class="switcher-label">Weekly product updates</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="switcher">
+                                    <input type="checkbox" class="switcher-input" checked="">
+                                    <span class="switcher-indicator">
+                                        <span class="switcher-yes"></span>
+                                        <span class="switcher-no"></span>
+                                    </span>
+                                    <span class="switcher-label">Weekly blog digest</span>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="text-right mt-3">
+        <button type="button" class="btn btn-primary">Değişiklikleri Kaydet</button>&nbsp;
+        <button type="button" class="btn btn-info">Kaydetme</button>
+    </div>
+    <br />
+</div>
+
+<script>
+    function RenkSec(id) {
+        var nodeNameProperty = RenkAdiGetir(id);
+        $("#seciim").html(nodeNameProperty);
+       
+    }
+    function RenkAdiGetir(id){
+        var nodeNameProperty = "";
+        const nodeList = document.querySelectorAll(".renkler");
+        for (let i = 0; i < nodeList.length; i++) {
+            if (id == i) {
+                nodeNameProperty = nodeList[i].name; 
+            }
+        }
+        return nodeNameProperty;
+    }
+
+
+</script>

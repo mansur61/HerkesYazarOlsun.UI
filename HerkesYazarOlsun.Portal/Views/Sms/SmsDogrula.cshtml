@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "Sms Doğrulama";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*
+@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;*@
+@using HerkesYazarOlsun.Portal.Controllers;
+
+@section Styles{
+
+    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+}
+@{
+    string tip = "email";
+}
+<input type="hidden" id="tip" value="@tip" />
+
+
+<section class="login_box_area section-margin">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <div class="hover">
+                        
+                        <h4>Herkes Yazar Olsun' da </h4> <h4>Sms Doğrulama İşlemi </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="login_form_inner register_form_inner">
+                    <h3>Sms Doğrulama</h3>
+
+
+                    <div id="register_form" class="row login_form">
+                        <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" id="sms" name="TELNO" placeholder="Telefon No" 
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Telefon No'">
+                        </div>
+                       
+                        <div class="col-md-12 form-group">
+                            <button type="submit" class="button button-register w-100" onclick="SmsGonder()">Sms Gönder</button>
+                        </div>
+                    </div>
+                    @Html.Partial("_AlertMesaj",@tip)
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="otp"></div>
+
+<script>
+    function SmsGonder() {
+
+        var sms = $("#sms").val();
+        var tip = $("#tip").val();
+         $.post("@Url.Action(nameof(SmsController.Gonder), "Sms")", {
+            "telno": sms
+        }, function (data) {
+            console.log(data);
+            if (data.state == 1) {
+
+                $.get("@Url.Action(nameof(SmsController.SmsOtp), "Sms")", {
+                    "telno": sms,
+                    "smsKod": data.message
+                }, function (data) {
+
+                    $("#otp").html(data);
+                    $("#modalOtp").modal("show");
+
+                });
+
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + tip).css("display", "block");
+                $("#bilgi-" + tip + " #mesaj").html(data.message);
+
+                $("#basarili-" + tip).css("display", "none");
+                $("#uyari-" + tip).css("display", "none");
+            }
+            else {
+                $("#uyari-" + tip).css("display", "block");
+                $("#bilgi-" + tip).css("display", "none");
+                $("#basarili-" + tip).css("display", "none");
+                $("#uyari-" + tip + " #mesaj").html(data.message);
+            }
+
+        });
+
+       
+    }
+
+ 
+</script>

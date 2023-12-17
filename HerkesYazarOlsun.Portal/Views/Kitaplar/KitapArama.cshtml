@@ -210,8 +210,7 @@
                 <br />
 
                 <div class="row">
-
-                    @Html.Partial("_Pagination",@Model)
+                    @Html.Partial("Kitaplar",@Model)
 
                 </div>
             </div>
@@ -233,7 +232,7 @@
     function FavorilereEkle(kitapId) {
 
         $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", { "id": kitapId, }, function (data) {
-            if (data) {
+            if (data.state == 1) {
                 $("#basarili").css("display", "block");
             } else {
                 $("#uyari").css("display", "block");

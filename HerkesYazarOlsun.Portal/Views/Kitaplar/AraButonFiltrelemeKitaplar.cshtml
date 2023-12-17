@@ -10,12 +10,12 @@
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
-    //Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
+    Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
     Model.kalan = @kalan;
     Model.bolum = @bolum;
     Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
     Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
-    Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "kitaplar";
+    Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "kitaplar" + Model.profilKitapTuru ?? "";
 }
 
 

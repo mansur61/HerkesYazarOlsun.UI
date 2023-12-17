@@ -16,10 +16,6 @@ namespace HerkesYazarOlsun.Portal.Controllers
             VM_ARAMA_SONUC aramaSonuc = new AramaService().TumAramalar(arama);
             aramaSonuc.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
-            //VM_BOOKS vM_BOOKS = new VM_BOOKS();
-
-            //var getBookList = new BooksService().GetBooksList();
-            //vM_BOOKS.BooksList = getBookList!;
             return View(aramaSonuc.vmBook);
            
         }

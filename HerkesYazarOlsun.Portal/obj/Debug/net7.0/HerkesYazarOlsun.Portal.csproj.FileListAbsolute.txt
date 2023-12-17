@@ -5,6 +5,7 @@ C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Deb
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\HerkesYazarOlsun.Portal.deps.json
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\HerkesYazarOlsun.Portal.runtimeconfig.json
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\HerkesYazarOlsun.Portal.dll
+C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\HerkesYazarOlsun.Portal.pdb
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\AutoMapper.dll
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\Humanizer.dll
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\Microsoft.AspNetCore.Razor.Language.dll
@@ -243,5 +244,4 @@ C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Deb
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Debug\net7.0\refint\HerkesYazarOlsun.Portal.dll
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Debug\net7.0\HerkesYazarOlsun.Portal.pdb
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Debug\net7.0\HerkesYazarOlsun.Portal.genruntimeconfig.cache
-C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\HerkesYazarOlsun.Portal.pdb
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Debug\net7.0\ref\HerkesYazarOlsun.Portal.dll

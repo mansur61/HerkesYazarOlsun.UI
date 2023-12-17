@@ -16,18 +16,25 @@
 
 
 <h3 style="margin: 50px auto;">Tüm Kitaplar</h3>
-<h6><span>@Model.BooksList.Count()</span> Kayıt Var </h6>
+<h6><span>@Model.VMBooksList.Count()</span> Kayıt Var </h6>
 <hr />
 
 @Html.Partial("_KitapFiltreleme")
+
+@{
+    Model.Tip = "tumkitaplar";
+}
+
+@Html.Partial("_AlertMesaj",@Model.Tip)
+
 
 <div id="tumkitaplar">
     @{
 
         int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
 
-        int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
-        int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+        int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
+        int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
         int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
@@ -38,19 +45,16 @@
         Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
         Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumkitaplar";
         Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
+       
     }
-
+   
     @Html.Partial("Kitaplar",@Model)
+   
     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)
    
 </div>
 
-<div id="arabutonfiltre">
-
-</div>
-
-
-
+<div id="arabutonfiltre"></div>
 
 
 
@@ -102,10 +106,10 @@
     }
 
 
-    function Kapat() {
-        $("#basarili").css("display", "none");
-        $("#uyari").css("display", "none");
-    }
+    //function Kapat() {
+    //    $("#basarili").css("display", "none");
+    //    $("#uyari").css("display", "none");
+    //}
 </script>
 
 <script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>

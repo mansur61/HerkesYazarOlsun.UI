@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using Newtonsoft.Json;
 
@@ -16,31 +17,62 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public List<Books>? GetBooksList()
+        public List<VM_BOOKS>? GetBooksList()
         {
             Task<string> jsonContent = GetData("api/Books/GetBooksList");
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<List<Books>>(jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<List<VM_BOOKS>>(jsonContent.Result);
             return result;
         }
-        public FAVORILER PostFavoriSaveBook(FAVORILER fav)
+
+        public VM_Stars GetMaxStarBooks()
         {
-            string stringData = JsonConvert.SerializeObject(fav);
-            Task<string> jsonContent = PostData("api/Books/PostFavoriSaveBook", stringData);
+            Task<string> jsonContent = GetData("api/Books/GetMaxStarBooks");
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<FAVORILER>(jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<VM_Stars>(jsonContent.Result);
             return result;
         }
 
-        public List<Books>? TumKitaplar(VM_ARAMA_INPUT arama)
+        public VM_Stars GetMaxStarBooksById(long id)
+        {
+            Task<string> jsonContent = GetData("api/Books/GetMaxStarBooksById?id=" + id);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<VM_Stars>(jsonContent.Result);
+            return result;
+        }
+
+
+        public ServiceResult<FavoriBooks> PostFavoriBookSave(FavoriBooks fav)
+        {
+            string stringData = JsonConvert.SerializeObject(fav);
+            Task<string> jsonContent = PostData("api/Books/PostFavoriBookSave", stringData);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<ServiceResult<FavoriBooks>>(jsonContent.Result);
+            return result;
+        }
+
+        public ServiceResult<BooksStars> PostBooksStars(BooksStars star)
+        {
+            string stringData = JsonConvert.SerializeObject(star);
+            Task<string> jsonContent = PostData("api/Books/PostBooksStars", stringData);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<ServiceResult<BooksStars>>(jsonContent.Result);
+            return result;
+        }
+
+
+        public List<VM_BOOKS>? TumKitaplar(VM_ARAMA_INPUT arama)
         {
             string stringData = JsonConvert.SerializeObject(arama);
             Task<string> jsonContent = PostData("api/Books/TumKitaplar", stringData);
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<List<Books>?>(jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<List<VM_BOOKS>?>(jsonContent.Result);
             return result;
         }
 

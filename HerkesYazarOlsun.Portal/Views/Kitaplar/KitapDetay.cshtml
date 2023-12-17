@@ -7,7 +7,7 @@
     <link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />
 }
 
-@Html.Partial("_Navbar")
+@Html.PartialAsync("_Navbar")
 <br />
 <br />
 @model HerkesYazarOlsun.Model.Entity.Books
@@ -39,5 +39,5 @@
 
 </div>
 
-@Html.Partial("_KitapDetayMesajBolumleri",@Model)
+@Html.PartialAsync("_KitapDetayMesajBolumleri",@Model)
 

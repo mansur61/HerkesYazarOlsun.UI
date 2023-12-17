@@ -31,14 +31,20 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [Route("KitabiFavorilereEkle")]
         public JsonResult KitabiFavorilereEkle(long id)
         {
-            FAVORILER fAVORILER = new FAVORILER()
+           /* FAVORILER fAVORILER = new FAVORILER()
+            {
+                BOOKS_ID = id,
+                USER_ID = 1
+            };*/
+
+            FavoriBooks fAVORILER = new FavoriBooks()
             {
                 BOOKS_ID = id,
                 USER_ID = 1
             };
-            var getFavori = new BooksService().PostFavoriSaveBook(fAVORILER);
+            var getFavori = new BooksService().PostFavoriBookSave(fAVORILER);
 
-            
+
             return Json(getFavori);
         }
 
@@ -114,7 +120,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
             return Json(vmKitap);
         }
-    
+
 
         public IActionResult KitapDetay(long kitapId)
         {
@@ -125,20 +131,22 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public IActionResult TumKitaplar(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
+           // vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
             vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
             var getBookList = new BooksService().TumKitaplar(arama);
-            vM_BOOKS.BooksList = getBookList!; vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+            vM_BOOKS.VMBooksList = getBookList!; 
+            vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
             return View(vM_BOOKS);
         }
         public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
-            List<Books>? bookList;
-            vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
-           
-            bookList = new BooksService().TumKitaplar(arama);
-            vM_BOOKS.BooksList = bookList!;
-            
+            vM_BOOKS.sliderdaGosterilecekKayit = (arama.listelenecek_kayit_sayisi != 0 ? arama.listelenecek_kayit_sayisi : 0);
+            vM_BOOKS.profilKitapTuru = arama.profilKitapTuru ?? "";
+            List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
+            //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
+            vM_BOOKS.VMBooksList = bookList!;
+
             return View(vM_BOOKS);
         }
 

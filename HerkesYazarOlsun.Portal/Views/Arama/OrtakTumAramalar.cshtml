@@ -5,8 +5,8 @@
 
     int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
 
-    int kalan = (@Model.vmBook.BooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.vmBook.BooksList.Count() / sliderdaGosterilecekKayit);
+    int kalan = (@Model.vmBook.VMBooksList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.vmBook.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
@@ -20,7 +20,10 @@
     Model.vmBook.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
     Model.vmBook.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
     Model.vmBook.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumaramalar";
+    Model.vmBook.Tip = "tumaramalar";
 }
+
+
 @*<p>Kayit: @Model.vmBook.BooksList.Count()</p>
 <p>sliderdaGosterilecekKayit : @sliderdaGosterilecekKayit</p>
 <p>kalan: @kalan</p>
@@ -36,12 +39,13 @@
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
 }
 
-@if(@Model.vmBook.BooksList.Count() > 0){
+@if (@Model.vmBook.VMBooksList.Count() > 0)
+{
 
-@Html.Partial("_Pagination",@Model.vmBook)
+    @Html.Partial("Kitaplar",@Model)
 
 <br />
-@Html.Partial("_PaginationButonlar",@Model.vmBook.vM_PAGINATION_BUTTONS)
+    @Html.Partial("_PaginationButonlar",@Model.vmBook.vM_PAGINATION_BUTTONS)
 }else{
     <p>Aranan kritere uygun herhangi bir kayıt bulunamadı</p>
 }

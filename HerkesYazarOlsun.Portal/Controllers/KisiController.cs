@@ -1,4 +1,5 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View();
         }
 
-        public IActionResult GetKisiByTC(long id)
+        public IActionResult GetKisiByTC(long tck)
         {
-            Users kisi = new KisiService().GetKisiByTC(id);
+            Users kisi = new KisiService().GetKisiByTC(tck);
             return View(kisi);
         }
 
@@ -28,8 +29,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             vmUsers.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
-            List<Users> usersList = new KisiService().GetKisiler(arama).ToList();
-            vmUsers.UsersList = usersList;
+            List<VM_USERS> usersList = new KisiService().GetKisiler(arama).ToList();
+            vmUsers.VMUsersList = usersList;
 
             return View(vmUsers); 
         }
@@ -58,11 +59,20 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             vmUsers.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
-            List<Users>  usersList = new KisiService().GetKisiler(arama).ToList();
-            vmUsers.UsersList = usersList;
+            List<VM_USERS> usersList = new KisiService().GetKisiler(arama).ToList();
+            vmUsers.VMUsersList = usersList;
 
             return View(vmUsers);
         }
+
+        public IActionResult Profil(long id)
+        {
+            Users kisi = new KisiService().GetKisiById(id);
+            var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
+            return View(vm_kisi);
+            
+        }
+        
 
     }
 }

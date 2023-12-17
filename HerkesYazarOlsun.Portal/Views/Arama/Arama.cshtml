@@ -18,14 +18,14 @@
 
     int sidebardaGosterilecekKayit = 3;
 
-    int sidebarKalan = (@Model.BooksList.Count() % sidebardaGosterilecekKayit);
-    int sidebarBolum = (@Model.BooksList.Count() / sidebardaGosterilecekKayit);
+    int sidebarKalan = (@Model.VMBooksList.Count() % sidebardaGosterilecekKayit);
+    int sidebarBolum = (@Model.VMBooksList.Count() / sidebardaGosterilecekKayit);
     int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
 
     int sliderdaGosterilecekKayit = 6;
 
-    int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+    int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
@@ -35,6 +35,7 @@
     Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
     Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
     Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "arama";
+    Model.Tip = "arama";
 }
 
 <section class="product spad">
@@ -144,7 +145,7 @@
                     </div>
                 </div>
 
-                <div class="alert alert-success" id="basarili" style="display:none;">
+                @*<div class="alert alert-success" id="basarili" style="display:none;">
                     <strong>Başarılı!</strong> Favorilere Eklendi
                     <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
                 </div>
@@ -153,10 +154,12 @@
                     <strong>Bilgi!</strong> Favorilere Eklenemedi
                     <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
                 </div>
-                <br />
+                <br />*@
+
+                @Html.Partial("_AlertMesaj",@Model.Tip)
 
                 <div class="row" id="tumaramaalar">
-                    @Html.Partial("_Pagination",@Model)
+                    @Html.Partial("Kitaplar",@Model)
                     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)
                 </div>
                 <div class="row" id="arabutonfiltre"></div>
@@ -174,8 +177,6 @@
     
     function Filtrele() {
        
-        //$("#arabutonfiltre").css("display", "block");
-        //$("#tumaramaalar").css("display", "none");
 
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
 
@@ -193,8 +194,6 @@
         var yazarAdi = $("#yazarAdi").val();
         var kategoriId = $("#kategori").val();
         var tarihCeck = $("#tarihCeck").val();
-        //alert("tarihCeck :" + tarihCeck + " kitap_ara:" + kitap_ara + " siralama : " + siralama + "yazarAdi:" + yazarAdi + " kategoriId : " + kategoriId);
-
         
         $.get("@Url.Action(nameof(AramaController.OrtakTumAramalar), "Arama")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
@@ -204,7 +203,7 @@
             "kategoriId": kategoriId,
             "tarihCeck": tarihCeck
         }, function (data) {
-            //console.log("data: " + data);
+           
             if (data) {
                 $("#verisayisi").val(3);
                 $("#arabutonfiltre").html(data);
@@ -222,12 +221,10 @@
 
     }
 
-    function Kapat() {
-        $("#basarili").css("display", "none");
-        $("#uyari").css("display", "none");
-    }
-
-
+    //function Kapat() {
+    //    $("#basarili").css("display", "none");
+    //    $("#uyari").css("display", "none");
+    //}
 
 </script>
 

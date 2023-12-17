@@ -165,7 +165,7 @@ a {
 }
 
 .header_area .navbar .nav .nav-item:hover .nav-link, .header_area .navbar .nav .nav-item.active .nav-link {
-    color: #384aeb
+    color: aqua /*#384aeb*/
 }
 
 .header_area .navbar .nav .nav-item.submenu {
@@ -236,7 +236,7 @@ a {
     }
 
     .header_area .navbar .nav .nav-item.submenu ul .nav-item:hover .nav-link {
-        background: #384aeb;
+        /*  background: #384aeb;*/
         color: #fff
     }
 

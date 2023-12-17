@@ -4,8 +4,8 @@
 
     int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
 
-    int kalan = (@Model.UsersList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.UsersList.Count() / sliderdaGosterilecekKayit);
+    int kalan = (@Model.VMUsersList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.VMUsersList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
@@ -14,7 +14,7 @@
     Model.bolum = @bolum;
     Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
     Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
-    Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "kitaplar";
+    Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "yazarlar";
 }
 
 
@@ -26,7 +26,7 @@
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
 }
 
-@if (@Model.UsersList.Count() > 0)
+@if (@Model.VMUsersList.Count() > 0)
 {
     @Html.Partial("Yazarlar",@Model)
 
