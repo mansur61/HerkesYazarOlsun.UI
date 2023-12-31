@@ -52,6 +52,39 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(getFavori_yazar);
         }
 
+        [HttpPost]
+        [Route("PostWriterFollow")]
+        public JsonResult PostWriterFollow(int id, int follow)
+        {
+
+            WriterFollow fovllow_yazar = new WriterFollow()
+            {
+                LoginUserId = 1,
+                YazarId = id,
+                isFollow = follow
+                
+            };
+            var getFavori_yazar = new KisiService().PostWriterFollow(fovllow_yazar);
+
+            return Json(getFavori_yazar);
+        }
+
+        [HttpPost]
+        [Route("PostWriterStars")]
+        public JsonResult PostWriterStars(int id, int puan)
+        {
+
+            WriterStars stars_yazar = new WriterStars()
+            {
+                LoginUserId = 1,
+                YazarId = id,
+                StarPuani = puan
+
+            };
+            var getFavori_yazar = new KisiService().PostWriterStars(stars_yazar);
+
+            return Json(getFavori_yazar);
+        }
 
         public IActionResult AraButonFiltrelemeYazarlar(VM_ARAMA_INPUT arama)
         {
@@ -69,6 +102,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             Users kisi = new KisiService().GetKisiById(id);
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
+            vm_kisi.Stars = new KisiService().GetMaxStarWriterById(id);
+
+            vm_kisi.vMWriterFollow = new KisiService().GetWriterFollowById(id);
             return View(vm_kisi);
             
         }

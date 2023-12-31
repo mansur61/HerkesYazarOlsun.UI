@@ -18,6 +18,16 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public VM_WriterFollow GetWriterFollowById(long yazar_id)
+        {
+            Task<string> jsonContent = GetData("api/Users/GetWriterFollowById?" + "yazar_id=" + yazar_id);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<VM_WriterFollow>(jsonContent.Result);
+            return result;
+        }
+
+        
         public Users GetKisiByUsername(string username )
         {
             Task<string> jsonContent = GetData("api/Users/GetKisiByUsername?" + "username=" + username);
@@ -36,9 +46,9 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public VM_Stars GetMaxStarWriter()
+        public VM_Stars GetMaxStarWriterById(long id)
         {
-            Task<string> jsonContent = GetData("api/Users/GetMaxStarWriter");
+            Task<string> jsonContent = GetData("api/Users/GetMaxStarWriterById?" + "id=" + id); ;
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<VM_Stars>(jsonContent.Result);
@@ -95,6 +105,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
             return result;
         }
+
 
         public List<VM_USERS> GetKisiler(VM_ARAMA_INPUT arama)
         {

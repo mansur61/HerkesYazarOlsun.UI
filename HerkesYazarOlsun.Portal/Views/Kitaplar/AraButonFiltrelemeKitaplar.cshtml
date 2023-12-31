@@ -5,8 +5,8 @@
 
     int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
 
-    int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+    int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
@@ -27,7 +27,7 @@
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
 }
 
-@if (@Model.BooksList.Count() > 0)
+@if (@Model.VMBooksList.Count() > 0)
 {
 
     @Html.Partial("Kitaplar",@Model)

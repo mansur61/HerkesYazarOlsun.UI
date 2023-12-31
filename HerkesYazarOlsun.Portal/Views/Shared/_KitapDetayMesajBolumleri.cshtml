@@ -1,9 +1,57 @@
-﻿@model HerkesYazarOlsun.Model.Entity.Books
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAY;
+@using HerkesYazarOlsun.Portal.Controllers;
+
+<style>
+    .product_description_area .tab-content .total_rate .box_total {
+        background: #f1f6f7;
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 20px
+    }
+
+        .product_description_area .tab-content .total_rate .box_total h4 {
+            font-size: 48px;
+            font-weight: bold;
+            color: #384aeb
+        }
+
+        .product_description_area .tab-content .total_rate .box_total h5 {
+            color: #333333;
+            margin-bottom: 0px;
+            font-size: 24px
+        }
+
+        .product_description_area .tab-content .total_rate .box_total h6 {
+            font-family: "Roboto",sans-serif;
+            margin-bottom: 0px;
+            font-size: 14px;
+            color: #555555;
+            font-weight: normal
+        }
+
+    /*.price-text-color {
+                                                    color:dodgerblue;
+                                                }*/
+
+</style>
+
+<input type="hidden" id="kitapId" name="kitapId" value="@Model.Vm_Book.ID" />
+<input type="hidden" id="degerlendirmemesaicin" value="degerlendirme" />
+<input type="hidden" id="yorummesajiicin" value="yorumicin" />
+
+
+@{
+    string alertmesajgostermedurumu = "degerlendirme";
+    
+}
+
+
+@*<div style="height:30px"></div>*@
 <section class="product_description_area">
     <div class="container">
 
 
-        <ul class="nav nav-tabs" id="myTab" role="tablist" >
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
 
             <li class="nav-item ">
                 <a class="nav-link active" id="aciklama-tab" data-toggle="tab" href="#aciklama" role="tab" aria-controls="aciklama" aria-selected="false">Açıklama</a>
@@ -28,9 +76,9 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="aciklama" role="tabpanel" aria-labelledby="aciklama-tab">
                 <p>
-                    @Model.ARKAKAPAKYAZISI
+                    @Model.Vm_Book.ARKAKAPAKYAZISI
                 </p>
-              
+
             </div>
             <div class="tab-pane fade" id="ozellikler" role="tabpanel" aria-labelledby="ozellikler-tab">
                 <div class="table-responsive">
@@ -69,7 +117,7 @@
                                     <h5>Hikaye</h5>
                                 </td>
                             </tr>
-                           
+
                         </tbody>
                     </table>
                 </div>
@@ -77,88 +125,58 @@
             <div class="tab-pane fade" id="yorumlar" role="tabpanel" aria-labelledby="yorumlar-tab">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="comment_list">
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/vendors/img/product/review-1.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <h5>12th Feb, 2018 at 05:56 pm</h5>
-                                        <a class="reply_btn" href="#">Reply</a>
-                                    </div>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
-                                </p>
-                            </div>
-                            <div class="review_item reply">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/vendors/img/product/review-2.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <h5>12th Feb, 2018 at 05:56 pm</h5>
-                                        <a class="reply_btn" href="#">Reply</a>
-                                    </div>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
-                                </p>
-                            </div>
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/vendors/img/product/review-3.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <h5>12th Feb, 2018 at 05:56 pm</h5>
-                                        <a class="reply_btn" href="#">Reply</a>
-                                    </div>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
-                                </p>
-                            </div>
+                        <div style="height:30px">
+                            <h3><strong>Yorumlar</strong></h3>
                         </div>
+                        @foreach (var item in @Model.Vm_Book_Comments)
+                        {
+                            <div class="comment_list">
+                                <div class="review_item">
+                                    <div class="media">
+                                        <div class="d-flex">
+                                            @*<img src="~/vendors/img/product/review-1.png" alt="">*@
+                                        </div>
+                                        <div class="media-body">
+                                            <h4>@item.NAME</h4>
+                                            <h5>@item.CREATE_AT</h5>
+                                            @*<a class="reply_btn" href="#">Reply</a>*@
+                                        </div>
+                                    </div>
+                                    <p>
+                                       @item.ACIKLAMA
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                       
                     </div>
                     <div class="col-lg-6">
                         <div class="review_box">
                             <h4>Yorum Yaz</h4>
-                            <form class="row contact_form" action="contact_process.php" method="post" id="contactForm" novalidate="novalidate">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Full name">
-                                    </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Adınızı giriniz">
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="email" class="form-control" id="email" name="email" placeholder="Email Address">
-                                    </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="Mail adresiniz">
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="number" name="number" placeholder="Phone Number">
-                                    </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <textarea class="form-control" type="text" id="message" name="message" rows="1" placeholder="Mesajınız"></textarea>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control" name="message" id="message" rows="1" placeholder="Message"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 text-right">
-                                    <button type="submit" value="submit" class="btn primary-btn">Gönder</button>
-                                </div>
-                            </form>
+                            </div>
+                            @{
+                                alertmesajgostermedurumu = "yorumicin"; 
+                            }
+                            @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
+
+                            <div class="col-md-12 text-right">
+                                <button onclick="YorumYap()" class="btn primary-btn">Gönder</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -169,136 +187,106 @@
                         <div class="row total_rate">
                             <div class="col-6">
                                 <div class="box_total">
-                                    <h5>Overall</h5>
-                                    <h4>4.0</h4>
-                                    <h6>(03 Reviews)</h6>
+                                    <h5>En fazla Yıldız</h5>
+                                   
+                                    @{
+                                        Model.Stars.isToplam = false;
+                                    }
+
+                                    <h4>@Html.Partial("_YildizGoster",@Model.Stars)</h4>
+                              
+                                   
+                                    <h6><strong>(@Model.Stars.EnFazlaSitar)</strong></h6>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="rating_list">
-                                    <h3>Based on 3 Reviews</h3>
-                                    <ul class="list">
-                                        <li>
-                                            <a href="#">
-                                                5 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                4 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                3 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                2 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                1 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 01
-                                            </a>
-                                        </li>
-                                    </ul>
+                                    <h3>Kitaba ait yıldızlar</h3>
+                                    @{
+                                        Model.Stars.isToplam = true;
+                                    }
+                                   
+                                    <div class="col-sm-7">
+                                        @Html.Partial("_YildizGoster",@Model.Stars)
+                                     
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
-                        <div class="review_list">
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/vendors/img/product/review-1.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
-                                </p>
-                            </div>
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/vendors/img/product/review-2.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
-                                </p>
-                            </div>
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="~/vendors/img/product/review-3.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo
-                                </p>
-                            </div>
+
+                        <div style="height:30px">
+                            <h3><strong>Değerlendimeler</strong></h3>
                         </div>
+                        @foreach (var item in @Model.Vm_Book_Degerlendirme_List)
+                        {
+                            <div class="review_list">
+                                <div class="review_item">
+                                    <div class="media">
+                                        <div class="d-flex">
+                                            @*<img src="~/vendors/img/product/review-1.png" alt="">*@
+                                        </div>
+                                        <div class="media-body">
+                                            <h4>@item.NAME</h4>
+
+                                            @for (int i = 0; i < @item.StarPuani; i++)
+                                            {
+                                                <i class="price-text-color fa fa-star"> </i>
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                    <p>
+                                        @item.ACIKLAMA
+                                    </p>
+                                </div>
+                            </div>
+                        }
+
                     </div>
                     <div class="col-lg-6">
                         <div class="review_box">
                             <h4>Kitabı Değerlendiriniz</h4>
-                            <p>Yıldız:</p>
-                            <ul class="list">
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                            </ul><br />
-                            <p>Değerlendime giriniz</p>
-                            <form action="#/" class="form-contact form-review mt-3">
+                            @*Yıldız:*@
+                            <div class="col-sm-12">
+                                <h3>
+                                    <i class="yildizver fa fa-star" onclick="YildizVer(1)"> </i>
+                                    <i class="yildizver fa fa-star" onclick="YildizVer(2)"> </i>
+                                    <i class="yildizver fa fa-star" onclick="YildizVer(3)"> </i>
+                                    <i class="yildizver fa fa-star" onclick="YildizVer(4)"> </i>
+                                    <i class="yildizver fa fa-star" onclick="YildizVer(5)"> </i>
+                                </h3>
+                            </div>
+                            <button type="button" class="btn btn-error" onclick="YildizIptalEt(0)">
+                                Verilen Yıldızı İptal Et
+                            </button>
+                            <div style="height:10px;margin:10px 2px;">
+                                <p>Değerlendime giriniz</p>
+                            </div>
+                            <br />
+                            <div style="height:auto;margin:10px 2px;">
+                                <div style="height:50px;"></div>
                                 <div class="form-group">
-                                    <input class="form-control" name="name" type="text" placeholder="Enter your name" required>
+                                    <input class="form-control" id="ad" type="text" placeholder="Adınız" required>
+
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" name="email" type="email" placeholder="Enter email address" required>
+                                    <input class="form-control" id="mail" type="text" placeholder="Mail adresiniz" required>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" name="subject" type="text" placeholder="Enter Subject">
+                                    <input class="form-control" id="konu" type="text" placeholder="Konu giriniz">
                                 </div>
                                 <div class="form-group">
-                                    <textarea class="form-control different-control w-100" name="textarea" id="textarea" cols="30" rows="5" placeholder="Enter Message"></textarea>
+                                    <textarea class="form-control different-control w-100" type="text" id="aciklamagir" cols="30" rows="5" placeholder="Değerlendirmenizi giriniz"></textarea>
                                 </div>
-                                <div class="form-group text-center text-md-right mt-3">
-                                    <button type="submit" class="button button--active button-review">Değerlendir</button>
-                                </div>
-                            </form>
+
+                               
+                                @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
+
+
+                                <button type="button" class="btn btn-success" onclick="Degerlendir()">Değerlendir</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -306,3 +294,150 @@
         </div>
     </div>
 </section>
+
+
+<script>
+
+    var yildizPuani = 0;
+
+    function YorumYap() {
+
+        console.log("geldi.");
+        var name = $("#name").val();
+        var email = $("#email").val();
+        var message = $("#message").val();
+
+        var kitapId = $("#kitapId").val();
+        var degerlendirme = $("#yorummesajiicin").val();
+
+        console.log("ad:" + name + " email:" + email + " aciklama:" + message);
+
+        if (ad == "" || email == "" ||  message == "") {
+            $("#uyari-" + degerlendirme).css("display", "block");
+            $("#bilgi-" + degerlendirme).css("display", "none");
+            $("#basarili-" + degerlendirme).css("display", "none");
+            $("#uyari-degerlendirme #mesaj").html("Tüm alanları doldurunuz");
+            return;
+        }
+
+        $.post("@Url.Action(nameof(KitaplarController.PostBooksComments), "Kitaplar")", {
+            "NAME": name,
+            "EMAIL": email,
+            "BookId": kitapId,
+            "ACIKLAMA": message,
+           
+
+        }, function (data) {
+            console.log("data:" + data.state);
+            if (data.state == 1) {
+                $("#basarili-" + degerlendirme).css("display", "block");
+                $("#basarili-" + degerlendirme + " #mesaj").html(data.message);
+
+                $("#bilgi-" + degerlendirme).css("display", "none");
+                $("#uyari-" + degerlendirme).css("display", "none");
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + degerlendirme).css("display", "block");
+                $("#bilgi-" + degerlendirme + " #mesaj").html(data.message);
+
+                $("#basarili-" + degerlendirme).css("display", "none");
+                $("#uyari-" + degerlendirme).css("display", "none");
+            }
+            else {
+                $("#uyari-" + degerlendirme).css("display", "block");
+                $("#bilgi-" + degerlendirme).css("display", "none");
+                $("#basarili-" + degerlendirme).css("display", "none");
+                $("#uyari-" + degerlendirme + " #mesaj").html(data.message);
+            }
+
+        });
+    }
+
+    function Degerlendir() {
+        console.log("geldi.");
+        var ad = $("#ad").val();
+        var email = $("#mail").val();
+        var konu = $("#konu").val();
+        var aciklama = $("#aciklamagir").val();
+        var kitapId = $("#kitapId").val();
+        var degerlendirme = $("#degerlendirmemesaicin").val();
+
+        console.log("ad:" + ad + " email:" + email + " konu:" + konu + " aciklama:" + aciklama);
+
+        if (yildizPuani == 0) {
+            $("#uyari-" + degerlendirme).css("display", "block");
+            $("#bilgi-" + degerlendirme).css("display", "none");
+            $("#basarili-" + degerlendirme).css("display", "none");
+            $("#uyari-" + degerlendirme + " #mesaj").html("Yıldız veriniz.");
+            return;
+        }
+
+        if (ad == "" || email == "" || konu == "" || aciklama == "") {
+            $("#uyari-" + degerlendirme).css("display", "block");
+            $("#bilgi-" + degerlendirme).css("display", "none");
+            $("#basarili-" + degerlendirme).css("display", "none");
+            $("#uyari-degerlendirme #mesaj").html("Tüm alanları doldurunuz");
+            return;
+        }
+
+        $.post("@Url.Action(nameof(KitaplarController.PostBooksDegerlendirme), "Kitaplar")", {
+            "NAME": ad,
+            "EMAIL": email,
+            "KONU": konu,
+            "BookId": kitapId,
+            "ACIKLAMA": aciklama,
+            "StarPuani": yildizPuani
+
+        }, function (data) {
+            console.log("data:" + data.state);
+            if (data.state == 1) {
+                $("#basarili-" + degerlendirme).css("display", "block");
+                $("#basarili-" + degerlendirme + " #mesaj").html(data.message);
+
+                $("#bilgi-" + degerlendirme).css("display", "none");
+                $("#uyari-" + degerlendirme).css("display", "none");
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + degerlendirme).css("display", "block");
+                $("#bilgi-" + degerlendirme + " #mesaj").html(data.message);
+
+                $("#basarili-" + degerlendirme).css("display", "none");
+                $("#uyari-" + degerlendirme).css("display", "none");
+            }
+            else {
+                $("#uyari-" + degerlendirme).css("display", "block");
+                $("#bilgi-" + degerlendirme).css("display", "none");
+                $("#basarili-" + degerlendirme).css("display", "none");
+                $("#uyari-" + degerlendirme + " #mesaj").html(data.message);
+            }
+
+        });
+    }
+
+    var yildizlar = document.getElementsByClassName("yildizver");
+
+    function YildizVer(adet) {
+
+        yildizPuani = adet;
+        console.log("adet:" + adet + " yildizlar.length :" + yildizlar.length);
+
+        for (var i = 0; i < yildizlar.length; i++) {
+            $(yildizlar[i]).css("color", "gray");
+        }
+
+        for (var i = 0; i < adet; i++) {
+            $(yildizlar[i]).css("color", "dodgerblue");
+        }
+    }
+
+    function YildizIptalEt(adet) {
+
+        yildizPuani = adet;
+        console.log("adet:" + adet);
+        for (var i = 0; i < yildizlar.length; i++) {
+            $(yildizlar[i]).css("color", "gray");
+        }
+    }
+
+
+</script>

@@ -17,6 +17,25 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public List<VM_BOOKS_DEGERLENDIRME> GetDegerlendirmelerBooksById(long kitapId)
+        {
+            Task<string> jsonContent = GetData("api/Books/GetDegerlendirmelerBooksById?" + "kitapId=" + kitapId);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<List<VM_BOOKS_DEGERLENDIRME>>(jsonContent.Result);
+            return result;
+        }
+
+        public List<VM_BOOKS_COMMENT> GetCommenstBooksById(long kitapId)
+        {
+            Task<string> jsonContent = GetData("api/Books/GetCommenstBooksById?" + "kitapId=" + kitapId);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<List<VM_BOOKS_COMMENT>>(jsonContent.Result);
+            return result;
+        }
+
+
         public List<VM_BOOKS>? GetBooksList()
         {
             Task<string> jsonContent = GetData("api/Books/GetBooksList");
@@ -54,7 +73,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<ServiceResult<FavoriBooks>>(jsonContent.Result);
             return result;
         }
-
+        
         public ServiceResult<BooksStars> PostBooksStars(BooksStars star)
         {
             string stringData = JsonConvert.SerializeObject(star);
@@ -65,6 +84,25 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public ServiceResult PostBooksDegerlendirme(VM_BOOKS_DEGERLENDIRME degerlendirme)
+        {
+            string stringData = JsonConvert.SerializeObject(degerlendirme);
+            Task<string> jsonContent = PostData("api/Books/PostBooksDegerlendirme", stringData);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
+            return result;
+        }
+
+        public ServiceResult PostBooksComments(VM_BOOKS_COMMENT mesajlar)
+        {
+            string stringData = JsonConvert.SerializeObject(mesajlar);
+            Task<string> jsonContent = PostData("api/Books/PostBooksComments", stringData);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
+            return result;
+        }
 
         public List<VM_BOOKS>? TumKitaplar(VM_ARAMA_INPUT arama)
         {

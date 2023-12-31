@@ -1,0 +1,95 @@
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_Stars
+
+@if (@Model.isToplam)
+{
+
+    <h5>
+        <i class="price-text-color fa fa-star"> </i>
+        &nbsp;<strong>(@Model.BirStarToplam) </strong>
+    </h5>
+    <h5>
+
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        &nbsp;<strong>(@Model.IkiStarToplam) </strong>
+    </h5>
+    <h5>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        &nbsp;<strong>(@Model.UcStarToplam) </strong>
+    </h5>
+    <h5>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        &nbsp;<strong>(@Model.DortStarToplam) </strong>
+    </h5>
+    <h5>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        &nbsp;<strong>(@Model.BesStarToplam) </strong>
+    </h5>
+}
+else
+{
+    @if (@Model.HangiStar == "yildiz1")
+    {
+        <i class="price-text-color fa fa-star"> </i>
+
+
+    }
+    else
+@if (@Model.HangiStar == "yildiz2")
+    {
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        @if (@Model.isToplam)
+        {
+            <strong>(@Model.IkiStarToplam) </strong>
+        }
+    }
+    else  @if (@Model.HangiStar == "yildiz3")
+    {
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        @if (@Model.isToplam)
+        {
+
+            <strong>(@Model.UcStarToplam) </strong>
+        }
+    }
+    else  @if (@Model.HangiStar == "yildiz4")
+    {
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+
+        @if (@Model.isToplam)
+        {
+
+            <strong>(@Model.DortStarToplam) </strong>
+        }
+    }
+    else
+    {
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+
+        @if (@Model.isToplam)
+        {
+
+            <strong>(@Model.BesStarToplam) </strong>
+        }
+    }
+
+}

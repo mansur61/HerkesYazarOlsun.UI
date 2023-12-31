@@ -31,11 +31,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [Route("KitabiFavorilereEkle")]
         public JsonResult KitabiFavorilereEkle(long id)
         {
-           /* FAVORILER fAVORILER = new FAVORILER()
-            {
-                BOOKS_ID = id,
-                USER_ID = 1
-            };*/
+            /* FAVORILER fAVORILER = new FAVORILER()
+             {
+                 BOOKS_ID = id,
+                 USER_ID = 1
+             };*/
 
             FavoriBooks fAVORILER = new FavoriBooks()
             {
@@ -124,17 +124,27 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult KitapDetay(long kitapId)
         {
+            VM_BOOKS_DETAY kitapDetay = new VM_BOOKS_DETAY();
+
             var getBookDetay = new BooksService().GetBooks(kitapId);
-            return View(getBookDetay);
+            var vmBook = ObjectMapper.Map(getBookDetay, new VM_BOOKS());
+
+            kitapDetay.Vm_Book = vmBook;
+            kitapDetay.Vm_Book_Degerlendirme_List = new BooksService().GetDegerlendirmelerBooksById(kitapId);
+            kitapDetay.Vm_Book_Comments = new BooksService().GetCommenstBooksById(kitapId);
+
+            kitapDetay.Stars = new BooksService().GetMaxStarBooksById(kitapId);
+
+            return View(kitapDetay);
         }
 
         public IActionResult TumKitaplar(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
-           // vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
+            // vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
             vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
             var getBookList = new BooksService().TumKitaplar(arama);
-            vM_BOOKS.VMBooksList = getBookList!; 
+            vM_BOOKS.VMBooksList = getBookList!;
             vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
             return View(vM_BOOKS);
         }
@@ -148,6 +158,58 @@ namespace HerkesYazarOlsun.Portal.Controllers
             vM_BOOKS.VMBooksList = bookList!;
 
             return View(vM_BOOKS);
+        }
+
+        [HttpPost]
+        [Route("PostBooksStars")]
+        public ServiceResult<BooksStars> PostBooksStars(long kitapId, int yildizPuani)
+        {
+            ServiceResult<BooksStars> result = new ServiceResult<BooksStars>();
+
+            BooksStars bookStar = new BooksStars()
+            {
+                BookaId = Convert.ToInt32(kitapId),
+                LoginUserId = 1,
+                StarPuani = yildizPuani
+            };
+            result = new BooksService().PostBooksStars(bookStar);
+
+            return result;
+        }
+
+
+        [HttpPost]
+        [Route("PostBooksDegerlendirme")]
+        public JsonResult PostBooksDegerlendirme(VM_BOOKS_DEGERLENDIRME degerlendirme)
+        {
+
+            ServiceResult<BooksStars> sonuc = PostBooksStars(degerlendirme.BookId ?? 0, degerlendirme.StarPuani);
+            ServiceResult result = new ServiceResult();
+
+            if (sonuc.State == MessageResultState.SUCCESS)
+            {
+                degerlendirme.LoginUserId = 1;
+                result = new BooksService().PostBooksDegerlendirme(degerlendirme);
+            }
+            else
+            {
+                result.State = MessageResultState.ERROR;
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Route("PostBooksComments")]
+        public JsonResult PostBooksComments(VM_BOOKS_COMMENT mesajlar)
+        {
+
+            ServiceResult result = new ServiceResult();
+
+            mesajlar.LoginUserId = 1;
+            result = new BooksService().PostBooksComments(mesajlar);
+
+            return Json(result);
         }
 
     }

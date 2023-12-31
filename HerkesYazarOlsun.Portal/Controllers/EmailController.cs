@@ -11,7 +11,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
 {
     public class EmailController : Controller
     {
-     
+        EmailService emailService;
+        EmailController(EmailService emailService)
+        {
+            this.emailService = emailService;
+        }
+
         public IActionResult EmailDogrula()
         {
             return View();
@@ -37,7 +42,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             // bu kısmı yarın test et
             ServiceResult updateResult = new KisiService().PostKisiUpdate(vM_USERS);
-            if(updateResult.State != MessageResultState.SUCCESS)
+            if (updateResult.State != MessageResultState.SUCCESS)
             {
                 result = updateResult;
                 return result;
@@ -48,10 +53,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var rnd3 = new Random().Next(0, 10);
             var rnd4 = new Random().Next(0, 10);
 
-            string sifre = rnd1.ToString() + ""+ rnd2.ToString()+ "" + rnd3.ToString() +""+ rnd4.ToString();
+            string sifre = rnd1.ToString() + "" + rnd2.ToString() + "" + rnd3.ToString() + "" + rnd4.ToString();
 
-            string sonuc =  EmailGonder(kime,sifre);
-            
+            var icerik = new VM_MAIL_ICERIK()
+            {
+                kime = kime,
+                sifre = sifre,
+                Host = "smtp.outlook.com",  //microsoft servislerini kullan
+                gondericii_mail = "kayamansur61@gmail.com",
+                gondericii_sifre = "Google.*?61",
+            };
+
+            string sonuc = emailService.EmailGonder(icerik);
+
 
             if (sonuc == "-1")
             {
@@ -68,44 +82,6 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
 
-        public string EmailGonder(string kime, string sifre)
-        {
-            MailMessage mailMessage = new MailMessage();
-            string gonderici_mail = "kayamansur61@gmail.com";
-            mailMessage.From = new MailAddress(gonderici_mail);
 
-           
-            mailMessage.To.Add(kime);
-            mailMessage.Subject = "Herkes Yazar Olsun Mail Doğrulama";
-            mailMessage.Body = "Gelen Kod : "+ sifre; // html formatta ta hazırlanabilir
-
-            SmtpClient smtpClient = new SmtpClient();
-            smtpClient.Host = "smtp.outlook.com"; //kullanılan servis microsoft 
-            //"smtp.gmail.com"; // 3. parti uygulamalara izin verilmiyor
-
-            smtpClient.Port = 587;
-            //smtpClient.UseDefaultCredentials = true;
-            smtpClient.EnableSsl = true;
-
-            ////gmail için
-            //string gonderici_username = "kayamansur61@gmail.com";
-            //string gonderici_password = "Google.*?6161";
-
-            //microsoft için
-            string gonderici_username = "kayamansur61@gmail.com";
-            string gonderici_password = "Google.*?61";
-            smtpClient.Credentials = new NetworkCredential(gonderici_username, gonderici_password);
-           
-
-            try
-            {
-                smtpClient.Send(mailMessage);
-                return "1";
-            }
-            catch (Exception ex)
-            {
-                return "-1";
-            }
-        }
     }
 }

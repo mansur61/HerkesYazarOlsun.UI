@@ -9,6 +9,13 @@
 
     <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
 }
+
+<input type="hidden" id="registericin" value="register" />
+
+@{
+    string alertmesajgostermedurumu = "register";
+}
+
 <section class="login_box_area section-margin">
     <div class="container">
         <div class="row">
@@ -54,7 +61,7 @@
                             <button type="submit" class="button button-register w-100" onclick="KayitOl()">Kayıt Ol</button>
                         </div>
                     </div>
-                    @Html.Partial("_AlertMesaj")
+                    @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
 
                 </div>
             </div>
@@ -75,7 +82,10 @@
         var email = $("#email").val();
         var password = $("#password").val();
         var telno = $("#telno").val();
-        
+
+        var register = $("#registericin").val();
+        console.log("register :" + register);
+
         $.post("@Url.Action(nameof(HomeController.SaveRegister), "Home")", {
             "username": uername,
             "email": email,
@@ -84,24 +94,24 @@
         }, function (data) {
             console.log(data);
             if (data.state == 1) {
-                $("#basarili").css("display", "block");
-                $("#basarili #mesaj").html(data.message);
+                $("#basarili-" + register).css("display", "block");
+                $("#basarili-" + register + " #mesaj").html(data.message);
 
-                $("#bilgi").css("display", "none");
-                $("#uyari").css("display", "none");
+                $("#bilgi-" + register).css("display", "none");
+                $("#uyari-" + register).css("display", "none");
             }
             else if (data.state == 3) {
-                $("#bilgi").css("display", "block");
-                $("#bilgi #mesaj").html(data.message);
+                $("#bilgi-" + register).css("display", "block");
+                $("#bilgi-" + register + " #mesaj").html(data.message);
 
-                $("#basarili").css("display", "none");
-                $("#uyari").css("display", "none");
+                $("#basarili-" + register).css("display", "none");
+                $("#uyari-" + register).css("display", "none");
             }
             else {
-                $("#uyari").css("display", "block");
-                $("#bilgi").css("display", "none");
-                $("#basarili").css("display", "none");
-                $("#uyari #mesaj").html(data.message);
+                $("#uyari-" + register).css("display", "block");
+                $("#bilgi-" + register).css("display", "none");
+                $("#basarili-" + register).css("display", "none");
+                $("#uyari-" + register + " #mesaj").html(data.message);
             }
 
         });
