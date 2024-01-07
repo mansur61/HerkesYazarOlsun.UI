@@ -24,6 +24,7 @@ namespace HerkesYazarOlsun.Portal.Services
         {
             var client = new GetHttpClientCustom().GetHttpClient();
             tckimlikno ??= _httpContextAccessor?.User.GetTcKimlikNo();
+            var mail = _httpContextAccessor?.User.GetEmail();
             //tckimlikno = tckimlikno.HasValue ? tckimlikno : _httpContextAccessor.User.GetTcKimlikNo();
             //var birim_id = _httpContextAccessor.User.GetUserInfoByKey("birim_id");
             //if (birim_id != 0)
@@ -31,6 +32,7 @@ namespace HerkesYazarOlsun.Portal.Services
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
             client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
+            client.DefaultRequestHeaders.Add("email", mail.ToString());
 
             var ip = _httpContextAccessor?.User.GetIpAddress();
             client.DefaultRequestHeaders.Add("ip", ip);
@@ -71,6 +73,7 @@ namespace HerkesYazarOlsun.Portal.Services
         {
             var client = new GetHttpClientCustom().GetHttpClient();
             tckimlikno ??= _httpContextAccessor?.User.GetTcKimlikNo();
+            var mail = _httpContextAccessor?.User.GetEmail();
             //tckimlikno = tckimlikno.HasValue ? tckimlikno : _httpContextAccessor.User.GetTcKimlikNo();
             //var birim_id = _httpContextAccessor.User.GetUserInfoByKey("birim_id");
             //if (birim_id != 0)
@@ -78,6 +81,7 @@ namespace HerkesYazarOlsun.Portal.Services
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
             client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
+            client.DefaultRequestHeaders.Add("email", mail.ToString());
 
             client.BaseAddress = new Uri(UriService);
             client.DefaultRequestHeaders.Accept.Clear();
