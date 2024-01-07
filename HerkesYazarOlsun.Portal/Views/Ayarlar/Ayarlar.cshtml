@@ -3,17 +3,57 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model HerkesYazarOlsun.Model.ViewModel.VM_AYARLAR
+@using HerkesYazarOlsun.Portal.Controllers;
+
+
+
+
+@if (@Model.UserDetail != null)
+{
+    <input type="hidden" id="UserDetailId" value="@Model.UserDetail.ID" />
+}
+else
+{
+    <input type="hidden" id="UserDetailId" value="0" />
+}
+@if (@Model.Profile != null)
+{
+    <input type="hidden" id="ProfileId" value="@Model.Profile.ID" />
+}
+else
+{
+    <input type="hidden" id="ProfileId" value="0" />
+}
+@if (@Model.Bildirim != null)
+{
+    <input type="hidden" id="BildirimId" value="@Model.Bildirim.ID" />
+}
+else
+{
+    <input type="hidden" id="BildirimId" value="0" />
+}
+
+<input type="hidden" id="loginId" value="@Model.LoginUserId" />
+
+
+<input type="hidden" id="ayarlaricin" value="ayarlar" />
+@{
+    string alertmesajgostermedurumu = "ayarlar";
+}
+
+
 <div class="container light-style flex-grow-1 container-p-y" style="margin-top:50px">
 
     <h1 class="font-weight-bold py-3 mb-4">
-       Ayarlar
+        Ayarlar
     </h1>
     <br />
     <div class="card overflow-hidden">
         <div class="row no-gutters row-bordered row-border-light">
             <div class="col-md-3 pt-0">
                 <ul class="nav nav-tabs" role="tablist">
-                    
+
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#account-general" role="tab" aria-selected="false">
                             <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
@@ -21,15 +61,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#account-info" role="tab" aria-selected="false">
+                        <a class="nav-link" data-toggle="tab" href="#account-profil" role="tab" aria-selected="false">
                             <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                            <span class="hidden-xs-down font-weight-bold">Bilgiler </span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#account-change-password" role="tab" aria-selected="false">
-                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                            <span class="hidden-xs-down font-weight-bold">Şifre Değiştir.</span>
+                            <span class="hidden-xs-down font-weight-bold">Profil Ayarları</span>
                         </a>
                     </li>
 
@@ -39,25 +73,229 @@
                             <span class="hidden-xs-down font-weight-bold">Linkler</span>
                         </a>
                     </li>
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#account-profil" role="tab" aria-selected="false">
+                        <a class="nav-link" data-toggle="tab" href="#account-info" role="tab" aria-selected="false">
                             <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                            <span class="hidden-xs-down font-weight-bold">Profil Ayarları</span>
+                            <span class="hidden-xs-down font-weight-bold">Detay Bilgiler </span>
                         </a>
                     </li>
+                    @*<li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#account-change-password" role="tab" aria-selected="false">
+                    <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                    <span class="hidden-xs-down font-weight-bold">Şifre Değiştir.</span>
+                    </a>
+                    </li>*@
+
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#account-notifications" role="tab" aria-selected="false">
                             <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
                             <span class="hidden-xs-down font-weight-bold">Bildirimler</span>
                         </a>
                     </li>
+
                 </ul>
-                
+
             </div>
             <div class="col-md-9">
                 <div class="tab-content">
                     <div class="tab-pane p-20 active" id="account-general" role="tabpanel">
+
+
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Kullanıcı Adı</label>
+                                @if (@Model.User != null)
+                                {
+                                    <input type="text" class="form-control" id="username" value="@Model.User.USERNAME">
+                                }
+                                else
+                                {
+                                    <input type="password" class="form-control" id="username">
+                                }
+
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Adınız</label>
+                                @if (@Model.User != null)
+                                {
+                                    <input type="text" class="form-control" id="name" value="@Model.User.NAME">
+                                }
+                                else
+                                {
+                                    <input type="password" class="form-control" id="name">
+                                }
+
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">E-mail</label>
+                                @if (@Model.User != null)
+                                {
+                                    <input type="text" class="form-control" id="email" value="@Model.User.EMAIL">
+                                }
+                                else
+                                {
+                                    <input type="password" class="form-control" id="email">
+                                }
+
+                                <div class="alert alert-warning mt-3">
+                                    E-postanız onaylanmadı. Lütfen gelen kutunuzu kontrol edin.<br>
+                                    <a href="javascript:void(0)" onclick="EpostaDogrula()">Doğrulamayı tekrar gönder</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-body pb-2">
+
+                            <div class="form-group">
+                                <label class="form-label">Mevcur şifre</label>
+                                @if (@Model.User != null)
+                                {
+                                    <input type="password" class="form-control" id="mevcutSifre" value="@Model.User.PASSWORD">
+                                }
+                                else
+                                {
+                                    <input type="password" class="form-control" id="mevcutSifre">
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yeni şifre</label>
+                                <input type="password" class="form-control" id="yeniSifre">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yeni şifreyi tekrar gir</label>
+                                <input type="password" class="form-control" id="yeniSifreTekrar">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane p-20" id="account-info" role="tabpanel">
+                        <div class="card-body pb-2">
+
+                            <div class="form-group">
+                                <label class="form-label">Hakkında Yazısı</label>
+                                <textarea class="form-control" rows="5" id="hakkinda">
+                                    @if (@Model.UserDetail != null)
+                                    {
+                                        @Model.UserDetail.HAKKINDA
+                                    }
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Doğum tarihi</label>
+                                @if (@Model.UserDetail != null)
+                                {
+                                    @if (@Model.UserDetail.DogumTarihi.HasValue)
+                                    {
+                                        <input type="text" class="form-control" id="dTarih"
+                                               value="@Model.UserDetail.DogumTarihi.Value.ToShortTimeString()">
+                                    }
+                                    else
+                                    {
+                                        <input type="text" class="form-control" id="dTarih" />
+                                    }
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="dTarih" />
+                                }
+
+                            </div>
+
+                        </div>
+                        <hr class="border-light m-0">
+                        <div class="card-body pb-2">
+
+                            <h6 class="mb-4">Telefonu Güncelle</h6>
+                            <div class="form-group">
+                                <label class="form-label">Tel</label>
+                                @if (@Model.UserDetail != null)
+                                {
+                                    <input type="text" class="form-control" id="tel" value="@Model.UserDetail.TEL">
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="tel">
+                                }
+
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Siteniz</label>
+                                @if (@Model.UserDetail != null)
+                                {
+                                    <input type="text" class="form-control" id="website" value="@Model.UserDetail.WebSite">
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="website">
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane p-20" id="account-social-links" role="tabpanel">
+                        <div class="card-body pb-2">
+
+                            <div class="form-group">
+                                <label class="form-label">Twitter</label>
+                                @if (@Model.UserDetail != null)
+                                {
+                                    <input type="text" class="form-control" id="twt" value="@Model.UserDetail.TwitterLink">
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="twt">
+                                }
+
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Facebook</label>
+                                @if (@Model.UserDetail != null)
+                                {
+                                    <input type="text" class="form-control" id="fcb" value="@Model.UserDetail.FacebookLink">
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="fcb">
+                                }
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">LinkedIn</label>
+                                @if (@Model.UserDetail != null)
+                                {
+                                    <input type="text" class="form-control" id="lkn" value="@Model.UserDetail.LinkedinLink">
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="lkn">
+                                }
+
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Instagram</label>
+                                @if (@Model.UserDetail != null)
+                                {
+                                    <input type="text" class="form-control" id="inst" value="@Model.UserDetail.InstagramLink">
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="inst">
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane p-20" id="account-profil" role="tabpanel">
+
                         <div class="card-body media align-items-center">
                             <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="d-block ui-w-80">
                             <div class="media-body ml-4">
@@ -70,114 +308,7 @@
                                 <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
                             </div>
                         </div>
-                        <hr class="border-light m-0">
 
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label class="form-label">Kullanıcı Adı</label>
-                                <input type="text" class="form-control mb-1" value="nmaxwell">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Adınız</label>
-                                <input type="text" class="form-control" value="Nelle Maxwell">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">E-mail</label>
-                                <input type="text" class="form-control mb-1" value="nmaxwell@mail.com">
-                                <div class="alert alert-warning mt-3">
-                                    E-postanız onaylanmadı. Lütfen gelen kutunuzu kontrol edin.<br>
-                                    <a href="javascript:void(0)">Doğrulamayı tekrar gönder</a>
-                                </div>
-                            </div>
-                           
-                        </div>
-
-                    </div>
-                    <div class="tab-pane p-20" id="account-change-password" role="tabpanel">
-                        <div class="card-body pb-2">
-
-                            <div class="form-group">
-                                <label class="form-label">Mevcur şifre</label>
-                                <input type="password" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Yeni şifre</label>
-                                <input type="password" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Yeni şifreyi tekrar gir</label>
-                                <input type="password" class="form-control">
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="tab-pane p-20" id="account-info" role="tabpanel">
-                        <div class="card-body pb-2">
-
-                            <div class="form-group">
-                                <label class="form-label">Hakkında Yazısı</label>
-                                <textarea class="form-control" rows="5">Hakkında yazısı değiştirilebiblir.</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Doğum tarihi</label>
-                                <input type="text" class="form-control" value="May 3, 1995">
-                            </div>
-                           @* <div class="form-group">
-                                <label class="form-label">Ülke</label>
-                                <select class="wide">
-                                    <option>USA</option>
-                                    <option selected="">Canada</option>
-                                    <option>UK</option>
-                                    <option>Germany</option>
-                                    <option>France</option>
-                                </select>
-                            </div>*@
-
-
-                        </div>
-                        <hr class="border-light m-0">
-                        <div class="card-body pb-2">
-
-                            <h6 class="mb-4">Telefonu Güncelle</h6>
-                            <div class="form-group">
-                                <label class="form-label">Tel</label>
-                                <input type="text" class="form-control" value="+0 (123) 456 7891">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Siteniz</label>
-                                <input type="text" class="form-control" value="">
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <div class="tab-pane p-20" id="account-social-links" role="tabpanel">
-                        <div class="card-body pb-2">
-
-                            <div class="form-group">
-                                <label class="form-label">Twitter</label>
-                                <input type="text" class="form-control" value="https://twitter.com/user">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Facebook</label>
-                                <input type="text" class="form-control" value="https://www.facebook.com/user">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">LinkedIn</label>
-                                <input type="text" class="form-control" value="">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Instagram</label>
-                                <input type="text" class="form-control" value="https://www.instagram.com/user">
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="tab-pane p-20" id="account-profil" role="tabpanel">
-                       
                         <hr class="border-light m-0">
                         <div class="card-body">
                             <h5 class="mb-2">
@@ -186,7 +317,7 @@
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                     <span id="seciim">Seçiniz</span>
-                                   
+
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
@@ -195,39 +326,30 @@
                                     <li><a class="renkler" id="# ADD8E6" name="Açık Mavi" onclick="RenkSec(2)">Açık Mavi</a></li>
                                 </ul>
                             </div>
-                           
-                           
+
+
                         </div>
-                        
+
                     </div>
                     <div class="tab-pane p-20" id="account-notifications" role="tabpanel">
                         <div class="card-body pb-2">
-                            Burası dursun zamanla ilgili kuralı eklersin..
-                            <h6 class="mb-4">Activity</h6>
+
+                            <h6 class="mb-4">Etkileşim</h6>
 
                             <div class="form-group">
+
                                 <label class="switcher">
-                                    <input type="checkbox" class="switcher-input" checked="">
+                                    <input type="checkbox" class="switcher-input" checked id="yorumchk" value="yorum">
                                     <span class="switcher-indicator">
                                         <span class="switcher-yes"></span>
                                         <span class="switcher-no"></span>
                                     </span>
-                                    <span class="switcher-label">Birisi makaleme yorum yaptığında bana e-posta gönder</span>
+                                    <span class="switcher-label">Birisi kitabıma yorum yaptığında bana e-posta gönder</span>
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label class="switcher">
-                                    <input type="checkbox" class="switcher-input" checked="">
-                                    <span class="switcher-indicator">
-                                        <span class="switcher-yes"></span>
-                                        <span class="switcher-no"></span>
-                                    </span>
-                                    <span class="switcher-label">Birisi forum başlığıma yanıt verdiğinde bana e-posta gönder</span>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label class="switcher">
-                                    <input type="checkbox" class="switcher-input">
+                                    <input type="checkbox" class="switcher-input" id="takipchk" value="takip">
                                     <span class="switcher-indicator">
                                         <span class="switcher-yes"></span>
                                         <span class="switcher-no"></span>
@@ -239,38 +361,19 @@
                         <hr class="border-light m-0">
                         <div class="card-body pb-2">
 
-                            <h6 class="mb-4">Application</h6>
+                            <h6 class="mb-4">Uygulama </h6>
 
                             <div class="form-group">
                                 <label class="switcher">
-                                    <input type="checkbox" class="switcher-input" checked="">
+                                    <input type="checkbox" class="switcher-input" checked="checked" id="yayinchk" value="yayin">
                                     <span class="switcher-indicator">
                                         <span class="switcher-yes"></span>
                                         <span class="switcher-no"></span>
                                     </span>
-                                    <span class="switcher-label">News and announcements</span>
+                                    <span class="switcher-label">Birisi kitap yayınladığında bana bildirim yolla</span>
                                 </label>
                             </div>
-                            <div class="form-group">
-                                <label class="switcher">
-                                    <input type="checkbox" class="switcher-input">
-                                    <span class="switcher-indicator">
-                                        <span class="switcher-yes"></span>
-                                        <span class="switcher-no"></span>
-                                    </span>
-                                    <span class="switcher-label">Weekly product updates</span>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label class="switcher">
-                                    <input type="checkbox" class="switcher-input" checked="">
-                                    <span class="switcher-indicator">
-                                        <span class="switcher-yes"></span>
-                                        <span class="switcher-no"></span>
-                                    </span>
-                                    <span class="switcher-label">Weekly blog digest</span>
-                                </label>
-                            </div>
+
 
                         </div>
                     </div>
@@ -278,26 +381,165 @@
             </div>
         </div>
     </div>
+
+    @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
+
     <br />
     <div class="text-right mt-3">
-        <button type="button" class="btn btn-primary">Değişiklikleri Kaydet</button>&nbsp;
-        <button type="button" class="btn btn-info">Kaydetme</button>
+        <button type="button" class="btn btn-primary" onclick="Guncelle()">Değişiklikleri Kaydet</button>&nbsp;
+        <button type="button" class="btn btn-info"  onclick="Kapat()">Kaydetme</button>
     </div>
     <br />
 </div>
 
+<div id="mail_dogulama"></div>
 <script>
+
+    var profilarkaplanirengi = "";
+    var profilarkaplanrenkkodu = "";
+
+    var isTakip = false;
+    var IsKitapYayin = false;
+    var IsKitapYorum = false;
+
+    var ayar = $("#ayarlaricin").val();
+
+    var countChecked = function () {
+        var n = $("input:checked").length;
+        console.log(n + (n === 1 ? " is" : " are") + " checked!");
+
+        const nodeList = document.querySelectorAll("input:checked");
+        for (let i = 0; i < nodeList.length; i++) {
+            if (nodeList[i].checked) {
+                if (nodeList[i].value == "yayin") {
+                    IsKitapYayin = false;
+
+                } else if (nodeList[i].value == "takip") {
+                    isTakip = false;
+                }
+                else if (nodeList[i].value == "yorum") {
+                    IsKitapYorum = false;
+                }
+            }
+        }
+    };
+
+    countChecked();
+
+    $("input[type=checkbox]").on("click", countChecked);
+
+    function Guncelle() {
+        var hakkinda = $("#hakkinda").val();
+        var dTarih = $("#dTarih").val();
+        var twt = $("#twt").val();
+        var fcb = $("#fcb").val();
+        var lkn = $("#lkn").val();
+        var inst = $("#inst").val();
+        var tel = $("#tel").val();
+        var website = $("#website").val();
+        var yeniSifreTekrar = $("#yeniSifreTekrar").val();
+        var yeniSifre = $("#yeniSifre").val();
+        var mevcutSifre = $("#mevcutSifre").val();
+        var username = $("#username").val();
+        var name = $("#name").val();
+        var email = $("#email").val();
+
+        var loginId = $("#loginId").val();
+        var UserDetailId = $("#UserDetailId").val();
+        var ProfileId = $("#ProfileId").val();
+        var BildirimId = $("#BildirimId").val();
+
+
+
+        //burdan devm edersin
+        $.post("@Url.Action(nameof(AyarlarController.SaveOrUpdateAyarlar), "Ayarlar")", {
+            "LoginUserId": loginId,
+            "UserDetailId": UserDetailId,
+            "ProfileId":ProfileId,
+            "BildirimId":BildirimId,
+            "UserDetail": {
+                "HAKKINDA":hakkinda,
+                "DogumTarihi":dTarih,
+                "TEL":tel,
+                "WebSite":website,
+                "TwitterLink":twt,
+                "FacebookLink":fcb,
+                "LinkedinLink": lkn,
+                "InstagramLink":inst,
+                "LoginUserId": loginId
+            },
+            "Profile": {
+                "LoginUserId": loginId,
+                "ProfilArkaplanResmi":profilarkaplanirengi,
+                "ProfilArkaplanRenkKodu": profilarkaplanrenkkodu
+            },
+            "User": {
+                "NAME": name,
+                "USERNAME": username,
+                "EMAIL": email,
+                "PASSWORD": yeniSifre
+            },
+            "Bildirim": {
+                "IsTakip": isTakip,
+                "IsKitapYayin": IsKitapYayin,
+                "IsKitapYorum":IsKitapYorum,
+                "LoginUserId": loginId
+            }
+
+        }, function (data) {
+            if (data.state == 1) {
+                $("#basarili-" + ayar).css("display", "block");
+                $("#basarili-" + ayar + " #mesaj").html(data.message);
+
+                $("#bilgi-" + ayar).css("display", "none");
+                $("#uyari-" + ayar).css("display", "none");
+
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + ayar).css("display", "block");
+                $("#bilgi-" + ayar + " #mesaj").html(data.message);
+
+                $("#basarili-" + ayar).css("display", "none");
+                $("#uyari-" + ayar).css("display", "none");
+            }
+            else {
+                $("#uyari-" + ayar).css("display", "block");
+                $("#bilgi-" + ayar).css("display", "none");
+                $("#basarili-" + ayar).css("display", "none");
+                $("#uyari-" + ayar + " #mesaj").html(data.message);
+            }
+
+        });
+
+    }
+
+    function Kapat(){
+        window.location.href = "/Home/Index";
+    }
+
+    function EpostaDogrula() {
+        console.log("eposta dogrulla");
+        $.get("@Url.Action(nameof(EmailController.Gonder), "Email")", {}, 
+        function (data) {
+           
+            $("#mail_dogulama").html(data);
+        });
+    }
+
     function RenkSec(id) {
         var nodeNameProperty = RenkAdiGetir(id);
+        profilarkaplanirengi = nodeNameProperty;
         $("#seciim").html(nodeNameProperty);
-       
+
     }
-    function RenkAdiGetir(id){
+
+    function RenkAdiGetir(id) {
         var nodeNameProperty = "";
         const nodeList = document.querySelectorAll(".renkler");
         for (let i = 0; i < nodeList.length; i++) {
             if (id == i) {
-                nodeNameProperty = nodeList[i].name; 
+                nodeNameProperty = nodeList[i].name;
+                profilarkaplanrenkkodu = nodeList[i].id;
             }
         }
         return nodeNameProperty;

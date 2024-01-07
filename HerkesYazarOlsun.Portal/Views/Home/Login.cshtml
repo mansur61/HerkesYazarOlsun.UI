@@ -5,48 +5,139 @@
 
 @section Styles{
 
-	<link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
 }
+
+@using HerkesYazarOlsun.Portal.Controllers;
+@model HerkesYazarOlsun.Model.ViewModel.VM_LOGIN;
+
+
+
+<input type="hidden" id="loginicin" value="logingiris" />
+@{
+    string alertmesajgostermedurumu = "logingiris";
+}
+
+
 <section class="login_box_area section-margin">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-6">
-				<div class="login_box_img">
-					<div class="hover">
-						<h4>Herkes Yazar Olsun' a Hoşgeldiniz !</h4>
-						<p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyaoruz.</p>
-						<a class="button button-account" href="/Home/Register">Kayıt Olunuz</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-6">
-				<div class="login_form_inner">
-					<h3>Giriş Yapınız</h3>
-					<form class="row login_form" action="#/" id="contactForm">
-						<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="name" name="name" placeholder="Kullanici Adi" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Kullanici Adi'">
-						</div>
-						<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="name" name="name" placeholder="Şifre" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre'">
-						</div>
-						<div class="col-md-12 form-group">
-							<div class="creat_account">
-								<input type="checkbox" id="f-option2" name="selector">
-								<label for="f-option2">Oturumumu açık tut</label>
-							</div>
-						</div>
-						<div class="col-md-12 form-group">
-							<button type="submit" value="submit" class="button button-login w-100">Giriş Yap</button>
-							<a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <div class="hover">
+                        <h4>Herkes Yazar Olsun' a Hoşgeldiniz !</h4>
+                        <p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyaoruz.</p>
+                        <a class="button button-account" href="/Home/Register">Kayıt Olunuz</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="login_form_inner">
+                    <h3>Giriş Yapınız</h3>
+                    @*<form class="row login_form" action="#/" id="contactForm">*@
+                    <form action="@Url.Action(nameof(AccountController.Login), "Account")" data-ajax-success="onSuccess" data-ajax-failure="onFailed" data-ajax="true" data-ajax-method="POST">
+                        <input type="hidden" name="RememberLogin" value="@Model.RememberLogin" />
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Email Adresiniz" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adresiniz'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="sifre" name="sifre" placeholder="Şifre" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <div class="creat_account">
+                                <input type="checkbox" id="hatirla" name="benihatirla" value="@Model.RememberLogin">
+                                <label for="f-option2">Oturumumu açık tut</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <button type="submit" value="submit" class="button button-login w-100">Giriş Yap</button>
+                            <a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
+                        </div>
+                    </form>
+                    @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
-@*@section scripts{
+<script>
 
-	<script src="~/lib/bootstrap/dist/js/main_aroma_template.js"></script>
-}*@
+    var rememberlogin = false;
+    var login = $("#loginicin").val();
+    var countChecked = function () {
+        var n = $("input:checked").length;
+        console.log(n + (n === 1 ? " is" : " are") + " checked!");
+
+        const nodeList = document.querySelectorAll("input:checked");
+        for (let i = 0; i < nodeList.length; i++) {
+            if (nodeList[i].checked) {
+                rememberlogin = true;
+                nodeList[i].value = true;
+                //if (nodeList[i].value == "beniHatirla") {
+                //    rememberlogin = true;
+                //}
+            } else {
+                nodeList[i].value = rememberlogin;
+            }
+        }
+    };
+
+    countChecked();
+
+    $("input[type=checkbox]").on("click", countChecked);
+
+    function onSuccess(data) {
+
+        if (data.state == 1) {
+            $("#basarili-" + login).css("display", "block");
+            $("#basarili-" + login + " #mesaj").html(data.message);
+
+            $("#bilgi-" + login).css("display", "none");
+            $("#uyari-" + login).css("display", "none");
+
+            window.location.href = "/Home/Index";
+
+        }
+        else if (data.state == 3) {
+            $("#bilgi-" + login).css("display", "block");
+            $("#bilgi-" + login + " #mesaj").html(data.message);
+
+            $("#basarili-" + login).css("display", "none");
+            $("#uyari-" + login).css("display", "none");
+        }
+        else {
+            $("#uyari-" + login).css("display", "block");
+            $("#bilgi-" + login).css("display", "none");
+            $("#basarili-" + login).css("display", "none");
+            $("#uyari-" + login + " #mesaj").html(data.message);
+        }
+
+        //if (data.message != "") {
+
+        //    toastrError(data.message, "Hata!");
+        //}
+        //else {
+        //    window.location.replace(data.redirecturl);
+        //}
+    }
+
+    function onFailed(data) {
+        //toastrError("İşlem Gerçekleşemedi:" + data, "Hata!");
+        if (data.state == 3) {
+            $("#bilgi-" + login).css("display", "block");
+            $("#bilgi-" + login + " #mesaj").html(data.message);
+
+            $("#basarili-" + login).css("display", "none");
+            $("#uyari-" + login).css("display", "none");
+        }
+        else {
+            $("#uyari-" + login).css("display", "block");
+            $("#bilgi-" + login).css("display", "none");
+            $("#basarili-" + login).css("display", "none");
+            $("#uyari-" + login + " #mesaj").html(data.message);
+        }
+    }
+
+
+</script>

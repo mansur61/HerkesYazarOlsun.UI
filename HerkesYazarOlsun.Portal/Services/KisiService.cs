@@ -18,6 +18,15 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public Users GetUsersByLoginId(long loginId)
+        {
+            Task<string> jsonContent = GetData("api/Users/GetUsersByLoginId?" + "loginId=" + loginId);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<Users>(jsonContent.Result);
+            return result;
+        }
+
         public VM_WriterFollow GetWriterFollowById(long yazar_id)
         {
             Task<string> jsonContent = GetData("api/Users/GetWriterFollowById?" + "yazar_id=" + yazar_id);
@@ -34,6 +43,15 @@ namespace HerkesYazarOlsun.Portal.Services
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<Users>(jsonContent.Result);
+            return result;
+        }
+
+        public ServiceResult<Users> GetKisiByMail(string mail)
+        {
+            Task<string> jsonContent = GetData("api/Users/GetKisiByMail?" + "mail=" + mail);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<ServiceResult<Users>>(jsonContent.Result);
             return result;
         }
 

@@ -3,6 +3,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
@@ -22,16 +23,17 @@ namespace HerkesYazarOlsun.Portal.Services
         protected async Task<string> GetData(string url, long? tckimlikno = null)
         {
             var client = new GetHttpClientCustom().GetHttpClient();
+            tckimlikno ??= _httpContextAccessor?.User.GetTcKimlikNo();
             //tckimlikno = tckimlikno.HasValue ? tckimlikno : _httpContextAccessor.User.GetTcKimlikNo();
             //var birim_id = _httpContextAccessor.User.GetUserInfoByKey("birim_id");
             //if (birim_id != 0)
             //{
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
-            //client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
+            client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
 
-            //var ip = _httpContextAccessor.User.GetIpAddress();
-            //client.DefaultRequestHeaders.Add("ip", ip);
+            var ip = _httpContextAccessor?.User.GetIpAddress();
+            client.DefaultRequestHeaders.Add("ip", ip);
 
             client.BaseAddress = new Uri(UriService);
             client.DefaultRequestHeaders.Accept.Clear();
@@ -68,14 +70,15 @@ namespace HerkesYazarOlsun.Portal.Services
         protected async Task<string> PostData(string url, string stringData, long? tckimlikno = null)
         {
             var client = new GetHttpClientCustom().GetHttpClient();
+            tckimlikno ??= _httpContextAccessor?.User.GetTcKimlikNo();
             //tckimlikno = tckimlikno.HasValue ? tckimlikno : _httpContextAccessor.User.GetTcKimlikNo();
             //var birim_id = _httpContextAccessor.User.GetUserInfoByKey("birim_id");
             //if (birim_id != 0)
             //{
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
-            //client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
-           
+            client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
+
             client.BaseAddress = new Uri(UriService);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

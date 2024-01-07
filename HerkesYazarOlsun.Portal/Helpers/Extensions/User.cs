@@ -26,6 +26,12 @@ namespace HerkesYazarOlsun.Portal.Helpers.Extensions
             return tckimlikno != null ? Convert.ToInt64(tckimlikno.Value) : 0;
         }
 
+        public static long GetEmail(this ClaimsPrincipal user)
+        {
+            var email = user.Claims.Where(x => x.Type == "email").FirstOrDefault();
+            return email != null ? Convert.ToInt64(email.Value) : 0;
+        }
+
         public static string GetIpAddress(this ClaimsPrincipal user)
         {
             var ip = user.Claims.Where(x => x.Type == "ip").FirstOrDefault();

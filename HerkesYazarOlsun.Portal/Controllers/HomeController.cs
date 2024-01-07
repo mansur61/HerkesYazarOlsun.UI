@@ -2,16 +2,22 @@
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Security.Cryptography;
 using System.Text;
+using System.Security.Claims;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        // GET: HomeController
+        public HomeController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor) : base(environment, httpContextAccessor)
+        {
+        }
+
         public ActionResult Index()
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
@@ -26,10 +32,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitaplar.Add("En Çok Beğenilen Kitaplar");
             return View(vM_BOOKS);
         }
-
-
         public ActionResult Login()
         {
+            VM_LOGIN vM_LOGIN = new VM_LOGIN();
+            vM_LOGIN.RememberLogin = false;
             return View();
         }
         public ActionResult Dogrulama()
