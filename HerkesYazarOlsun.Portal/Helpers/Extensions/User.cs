@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using HerkesYazarOlsun.Portal.Services;
+using System.Net;
 using System.Security.Claims;
 
 namespace HerkesYazarOlsun.Portal.Helpers.Extensions
@@ -26,10 +27,18 @@ namespace HerkesYazarOlsun.Portal.Helpers.Extensions
             return tckimlikno != null ? Convert.ToInt64(tckimlikno.Value) : 0;
         }
 
-        public static long GetEmail(this ClaimsPrincipal user)
+        public static string GetEmail(this ClaimsPrincipal user)
         {
             var email = user.Claims.Where(x => x.Type == "email").FirstOrDefault();
-            return email != null ? Convert.ToInt64(email.Value) : 0;
+            return email != null ? email.Value : "";
+        }
+
+        public static long GetLoginUserId(this ClaimsPrincipal user)
+        {
+            var email = user.Claims.Where(x => x.Type == "email").FirstOrDefault();
+            KisiService kisiService = new KisiService();
+            var sonuc = kisiService.GetKisiByMail(email?.Value ?? "");
+            return sonuc != null ? sonuc.Result.ID : 0;
         }
 
         public static string GetIpAddress(this ClaimsPrincipal user)

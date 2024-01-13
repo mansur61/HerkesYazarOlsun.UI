@@ -41,8 +41,8 @@
 
 
 @{
-    string alertmesajgostermedurumu = "degerlendirme";
-    
+    string alertmesajgostermedurumu = "";
+
 }
 
 
@@ -281,7 +281,10 @@
                                     <textarea class="form-control different-control w-100" type="text" id="aciklamagir" cols="30" rows="5" placeholder="Değerlendirmenizi giriniz"></textarea>
                                 </div>
 
-                               
+                                @{
+                                     alertmesajgostermedurumu = "degerlendirme";
+
+                                }
                                 @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
 
 
@@ -308,15 +311,15 @@
         var message = $("#message").val();
 
         var kitapId = $("#kitapId").val();
-        var degerlendirme = $("#yorummesajiicin").val();
+        var yorumicin = $("#yorummesajiicin").val();
 
         console.log("ad:" + name + " email:" + email + " aciklama:" + message);
 
         if (ad == "" || email == "" ||  message == "") {
-            $("#uyari-" + degerlendirme).css("display", "block");
-            $("#bilgi-" + degerlendirme).css("display", "none");
-            $("#basarili-" + degerlendirme).css("display", "none");
-            $("#uyari-degerlendirme #mesaj").html("Tüm alanları doldurunuz");
+            $("#uyari-" + yorumicin).css("display", "block");
+            $("#bilgi-" + yorumicin).css("display", "none");
+            $("#basarili-" + yorumicin).css("display", "none");
+            $("#uyari-" + yorumicin + " #mesaj").html("Tüm alanları doldurunuz");
             return;
         }
 
@@ -330,24 +333,24 @@
         }, function (data) {
             console.log("data:" + data.state);
             if (data.state == 1) {
-                $("#basarili-" + degerlendirme).css("display", "block");
-                $("#basarili-" + degerlendirme + " #mesaj").html(data.message);
+                $("#basarili-" + yorumicin).css("display", "block");
+                $("#basarili-" + yorumicin + " #mesaj").html(data.message);
 
-                $("#bilgi-" + degerlendirme).css("display", "none");
-                $("#uyari-" + degerlendirme).css("display", "none");
+                $("#bilgi-" + yorumicin).css("display", "none");
+                $("#uyari-" + yorumicin).css("display", "none");
             }
             else if (data.state == 3) {
-                $("#bilgi-" + degerlendirme).css("display", "block");
-                $("#bilgi-" + degerlendirme + " #mesaj").html(data.message);
+                $("#bilgi-" + yorumicin).css("display", "block");
+                $("#bilgi-" + yorumicin + " #mesaj").html(data.message);
 
-                $("#basarili-" + degerlendirme).css("display", "none");
-                $("#uyari-" + degerlendirme).css("display", "none");
+                $("#basarili-" + yorumicin).css("display", "none");
+                $("#uyari-" + yorumicin).css("display", "none");
             }
             else {
-                $("#uyari-" + degerlendirme).css("display", "block");
-                $("#bilgi-" + degerlendirme).css("display", "none");
-                $("#basarili-" + degerlendirme).css("display", "none");
-                $("#uyari-" + degerlendirme + " #mesaj").html(data.message);
+                $("#uyari-" + yorumicin).css("display", "block");
+                $("#bilgi-" + yorumicin).css("display", "none");
+                $("#basarili-" + yorumicin).css("display", "none");
+                $("#uyari-" + yorumicin + " #mesaj").html(data.message);
             }
 
         });
@@ -389,7 +392,7 @@
             "StarPuani": yildizPuani
 
         }, function (data) {
-            console.log("data:" + data.state);
+            console.log("data state:" + data.state);
             if (data.state == 1) {
                 $("#basarili-" + degerlendirme).css("display", "block");
                 $("#basarili-" + degerlendirme + " #mesaj").html(data.message);

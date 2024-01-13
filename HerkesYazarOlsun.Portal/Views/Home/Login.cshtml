@@ -18,7 +18,6 @@
     string alertmesajgostermedurumu = "logingiris";
 }
 
-
 <section class="login_box_area section-margin">
     <div class="container">
         <div class="row">
@@ -32,11 +31,12 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="login_form_inner">
+                <div class="login_form_inner" style="height:auto" >
                     <h3>Giriş Yapınız</h3>
-                    @*<form class="row login_form" action="#/" id="contactForm">*@
-                    <form action="@Url.Action(nameof(AccountController.Login), "Account")" data-ajax-success="onSuccess" data-ajax-failure="onFailed" data-ajax="true" data-ajax-method="POST">
-                        <input type="hidden" name="RememberLogin" value="@Model.RememberLogin" />
+                   
+                    @*<form action="@Url.Action(nameof(AccountController.Login), "Account")" ajax-success="onSuccess" 
+                             failure="onFailed" ajax="true" ajax-method="POST" id="contactForm" class="row login_form">*@
+                    <div id="contactForm" class="row login_form">
                         <div class="col-md-12 form-group">
                             <input type="text" class="form-control" id="email" name="email" placeholder="Email Adresiniz" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adresiniz'">
                         </div>
@@ -45,17 +45,35 @@
                         </div>
                         <div class="col-md-12 form-group">
                             <div class="creat_account">
-                                <input type="checkbox" id="hatirla" name="benihatirla" value="@Model.RememberLogin">
+                                @if(@Model.benihatirla != null)
+                                {
+                                    @if (@Model.benihatirla == "0")
+                                    {
+                                        <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' checked value="true">
+                                    }
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
+                                }
+                               
+
                                 <label for="f-option2">Oturumumu açık tut</label>
                             </div>
                         </div>
                         <div class="col-md-12 form-group">
-                            <button type="submit" value="submit" class="button button-login w-100">Giriş Yap</button>
-                            <a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
+                            <button class="button button-login w-100" onclick="Giris()">Giriş Yap</button>
+                        @*type="submit"*@
+                        <a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
                         </div>
-                    </form>
+                    </div>
+                    @*</form>*@
                     @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
-                </div>
+               </div>
             </div>
         </div>
     </div>
@@ -64,28 +82,18 @@
 <script>
 
     var rememberlogin = false;
-    var login = $("#loginicin").val();
-    var countChecked = function () {
-        var n = $("input:checked").length;
-        console.log(n + (n === 1 ? " is" : " are") + " checked!");
+    if ($("#hatirla").val() == "false") {
+        rememberlogin = false;
+    }else{
+        rememberlogin = true;
+    }
+   
+    var login = $("#loginicin").val();  
 
-        const nodeList = document.querySelectorAll("input:checked");
-        for (let i = 0; i < nodeList.length; i++) {
-            if (nodeList[i].checked) {
-                rememberlogin = true;
-                nodeList[i].value = true;
-                //if (nodeList[i].value == "beniHatirla") {
-                //    rememberlogin = true;
-                //}
-            } else {
-                nodeList[i].value = rememberlogin;
-            }
-        }
-    };
-
-    countChecked();
-
-    $("input[type=checkbox]").on("click", countChecked);
+    function handleClick(cb) {
+        rememberlogin = cb.checked;
+        console.log("rememberlogin:" + rememberlogin);
+    }
 
     function onSuccess(data) {
 
@@ -137,6 +145,47 @@
             $("#basarili-" + login).css("display", "none");
             $("#uyari-" + login + " #mesaj").html(data.message);
         }
+    }
+
+    function Giris() {
+        var email = $("#email").val();
+        var sifre = $("#sifre").val();
+       
+        $.post("@Url.Action(nameof(AccountController.Login), "Account")", {
+            "RememberLogin": rememberlogin,
+            "email": email,
+            "sifre": sifre,
+            "benihatirla": rememberlogin ==  false ? "0" : "1"
+
+        }, function (data) {
+            if (data.state == 1) {
+                $("#basarili-" + login).css("display", "block");
+                $("#basarili-" + login + " #mesaj").html(data.message + " Giriş işlemi Başarılı Anasayfaya yönlendiriliyorsunuz.");
+
+                $("#bilgi-" + login).css("display", "none");
+                $("#uyari-" + login).css("display", "none");
+
+                setTimeout(function () {
+                  
+                    window.location.href = "/Home/Index";
+                }, 5000);
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + login).css("display", "block");
+                $("#bilgi-" + login + " #mesaj").html(data.message);
+
+                $("#basarili-" + login).css("display", "none");
+                $("#uyari-" + login).css("display", "none");
+            }
+            else {
+                $("#uyari-" + login).css("display", "block");
+                $("#bilgi-" + login).css("display", "none");
+                $("#basarili-" + login).css("display", "none");
+                $("#uyari-" + login + " #mesaj").html(data.message);
+            }
+
+        });
+
     }
 
 

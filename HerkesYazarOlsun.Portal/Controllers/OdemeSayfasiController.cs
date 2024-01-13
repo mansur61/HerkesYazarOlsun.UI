@@ -2,8 +2,10 @@
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
 
 
 namespace HerkesYazarOlsun.Portal.Controllers
@@ -12,8 +14,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
     {
 
         private EmailService emailService;
-        public OdemeSayfasiController()
+       
+        private IHttpContextAccessor _contextAccessor;
+        private long Lid;
+        public OdemeSayfasiController(IHttpContextAccessor contextAccessor)
         {
+            _contextAccessor = contextAccessor;
+            Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
             this.emailService = new EmailService();
         }
         public IActionResult Odeme()
@@ -26,7 +33,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public JsonResult SaveOdeme(VM_KARTLAR kart)
         {
             ServiceResult result = new ServiceResult();
-
+            kart.LoginUserId = Lid;
             result = new OdemeService().PostOdeme(kart);
             
 
@@ -47,7 +54,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public JsonResult SaveSponsorlukBildir(VM_ODEME_SPONSORLARI odemeSponsorlar)
         {
             ServiceResult result = new ServiceResult();
-
+            odemeSponsorlar.LoginUserId = Lid;
             result = new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
 
             if(result.State == MessageResultState.SUCCESS)

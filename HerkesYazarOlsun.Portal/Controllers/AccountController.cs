@@ -19,15 +19,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<JsonResult> Login(VM_LOGIN login)
         {
-
-
             ServiceResult<Users> sonuc = new KisiService().GetKisiByMail(login.email ?? "");
            
             if (sonuc.State == MessageResultState.SUCCESS)
             {
+                login.ExpiresUtc = DateTime.UtcNow.AddDays(3); 
+                login.AllowRefresh = true;
+                login.IsPersistent = login.RememberLogin;
+                login.LoginUserId = sonuc.Result.ID;
+                ServiceResult sonuc2 = new KisiService().SaveOrUpdateAccountLogin(login);
+                sonuc.State = sonuc2.State;
 
                 var ip = (HttpContext.Request.Headers["X-Forwarded-For"].ToString() != null
                          && HttpContext.Request.Headers["X-Forwarded-For"].ToString() != "")
@@ -38,8 +42,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
                 List<Claim> claims = new List<Claim>
                 {
-                    new Claim("telno", sonuc.Result.TELNO ?? ""),                  
-                    new Claim("email", sonuc.Result.EMAIL ?? ""),
+                    new Claim("telno", sonuc.Result.TELNO ?? ""),
+                    new Claim("tckimlikno", "0"),// yapı tckimlik no üzerinden değil bunun yerine tekil olan email üzerinden ilerlemektedir. Zamanla belki tckimlikno üzerinden ilerleyebilir
+                    new Claim("uygulama_id", "1"), // web
+                    new Claim("email", sonuc.Result.EMAIL ?? ""),                    
                     new Claim("ip", ip ?? ""),
                 };
 
@@ -49,18 +55,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 var props = new AuthenticationProperties();
                 props.IsPersistent = login.RememberLogin;
                 // props.IsPersistent = false;
-                props.ExpiresUtc = DateTime.UtcNow.AddDays(3);
-                props.AllowRefresh = true;
+                props.ExpiresUtc = login.ExpiresUtc;
+                props.AllowRefresh = login.AllowRefresh;
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
 
-               
+
+
             }
 
             return Json(sonuc);
-
-
-
-
         }
 
         [HttpPost]

@@ -4,14 +4,19 @@ using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
 using HerkesYazarOlsun.Model.Utils;
 using System.Linq;
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
     public class KitaplarController : Controller
     {
-        // private readonly BooksService booksService;
-
-        //Kitap ekleme ana sayfası açılır
+        private IHttpContextAccessor _contextAccessor;
+        private long Lid;
+        public KitaplarController(IHttpContextAccessor contextAccessor)
+        {
+            _contextAccessor = contextAccessor;
+            Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
+        }
         public IActionResult Index(VM_BOOKS input)
         {
 
@@ -89,6 +94,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 {
                     ARKAKAPAKFOTO = input.ARKAKAPAKFOTO != null ? input.ARKAKAPAKFOTO : "",
                     ONSOZ = input.ONSOZ,
+                    YazarId = Lid,
                     ONKAPAKFOTO = input.ONKAPAKFOTO != null ? input.ONKAPAKFOTO : "",
                     CategoriId = input.CategoriId,
                     Name = input.Name != null ? input.Name : "",
@@ -169,7 +175,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             BooksStars bookStar = new BooksStars()
             {
                 BookaId = Convert.ToInt32(kitapId),
-                LoginUserId = 1,
+                LoginUserId = Convert.ToInt32(Lid),
                 StarPuani = yildizPuani
             };
             result = new BooksService().PostBooksStars(bookStar);
@@ -188,7 +194,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             if (sonuc.State == MessageResultState.SUCCESS)
             {
-                degerlendirme.LoginUserId = 1;
+                degerlendirme.LoginUserId = Convert.ToInt32(Lid);
                 result = new BooksService().PostBooksDegerlendirme(degerlendirme);
             }
             else
@@ -206,7 +212,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             ServiceResult result = new ServiceResult();
 
-            mesajlar.LoginUserId = 1;
+            mesajlar.LoginUserId = Convert.ToInt32(Lid);
             result = new BooksService().PostBooksComments(mesajlar);
 
             return Json(result);

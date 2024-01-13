@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -32,12 +33,23 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitaplar.Add("En Çok Beğenilen Kitaplar");
             return View(vM_BOOKS);
         }
+
+        //[HttpPost]
+        [AllowAnonymous]
         public ActionResult Login()
         {
             VM_LOGIN vM_LOGIN = new VM_LOGIN();
             vM_LOGIN.RememberLogin = false;
+           // vM_LOGIN.benihatirla = "1";
+            return View(vM_LOGIN);
+        }
+
+        public ActionResult HataliGiris()
+        {            
             return View();
         }
+
+
         public ActionResult Dogrulama()
         {
             return View();

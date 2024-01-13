@@ -1,6 +1,7 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +9,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
 {
     public class KisiController : Controller 
     {
-        public KisiController()
+        private IHttpContextAccessor _contextAccessor;
+        private long Lid;
+        public KisiController(IHttpContextAccessor contextAccessor)
         {
-
+            _contextAccessor = contextAccessor;
+             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
         }
         public IActionResult Index()
         {
@@ -40,9 +44,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [Route("YazariFavorilereEkle")]
         public JsonResult YazariFavorilereEkle(int id,long tck)
         {
+            
             VM_FAVORI_YAZARLAR fav_yazar = new VM_FAVORI_YAZARLAR()
-            {
-                LoginUserId = 1,
+            {                
+                LoginUserId = Convert.ToInt32(Lid),
                 YazarId = id,
                 tck = tck
             };
@@ -56,10 +61,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [Route("PostWriterFollow")]
         public JsonResult PostWriterFollow(int id, int follow)
         {
-
             WriterFollow fovllow_yazar = new WriterFollow()
             {
-                LoginUserId = 1,
+                LoginUserId = Convert.ToInt32(Lid),
                 YazarId = id,
                 isFollow = follow
                 
@@ -76,7 +80,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             WriterStars stars_yazar = new WriterStars()
             {
-                LoginUserId = 1,
+                LoginUserId = Convert.ToInt32(Lid),
                 YazarId = id,
                 StarPuani = puan
 

@@ -72,8 +72,16 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<VM_Stars>(jsonContent.Result);
             return result;
         }
+        
+        public ServiceResult SaveOrUpdateAccountLogin(VM_LOGIN vmLogni)
+        {
+            string stringData = JsonConvert.SerializeObject(vmLogni);
+            Task<string> jsonContent = PostData("api/Users/SaveOrUpdateAccountLogin", stringData);
+            Task.WaitAll(jsonContent);
 
-
+            var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
+            return result;
+        }
         public FAVORI_YAZARLAR PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav_yazar)
         {
             string stringData = JsonConvert.SerializeObject(fav_yazar);

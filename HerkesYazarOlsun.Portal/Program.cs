@@ -9,7 +9,13 @@ builder.Services.AddRazorPages();
 builder.Services.AddMvc();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHttpClient();
-
+builder.Services.AddAuthentication()
+        .AddCookie(options =>
+        {
+            options.LoginPath = "/Home/Login/";
+            options.AccessDeniedPath = "/Home/HataliGiris/";
+        })
+       ;
 
 var app = builder.Build();
 
@@ -30,12 +36,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting().UseEndpoints(endpoints =>
+app.UseRouting();
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
 });
 
-app.UseAuthorization();
+
+
 
 app.MapRazorPages();
 app.MapControllers();
