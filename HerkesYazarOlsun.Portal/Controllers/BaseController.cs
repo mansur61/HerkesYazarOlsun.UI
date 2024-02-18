@@ -1,7 +1,9 @@
 ﻿
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -32,6 +34,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             //}
 
             var mail = _httpContextAccessor?.HttpContext?.User.Claims.FirstOrDefault(x => x.Type.Equals("email"));
+            var bak =  _httpContextAccessor?.HttpContext?.User.GetEmail();
+            var cccc = _httpContextAccessor?. HttpContext?.Request.Headers["email"].ToString();
             if (mail != null)
             {
                 EMAIL = mail.Value.ToString();
@@ -46,7 +50,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             else
             {
 
-                httpContextAccessor.HttpContext.Response.StatusCode = 403;
+                //httpContextAccessor.HttpContext.Response.StatusCode = 201;//403
                 isEmail = false;
                 //httpContextAccessor.HttpContext.Request.Path = "/Home/Login";
                 //System.Diagnostics.Process.Start("/Home/Login/");

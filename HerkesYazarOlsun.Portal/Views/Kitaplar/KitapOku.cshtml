@@ -62,14 +62,19 @@
 
             @foreach (var item in @Model.BooksPageList)
             {
-                <div class='feature pagefx hardpage'>
-                    @*<p class='subtitle'>page flipping effect</p>*@
+                <div style="overflow:auto;overflow-x: hidden; text-align: justify;padding-right:15px">
 
-                    <p>@item.PageWrite</p>
+                    <div class='feature pagefx hardpage' style="width:350px">
 
+                        <p style="font-size:12px;">
+                            @item.PageWrite
+                        </p>
+                    </div>
                 </div>
             }
-            @*kitap bitiş kapağı*@
+
+
+
             <div class='last_cover'>
                 <img src="~/wowbook/images/cover_last.png" alt="" width="100%" height="100%" />
             </div>

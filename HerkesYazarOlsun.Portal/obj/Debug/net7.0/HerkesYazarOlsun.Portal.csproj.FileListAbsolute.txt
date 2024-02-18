@@ -245,3 +245,9 @@ C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Deb
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Debug\net7.0\HerkesYazarOlsun.Portal.pdb
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Debug\net7.0\HerkesYazarOlsun.Portal.genruntimeconfig.cache
 C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\obj\Debug\net7.0\ref\HerkesYazarOlsun.Portal.dll
+C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\DocumentFormat.OpenXml.dll
+C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\System.IO.Packaging.dll
+C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\libman.json
+C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\BouncyCastle.Crypto.dll
+C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal\bin\Debug\net7.0\itextsharp.dll

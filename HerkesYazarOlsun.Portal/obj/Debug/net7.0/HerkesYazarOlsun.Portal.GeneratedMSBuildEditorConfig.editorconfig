@@ -92,10 +92,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcQXJhQnV0b25GaWx0cmVsZW1lS2l0YXBsYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapArama.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBBcmFtYS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -108,12 +104,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBEZXRheVNheWZhc2kuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapEkleWordOrPdf.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBFa2xlV29yZE9yUGRmLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapKayit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBLYXlpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapOku.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBPa3UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapOlustur.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBPbHVzdHVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/TumKitaplar.cshtml]

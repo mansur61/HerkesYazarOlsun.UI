@@ -158,6 +158,7 @@
             "benihatirla": rememberlogin ==  false ? "0" : "1"
 
         }, function (data) {
+            console.log("data.state:"+ data.state);
             if (data.state == 1) {
                 $("#basarili-" + login).css("display", "block");
                 $("#basarili-" + login + " #mesaj").html(data.message + " Giriş işlemi Başarılı Anasayfaya yönlendiriliyorsunuz.");
@@ -168,7 +169,7 @@
                 setTimeout(function () {
                   
                     window.location.href = "/Home/Index";
-                }, 5000);
+                }, 3000);
             }
             else if (data.state == 3) {
                 $("#bilgi-" + login).css("display", "block");

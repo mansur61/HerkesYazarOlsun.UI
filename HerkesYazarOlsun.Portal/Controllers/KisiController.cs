@@ -107,7 +107,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             Users kisi = new KisiService().GetKisiById(id);
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
             vm_kisi.Stars = new KisiService().GetMaxStarWriterById(id);
-
+            ViewBag.LOGIN_USER_ID = Lid;
             vm_kisi.vMWriterFollow = new KisiService().GetWriterFollowById(id);
             return View(vm_kisi);
             

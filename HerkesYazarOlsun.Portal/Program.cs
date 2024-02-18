@@ -1,4 +1,8 @@
 using HerkesYazarOlsun.Portal.Helpers;
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
+using HerkesYazarOlsun.Portal.Middleware;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting.Internal;
 
@@ -8,14 +12,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddMvc();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
+
 builder.Services.AddHttpClient();
-builder.Services.AddAuthentication()
-        .AddCookie(options =>
-        {
-            options.LoginPath = "/Home/Login/";
-            options.AccessDeniedPath = "/Home/HataliGiris/";
-        })
-       ;
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(x =>
+{
+    x.Cookie.Name = "login";
+    x.LoginPath = "/Account/Login";
+    x.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+});
 
 var app = builder.Build();
 
@@ -34,10 +45,17 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+//app.UseMiddleware<RequestExceptionMiddleware>();
+
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseCookiePolicy();
+//app.UseSession();
 app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");

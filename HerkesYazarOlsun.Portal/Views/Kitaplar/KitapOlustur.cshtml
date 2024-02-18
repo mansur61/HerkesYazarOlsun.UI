@@ -333,6 +333,7 @@
         $.post("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")",
             {
                 "ID": kitapId,
+                "isWordPDF":false,
                 "Name": kitapAdi,
                 "onsoz": onsoz,
                 "ONKAPAKFOTO": onKapak,

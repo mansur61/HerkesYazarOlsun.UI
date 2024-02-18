@@ -38,15 +38,11 @@
                                 <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
                                          alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                                         style="width: 150px; z-index: 1">
-                                    @*<button type="button" class="btn btn-outline-dark"
-                                    style="z-index: 1;">
-                                    Edit profile
-                                    </button>*@
-                                    <div class="mb-3">
-                                        <label for="formFile" class="form-label">Profili Değiştir.</label>
-                                        <input class="form-control" type="file" id="formFile">
-                                    </div>
+                                         style="width: 150px; z-index: 1" />
+                                    @* <div class="mb-3">
+                                    <label for="formFile" class="form-label">Profili Değiştir.</label>
+                                    <input class="form-control" type="file" id="formFile">
+                                    </div>*@
                                 </div>
                                 <div style="margin-top: 10px;color:black;font-size:30px">
                                     @Model.NAME @Model.SURNAME
@@ -57,18 +53,7 @@
                         </div>
                         <br />
                         <h4>@Html.Partial("_YildizGoster",@Model.Stars)</h4>
-                     @*   <div class="col-md-2">
-                            <div class="rating hidden-sm col-sm-8" stye="border:1px solid red">
-                                @for (int i = 0; i < Model.Stars.EnFazlaSitar; i++)
-                                {
-                                    <h4>
-                                        <i class="price-text-color fa fa-star"></i>
-                                    </h4>
-                                }
-                                
-                            </div>
 
-                        </div>*@
 
                     </div>
 
@@ -83,23 +68,27 @@
                         <p style="font-size:25px">61</p>
                     </div>
 
+                    @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
+                    {
 
-                    <div class="col-md-1" style="text-align:center;margin-top:80px;">
-                        @if (@Model.vMWriterFollow.isFollow == 0)
-                        {
-                            <button type="button" class="btn btn-info" onclick="YazarTakip(1)">
-                                Takip Et
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="button" class="btn btn-warning" onclick="YazarTakip(0)">
-                                Takip Ediliyor
-                            </button>
 
-                        }
+                        <div class="col-md-1" style="text-align:center;margin-top:80px;">
+                            @if (@Model.vMWriterFollow.isFollow == 0)
+                            {
+                                <button type="button" class="btn btn-info" onclick="YazarTakip(1)">
+                                    Takip Et
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-warning" onclick="YazarTakip(0)">
+                                    Takip Ediliyor
+                                </button>
 
-                    </div>
+                            }
+
+                        </div>
+                    }
                 </div>
                 <div class="col-md-12" style="text-align:center;margin:15px 5px;">
                     <h4>
@@ -109,12 +98,17 @@
                         <i class="yildizver fa fa-star" onclick="YildizVerChange(4)"> </i>
                         <i class="yildizver fa fa-star" onclick="YildizVerChange(5)"> </i>
                     </h4>
-                    <button type="button" class="btn btn-info" onclick="YildizVer()">
-                        Yıldız Ver
-                    </button>
-                    <button type="button" class="btn btn-error" onclick="YildizIptalEt(0)">
-                        İptal Et
-                    </button>
+
+                    @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
+                    {
+
+                        <button type="button" class="btn btn-info" onclick="YildizVer()">
+                            Yıldız Ver
+                        </button>
+                        <button type="button" class="btn btn-error" onclick="YildizIptalEt(0)">
+                            İptal Et
+                        </button>
+                    }
                 </div>
             </div>
 
@@ -138,7 +132,7 @@
         <h3>En fazla Yıldız</h3>
         <h4>
             @{
-                Model.Stars.isToplam= false;
+                Model.Stars.isToplam = false;
             }
             @Html.Partial("_YildizGoster",@Model.Stars)
 
@@ -151,12 +145,12 @@
         <div class="rating_list">
             <h3>Yazara ait yıldızlar</h3>
             <div class="col-sm-7">
-               
+
                 @{
                     Model.Stars.isToplam = true;
                 }
                 @Html.Partial("_YildizGoster",@Model.Stars)
-                
+
             </div>
 
         </div>
@@ -315,9 +309,9 @@
         console.log("adet:" + adet);
         for (var i = 0; i < yildizlar.length; i++) {
             $(yildizlar[i]).css("color", "black");
-        }  
+        }
     }
-    
+
     function YildizVerChange(adet) {
 
         yildizPuani = adet;

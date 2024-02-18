@@ -1,6 +1,54 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\basic.css",
+      "PackagePath": "staticwebassets\\dropzone\\basic.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\basic.min.css",
+      "PackagePath": "staticwebassets\\dropzone\\basic.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\dropzone-amd-module.js",
+      "PackagePath": "staticwebassets\\dropzone\\dropzone-amd-module.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\dropzone-amd-module.min.js",
+      "PackagePath": "staticwebassets\\dropzone\\dropzone-amd-module.min.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\dropzone.css",
+      "PackagePath": "staticwebassets\\dropzone\\dropzone.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\dropzone.js",
+      "PackagePath": "staticwebassets\\dropzone\\dropzone.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\dropzone.min.css",
+      "PackagePath": "staticwebassets\\dropzone\\dropzone.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\dropzone.min.js",
+      "PackagePath": "staticwebassets\\dropzone\\dropzone.min.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\min\\basic.min.css",
+      "PackagePath": "staticwebassets\\dropzone\\min\\basic.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\min\\dropzone-amd-module.min.js",
+      "PackagePath": "staticwebassets\\dropzone\\min\\dropzone-amd-module.min.js"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\min\\dropzone.min.css",
+      "PackagePath": "staticwebassets\\dropzone\\min\\dropzone.min.css"
+    },
+    {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\dropzone\\min\\dropzone.min.js",
+      "PackagePath": "staticwebassets\\dropzone\\min\\dropzone.min.js"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },

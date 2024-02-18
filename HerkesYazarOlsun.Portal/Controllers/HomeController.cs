@@ -10,42 +10,79 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
-    public class HomeController : BaseController
+    [Authorize]
+    public class HomeController : Controller
     {
-        public HomeController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor) : base(environment, httpContextAccessor)
+        private IHttpContextAccessor _httpContextAccessor;
+
+        private IWebHostEnvironment _environment;
+        public HomeController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
+            _environment = environment;
         }
 
+        public string SignInUrl { get { return $"/Home/Login"; } }
+        [AllowAnonymous]
         public ActionResult Index()
-        {
-            VM_BOOKS vM_BOOKS = new VM_BOOKS();
+        {            
 
+            VM_BOOKS vM_BOOKS = new VM_BOOKS();
             var getBookList = new BooksService().GetBooksList();
             vM_BOOKS.VMBooksList = getBookList!;
-            
+
 
             List<string> kitaplar = new List<string>();
             kitaplar.Add("Yayına En Yakın Olan Kitaplar");
             kitaplar.Add("En Çok Okunan  Kitaplar");
             kitaplar.Add("En Çok Beğenilen Kitaplar");
             return View(vM_BOOKS);
+
+            //var mail = _httpContextAccessor?.HttpContext?.User.Claims.FirstOrDefault(x => x.Type.Equals("email"));
+            //if (mail != null)
+            //{
+
+            //    VM_BOOKS vM_BOOKS = new VM_BOOKS();
+            //    var getBookList = new BooksService().GetBooksList();
+            //    vM_BOOKS.VMBooksList = getBookList!;
+
+
+            //    List<string> kitaplar = new List<string>();
+            //    kitaplar.Add("Yayına En Yakın Olan Kitaplar");
+            //    kitaplar.Add("En Çok Okunan  Kitaplar");
+            //    kitaplar.Add("En Çok Beğenilen Kitaplar");
+            //    return View(vM_BOOKS);
+
+            //}
+            //else
+            //{
+
+            //    return Redirect(SignInUrl);
+            //}
+
         }
 
-        //[HttpPost]
+        
         [AllowAnonymous]
         public ActionResult Login()
         {
             VM_LOGIN vM_LOGIN = new VM_LOGIN();
             vM_LOGIN.RememberLogin = false;
-           // vM_LOGIN.benihatirla = "1";
             return View(vM_LOGIN);
         }
 
         public ActionResult HataliGiris()
-        {            
+        {
+            //Localde çalıştırmak için kullanılır... Sonraya doğru işe yarar
+            //if (Request.Host.Host.Contains("localhost") || (Request.Host.Host.Contains("emadentest.mapeg.gov.tr") && tck.HasValue))
+            //{
+            //    await loginProcess(tck.Value);
+            //}
+            //return Redirect("/Home/Index");
             return View();
         }
 
