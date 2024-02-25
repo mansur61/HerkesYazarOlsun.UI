@@ -15,28 +15,29 @@
 @using HerkesYazarOlsun.Portal.Controllers;
 
 @{
+    Model.kitapSliderYometimAdi = "arama";
+    //int sidebardaGosterilecekKayit = 3;
 
-    int sidebardaGosterilecekKayit = 3;
+    //int sidebarKalan = (@Model.VMBooksList.Count() % sidebardaGosterilecekKayit);
+    //int sidebarBolum = (@Model.VMBooksList.Count() / sidebardaGosterilecekKayit);
+    //int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
 
-    int sidebarKalan = (@Model.VMBooksList.Count() % sidebardaGosterilecekKayit);
-    int sidebarBolum = (@Model.VMBooksList.Count() / sidebardaGosterilecekKayit);
-    int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
+    //int sliderdaGosterilecekKayit = 6;
 
-    int sliderdaGosterilecekKayit = 6;
+    //int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
+    //int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
-    int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
+    //int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
-    int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-
-    Model.kalan = @kalan;
-    Model.bolum = @bolum;
-    Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-    Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
-    Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
-    Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "arama";
-    Model.Tip = "arama";
+    //Model.kalan = @kalan;
+    //Model.bolum = @bolum;
+    //Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
+    //Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
+    //Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
+    //Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "arama";
+    //Model.Tip = "arama";
 }
+@Html.Partial("_KitapSliderItemYonetimleri",@Model)
 
 <section class="product spad">
 <div class="container" >

@@ -16,6 +16,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\umpg0020097\Desktop\HerkesYazarOlsun.UI\HerkesYazarOlsun.Portal
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/YedekDosyalar/KitapKayit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = SGVscGVyc1xZZWRla0Rvc3lhbGFyXEtpdGFwS2F5aXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/YedekDosyalar/KitapSliderGosterimleri.cshtml]
 build_metadata.AdditionalFiles.TargetPath = SGVscGVyc1xZZWRla0Rvc3lhbGFyXEtpdGFwU2xpZGVyR29zdGVyaW1sZXJpLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -108,10 +112,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBFa2xlV29yZE9yUGRmLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapKayit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBLYXlpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Kitaplar/KitapOku.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2l0YXBsYXJcS2l0YXBPa3UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -164,6 +164,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9LaXRhcERldGF5TWVzYWpCb2x1bWxlcmkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_KitapEkleOnBilgiler.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9LaXRhcEVrbGVPbkJpbGdpbGVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_KitapFiltreleme.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9LaXRhcEZpbHRyZWxlbWUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -174,6 +178,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_KitapSliderGosterimleri.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9LaXRhcFNsaWRlckdvc3RlcmltbGVyaS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_KitapSliderItemYonetimleri.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9LaXRhcFNsaWRlckl0ZW1Zb25ldGltbGVyaS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_Layout.cshtml]
@@ -202,6 +210,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_YazarFiltreleme.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9ZYXphckZpbHRyZWxlbWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_YazarSliderItemYonetimleri.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9ZYXphclNsaWRlckl0ZW1Zb25ldGltbGVyaS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Views/Shared/_YildizGoster.cshtml]

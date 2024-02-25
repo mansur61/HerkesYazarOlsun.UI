@@ -30,24 +30,27 @@
 
 <div id="tumkitaplar">
     @{
+        Model.kitapSliderYometimAdi = "tumkitaplar";
+        //int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
 
-        int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
+        //int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
+        //int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
-        int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
-        int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
+        //int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
-        int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
+        //Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
+        //Model.kalan = @kalan;
+        //Model.bolum = @bolum;
+        ////Model.sliderSayisi = @sliderSayisi;
+        //Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
+        //Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumkitaplar";
+        //Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
+        //Model.End = @sliderdaGosterilecekKayit;
 
-        Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-        Model.kalan = @kalan;
-        Model.bolum = @bolum;
-        //Model.sliderSayisi = @sliderSayisi;
-        Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
-        Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumkitaplar";
-        Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
-       
     }
-   
+
+    @Html.Partial("_KitapSliderItemYonetimleri",@Model)
+
     @Html.Partial("Kitaplar",@Model)
    
     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)

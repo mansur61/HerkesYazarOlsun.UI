@@ -31,22 +31,10 @@
 
 <div id="tumyazarlar">
     @{
-
-        int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 10 : Model.sliderdaGosterilecekKayit;
-
-        int kalan = (@Model.VMUsersList.Count() % sliderdaGosterilecekKayit);
-        int bolum = (@Model.VMUsersList.Count() / sliderdaGosterilecekKayit);
-
-        int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-
-        Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-        Model.kalan = @kalan;
-        Model.bolum = @bolum;
-       // Model.sliderSayisi = @sliderSayisi;
-        Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
-        Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumyazarlar";
-        Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
+        Model.yazarSliderYometimAdi = "tumyazarlar";        
     }
+
+    @Html.Partial("_YazarSliderItemYonetimleri",@Model)
 
     @Html.Partial("Yazarlar",@Model)
     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)

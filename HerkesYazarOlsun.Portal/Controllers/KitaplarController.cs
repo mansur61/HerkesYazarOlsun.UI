@@ -119,38 +119,40 @@ namespace HerkesYazarOlsun.Portal.Controllers
             {
                 text += PdfTextExtractor.GetTextFromPage(reader, page);
                 string sayfaYaz = PdfTextExtractor.GetTextFromPage(reader, page);
-                Console.WriteLine("sayfaYaz: "+ page + " -- " + sayfaYaz + "\n");
-                
+                Console.WriteLine("sayfaYaz: " + page + " -- " + sayfaYaz + "\n");
+
                 if (eklemeDurumu.State == MessageResultState.SUCCESS)
                 {
                     vM_BOOKS.ID = eklemeDurumu.Result.BookID;
-                    vM_BOOKS.SAYFAYAZI = sayfaYaz;
+                    vM_BOOKS.SAYFAYAZI = sayfaYaz.Trim();
+                    byte[] result = Encoding.UTF8.GetBytes(sayfaYaz);
+                    vM_BOOKS.SAYFAYAZIBASE64 = Convert.ToBase64String(result);
                     _ = KitapEkle(vM_BOOKS);
                 }
             }
             reader.Close();
-           // Console.WriteLine("text: " + text);
+            // Console.WriteLine("text: " + text);
 
             //SayfalariVeriTabaninaAktar(vM_BOOKS, text, paragrafLimiti);
 
         }
-        private void SayfalariVeriTabaninaAktar(VM_BOOKS vM_BOOKS,string sayfaYazisi,int aktarilmakIstenenLimit)
+        private void SayfalariVeriTabaninaAktar(VM_BOOKS vM_BOOKS, string sayfaYazisi, int aktarilmakIstenenLimit)
         {
             var eklemeDurumu = KitapEkle(vM_BOOKS);//ilk etap kitabı ekle
             if (eklemeDurumu.State == MessageResultState.SUCCESS)
             {
                 vM_BOOKS.ID = eklemeDurumu.Result.BookID;
-                _  = BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(vM_BOOKS, sayfaYazisi, aktarilmakIstenenLimit);
-               
+                _ = BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(vM_BOOKS, sayfaYazisi, aktarilmakIstenenLimit);
+
             }
         }
         private void DosyadanKitapAktar(VM_BOOKS vM_BOOKS)
         {
             //string docxFilePath = DosyaYolu + vM_BOOKS.FDileName;
-            
+
             try
             {
-                if (vM_BOOKS.pdfVeyaWord == 1) 
+                if (vM_BOOKS.pdfVeyaWord == 1)
                 {
                     // word
                     WordDosyasindaAktarma(vM_BOOKS);
@@ -160,7 +162,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     // pdf okuma işlemini getir.
                     PdfDosyasindanOkuma(vM_BOOKS);
                 }
-                                
+
             }
             catch (Exception ex)
             {
@@ -186,8 +188,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 if (!string.IsNullOrEmpty(eklenilecekYazi) && !char.IsWhiteSpace(eklenilecekYazi[eklenilecekYazi.Length - 1]))
                 {
                     // Son karakterde boşluk olmayan durumu kontrol et
-                    int sonBoşlukIndex = 
-                        //input.LastIndexOf(' ');
+                    int sonBoşlukIndex =
+                    //input.LastIndexOf(' ');
                     eklenilecekYazi.LastIndexOf(' ');
                     uzunluk = sonBoşlukIndex;
                     if (sonBoşlukIndex != -1)
@@ -202,7 +204,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 }
 
                 Console.WriteLine($"parcalar[" + i + "]: " + parcalar[i] + " start:" + start.ToString() + "\n");
-                vM_BOOKS.SAYFAYAZI = parcalar[i];
+                vM_BOOKS.SAYFAYAZI = parcalar[i].Trim();
+                byte[] result = Encoding.UTF8.GetBytes(parcalar[i]);
+                byte[] array = Encoding.ASCII.GetBytes(parcalar[i]);
+                vM_BOOKS.SAYFAYAZIBASE64 = Convert.ToBase64String(result);
                 _ = KitapEkle(vM_BOOKS);//kitabın sayfalarını ekle
             }
 
@@ -288,11 +293,23 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public IActionResult PostKitapEkleWordOrPdf(VM_BOOKS vM_BOOKS) // JsonResult oalrakta çalıştır
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
+            var files = Request.Form.Files;
+
+            var file2 = Request.Form.Files[vM_BOOKS.ONKAPAKFOTO];
+            if (file2 != null && file2.Length > 0)
+            {
+                /*var fileName = Path.GetFileName(file2.FileName);
+                var filePath = Path.Combine(Server.MapPath("~/uploads"), fileName);
+
+                file.SaveAs(filePath);*/
+
+            }
+
             string dosya = "";
 
             if (vM_BOOKS.pdfVeyaWord == 1)
             {
-                dosya = "SablonWordBelge.docx" ;
+                dosya = "SablonWordBelge.docx";
             }
             else
             {
@@ -303,7 +320,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             vM_BOOKS.FDileName = dosya;
 
-            bool isAktarma = AlinanDosyayiSablonDosyayaAktarma(hedefDosyaYolu);
+            bool isAktarma = //false;
+            AlinanDosyayiSablonDosyayaAktarma(hedefDosyaYolu);
             if (isAktarma)
             {
                 vM_BOOKS.ID = 0;
@@ -397,6 +415,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 {
                     BooksId = input.ID,
                     PageWrite = input.SAYFAYAZI,
+                    PageWriteBase64 = input.SAYFAYAZIBASE64,
                     PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
 
                 });
@@ -422,6 +441,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     YazarId = Lid,
                     ONKAPAKFOTO = input.ONKAPAKFOTO != null ? input.ONKAPAKFOTO : "",
                     CategoriId = input.CategoriId,
+                    TAMAMLANDIMI = input.isPdfVeyaWordTamalama ?? false,
                     Name = input.Name != null ? input.Name : "",
                     ARKAKAPAKYAZISI = input.ARKAKAPAKYAZISI != null ? input.ARKAKAPAKYAZISI : ""
 
@@ -434,9 +454,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         {
                             BooksId = book.ID,
                             PageWrite = input.SAYFAYAZI,
+                            PageWriteBase64  = input.SAYFAYAZIBASE64,
                             PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
 
-                        });
+                        });;
                         if (bookPages != null && bookPages.ID != 0)
                         {
                             input.ID = bookPages.ID;
@@ -484,7 +505,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
             // vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
-            vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+            //vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
             var getBookList = new BooksService().TumKitaplar(arama);
             vM_BOOKS.VMBooksList = getBookList!;
             vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;

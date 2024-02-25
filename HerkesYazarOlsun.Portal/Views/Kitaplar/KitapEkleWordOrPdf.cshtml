@@ -62,8 +62,9 @@
                 <div class="tab-content">
 
                     <div class="tab-pane p-20 active" id="account-onbilgi" role="tabpanel">
+                        @Html.Partial("_KitapEkleOnBilgiler",@Model)
+                       @* <div class="card-body">
 
-                        <div class="card-body">
                             <h1><strong>Kitabınızı Yazmaya Başlayınız </strong> </h1>
                             <h4>Kitabınız İçin Önbilgileri Formlardan Doldurunuz ... </h4>
                             <br />
@@ -77,7 +78,8 @@
 
                                 <div class="mb-3">
                                     <h5>Kitabınızın Ön Kapağını Seçiniz</h5>
-                                    <input class="form-control" type="file" id="formFileMultipleOnkapak" multiple>
+                                    <input class="form-control" type="file" name="formFileMultipleOnkapak" id="formFileMultipleOnkapak" multiple>
+                                   
 
                                 </div>
                                 <div class="mb-3">
@@ -108,17 +110,24 @@
                                 </select>
                             </div>
 
-                        </div>
-
+                        </div>*@
+                       
                     </div>
 
                     <div class="tab-pane p-20" id="account-dosyaAktarim" role="tabpanel">
-                       <div class="row">
+                        <div class="row">
                             <h5>Pdf veya Word ?</h5>
                             <select class="form-select" style="width:500px;height:30px" id="pdfVeyaWord">
                                 <option value="1">Word</option>
                                 <option value="2">Pdf</option>
                             </select>
+
+                            <h5>Yüklediğiniz Kitap Tamamlanmış Kitap Mıdır?</h5>
+                            <select class="form-select" style="width:500px;height:30px" id="isPdfVeyaWordTamalama">
+                                <option value="1">Evet</option>
+                                <option value="2">Hayır</option>
+                            </select>
+
                             <div class="card-body">
                                 <h5>Dosya Seçiniz</h5>
                                 <div id="DropzoneForm" class="dropzone">
@@ -127,190 +136,183 @@
                                     </div>
                                 </div>
                             </div>
-                        
+
+
+                        </div>
 
                     </div>
-
+                    @*</form>*@
                 </div>
-                @*</form>*@
             </div>
         </div>
+
+        @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
+
+        <br />
+        <div class="text-right mt-3">
+            <button type="button" class="btn btn-primary" onclick="Kaydet()">Ekle</button>&nbsp;
+            <button type="button" class="btn btn-info" onclick="SayfayiKapat()">Kapat</button>
+            <button class="btn btn-warning" type="submit" id="btnModalTestButon">Test Butonu</button>
+            @*onclick="Test()"*@
+        </div>
+        <br />
     </div>
 
-    @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
-
-    <br />
-    <div class="text-right mt-3">
-        <button type="button" class="btn btn-primary" onclick="Kaydet()">Ekle</button>&nbsp;
-        <button type="button" class="btn btn-info" onclick="SayfayiKapat()">Kapat</button>
-        <button class="btn btn-warning" type="submit" id="btnModalTestButon">Test Butonu</button>
-        @*onclick="Test()"*@
-    </div>
-    <br />
-</div>
-
-@section scripts{
-    <script src="~/dropzone/dropzone.min.js"></script>
-}
-<script>
-    var kitapaktarm = $("#kitapaktarmaicin").val();
-
-    function SayfayiKapat() {
-        window.location.href = "/Home/Index";
+    @section scripts{
+        <script src="~/dropzone/dropzone.min.js"></script>
     }
+    <script>
+        var kitapaktarm = $("#kitapaktarmaicin").val();
 
-    Dropzone.autoDiscover = false;
-    var myDropzone = new Dropzone("#DropzoneForm",
-        {
-            autoProcessQueue: false,
-            url: "@Url.Action(nameof(KitaplarController.PostKitapEkleWordOrPdf), "Kitaplar")",
-            maxFiles: 1,
-            // acceptedFiles: '.word, .png, .jpeg, .pdf',
-             //acceptedFiles: '.jpg, .png, .jpeg, .pdf',
-            maxFilesize: 100,
-            addRemoveLinks: true,
-            clickable: true,
-            success: function (file, response) {
-                console.log("response:" + response);
-                
-                if (response != "" && response != null) {
-                    $("#basarili-" + kitapaktarm).css("display", "block");
-                    $("#basarili-" + kitapaktarm + " #mesaj").html("Başarılı");
-
-                    $("#bilgi-" + kitapaktarm).css("display", "none");
-                    $("#uyari-" + kitapaktarm).css("display", "none");
-
-                }
-                else if (response == "") {
-                    $("#bilgi-" + kitapaktarm).css("display", "block");
-                    $("#bilgi-" + kitapaktarm + " #mesaj").html("hata");
-
-                    $("#basarili-" + kitapaktarm).css("display", "none");
-                    $("#uyari-" + kitapaktarm).css("display", "none");
-                }
-                
-            }
-            ,
-            init: function () {
-                var submitButton = document.querySelector('#btnModalTestButon');
-                myDropzone = this;
-
-                submitButton.addEventListener("click", function () {
-                    console.log("tıklandi");
-                    //if ($("#ekBelgeTuru").val() == null || $("#ekBelgeTuru").val() == "") {
-                    //    SwalConfirmMessageError("HATA", "BELGE TÜRÜ BOŞ GEÇİLEMEZ");
-
-                    //    return;
-                    //}
-                    //else if ($("#aciklama").val() == null || $("#aciklama").val() == "") {
-                    //    SwalConfirmMessageError("HATA", "AÇIKLAMA BOŞ GEÇİLEMEZ");
-
-                    //    return;
-                    //}
-
-                    myDropzone.processQueue();
-                });
-
-                this.on("sending", function (file, xhr, formData) {
-                    console.log(file);
-                    //var kitapId = $("#BOOKSID").val();
-                    //console.log("kitapId:" + kitapId);
-                    //var sayfaId = $("#BOOKPAGESID").val();
-                    //console.log("sayfaId:" + sayfaId);
-                    var onKapak = $("#formFileMultipleOnkapak").val();
-                    var arkaKapak = $("#formFileMultipleArkakapak").val();
-                    var kitapAdi = $("#kitapAdi").val();
-                    var onsoz = $("#onsoz").val();
-                    var pdfVeyaWord = $("#pdfVeyaWord").val();                    
-                    var arkaKapakYazi = $("#arkaKapakYazi").val();
-                    var kategori = $("#kitapKetogri").val();
-                    var sayfaResim = $("#formFileMultipleIlgiliSayfa").val();
-                    var sayfaYazi = $("#sayfaYazi").val();
-
-                    //formData.append("ID", kitapId);
-                    formData.append("Name", kitapAdi);
-                    formData.append("onsoz", onsoz);
-                    formData.append("ONKAPAKFOTO", onKapak);
-
-                    formData.append("ARKAKAPAKYAZISI", arkaKapakYazi);
-                    formData.append("CategoriId", kategori);
-                    formData.append("onsoz", onsoz);
-                    formData.append("KITAPSAYFAFOTO", sayfaResim);
-                    formData.append("pdfVeyaWord", pdfVeyaWord);
-                    formData.append("SAYFAYAZI", sayfaYazi);
-                    formData.append("ARKAKAPAKFOTO", arkaKapak);
-
-                });
-            }
-        });
-
-    function Test() {
-
-        var kitapveyaworddosya = $("#kitapveyaworddosya").val();
-        console.log("kitapveyaworddosya: " + kitapveyaworddosya);
-        var fileInput = $('#kitapveyaworddosya')[0];
-        var file = fileInput.files[0];
-        console.log("file: " + file);
-        if (file) {
-            var formData = new FormData();
-            formData.append('file', file);
-
-            $.post("@Url.Action(nameof(KitaplarController.PostKitapEkleWordOrPdf), "Kitaplar")",
-                //$("form").serialize(),
-                {},
-
-                function (data) {
-                    console.log("test buton data:" + data);
-
-                });
-        } else {
-            console.warn('Lütfen bir dosya seçin.');
+        function SayfayiKapat() {
+            window.location.href = "/Home/Index";
         }
 
-    }
+        Dropzone.autoDiscover = false;
+        var myDropzone = new Dropzone("#DropzoneForm",
+            {
+                autoProcessQueue: false,
+                url: "@Url.Action(nameof(KitaplarController.PostKitapEkleWordOrPdf), "Kitaplar")",
+                maxFiles: 3,
+                //acceptedFiles: '.word, .png, .jpeg, .pdf, .png',
+                parallelUploads: 10,
+                addRemoveLinks: true,
+                clickable: true,
+                success: function (file, response) {
+                    console.log("response:" + response);
 
-    function Kaydet() {
-        var kitapId = $("#BOOKSID").val();
-        console.log("kitapId:" + kitapId);
-        var sayfaId = $("#BOOKPAGESID").val();
-        console.log("sayfaId:" + sayfaId);
-        var onKapak = $("#formFileMultipleOnkapak").val();
-        var arkaKapak = $("#formFileMultipleArkakapak").val();
-        var kitapAdi = $("#kitapAdi").val();
-        var onsoz = $("#onsoz").val();
-        var arkaKapakYazi = $("#arkaKapakYazi").val();
-        var kategori = $("#kitapKetogri").val();
-        var sayfaResim = $("#formFileMultipleIlgiliSayfa").val();
-        var sayfaYazi = $("#sayfaYazi").val();
+                    if (response != "" && response != null) {
+                        $("#basarili-" + kitapaktarm).css("display", "block");
+                        $("#basarili-" + kitapaktarm + " #mesaj").html("Başarılı");
 
-        console.log("onKapak: " + onKapak + " arkaKapak: " + arkaKapak + " kitapAdi:" + kitapAdi + " onsoz:" + onsoz + " arkaKapakYazi:" + arkaKapakYazi
-            + " kategori:" + kategori + " sayfaResim:" + sayfaResim + " sayfaYazi:" + sayfaYazi
-        );
-        //$.post("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")",
-        //    {
-        //        "ID": kitapId,
-        //        "Name": kitapAdi,
-        //        "onsoz": onsoz,
-        //        "ONKAPAKFOTO": onKapak,
-        //        "ARKAKAPAKFOTO": arkaKapak,
-        //        "ARKAKAPAKYAZISI": arkaKapakYazi,
-        //        "CategoriId": kategori,
-        //        "KITAPSAYFAFOTO": sayfaResim,
-        //        "SAYFAYAZI": sayfaYazi
-        //    },
+                        $("#bilgi-" + kitapaktarm).css("display", "none");
+                        $("#uyari-" + kitapaktarm).css("display", "none");
 
-        //    function (data) {
+                    }
+                    else if (response == "") {
+                        $("#bilgi-" + kitapaktarm).css("display", "block");
+                        $("#bilgi-" + kitapaktarm + " #mesaj").html("hata");
 
-        //        $("#BOOKSID").val(data.bookID);
-        //        $("#BOOKPAGESID").val(data.booksPageID);
-        //        console.log("BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
-        //        $("#sayfaSayisi").html(data.booksPageCount);
-        //        //$("#sayfaYazi").text = "";
-        //        //$("#sayfaYazi").val = "";
+                        $("#basarili-" + kitapaktarm).css("display", "none");
+                        $("#uyari-" + kitapaktarm).css("display", "none");
+                    }
+
+                }
+                ,
+                init: function () {
+                    var submitButton = document.querySelector('#btnModalTestButon');
+                    myDropzone = this;
+
+                    submitButton.addEventListener("click", function () {
+                        console.log("tıklandi");
+
+                        myDropzone.processQueue();
+                    });
+
+                    this.on("sending", function (file, xhr, formData) {
+                        console.log(file);
+                        //var kitapId = $("#BOOKSID").val();
+                        //console.log("kitapId:" + kitapId);
+                        //var sayfaId = $("#BOOKPAGESID").val();
+                        //console.log("sayfaId:" + sayfaId);
+                        var onKapak = $("#formFileMultipleOnkapak").val();
+                        var arkaKapak = $("#formFileMultipleArkakapak").val();
+                        var kitapAdi = $("#kitapAdi").val();
+                        var onsoz = $("#onsoz").val();
+                        var pdfVeyaWord = $("#pdfVeyaWord").val();
+                        var isPdfVeyaWordTamalama = $("#isPdfVeyaWordTamalama").val();
 
 
-        //    });
+                        var arkaKapakYazi = $("#arkaKapakYazi").val();
+                        var kategori = $("#kitapKetogri").val();
+                        var sayfaResim = $("#formFileMultipleIlgiliSayfa").val();
+                        var sayfaYazi = $("#sayfaYazi").val();
 
-    }
+                        //formData.append("ID", kitapId);
+                        formData.append("Name", kitapAdi);
+                        formData.append("onsoz", onsoz);
+                        formData.append("ONKAPAKFOTO", onKapak);
+                        formData.append("isPdfVeyaWordTamalama", isPdfVeyaWordTamalama);
+                        formData.append("ARKAKAPAKYAZISI", arkaKapakYazi);
+                        formData.append("CategoriId", kategori);
+                        formData.append("onsoz", onsoz);
+                        formData.append("KITAPSAYFAFOTO", sayfaResim);
+                        formData.append("pdfVeyaWord", pdfVeyaWord);
+                        formData.append("SAYFAYAZI", sayfaYazi);
+                        formData.append("ARKAKAPAKFOTO", arkaKapak);
 
-</script>
+                    });
+                }
+            });
+
+
+        function Test() {
+
+            var kitapveyaworddosya = $("#kitapveyaworddosya").val();
+            console.log("kitapveyaworddosya: " + kitapveyaworddosya);
+            var fileInput = $('#kitapveyaworddosya')[0];
+            var file = fileInput.files[0];
+            console.log("file: " + file);
+            if (file) {
+                var formData = new FormData();
+                formData.append('file', file);
+
+                $.post("@Url.Action(nameof(KitaplarController.PostKitapEkleWordOrPdf), "Kitaplar")",
+                    //$("form").serialize(),
+                    {},
+
+                    function (data) {
+                        console.log("test buton data:" + data);
+
+                    });
+            } else {
+                console.warn('Lütfen bir dosya seçin.');
+            }
+
+        }
+
+        function Kaydet() {
+            var kitapId = $("#BOOKSID").val();
+            console.log("kitapId:" + kitapId);
+            var sayfaId = $("#BOOKPAGESID").val();
+            console.log("sayfaId:" + sayfaId);
+            var onKapak = $("#formFileMultipleOnkapak").val();
+            var arkaKapak = $("#formFileMultipleArkakapak").val();
+            var kitapAdi = $("#kitapAdi").val();
+            var onsoz = $("#onsoz").val();
+            var arkaKapakYazi = $("#arkaKapakYazi").val();
+            var kategori = $("#kitapKetogri").val();
+            var sayfaResim = $("#formFileMultipleIlgiliSayfa").val();
+            var sayfaYazi = $("#sayfaYazi").val();
+
+            console.log("onKapak: " + onKapak + " arkaKapak: " + arkaKapak + " kitapAdi:" + kitapAdi + " onsoz:" + onsoz + " arkaKapakYazi:" + arkaKapakYazi
+                + " kategori:" + kategori + " sayfaResim:" + sayfaResim + " sayfaYazi:" + sayfaYazi
+            );
+            //$.post("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")",
+            //    {
+            //        "ID": kitapId,
+            //        "Name": kitapAdi,
+            //        "onsoz": onsoz,
+            //        "ONKAPAKFOTO": onKapak,
+            //        "ARKAKAPAKFOTO": arkaKapak,
+            //        "ARKAKAPAKYAZISI": arkaKapakYazi,
+            //        "CategoriId": kategori,
+            //        "KITAPSAYFAFOTO": sayfaResim,
+            //        "SAYFAYAZI": sayfaYazi
+            //    },
+
+            //    function (data) {
+
+            //        $("#BOOKSID").val(data.bookID);
+            //        $("#BOOKPAGESID").val(data.booksPageID);
+            //        console.log("BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
+            //        $("#sayfaSayisi").html(data.booksPageCount);
+            //        //$("#sayfaYazi").text = "";
+            //        //$("#sayfaYazi").val = "";
+
+
+            //    });
+
+        }
+
+    </script>

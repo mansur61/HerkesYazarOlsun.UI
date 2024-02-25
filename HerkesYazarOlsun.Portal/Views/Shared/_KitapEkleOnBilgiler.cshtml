@@ -1,0 +1,56 @@
+﻿@using HerkesYazarOlsun.Portal.Controllers;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+
+<div class="card-body">
+
+    <h1><strong>Kitabınızı Yazmaya Başlayınız </strong> </h1>
+    <h4>Kitabınız İçin Önbilgileri Formlardan Doldurunuz ... </h4>
+    <br />
+    <div class="conrainer">
+
+        <div class="mb-3">
+            <h5>Kitabınızın Adını Belirleyiniz</h5>
+            <input class="form-control" type="text" id="kitapAdi" multiple>
+
+        </div>
+
+        <div class="mb-3">
+            <h5>Kitabınızın Ön Kapağını Seçiniz</h5>
+            <input class="form-control" type="file" name="formFileMultipleOnkapak" id="formFileMultipleOnkapak" multiple>
+            @*<div id="DropzoneFormOnFoto" class="dropzone">
+            <div class="fallback">
+            <input name="formFileMultipleOnkapak" id="formFileMultipleOnkapak" type="file" multiple />
+            <input name="file"  type="file" multiple />
+            </div>
+            </div>*@
+
+        </div>
+        <div class="mb-3">
+            <h5>Kitabınızın Arka Kapağını Seçiniz</h5>
+            <input class="form-control" type="file" id="formFileMultipleArkakapak" multiple>
+        </div>
+        <div class="mb-3">
+            <h5>Kitabınızın Önsöz'ünü giriniz</h5>
+            <textarea class="form-control" id="onsoz" rows="5" cols="50"></textarea>
+            <div id="help" class="form-text" style="color:cadetblue">500 karakteri geçmeyiniz.</div>
+        </div>
+
+        <div class="mb-3">
+            <h5>Kitabınızın Arkakapak yazısını giriniz</h5>
+            <textarea class="form-control" id="arkaKapakYazi" rows="5" cols="50"></textarea>
+            <div id="help" class="form-text" style="color:cadetblue">200 karakteri geçmeyiniz.</div>
+        </div>
+        <h5>Kitabın Kategorisini seçiniz</h5>
+        <div class="row-cols-3">
+        </div>
+
+        <select class="form-select" style="width:500px;height:30px" id="kitapKetogri">
+            <option selected>Köşe Yazarı</option>
+            <option value="1">Hikaye</option>
+            <option value="2">Masal</option>
+            <option value="3">Şiir</option>
+            <option value="3">Roman</option>
+        </select>
+    </div>
+
+</div>

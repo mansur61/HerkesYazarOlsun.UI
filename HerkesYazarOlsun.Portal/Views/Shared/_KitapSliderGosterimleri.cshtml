@@ -6,8 +6,10 @@
 @using HerkesYazarOlsun.Portal.Controllers;
 
 @{
+    //Model.kitapSliderYometimAdi = "index";
+    //int sliderSayisi = 0;
 
-    int sliderdaGosterilecekKayit = 5;
+     int sliderdaGosterilecekKayit = 5;
     Model.End = sliderdaGosterilecekKayit;
     int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
     int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
@@ -20,6 +22,8 @@
     Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
     Model.Start = @start;
 }
+
+@*@Html.Partial("_KitapSliderItemYonetimleri",@Model)*@
 
 <div id="my-pics-@Model.Tip" class="carousel slide" data-ride="carousel"
      style="width:1050px;margin:5px auto;background-color:aliceblue;height:430px">

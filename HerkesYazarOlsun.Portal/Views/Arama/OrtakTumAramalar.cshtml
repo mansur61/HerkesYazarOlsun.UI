@@ -2,34 +2,26 @@
 @model HerkesYazarOlsun.Model.ViewModel.VM_ARAMA_SONUC
 
 @{
+    Model.vmBook.kitapSliderYometimAdi = "tumaramalar";
+    //int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
 
-    int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
+    //int kalan = (@Model.vmBook.VMBooksList.Count() % sliderdaGosterilecekKayit);
+    //int bolum = (@Model.vmBook.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
-    int kalan = (@Model.vmBook.VMBooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.vmBook.VMBooksList.Count() / sliderdaGosterilecekKayit);
+    //int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 
-    int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
+    ////Model.vmBook = new HerkesYazarOlsun.Model.ViewModel.VM_BOOKS();
+    //Model.kalan = @kalan;
+    //Model.vmBook.bolum = @bolum;
 
-    //Model.vmBook = new HerkesYazarOlsun.Model.ViewModel.VM_BOOKS();
-    Model.kalan = @kalan;
-    Model.vmBook.bolum = @bolum;
+    //Model.vmBook.Start = 0;
+    //Model.vmBook.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
 
-    Model.vmBook.Start = 0;
-    Model.vmBook.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-
-    Model.vmBook.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
-    Model.vmBook.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
-    Model.vmBook.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumaramalar";
-    Model.vmBook.Tip = "tumaramalar";
+    //Model.vmBook.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
+    //Model.vmBook.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
+    //Model.vmBook.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "tumaramalar";
+    //Model.vmBook.Tip = "tumaramalar";
 }
-
-
-@*<p>Kayit: @Model.vmBook.BooksList.Count()</p>
-<p>sliderdaGosterilecekKayit : @sliderdaGosterilecekKayit</p>
-<p>kalan: @kalan</p>
-<p>bolum: @bolum</p>
-<p>sliderSayisi: @sliderSayisi</p>*@
-
 
 @section scripts{
     <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
@@ -41,8 +33,11 @@
 
 @if (@Model.vmBook.VMBooksList.Count() > 0)
 {
+    @Html.Partial("_KitapSliderItemYonetimleri",@Model.vmBook)
 
-    @Html.Partial("Kitaplar",@Model)
+    @Html.Partial("Kitaplar",@Model.vmBook)
+
+   @* @Html.Partial("Kitaplar",@Model)*@
 
 <br />
     @Html.Partial("_PaginationButonlar",@Model.vmBook.vM_PAGINATION_BUTTONS)
