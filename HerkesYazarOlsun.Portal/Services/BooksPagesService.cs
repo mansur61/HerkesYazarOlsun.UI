@@ -1,4 +1,6 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
+using HerkesYazarOlsun.Model.ViewModel;
 using Newtonsoft.Json;
 
 
@@ -13,6 +15,16 @@ namespace HerkesYazarOlsun.Portal.Services
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<BooksPages>(jsonContent.Result);
+            return result;
+        }
+
+        public ServiceResult PostUpdateBooksPages(VM_BOOKS_PAGES sayfa)
+        {
+            string stringData = JsonConvert.SerializeObject(sayfa);
+            Task<string> jsonContent = PostData("api/BooksPages/PostUpdateBooksPages", stringData);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
             return result;
         }
 

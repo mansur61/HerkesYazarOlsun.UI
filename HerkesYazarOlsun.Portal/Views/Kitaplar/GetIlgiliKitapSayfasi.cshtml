@@ -1,0 +1,44 @@
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_PAGES
+@using HerkesYazarOlsun.Portal.Controllers;
+@if (Model != null)
+{
+    <input type="hidden" id="sayfayazi" value="@Model.PageWrite" />
+    <input type="hidden" id="sayfaId" value="@Model.ID" />
+
+    <div style="background-color:white;overflow:auto;overflow-x: hidden;text-align: justify;height:250px;width:auto;padding-right:15px">
+        @Model.PageWrite
+    </div>
+    
+    <div style="height:20px"></div>
+
+    <button class="btn btn-warning" onclick="Guncelle()">
+        Güncelle
+    </button>
+
+    <div style="height:20px"></div>
+    <div id="sonucula"></div>
+
+    <div style="height:50px"></div>
+}
+<script type="text/javascript">
+    function Guncelle() {
+        var kitapSayfa = $("#sayfayazi").val();
+        var id = $("#sayfaId").val();
+        $.post("@Url.Action(nameof(KitaplarController.PostBooksPageUpdate), "Kitaplar")", { "ID": id, "PageWrite": kitapSayfa },
+            function (data) {
+                if (data.state == 1){
+                    $("#sonucula").css("display", "block");
+                    $("#sonucula").html("Güncellendi.");
+                }else{
+                    $("#sonucula").css("display", "block");
+                    $("#sonucula").html("Başarısız. Güncellenemedi.");
+                }
+               
+            });
+
+    }
+
+    $(document).ready(function () {
+        $("#sonucula").css("display", "none");
+    });
+</script>

@@ -357,6 +357,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(result);
         }
 
+
+        
         static string GetTextFromPage(Body body, int pageNumber)
         {
             // Assuming each page is separated by a section break
@@ -454,10 +456,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         {
                             BooksId = book.ID,
                             PageWrite = input.SAYFAYAZI,
-                            PageWriteBase64  = input.SAYFAYAZIBASE64,
+                            PageWriteBase64 = input.SAYFAYAZIBASE64,
                             PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
 
-                        });;
+                        }); ;
                         if (bookPages != null && bookPages.ID != 0)
                         {
                             input.ID = bookPages.ID;
@@ -484,6 +486,32 @@ namespace HerkesYazarOlsun.Portal.Controllers
             //Json(vmKitap);
         }
 
+
+        public IActionResult KitapGuncelleme(long kitapId)
+        {
+            var getBook = new BooksService().GetBooks(kitapId);
+            var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
+            var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
+            getBookPage = getBookPage ?? null;
+            vmBook.BooksPageList = ObjectMapper.MapList(getBookPage!, new List<VM_BOOKS_PAGES>());
+            return View(vmBook);
+        }
+
+        public IActionResult GetIlgiliKitapSayfasi(long kitapSayfaId, long? kitapId = 0)
+        {
+            var getBookPage = new BooksPagesService().GetBooksPages(kitapSayfaId);
+            getBookPage = getBookPage ?? null;
+            var kitapSayfa = ObjectMapper.Map(getBookPage!, new VM_BOOKS_PAGES());
+            return PartialView(kitapSayfa);
+        }
+
+        [HttpPost]
+        [Route("PostBooksPageUpdate")]
+        public JsonResult PostBooksPageUpdate(VM_BOOKS_PAGES sayfa)
+        {
+            ServiceResult sonuc = new BooksPagesService().PostUpdateBooksPages(sayfa);           
+            return Json(sonuc);
+        }
 
         public IActionResult KitapDetay(long kitapId)
         {
