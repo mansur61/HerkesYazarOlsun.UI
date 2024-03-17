@@ -509,6 +509,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [Route("PostBooksPageUpdate")]
         public JsonResult PostBooksPageUpdate(VM_BOOKS_PAGES sayfa)
         {
+            sayfa.PageFoto = "";            
             ServiceResult sonuc = new BooksPagesService().PostUpdateBooksPages(sayfa);           
             return Json(sonuc);
         }
