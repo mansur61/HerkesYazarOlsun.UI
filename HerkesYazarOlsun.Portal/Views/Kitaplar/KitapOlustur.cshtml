@@ -55,48 +55,51 @@
         <div class="col-lg-7 mx-0 px-0">
             <div class="progress">
                 <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%"></div>
-            </div>
+            </div>          
+
             <div id="qbox-container">
-                @*<form class="needs-validation" id="form-wrapper" method="post" name="form-wrapper" novalidate="">*@
-                <div id="steps-container">
+                <form action="KitapEkle" method="post" enctype="multipart/form-data" class="needs-validation" id="form-wrapper">
 
-                    <div class="step">
-                        @Html.Partial("_KitapEkleOnBilgiler",@Model)
+                    <div id="steps-container">
 
-                    </div>
-
-                    <div class="step">
-                        <h1><strong>Kitabınızın Sayfalarını Oluşturunuz.</strong> </h1>
-                        <p>Kitabta Yazılan İlgili Sayfa No : <span id="sayfaSayisi">1</span>  </p>
-                        <input class="form-control" type="hidden" id="BOOKSID" value="@Model.ID">
-                        <input class="form-control" type="hidden" id="BOOKPAGESID" value="0">
-                        <br />
-                        <div class="conrainer">
-                            <div class="mb-3">
-                                <h5>İlgili sayfaya resim koyabilirsiniz</h5>
-                                <input class="form-control" type="file" id="formFileMultipleIlgiliSayfa" multiple>
-
-                            </div>
-
-                            <div class="mb-3">
-                                <h5>İlgili Sayfayı yazınız</h5>
-                                <div id="help" class="form-text" style="color:cadetblue">1000 karakteri geçmeyiniz.</div>
-                                <textarea class="form-control" id="sayfaYazi" rows="30" cols="50"></textarea>
-
-                            </div>
+                        <div class="step">
+                            @Html.Partial("_KitapEkleOnBilgiler",@Model)
 
                         </div>
+
+                        <div class="step">
+                            <h1><strong>Kitabınızın Sayfalarını Oluşturunuz.</strong> </h1>
+                            <p>Kitabta Yazılan İlgili Sayfa No : <span id="sayfaSayisi">1</span>  </p>
+                            <input class="form-control" type="hidden" id="BOOKSID" value="@Model.ID">
+                            <input class="form-control" type="hidden" id="BOOKPAGESID" value="0">
+                            <input type="hidden" id="KITAPSAYFAFOTO" name="KITAPSAYFAFOTO">
+                            <br />
+                            <div class="conrainer">
+                                <div class="mb-3">
+                                    <h5>İlgili sayfaya resim koyabilirsiniz</h5>
+                                    <input type="file" id="dosyaSayfaFoto" name="dosyaSayfaFoto" onchange="dosyaSecim('sayfaFoto')" multiple class="form-control">
+                                    <br />
+
+                                </div>
+
+                                <div class="mb-3">
+                                    <h5>İlgili Sayfayı yazınız</h5>
+                                    <div id="help" class="form-text" style="color:cadetblue" name="SAYFAYAZI">1000 karakteri geçmeyiniz.</div>
+                                    <textarea class="form-control" id="sayfaYazi" rows="30" cols="50"></textarea>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
                     </div>
-
-
-                </div>
-                <div id="q-box__buttons">
-                    <button id="prev-btn" type="button">Geri</button>
-                    <button id="next-btn" type="button">İleri</button>
-                    <button id="submit-btn" type="submit" onclick="Kaydet()">Kaydet</button>
-                    @*<button id="sayfa-kaydet-btn" type="button">Satfa Kaydet</button>*@
-                </div>
-                @*</form>*@
+                    <div id="q-box__buttons">
+                        <button id="prev-btn" type="button">Geri</button>
+                        <button id="next-btn" type="button">İleri</button>
+                        <button id="submit-btn" type="submit">Kaydet</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -111,8 +114,77 @@
 <br />
 
 @*<script type="text/javascript" src="js/kitapekle.js"></script>*@
-
+<script src="~/js/general.js"></script>
 <script>
+    var kitapOlusturForm =  document.getElementById('form-wrapper');
+    kitapOlusturForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Formun varsayılan submit işlemini engelle
+
+        var formData = new FormData(this); // FormData nesnesini oluştur
+
+        // Birden fazla dosyayı FormData nesnesine ekle
+
+        /*var dosyaOnKapakFoto = document.getElementById('dosyaOnKapakFoto').files[0];
+        var dosyaArkaKapakFoto = document.getElementById('dosyaArkaKapakFoto').files[0];
+        var dosyaSayfaFoto = document.getElementById('dosyaSayfaFoto').files[0];
+        
+        formData.append('dosyalar', dosyaOnKapakFoto);
+        formData.append('dosyalar', dosyaArkaKapakFoto);
+        formData.append('dosyalar', dosyaSayfaFoto);*/
+
+        var dosyaInputs = kitapOlusturForm.querySelectorAll('input[type="file"]');
+        console.log(dosyaInputs.length);
+        for (var i = 0; i < dosyaInputs.length; i++) {
+            formData.append('dosyalar', dosyaInputs[i].files[0]);
+
+        }
+        // Formun AJAX ile gönderilmesi veya submit işlemi
+        $.ajax({
+            url: 'KitapEkle', // Formun gönderileceği adresi belirtin
+            method: 'POST',
+            data: formData, // Form verilerini FormData nesnesiyle al
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log('Başarılı dönüş: response', response);
+                console.log('Başarılı dönüş: response result ', response.result);
+                // Başarılı dönüş sonucunu işleme kodları buraya gelebilir.
+                if (response.state == 1) {
+
+                    $("#BOOKSID").val(response.result.bookID);
+                    $("#BOOKPAGESID").val(response.result.booksPageID);
+                    console.log("BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
+                    $("#sayfaSayisi").html(response.result.booksPageCount);
+                    //$("#sayfaYazi").text = "";
+                    //$("#sayfaYazi").val = "";
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Hata:', error);
+                // Hata durumunu işleme kodları buraya gelebilir
+            }
+        });
+    });
+
+    //function dosyaSecim(deger){
+    //    if (deger == "sayfaFoto") {
+    //        var dosya = document.getElementById('dosyaSayfaFoto').files[0];
+    //        var dosyaAdi = dosya.name;
+    //        $("#KITAPSAYFAFOTO").val(dosyaAdi);
+    //        console.log(deger + " geldi....  , dosyaAdi : " + dosyaAdi);
+    //    }
+    //    else if (deger == "onKapakFoto"){
+    //        var dosya = document.getElementById('dosyaOnKapakFoto').files[0];
+    //        var dosyaAdi = dosya.name;
+    //        $("#ONKAPAKFOTO").val(dosyaAdi);
+    //    }
+    //    else if (deger == "arkaKapakFoto") {
+    //        var dosya = document.getElementById('dosyaArkaKapakFoto').files[0];
+    //        var dosyaAdi = dosya.name;
+    //        $("#ARKAKAPAKFOTO").val(dosyaAdi);
+    //    }
+
+    //}
 
     let step = document.getElementsByClassName('step');
     let prevBtn = document.getElementById('prev-btn');
@@ -123,9 +195,9 @@
     let bodyElement = document.querySelector('body');
 
 
-    //form.onsubmit = () => {
-    //    return false
-    //}
+    form.onsubmit = () => {
+        return false
+    }
 
     var current_step = 0;
     var stepCount = step.length;
@@ -230,7 +302,7 @@
         progress((100 / stepCount) * current_step);
     });
 
-
+    /*
     submitBtn.addEventListener('click', () => {
         preloader.classList.add('d-block');
 
@@ -259,59 +331,9 @@
             })
 
     });
+    */
 
 
-    function Kaydet() {
-        var kitapId = $("#BOOKSID").val();
-        console.log("kitapId:" + kitapId);
-        var sayfaId = $("#BOOKPAGESID").val();
-        console.log("sayfaId:" + sayfaId);
-        var onKapak = $("#formFileMultipleOnkapak").val();
-        var arkaKapak = $("#formFileMultipleArkakapak").val();
-        var kitapAdi = $("#kitapAdi").val();
-        var onsoz = $("#onsoz").val();
-        var arkaKapakYazi = $("#arkaKapakYazi").val();
-        var kategori = $("#kitapKetogri").val();
-        var sayfaResim = $("#formFileMultipleIlgiliSayfa").val();
-        var sayfaYazi = $("#sayfaYazi").val();
-
-        console.log("onKapak: " + onKapak + " arkaKapak: " + arkaKapak + " kitapAdi:" + kitapAdi + " onsoz:" + onsoz + " arkaKapakYazi:" + arkaKapakYazi
-            + " kategori:" + kategori + " sayfaResim:" + sayfaResim + " sayfaYazi:" + sayfaYazi
-        );
-        $.post("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")",
-            {
-                "ID": kitapId,
-                "isWordPDF": false,
-                "isPdfVeyaWordTamalama": false,
-                "Name": kitapAdi,
-                "onsoz": onsoz,
-                "ONKAPAKFOTO": onKapak,
-                "ARKAKAPAKFOTO": arkaKapak,
-                "ARKAKAPAKYAZISI": arkaKapakYazi,
-                "CategoriId": kategori,
-                "KITAPSAYFAFOTO": sayfaResim,
-                "SAYFAYAZI": sayfaYazi
-            },
-
-            function (data) {
-
-                if (data.state == 1) {
-                    //$("#sayfaSayisi").html(data);
-
-                    $("#BOOKSID").val(data.bookID);
-                    $("#BOOKPAGESID").val(data.booksPageID);
-                    console.log("BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
-                    $("#sayfaSayisi").html(data.booksPageCount);
-                    //$("#sayfaYazi").text = "";
-                    //$("#sayfaYazi").val = "";
-                }
-
-
-
-
-            });
-
-    }
 
 </script>
 

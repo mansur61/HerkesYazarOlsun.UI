@@ -53,6 +53,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\js\\general.js",
+      "PackagePath": "staticwebassets\\js\\general.js"
+    },
+    {
       "Id": "C:\\Users\\umpg0020097\\Desktop\\HerkesYazarOlsun.UI\\HerkesYazarOlsun.Portal\\wwwroot\\lib\\bootstrap\\LICENSE",
       "PackagePath": "staticwebassets\\lib\\bootstrap"
     },

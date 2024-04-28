@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using System.Text;
 using iTextSharp.text.pdf.parser;
 using iTextSharp.text.pdf;
+using System.Security.Cryptography;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -138,7 +139,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
         private void SayfalariVeriTabaninaAktar(VM_BOOKS vM_BOOKS, string sayfaYazisi, int aktarilmakIstenenLimit)
         {
-            var eklemeDurumu = KitapEkle(vM_BOOKS);//ilk etap kitabı ekle
+            var eklemeDurumu = KitapEkle( vM_BOOKS);//ilk etap kitabı ekle
             if (eklemeDurumu.State == MessageResultState.SUCCESS)
             {
                 vM_BOOKS.ID = eklemeDurumu.Result.BookID;
@@ -289,21 +290,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        [Route("PostKitapEkleWordOrPdf")]
+        //[Route("PostKitapEkleWordOrPdf")]
         public IActionResult PostKitapEkleWordOrPdf(VM_BOOKS vM_BOOKS) // JsonResult oalrakta çalıştır
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            var files = Request.Form.Files;
-
-            var file2 = Request.Form.Files[vM_BOOKS.ONKAPAKFOTO];
-            if (file2 != null && file2.Length > 0)
-            {
-                /*var fileName = Path.GetFileName(file2.FileName);
-                var filePath = Path.Combine(Server.MapPath("~/uploads"), fileName);
-
-                file.SaveAs(filePath);*/
-
-            }
+            var files = Request.Form.Files; // Request yerine  vM_BOOKS.dosyalar şeklinde al
 
             string dosya = "";
 
@@ -320,8 +311,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             vM_BOOKS.FDileName = dosya;
 
-            bool isAktarma = //false;
-            AlinanDosyayiSablonDosyayaAktarma(hedefDosyaYolu);
+            bool isAktarma = false;
+          //  AlinanDosyayiSablonDosyayaAktarma(hedefDosyaYolu);
             if (isAktarma)
             {
                 vM_BOOKS.ID = 0;
@@ -396,18 +387,26 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(getFavori);
         }
 
+        [HttpPost]
+        public string DosyaYukle(IFormFile dosya, VM_BOOKS input)
+        {
+            var ds = dosya;
+            return "";
+        }
 
         [HttpPost]
-        [Route("KitapEkle")]
-        public ServiceResult<VM_KITAP_EKLE> KitapEkle(VM_BOOKS input)
+        //[Route("KitapEkle")]
+        public ServiceResult<VM_KITAP_EKLE> KitapEkle( VM_BOOKS input)
         {
+            var bb = Request.Form.Files; // input.dosyalar şeklinde al
+
             int sayfaId = 0;
             int sayfaCount = 0;
             ServiceResult<VM_KITAP_EKLE> result = new ServiceResult<VM_KITAP_EKLE>();
 
             VM_KITAP_EKLE vmKitap = new VM_KITAP_EKLE();
             //var getBook = new BooksService().GetBooks(input.ID);
-            if (input.ID != 0)
+           /* if (input.ID != 0)
             {
 
                 var _book = ObjectMapper.Map(input, new Books());
@@ -480,9 +479,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
             }
+           */
             result.Result = vmKitap;
             result.State = MessageResultState.SUCCESS;
             return result;
+            //return View(input);
             //Json(vmKitap);
         }
 
