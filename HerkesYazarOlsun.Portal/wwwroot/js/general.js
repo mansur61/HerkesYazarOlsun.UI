@@ -20,3 +20,23 @@ function dosyaSecim(deger) {
 
 }
 
+function isAlert(metinText) {
+    Swal.fire({
+        title: 'Emin misiniz?',
+        text: metinText,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Evet',
+        cancelButtonText: 'Hayır',
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            return true;
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return false;
+        }
+    });
+}

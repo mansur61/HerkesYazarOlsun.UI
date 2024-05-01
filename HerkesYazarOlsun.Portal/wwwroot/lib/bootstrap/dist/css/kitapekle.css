@@ -113,6 +113,7 @@ label {
     }
 
 button#prev-btn,
+/*button#tamam-btn,*/
 button#next-btn,
 button#sayfa-kaydet-btn,
 button#submit-btn {
@@ -140,6 +141,7 @@ button#submit-btn {
 }
 
     button#prev-btn:after,
+    /*button#tamam-btn:after,*/
     button#next-btn:after,
     button#sayfa-kaydet-btn:after,
     button#submit-btn:after {
@@ -155,6 +157,7 @@ button#submit-btn {
     }
 
     button#prev-btn:hover::after,
+    /*button#tamam-btn:hover::after,*/
     button#next-btn:hover::after,
     button#sayfa-kaydet-btn::after,
     button#submit-btn:hover::after {
