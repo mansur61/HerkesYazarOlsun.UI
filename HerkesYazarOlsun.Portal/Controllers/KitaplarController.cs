@@ -421,6 +421,41 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return PartialView(alert);
         }
 
+        [HttpPost]
+        public ServiceResult KitabiTamamla(VM_BOOKS input)
+        {
+            ServiceResult result = new ServiceResult();
+           // var _book = ObjectMapper.Map(input, new Books());
+
+            var getBook = new BooksService().GetBooks(input.ID);
+            if(getBook != null)
+            {
+                getBook.TAMAMLANDIMI = input.isTamalama ?? false;
+
+                var updaterBook = new BooksService().UpdateBook(getBook);
+
+                bool isTamamlama = updaterBook?.TAMAMLANDIMI ?? false;
+
+                if (updaterBook != null && isTamamlama)
+                {
+                    result.State = MessageResultState.SUCCESS;
+                }
+                else
+                {
+                    result.State = MessageResultState.ERROR;
+                }
+
+            }
+            else
+            {
+                result.State = MessageResultState.ERROR;
+            }
+           
+
+            return result;
+
+        }
+
 
         [HttpPost]
         //[Route("KitapEkle")]
@@ -436,23 +471,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 input = await ModelIlgiliDosyalariDoldur(input, files);
             }
             
-
-            
             ServiceResult<VM_KITAP_EKLE> result = new ServiceResult<VM_KITAP_EKLE>();
 
             VM_KITAP_EKLE vmKitap = new VM_KITAP_EKLE();
             //var getBook = new BooksService().GetBooks(input.ID);
-            /*if (input.ID != 0)
+            if (input.ID != 0)
             {
-
                 var _book = ObjectMapper.Map(input, new Books());
-                var updaterBook = new BooksService().UpdateBook(_book);
-
                 var bookPages = new BooksPagesService().PostSaveBooksPages(new BooksPages()
                 {
                     BooksId = input.ID,
                     PageWrite = input.SAYFAYAZI,
-                    PageWriteBase64 = input.SAYFAYAZIBASE64,
+                    PageWriteBase64 = input.SAYFAYAZIBASE64 == null ? "" : input.SAYFAYAZIBASE64,
                     PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
 
                 });
@@ -461,12 +491,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     sayfaCount = new BooksPagesService().GetPagesByBooks(input.ID)!.Count();
                     sayfaId = (int)bookPages.ID;
 
+                    result.State = MessageResultState.SUCCESS;
+
+                }
+                else
+                {
+                    new BooksService().DeleteBook(_book);
+                    result.State = MessageResultState.ERROR;
                 }
 
                 vmKitap.BookID = input.ID;
                 vmKitap.BooksPageCount = sayfaCount + 1;
                 vmKitap.BooksPageID = sayfaId;
-                input. IlgiiSayfaSayisi = sayfaId;
+                input.IlgiiSayfaSayisi = sayfaId;
 
             }
             else
@@ -491,15 +528,22 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         {
                             BooksId = book.ID,
                             PageWrite = input.SAYFAYAZI,
-                            PageWriteBase64 = input.SAYFAYAZIBASE64,
+                            PageWriteBase64 = input.SAYFAYAZIBASE64 == null ? "" : input.SAYFAYAZIBASE64,
                             PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
 
-                        }); ;
+                        });
                         if (bookPages != null && bookPages.ID != 0)
                         {
                             input.ID = bookPages.ID;
                             sayfaId = (int)bookPages.ID;
                             sayfaCount = new BooksPagesService().GetPagesByBooks(book.ID)!.Where(p => p.BooksId == book.ID).Count();
+                            
+                            result.State = MessageResultState.SUCCESS;
+                        }
+                        else
+                        {
+                            new BooksService().DeleteBook(book);
+                            result.State = MessageResultState.ERROR;
                         }
 
                         vmKitap.BookID = book!.ID;
@@ -507,21 +551,25 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         vmKitap.BooksPageCount = sayfaCount + 1;
                         input. IlgiiSayfaSayisi = sayfaCount + 1;
                     }
+                    else
+                    {
+                        result.State = MessageResultState.ERROR;
+                    }
 
                 }
                 else
                 {
                     vmKitap.BookID = book!.ID;
+
                 }
 
 
             }
-           */
+           
             result.Result = vmKitap;
-            result.State = MessageResultState.SUCCESS;
+            //result.State = MessageResultState.SUCCESS;
             return result;
-            //return View(input);
-            //Json(vmKitap);
+         
         }
 
 

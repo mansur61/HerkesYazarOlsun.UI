@@ -124,6 +124,16 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public void DeleteBook(Books book)
+        {
+            string stringData = JsonConvert.SerializeObject(book);
+            Task<string> jsonContent = PostData("api/Books/DeleteBook", stringData);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<Books>(jsonContent.Result);
+            //return result;
+        }
+
         public Books? UpdateBook(Books book)
         {
             string stringData = JsonConvert.SerializeObject(book);
