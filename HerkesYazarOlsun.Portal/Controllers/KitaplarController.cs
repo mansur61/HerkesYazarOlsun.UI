@@ -422,37 +422,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        public ServiceResult KitabiTamamla(VM_BOOKS input)
+        public ServiceResult<Books> KitabiTamamla(VM_BOOKS input)
         {
-            ServiceResult result = new ServiceResult();
-           // var _book = ObjectMapper.Map(input, new Books());
-
+            
             var getBook = new BooksService().GetBooks(input.ID);
-            if(getBook != null)
-            {
-                getBook.TAMAMLANDIMI = input.isTamalama ?? false;
-
-                var updaterBook = new BooksService().UpdateBook(getBook);
-
-                bool isTamamlama = updaterBook?.TAMAMLANDIMI ?? false;
-
-                if (updaterBook != null && isTamamlama)
-                {
-                    result.State = MessageResultState.SUCCESS;
-                }
-                else
-                {
-                    result.State = MessageResultState.ERROR;
-                }
-
-            }
-            else
-            {
-                result.State = MessageResultState.ERROR;
-            }
-           
-
-            return result;
+            ServiceResult<Books> updaterBook = new BooksService().UpdateBook(getBook!);
+            
+            return updaterBook;
 
         }
 

@@ -134,13 +134,13 @@ namespace HerkesYazarOlsun.Portal.Services
             //return result;
         }
 
-        public Books? UpdateBook(Books book)
+        public ServiceResult<Books> UpdateBook(Books book)
         {
             string stringData = JsonConvert.SerializeObject(book);
             Task<string> jsonContent = PostData("api/Books/UpdateBook", stringData);
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<Books>(jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<ServiceResult<Books>>(jsonContent.Result);
             return result;
         }
 
