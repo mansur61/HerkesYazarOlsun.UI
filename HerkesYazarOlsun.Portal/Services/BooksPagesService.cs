@@ -45,14 +45,14 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-
-        public BooksPages? PostSaveBooksPages(BooksPages book)
+       
+        public ServiceResult<BooksPages> PostSaveBooksPages(VM_BOOKS_PAGES bookPages)
         {
-            string stringData = JsonConvert.SerializeObject(book);
+            string stringData = JsonConvert.SerializeObject(bookPages);
             Task<string> jsonContent = PostData("api/BooksPages/PostSaveBooksPages", stringData);
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<BooksPages>(jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<ServiceResult<BooksPages>>(jsonContent.Result);
             return result;
         }
 

@@ -14,8 +14,22 @@ function dosyaSecim(deger) {
     }
     else if (deger == "arkaKapakFoto") {
         var dosya = document.getElementById('dosyaArkaKapakFoto').files[0];
+        if ("undefined" != dosya) {
+            var dosyaAdi = dosya.name;
+            $("#ARKAKAPAKFOTO").val(dosyaAdi);
+        }
+        
+    }
+    else if (deger == "profilFoto") {
+        var dosya = document.getElementById('proFotoSec').files[0];
         var dosyaAdi = dosya.name;
-        $("#ARKAKAPAKFOTO").val(dosyaAdi);
+        $("#profilFotoName").val(dosyaAdi);
+    }
+
+    else if (deger == "dosyaAktarmaDisVeri") {
+        var dosya = document.getElementById('dosyaAktar').files[0];
+        var dosyaAdi = dosya.name;
+        $("#aktarilacakDosya").val(dosyaAdi);
     }
 
 }

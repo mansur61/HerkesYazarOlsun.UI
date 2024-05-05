@@ -80,8 +80,8 @@ namespace HerkesYazarOlsun.Portal.Services
             //{
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
-            client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
-            client.DefaultRequestHeaders.Add("email", mail.ToString());
+            client.DefaultRequestHeaders.Add("tckimlikno", (tckimlikno != null) ? tckimlikno.ToString() : "0" );
+            client.DefaultRequestHeaders.Add("email", (mail != null )? mail.ToString() : "");
 
             client.BaseAddress = new Uri(UriService);
             client.DefaultRequestHeaders.Accept.Clear();
