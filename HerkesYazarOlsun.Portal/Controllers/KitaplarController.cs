@@ -54,9 +54,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
 
-        private async Task WordDosyasindaAktarma(VM_BOOKS vM_BOOKS)
+        private async Task<ServiceResult> WordDosyasindaAktarma(VM_BOOKS vM_BOOKS)
         {
             string docxFilePath = DosyaYolu + vM_BOOKS.FDileName;
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
             using (WordprocessingDocument doc = WordprocessingDocument.Open(docxFilePath, false))
             {
                 // Access the main document part
@@ -96,124 +97,152 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
                 }
                 //paragrafLimiti, iligli uzunluk: 220-230 cümleye denk gelmektedir.
-                SayfalariVeriTabaninaAktar(vM_BOOKS, sayfaYazisi, paragrafLimiti);
-
+                result = await SayfalariVeriTabaninaAktar(vM_BOOKS, sayfaYazisi, paragrafLimiti);
 
             }
+            return result;
 
         }
         /// <summary>
         /// Pdf lerde sayfa sayfa veri tabanına ekleme yapıldı. 1800 limite şuan uyulmadı.
         /// </summary>
         /// <param name="vM_BOOKS"></param>
-        private async Task PdfDosyasindanOkumaAsync(VM_BOOKS vM_BOOKS)
+        private async Task<ServiceResult> PdfDosyasindanOkumaAsync(VM_BOOKS vM_BOOKS)
         {
+            ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
+
             string pdfFilePath = DosyaYolu + vM_BOOKS.FDileName;
-            int paragrafLimiti = 1800;
+           // int paragrafLimiti = 1800;
 
             PdfReader reader = new PdfReader(pdfFilePath);
             string text = string.Empty;
 
-            var eklemeDurumu = await KitapEkle(vM_BOOKS);//ilk etap kitabı ekle
-
-
-            for (int page = 1; page <= reader.NumberOfPages; page++)
+            try
             {
-                text += PdfTextExtractor.GetTextFromPage(reader, page);
-                string sayfaYaz = PdfTextExtractor.GetTextFromPage(reader, page);
-                Console.WriteLine("sayfaYaz: " + page + " -- " + sayfaYaz + "\n");
+                var eklemeDurumu = await KitapEkle(vM_BOOKS);//ilk etap kitabı ekle
 
                 if (eklemeDurumu.State == MessageResultState.SUCCESS)
                 {
-                    vM_BOOKS.ID = eklemeDurumu.Result.BookID;
-                    vM_BOOKS.SAYFAYAZI = sayfaYaz.Trim();
-                    byte[] result = Encoding.UTF8.GetBytes(sayfaYaz);
-                    vM_BOOKS.SAYFAYAZIBASE64 = Convert.ToBase64String(result);
-                    _ = KitapEkle(vM_BOOKS);
+                    for (int page = 1; page <= reader.NumberOfPages; page++)
+                    {
+                        text += PdfTextExtractor.GetTextFromPage(reader, page);
+                        string sayfaYaz = PdfTextExtractor.GetTextFromPage(reader, page);
+                        Console.WriteLine("sayfaYaz: " + page + " -- " + sayfaYaz + "\n");
+
+                        if (eklemeDurumu.State == MessageResultState.SUCCESS)
+                        {
+                            vM_BOOKS.ID = eklemeDurumu.Result.BookID;
+                            vM_BOOKS.SAYFAYAZI = sayfaYaz.Trim();
+                            byte[] result = Encoding.UTF8.GetBytes(sayfaYaz);
+                            vM_BOOKS.SAYFAYAZIBASE64 = Convert.ToBase64String(result);
+                            _ = KitapEkle(vM_BOOKS);
+                        }
+                    }
+                    reader.Close();
                 }
             }
-            reader.Close();
-            // Console.WriteLine("text: " + text);
+            catch (Exception)
+            {
 
-            //SayfalariVeriTabaninaAktar(vM_BOOKS, text, paragrafLimiti);
+                sonuc.State = MessageResultState.ERROR;
+            }
+
+            return sonuc;
 
         }
-        private async Task SayfalariVeriTabaninaAktar(VM_BOOKS vM_BOOKS, string sayfaYazisi, int aktarilmakIstenenLimit)
+        private async Task<ServiceResult> SayfalariVeriTabaninaAktar(VM_BOOKS vM_BOOKS, string sayfaYazisi, int aktarilmakIstenenLimit)
         {
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
             var eklemeDurumu = await KitapEkle(vM_BOOKS);//ilk etap kitabı ekle
+            result.State = eklemeDurumu.State;
+
             if (eklemeDurumu.State == MessageResultState.SUCCESS)
             {
                 vM_BOOKS.ID = eklemeDurumu.Result.BookID;
-                _ = BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(vM_BOOKS, sayfaYazisi, aktarilmakIstenenLimit);
+                result = await BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(vM_BOOKS, sayfaYazisi, aktarilmakIstenenLimit);
 
             }
+            return result;
         }
-        private async Task DosyadanKitapAktar(VM_BOOKS vM_BOOKS)
+        private async Task<ServiceResult> DosyadanKitapAktar(VM_BOOKS vM_BOOKS)
         {
             //string docxFilePath = DosyaYolu + vM_BOOKS.FDileName;
-
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
             try
             {
                 if (vM_BOOKS.pdfVeyaWord == 1)
                 {
                     // word
-                    await WordDosyasindaAktarma(vM_BOOKS);
+                    result =  await WordDosyasindaAktarma(vM_BOOKS);
                 }
                 else
                 {
                     // pdf okuma işlemini getir.
-                    await PdfDosyasindanOkumaAsync(vM_BOOKS);
+                    result = await PdfDosyasindanOkumaAsync(vM_BOOKS);
                 }
 
             }
             catch (Exception ex)
             {
+                result.State = MessageResultState.ERROR;
                 Console.WriteLine($"Hata: {ex.Message}");
             }
-
+            return result;
         }
 
-        string BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(VM_BOOKS vM_BOOKS, string input, int uzunluk)
+        private async Task<ServiceResult> BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(VM_BOOKS vM_BOOKS, string input, int uzunluk)
         {
+            ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
             int length = input.Length;
             int numberOfChunks = (int)Math.Ceiling((double)length / uzunluk);
 
             string[] parcalar = new string[numberOfChunks];
 
-            for (int i = 0; i < numberOfChunks; i++)
+            try
             {
-                int start = i * uzunluk;
-                int chunkLength = Math.Min(uzunluk, length - start);
-                // parcalar[i] = input.Substring(start, chunkLength);
-                var eklenilecekYazi = input.Substring(start, chunkLength);
-
-                if (!string.IsNullOrEmpty(eklenilecekYazi) && !char.IsWhiteSpace(eklenilecekYazi[eklenilecekYazi.Length - 1]))
+                for (int i = 0; i < numberOfChunks; i++)
                 {
-                    // Son karakterde boşluk olmayan durumu kontrol et
-                    int sonBoşlukIndex =
-                    //input.LastIndexOf(' ');
-                    eklenilecekYazi.LastIndexOf(' ');
-                    uzunluk = sonBoşlukIndex;
-                    if (sonBoşlukIndex != -1)
+                    int start = i * uzunluk;
+                    int chunkLength = Math.Min(uzunluk, length - start);
+                    // parcalar[i] = input.Substring(start, chunkLength);
+                    var eklenilecekYazi = input.Substring(start, chunkLength);
+
+                    if (!string.IsNullOrEmpty(eklenilecekYazi) && !char.IsWhiteSpace(eklenilecekYazi[eklenilecekYazi.Length - 1]))
                     {
-                        // Bir önceki boşluğu bul
-                        parcalar[i] = input.Substring(start, sonBoşlukIndex);
+                        // Son karakterde boşluk olmayan durumu kontrol et
+                        int sonBoşlukIndex =
+                        //input.LastIndexOf(' ');
+                        eklenilecekYazi.LastIndexOf(' ');
+                        uzunluk = sonBoşlukIndex;
+                        if (sonBoşlukIndex != -1)
+                        {
+                            // Bir önceki boşluğu bul
+                            parcalar[i] = input.Substring(start, sonBoşlukIndex);
+                        }
                     }
-                }
-                else
-                {
-                    parcalar[i] = input.Substring(start, chunkLength);
-                }
+                    else
+                    {
+                        parcalar[i] = input.Substring(start, chunkLength);
+                    }
 
-                Console.WriteLine($"parcalar[" + i + "]: " + parcalar[i] + " start:" + start.ToString() + "\n");
-                vM_BOOKS.SAYFAYAZI = parcalar[i].Trim();
-                byte[] result = Encoding.UTF8.GetBytes(parcalar[i]);
-                byte[] array = Encoding.ASCII.GetBytes(parcalar[i]);
-                vM_BOOKS.SAYFAYAZIBASE64 = Convert.ToBase64String(result);
-                _ = KitapEkle(vM_BOOKS);//kitabın sayfalarını ekle
+                    Console.WriteLine($"parcalar[" + i + "]: " + parcalar[i] + " start:" + start.ToString() + "\n");
+                    vM_BOOKS.SAYFAYAZI = parcalar[i].Trim();
+                    byte[] result = Encoding.UTF8.GetBytes(parcalar[i]);
+                    byte[] array = Encoding.ASCII.GetBytes(parcalar[i]);
+                    vM_BOOKS.SAYFAYAZIBASE64 = Convert.ToBase64String(result);
+
+                    var kitapResult = await KitapEkle(vM_BOOKS);//kitabın sayfalarını ekle
+                    sonuc.State = kitapResult.State;
+                }
+            }
+            catch (Exception ex)
+            {
+                var _ = ex.Message;
+                sonuc.State = MessageResultState.ERROR;
             }
 
-            return string.Join(" ", parcalar);
+            sonuc.Result = string.Join(" ", parcalar);
+            return sonuc;
         }
 
         private byte GetByte(byte[] bytes)
@@ -326,7 +355,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             {
                 vM_BOOKS.ID = 0;
                 vM_BOOKS.isWordPDF = true;
-                await DosyadanKitapAktar(vM_BOOKS);
+                result = await DosyadanKitapAktar(vM_BOOKS);
+                var bak = result;
             }
             else
             {
@@ -502,7 +532,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 });
                 if (!input.isWordPDF)
                 {
-                    if (book?.Result.ID != 0 && book.Result != null)
+                    if (book?.Result.ID != 0 && book?.Result != null)
                     {
                         var bookPages = new BooksPagesService().PostSaveBooksPages(new VM_BOOKS_PAGES()
                         {

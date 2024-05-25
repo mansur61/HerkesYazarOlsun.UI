@@ -1,69 +1,60 @@
 ﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
 @using HerkesYazarOlsun.Portal.Controllers;
 
-
 @{
     int gosterilecekKayit = Model.sliderdaGosterilecekKayit;
-    int gosterimSayisi = Model.sliderdaGosterilecekKayit;
+    int start = Model.Start;
+    int end = Model.Start + gosterilecekKayit;
+    var booksList = Model.VMBooksList.OrderByDescending(p => p.ID).Skip(start).Take(gosterilecekKayit).ToList();
 }
 
-@foreach (var item in @Model.VMBooksList.OrderByDescending(p=>p.ID).Take(range: new Range(Model.Start, @gosterilecekKayit)))
+@foreach (var item in booksList.Select((value, index) => new { value, index }))
 {
-    
+    <input type="hidden" value="@item.index">
+
     <div class="col-lg-4 col-md-6 col-sm-6" style="border: 1px dotted blue;height:auto;width:200px;margin:5px 5px;padding:5px">
         <div class="product__item" style="overflow:hidden;height:360px">
-            <div class="product__item__pic set-bg" data-setbg="http://placehold.it/350x260">
-               
+            @{
+                var backgroundImage = !string.IsNullOrEmpty(item.value.ONKAPAKFOTO) ?
+                $"data:image;base64,{Html.Raw(item.value.ONKAPAKFOTO)}" :
+                "http://placehold.it/350x260";
+            }
+            <div class="product__item__pic set-bg" data-setbg="@backgroundImage" style="background-image:url('@backgroundImage')">
                 <ul class="product__item__pic__hover">
-                    <li><a onclick='KitabiFavorilereEkle(@item.ID,"@Model.Tip")'><i class="fa fa-heart"></i></a></li>
-                    <li><a href="/Kisi/Profil?id=@item.YazarId"><i class="fa fa-user"></i></a></li>
-
+                    <li><a onclick='KitabiFavorilereEkle(@item.value.ID, "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
+                    <li><a href="/Kisi/Profil?id=@item.value.YazarId"><i class="fa fa-user"></i></a></li>
                 </ul>
             </div>
-           @* @if (!string.IsNullOrEmpty(@Model.ONKAPAKFOTO))
-            {
-                <img src="data:image;base64,@Model.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">
-            }
-            else
-            {
-                <img class="img-responsive" src="http://placehold.it/350x260" alt="Portfolio 1" style="height:300px">
-
-            }*@
             <div class="product__item__text" style="height:auto">
-                <h6><a href="/Kitaplar/KitapDetay?kitapId=@item.ID">@item.Name </a></h6>
+                <h6><a href="/Kitaplar/KitapDetay?kitapId=@item.value.ID">@item.value.Name</a></h6>
                 <div class="row">
                     <div class="rating hidden-sm col-sm-7">
-                        @for (int i = 0; i < @item.Stars.EnFazlaSitar; i++)
+                        @for (int i = 0; i < @item.value.Stars.EnFazlaSitar; i++)
                         {
                             <i class="price-text-color fa fa-star"></i>
                         }
-
-
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 }
 
 @{
-    Model.Start = Model.sliderdaGosterilecekKayit;
-    gosterilecekKayit = Model.End + Model.sliderdaGosterilecekKayit;
-    Model.sliderdaGosterilecekKayit = gosterilecekKayit;
+    Model.Start += gosterilecekKayit;
 }
 
 <script>
     function KitabiFavorilereEkle(kitapId, tip) {
         console.log("tip: " + tip);
-        $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", { "id": kitapId, }, function (data) {
+        $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", { "id": kitapId }, function (data) {
             if (data.state == 1) {
                 $("#basarili-" + tip).css("display", "block");
             } else {
-                $("#uyari-"+ tip).css("display", "block");
+                $("#uyari-" + tip).css("display", "block");
             }
-
         });
     }
+
+    
 </script>
