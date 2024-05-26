@@ -1,4 +1,5 @@
-﻿using HerkesYazarOlsun.Model.Entity;
+﻿using AutoMapper;
+using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
@@ -105,7 +106,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public IActionResult Profil(long id)
         {
             Users kisi = new KisiService().GetKisiById(id);
+            var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
+
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
+            vm_kisi.Profile = profile;
             vm_kisi.Stars = new KisiService().GetMaxStarWriterById(id);
             ViewBag.LOGIN_USER_ID = Lid;
             vm_kisi.vMWriterFollow = new KisiService().GetWriterFollowById(id);

@@ -36,13 +36,19 @@
                         <div class="card">
                             <div class="rounded-top text-white d-flex flex-row">
                                 <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                                         alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                                         style="width: 150px; z-index: 1" />
-                                    @* <div class="mb-3">
-                                    <label for="formFile" class="form-label">Profili Değiştir.</label>
-                                    <input class="form-control" type="file" id="formFile">
-                                    </div>*@
+                                   @* *@
+
+                                    @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64))
+                                    {
+                                        <img src="data:image;base64,@Model?.Profile?.ProfilResimBase64" alt="Profil Resmi"
+                                             style="height:300px;width:215px" class="img-fluid img-thumbnail mt-4 mb-2">
+                                    }
+                                    else
+                                    {
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                                             alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                             style="width: 150px; z-index: 1" />
+                                    }
                                 </div>
                                 <div style="margin-top: 10px;color:black;font-size:30px">
                                     @Model.NAME @Model.SURNAME

@@ -1,8 +1,11 @@
 ﻿
+using DocumentFormat.OpenXml.EMMA;
+using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -16,7 +19,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult Ayarlar()
         {
-            long loginId = LOGIN_USER_ID;
+            long loginId = 6;
+                //LOGIN_USER_ID;
             VM_AYARLAR vmAyr = new VM_AYARLAR();
 
             vmAyr.LoginUserId = loginId;
@@ -37,7 +41,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 await file.CopyToAsync(memoryStream);
                 byte[] fileBytes = memoryStream.ToArray();
 
-                if (!string.IsNullOrEmpty(input.Profile.ProfilResimBase64) && input.Profile.ProfilResimName == file.FileName)
+                if (!string.IsNullOrEmpty(input.Profile.ProfilResimName) && input.Profile.ProfilResimName == file.FileName)
                 {
 
                     string base64String = Convert.ToBase64String(fileBytes);
@@ -50,17 +54,37 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        [Route("SaveOrUpdateAyarlar")]
-        public async Task<JsonResult> SaveOrUpdateAyarlarAsync(VM_AYARLAR ayr)
+        //[Route("SaveOrUpdateAyarlar")]
+        public async Task<JsonResult> SaveOrUpdateAyarlar(VM_AYARLAR ayr)
         {
-            ayr.LoginUserId = LOGIN_USER_ID;
+            ayr.LoginUserId = 6;
+            //LOGIN_USER_ID;
 
-            var files = ayr.dosyalar?.FirstOrDefault();
-            if ( files != null)
+            // Deserialize JSON strings to their respective objects
+            if (Request.Form.ContainsKey("UserDetail"))
             {
-                ayr = await ModelIlgiliDosyalariDoldur(ayr, files);
+                ayr.UserDetail = JsonConvert.DeserializeObject<UsersDetails>(Request.Form["UserDetail"]);
+            }
+            if (Request.Form.ContainsKey("Profile"))
+            {
+                ayr.Profile = JsonConvert.DeserializeObject<Profil>(Request.Form["Profile"]);
+            }
+            if (Request.Form.ContainsKey("User"))
+            {
+                ayr.User = JsonConvert.DeserializeObject<Users>(Request.Form["User"]);
+            }
+            if (Request.Form.ContainsKey("Bildirim"))
+            {
+                ayr.Bildirim = JsonConvert.DeserializeObject<Bildirimler>(Request.Form["Bildirim"]);
             }
 
+            var files = ayr.dosyalar?.FirstOrDefault();
+            if (files != null)
+            {
+                ayr = await ModelIlgiliDosyalariDoldur(ayr, files);                
+            }
+            
+            ayr.dosyalar = null;
             var sonuc = new AyarlarService().SaveOrUpdateAyarlar(ayr);
 
             return Json(sonuc);
