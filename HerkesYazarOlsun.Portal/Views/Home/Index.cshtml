@@ -45,7 +45,7 @@
 <div class="row">
     <div class="col-md-9">
         <h3>
-            Yayına En Yakın Olan Kitaplar
+            En Çok Yıldız Alan Kitaplar
         </h3>
     </div>
 </div>
@@ -55,15 +55,15 @@
     Model.Tip = @tipsec;
 }
 
-@Html.Partial("_KitapSliderGosterimleri",@Model)
-
+@Html.Partial("_KitapSliderGosterimleri", @Model)
+@* @Model.VMBooksList.Where(p => p.Stars.HangiStar == "4" || p.Stars.HangiStar == "5").ToList() *@
 
 <div style="height:50px;"></div>
 
 <div class="row">
     <div class="col-md-9">
         <h3>
-            En Çok Beğenilen Kitaplar
+            En Çok Yorum Alan Kitaplar
         </h3>
     </div>
 </div>
@@ -81,7 +81,7 @@
 <div class="row">
     <div class="col-md-9">
         <h3>
-            En Çok Okunan  Kitaplar
+            Diğer Kitaplar
         </h3>
     </div>
 </div>

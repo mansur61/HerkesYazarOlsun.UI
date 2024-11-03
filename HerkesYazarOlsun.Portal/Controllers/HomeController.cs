@@ -34,7 +34,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
             var getBookList = new BooksService().GetBooksList();
             vM_BOOKS.VMBooksList = getBookList!;
-
+            var bb = vM_BOOKS.VMBooksList.Where(p => p.Stars.HangiStar == "4" || p.Stars.HangiStar == "5").ToList();
 
             List<string> kitaplar = new List<string>();
             kitaplar.Add("Yayına En Yakın Olan Kitaplar");
