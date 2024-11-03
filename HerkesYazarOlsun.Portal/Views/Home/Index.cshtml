@@ -41,6 +41,7 @@
 <br />
 @{
     string tipsec = "";
+    var tempBookList = Model.VMBooksList;
 }
 <div class="row">
     <div class="col-md-9">
@@ -51,26 +52,34 @@
 </div>
 
 @{
-    tipsec = "yayin";
-    Model.Tip = @tipsec;
+    tipsec = "yildizalan";
+    // tipsec = "yayin";
+    Model.Tip = @tipsec;    
+    Model.VMBooksList = Model.VMBooksList.Where(p => p.Stars.HangiStar == "yildiz5").ToList();
 }
 
 @Html.Partial("_KitapSliderGosterimleri", @Model)
-@* @Model.VMBooksList.Where(p => p.Stars.HangiStar == "4" || p.Stars.HangiStar == "5").ToList() *@
 
 <div style="height:50px;"></div>
 
 <div class="row">
     <div class="col-md-9">
         <h3>
-            En Çok Yorum Alan Kitaplar
+            En Çok Yorum Alan 10 Kitaplar 
         </h3>
     </div>
 </div>
 
 @{
-    tipsec = "begenilen";
+    // tipsec = "begenilen";
+    tipsec = "yorumalan";
     Model.Tip = @tipsec;
+    // Model.VMBooksList = @tempBookList;
+    // Yorum sayısına göre sıralanmış en çok yorum alan 10 kitabı seç
+    Model.VMBooksList = Model.VMBooksList
+                        .OrderByDescending(b => b.CommentCount)
+                        .Take(10)
+                        .ToList();
 }
 
 @Html.Partial("_KitapSliderGosterimleri",@Model)
@@ -81,14 +90,20 @@
 <div class="row">
     <div class="col-md-9">
         <h3>
-            Diğer Kitaplar
+            Diğer Kitaplar 
         </h3>
     </div>
 </div>
 
 @{
-    tipsec = "okunan";
+    tipsec = "digerkitaplar";
+    // tipsec = "okunan";
     Model.Tip = @tipsec;
+    // İlk 10 yorum alan ve 5 yıldızlı kitapları hariç tut
+    Model.VMBooksList = tempBookList
+                        .Where(p => p.CommentCount <= tempBookList.OrderByDescending(b => b.CommentCount).Skip(10).Select(b => b.CommentCount).FirstOrDefault())
+                        .Where(p => p.Stars.HangiStar != "yildiz5")
+                        .ToList();
 }
 
 @Html.Partial("_KitapSliderGosterimleri",@Model)
