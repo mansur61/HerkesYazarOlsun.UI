@@ -26,61 +26,45 @@ namespace HerkesYazarOlsun.Portal.Controllers
             _environment = environment;
         }
 
-        public string SignInUrl { get { return $"/Home/Login"; } }
-        [AllowAnonymous]
-        public ActionResult Index()
-        {            
+        public string SignInUrl { get { return $"/Account/Login"; } }
 
+        private VM_BOOKS GetListBooks()
+        {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
             var getBookList = new BooksService().GetBooksList();
             vM_BOOKS.VMBooksList = getBookList!;
-            var bb = vM_BOOKS.VMBooksList.Where(p => p.Stars.HangiStar == "yildiz2").ToList();
+            // var bb = vM_BOOKS.VMBooksList.Where(p => p.Stars.HangiStar == "yildiz2").ToList();
+            //  List<string> kitaplar = new List<string>();
 
-            List<string> kitaplar = new List<string>();
-           
-            return View(vM_BOOKS);
-
-            //var mail = _httpContextAccessor?.HttpContext?.User.Claims.FirstOrDefault(x => x.Type.Equals("email"));
-            //if (mail != null)
-            //{
-
-            //    VM_BOOKS vM_BOOKS = new VM_BOOKS();
-            //    var getBookList = new BooksService().GetBooksList();
-            //    vM_BOOKS.VMBooksList = getBookList!;
-
-
-            //    List<string> kitaplar = new List<string>();
-            //    kitaplar.Add("Yayına En Yakın Olan Kitaplar");
-            //    kitaplar.Add("En Çok Okunan  Kitaplar");
-            //    kitaplar.Add("En Çok Beğenilen Kitaplar");
-            //    return View(vM_BOOKS);
-
-            //}
-            //else
-            //{
-
-            //    return Redirect(SignInUrl);
-            //}
-
+            return vM_BOOKS;
         }
 
-        
         [AllowAnonymous]
-        public ActionResult Login()
+        public ActionResult Index()
         {
-            VM_LOGIN vM_LOGIN = new VM_LOGIN();
-            vM_LOGIN.RememberLogin = false;
-            return View(vM_LOGIN);
+            string isGozlemciMod = User.GetGozlemciMod();
+            //var bb = User.GetEmail();
+            if (!string.IsNullOrEmpty(isGozlemciMod) && isGozlemciMod == "1") // gözlemci mod ile gelinmiş
+            {
+                var vM_BOOKS = GetListBooks();
+                return View(vM_BOOKS);
+            }
+
+            if (!string.IsNullOrEmpty(User.GetEmail()))
+            {
+                var vM_BOOKS = GetListBooks();
+                return View(vM_BOOKS);
+
+            }
+            else
+            {
+                return Redirect(SignInUrl);
+            }
+
         }
 
         public ActionResult HataliGiris()
         {
-            //Localde çalıştırmak için kullanılır... Sonraya doğru işe yarar
-            //if (Request.Host.Host.Contains("localhost") || (Request.Host.Host.Contains("emadentest.mapeg.gov.tr") && tck.HasValue))
-            //{
-            //    await loginProcess(tck.Value);
-            //}
-            //return Redirect("/Home/Index");
             return View();
         }
 

@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Styles{
+@section Styles {
 
     <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
 }
@@ -31,11 +31,11 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="login_form_inner" style="height:auto" >
+                <div class="login_form_inner" style="height:auto">
                     <h3>Giriş Yapınız</h3>
-                   
-                    @*<form action="@Url.Action(nameof(AccountController.Login), "Account")" ajax-success="onSuccess" 
-                             failure="onFailed" ajax="true" ajax-method="POST" id="contactForm" class="row login_form">*@
+
+                    @*<form action="@Url.Action(nameof(AccountController.Login), "Account")" ajax-success="onSuccess"
+                    failure="onFailed" ajax="true" ajax-method="POST" id="contactForm" class="row login_form">*@
                     <div id="contactForm" class="row login_form">
                         <div class="col-md-12 form-group">
                             <input type="text" class="form-control" id="email" name="email" placeholder="Email Adresiniz" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adresiniz'">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-md-12 form-group">
                             <div class="creat_account">
-                                @if(@Model.benihatirla != null)
+                                @if (@Model.benihatirla != null)
                                 {
                                     @if (@Model.benihatirla == "0")
                                     {
@@ -60,20 +60,22 @@
                                 {
                                     <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
                                 }
-                               
+
 
                                 <label for="f-option2">Oturumumu açık tut</label>
                             </div>
                         </div>
                         <div class="col-md-12 form-group">
                             <button class="button button-login w-100" onclick="Giris()">Giriş Yap</button>
-                        @*type="submit"*@
-                        <a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
+                            <br />
+                            <button class="button button-login w-100" onclick="GozlemciMod()">Gözlemci Modunda Giriş Yap</button>
+                            @*type="submit"*@
+                            <a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
                         </div>
                     </div>
                     @*</form>*@
-                    @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
-               </div>
+                    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
+                </div>
             </div>
         </div>
     </div>
@@ -87,8 +89,8 @@
     }else{
         rememberlogin = true;
     }
-   
-    var login = $("#loginicin").val();  
+
+    var login = $("#loginicin").val();
 
     function handleClick(cb) {
         rememberlogin = cb.checked;
@@ -150,7 +152,7 @@
     function Giris() {
         var email = $("#email").val();
         var sifre = $("#sifre").val();
-       
+
         $.post("@Url.Action(nameof(AccountController.Login), "Account")", {
             "RememberLogin": rememberlogin,
             "email": email,
@@ -167,7 +169,42 @@
                 $("#uyari-" + login).css("display", "none");
 
                 setTimeout(function () {
-                  
+
+                    window.location.href = "/Home/Index";
+                }, 3000);
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + login).css("display", "block");
+                $("#bilgi-" + login + " #mesaj").html(data.message);
+
+                $("#basarili-" + login).css("display", "none");
+                $("#uyari-" + login).css("display", "none");
+            }
+            else {
+                $("#uyari-" + login).css("display", "block");
+                $("#bilgi-" + login).css("display", "none");
+                $("#basarili-" + login).css("display", "none");
+                $("#uyari-" + login + " #mesaj").html(data.message);
+            }
+
+        });
+
+    }
+
+    function GozlemciMod() {
+        var email = $("#email").val();
+        var sifre = $("#sifre").val();
+        console.log("GozlemciMod");
+        $.post("@Url.Action(nameof(AccountController.GozlemciModLogin), "Account")", {"email":email}, function (data) {
+            console.log("data.state:"+ data.state);
+            if (data.state == 1) {
+                $("#basarili-" + login).css("display", "block");
+                $("#basarili-" + login + " #mesaj").html(data.message + " Anasayfaya yönlendiriliyorsunuz.");
+
+                $("#bilgi-" + login).css("display", "none");
+                $("#uyari-" + login).css("display", "none");
+
+                setTimeout(function () {
                     window.location.href = "/Home/Index";
                 }, 3000);
             }

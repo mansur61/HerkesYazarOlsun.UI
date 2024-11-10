@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HerkesYazarOlsun.Portal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e2ce52713e57a91216897d387d2b74b2a4aecff8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c4f2559675a8df78fbd8d1fd3ec967392a436e4")]
 [assembly: System.Reflection.AssemblyProductAttribute("HerkesYazarOlsun.Portal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HerkesYazarOlsun.Portal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

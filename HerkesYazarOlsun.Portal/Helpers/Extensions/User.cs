@@ -27,6 +27,12 @@ namespace HerkesYazarOlsun.Portal.Helpers.Extensions
             return tckimlikno != null ? Convert.ToInt64(tckimlikno.Value) : 0;
         }
 
+        public static string GetGozlemciMod(this ClaimsPrincipal user)
+        {
+            var mod = user.Claims.Where(x => x.Type == "gozlemci_mod").FirstOrDefault();
+            return mod != null ? mod.Value : "0";
+        }
+
         public static string GetEmail(this ClaimsPrincipal user)
         {
             var email = user.Claims.Where(x => x.Type == "email").FirstOrDefault();
