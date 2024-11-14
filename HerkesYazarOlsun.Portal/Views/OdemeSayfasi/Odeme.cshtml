@@ -34,12 +34,91 @@
 
 <div style="height:75px;"></div>
 <h1>Ödeme Sayfası</h1>
-<div style="height:75px;"></div>
+@* <div style="height:75px;"></div> *@
 
+<br />
 <div class="container" style="margin-bottom:50px;">
     <div class="row">
         <div class="col-md-12">
-            <div class="col-md-4" style="background-color:lightgrey;border-radius:20px;">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Ödeme Detayları
+                        </h3>
+                        @*<div class="checkbox pull-right">
+                        <label>
+                        <input type="checkbox" />
+                        Remember
+                        </label>
+                        </div>*@
+                    </div>
+                    <div class="panel-body">
+                        @*<form role="form">*@
+                        <div class="form-group">
+                            <label for="cardNumber">
+                                Kard Numaranız
+                            </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="card_number" placeholder="Kart Numaranız" />
+                                <span class="input-group-addon"><span class="fa fa-lock"></span></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardNumber">
+                                Kard Üzerindeki İsim
+                            </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="cardOnName" name="cardOnName" placeholder="Kart Üzerindeki İsim" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-7 col-md-7">
+                                <label for="expityMonth">
+                                    Son Kullanım Tarihi
+                                </label>
+                                <div class="form-group">
+
+                                    <div class="col-xs-6 col-lg-6 pl-ziro">
+                                        <input type="number" class="form-control" id="expityMonth" name="expityMonth" placeholder="MM" />
+                                    </div>
+                                    <div class="col-xs-6 col-lg-6 pl-ziro">
+                                        <input type="number" class="form-control" id="expityYear" name="expityYear" placeholder="YY" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-5 col-md-5 pull-right">
+                                <div class="form-group">
+                                    <label for="cvCode">
+                                        CVV
+                                    </label>
+                                    <input type="number" class="form-control" id="cvCode" name="cvCode" placeholder="CVV" />
+                                </div>
+                            </div>
+                        </div>
+                        @*</form>*@
+                    </div>
+                </div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active">
+                        <a>
+                            <span class="badge pull-right">
+                                <span class="fa fa-turkish-lira" id="odemeFiyati">
+                                    4200
+                                </span>
+                                @*4200*@
+
+                            </span> Toplam Ödeme
+                        </a>
+                    </li>
+                </ul>
+                <br />
+                @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
+
+                <a class="btn btn-success btn-lg btn-block" role="button" onclick="OdemeAl()">ÖDEME YAP</a>
+
+            </div>
+            <div class="col-md-6" style="background-color:lightgrey;border-radius:20px;">
                 <div>
                     <p style="text-align:center;font-size:30px;margin-top:10px">
                         <i class="fa fa-bell" style="color:green"></i> <strong>TEBRİKLER</strong>
@@ -74,87 +153,11 @@
 
                 </div>
 
-                <div class="text-center" style="margin-top:10px;margin-bottom:10px">
+               @*  <div class="text-center" style="margin-top:10px;margin-bottom:10px">
 
                     <button type="button" class="btn btn-light">  <a href="/OdemeSayfasi/Odeme">Ödeme Sayfasına Geç</a>  </button>
-                </div>
+                </div> *@
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        Ödeme Detayları
-                    </h3>
-                    @*<div class="checkbox pull-right">
-                    <label>
-                    <input type="checkbox" />
-                    Remember
-                    </label>
-                    </div>*@
-                </div>
-                <div class="panel-body">
-                    @*<form role="form">*@
-                    <div class="form-group">
-                        <label for="cardNumber">
-                            Kard Numaranız
-                        </label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="card_number" placeholder="Kart Numaranız" />
-                            <span class="input-group-addon"><span class="fa fa-lock"></span></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="cardNumber">
-                            Kard Üzerindeki İsim
-                        </label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="cardOnName" name="cardOnName" placeholder="Kart Üzerindeki İsim" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-7 col-md-7">
-                            <label for="expityMonth">
-                                Son Kullanım Tarihi
-                            </label>
-                            <div class="form-group">
-
-                                <div class="col-xs-6 col-lg-6 pl-ziro">
-                                    <input type="number" class="form-control" id="expityMonth" name="expityMonth" placeholder="MM" />
-                                </div>
-                                <div class="col-xs-6 col-lg-6 pl-ziro">
-                                    <input type="number" class="form-control" id="expityYear" name="expityYear" placeholder="YY" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-5 col-md-5 pull-right">
-                            <div class="form-group">
-                                <label for="cvCode">
-                                    CVV
-                                </label>
-                                <input type="number" class="form-control" id="cvCode" name="cvCode" placeholder="CVV" />
-                            </div>
-                        </div>
-                    </div>
-                    @*</form>*@
-                </div>
-            </div>
-            <ul class="nav nav-pills nav-stacked">
-                <li class="active">
-                    <a>
-                        <span class="badge pull-right">
-                            <span class="fa fa-turkish-lira" id="odemeFiyati">
-                                4200
-                            </span>
-                            @*4200*@
-
-                        </span> Toplam Ödeme
-                    </a>
-                </li>
-            </ul>
-            <br />
-            @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
-
-            <a class="btn btn-success btn-lg btn-block" role="button" onclick="OdemeAl()">ÖDEME YAP</a>
-            @*href="http://www.jquery2dotnet.com"*@
         </div>
     </div>
 </div>

@@ -6,14 +6,20 @@
 @section Styles {
 
     <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+    <style>
+        #normalLoginTab {
+            background-color: lightgray; /* Aktif tab için mavi arka plan */
+            color: white; /* Yazıyı beyaz yapar */
+        }
+    </style>
 }
 
 @using HerkesYazarOlsun.Portal.Controllers;
 @model HerkesYazarOlsun.Model.ViewModel.VM_LOGIN;
 
 
-
 <input type="hidden" id="loginicin" value="logingiris" />
+
 @{
     string alertmesajgostermedurumu = "logingiris";
 }
@@ -34,46 +40,67 @@
                 <div class="login_form_inner" style="height:auto">
                     <h3>Giriş Yapınız</h3>
 
-                    @*<form action="@Url.Action(nameof(AccountController.Login), "Account")" ajax-success="onSuccess"
-                    failure="onFailed" ajax="true" ajax-method="POST" id="contactForm" class="row login_form">*@
-                    <div id="contactForm" class="row login_form">
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="email" name="email" placeholder="Email Adresiniz" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adresiniz'">
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="sifre" name="sifre" placeholder="Şifre" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre'">
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <div class="creat_account">
-                                @if (@Model.benihatirla != null)
-                                {
-                                    @if (@Model.benihatirla == "0")
-                                    {
-                                        <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
-                                    }
-                                    else
-                                    {
-                                        <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' checked value="true">
-                                    }
-                                }
-                                else
-                                {
-                                    <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
-                                }
-
-
-                                <label for="f-option2">Oturumumu açık tut</label>
+                    <!-- Tablar -->
+                    <div style="margin: -30px 10%; border: 2px solid #ddd; border-radius: 8px;">
+                        <ul class="nav nav-tabs" id="loginTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="normalLoginTab" onclick="LoginTab(0)" style="cursor:pointer">Normal Giriş</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="observerLoginTab" onclick="LoginTab(1)" style="cursor:pointer">Gözlemci Modunda Giriş</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="loginTabContent">
+                        <br />  <br />
+                        <!-- Normal Giriş Tabı -->
+                        <div id="normalLogin" role="tabpanel">
+                            <div id="contactForm" class="row login_form">
+                                <div class="col-md-12 form-group">
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="Email Adresiniz" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adresiniz'">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <input type="text" class="form-control" id="sifre" name="sifre" placeholder="Şifre" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre'">
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <div class="creat_account">
+                                        @if (@Model.benihatirla != null)
+                                        {
+                                            @if (@Model.benihatirla == "0")
+                                            {
+                                                <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' checked value="true">
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
+                                        }
+                                        <label for="f-option2">Oturumumu açık tut</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <button class="button button-login w-100" onclick="Giris()">Giriş Yap</button>
+                                    <br />
+                                    <a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-12 form-group">
-                            <button class="button button-login w-100" onclick="Giris()">Giriş Yap</button>
-                            <br />
-                            <button class="button button-login w-100" onclick="GozlemciMod()">Gözlemci Modunda Giriş Yap</button>
-                            @*type="submit"*@
-                            <a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
+
+                        <!-- Gözlemci Modu Giriş Tabı -->
+                        <div id="observerLogin" role="tabpanel">
+                            <div id="contactForm" class="row login_form">
+                                <div class="col-md-12 form-group">
+                                    <button class="button button-login w-100" onclick="GozlemciMod()">Gözlemci Modunda Giriş Yap</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    @*</form>*@
+
                     @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
                 </div>
             </div>
@@ -86,11 +113,37 @@
     var rememberlogin = false;
     if ($("#hatirla").val() == "false") {
         rememberlogin = false;
-    }else{
+    } else {
         rememberlogin = true;
     }
 
     var login = $("#loginicin").val();
+
+    $("#normalLogin").css("display", "block");
+    $("#observerLogin").css("display", "none");
+
+    function LoginTab(index) {
+        console.log("index:" + index);
+        if (index == 0) {
+            $("#normalLogin").css("display", "block");
+            $("#observerLogin").css("display", "none");
+
+            $("#normalLoginTab").css("background-color", "lightgray");
+
+            $("#observerLoginTab").css("background-color", "white");
+            $("#observerLoginTab").css("color", "green");
+            
+           
+        } else {
+            $("#observerLogin").css("display", "block");
+            $("#normalLogin").css("display", "none");
+
+            $("#normalLoginTab").css("background-color", "white");
+            $("#normalLoginTab").css("color", "green");
+
+            $("#observerLoginTab").css("background-color", "lightgray");
+        }
+    }
 
     function handleClick(cb) {
         rememberlogin = cb.checked;
@@ -150,6 +203,7 @@
     }
 
     function Giris() {
+
         var email = $("#email").val();
         var sifre = $("#sifre").val();
 
@@ -157,10 +211,10 @@
             "RememberLogin": rememberlogin,
             "email": email,
             "sifre": sifre,
-            "benihatirla": rememberlogin ==  false ? "0" : "1"
+            "benihatirla": rememberlogin == false ? "0" : "1"
 
         }, function (data) {
-            console.log("data.state:"+ data.state);
+            console.log("data.state:" + data.state);
             if (data.state == 1) {
                 $("#basarili-" + login).css("display", "block");
                 $("#basarili-" + login + " #mesaj").html(data.message + " Giriş işlemi Başarılı Anasayfaya yönlendiriliyorsunuz.");
@@ -192,11 +246,12 @@
     }
 
     function GozlemciMod() {
+
         var email = $("#email").val();
         var sifre = $("#sifre").val();
         console.log("GozlemciMod");
-        $.post("@Url.Action(nameof(AccountController.GozlemciModLogin), "Account")", {"email":email}, function (data) {
-            console.log("data.state:"+ data.state);
+        $.post("@Url.Action(nameof(AccountController.GozlemciModLogin), "Account")", { "email": email }, function (data) {
+            console.log("data.state:" + data.state);
             if (data.state == 1) {
                 $("#basarili-" + login).css("display", "block");
                 $("#basarili-" + login + " #mesaj").html(data.message + " Anasayfaya yönlendiriliyorsunuz.");

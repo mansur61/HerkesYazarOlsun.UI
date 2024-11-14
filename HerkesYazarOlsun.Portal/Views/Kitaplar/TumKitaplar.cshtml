@@ -49,13 +49,11 @@
 <script>
 
     $("#arabutonfiltre").css("display", "none");
-    // $("#tumkitaplar").css("display", "none");
     function Ara() {
 
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
 
         if(listelenecek_kayit_sayisi == 0){
-           // alert("ddd");
             return ;
         }
 
@@ -66,16 +64,13 @@
 
         var kitap_ara = $("#kitap_ara").val();
 
-       // alert(listelenecek_kayit_sayisi + " " + kitap_ara);
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
             "KITAP_ADI": kitap_ara
         }, function (data) {
             if (data) {
-                //alert("başarılı");
                 $("#arabutonfiltre").html(data);
                 $("#arabutonfiltre").css("display", "block");
-                //$("#tumkitaplar").html("");
                 $("#tumkitaplar").css("display", "none");
 
                 //const nodeList = document.querySelectorAll("#gozukecekMiFooter");
@@ -93,11 +88,6 @@
         });
     }
 
-
-    //function Kapat() {
-    //    $("#basarili").css("display", "none");
-    //    $("#uyari").css("display", "none");
-    //}
 </script>
 
 <script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>

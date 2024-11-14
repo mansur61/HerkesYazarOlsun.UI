@@ -412,7 +412,6 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             var getBook = new BooksService().GetBooks(kitapid);
             ServiceResult<Books> checkerBook = new BooksService().CheckBook(getBook!);
-
             return Json(checkerBook);
         }
 
@@ -665,6 +664,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             vM_BOOKS.sliderdaGosterilecekKayit = (arama.listelenecek_kayit_sayisi != 0 ? arama.listelenecek_kayit_sayisi : 0);
             vM_BOOKS.profilKitapTuru = arama.profilKitapTuru ?? "";
             vM_BOOKS.isAnaSayfa = false;
+            vM_BOOKS.Tip = arama.profilKitapTuru + "-" + arama.Tip;
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
             vM_BOOKS.VMBooksList = bookList!;

@@ -15,7 +15,9 @@
 
 @foreach (var item in booksList.Select((value, index) => new { value, index }))
 {
+    item.value.isAnaSayfa = Model.isAnaSayfa;
     <input type="hidden" value="@item.index">
+    <input type="hidden" value="@item.value.ID" name="kId">
 
     <div class="col-lg-4 col-md-6 col-sm-6" style="border: 1px dotted blue;height:auto;width:200px;margin:5px 5px;padding:5px">
         <div class="product__item" style="overflow:hidden;height:360px">
@@ -24,21 +26,32 @@
                 $"data:image;base64,{Html.Raw(item.value.ONKAPAKFOTO)}" :
                 "http://placehold.it/350x260";
             }
+            @* <p>@item.value.isAnaSayfa</p>  *@
+            @* <p>Tip: @Model.Tip</p> *@
+            @* <p> tamam: @item.value.TAMAMLANDIMI - yayin: @item.value.YAYINDAMI</p> *@
             <div class="product__item__pic set-bg" data-setbg="@backgroundImage" style="background-image:url('@backgroundImage')">
                 <ul class="product__item__pic__hover">
                     @if (isGozlemciMod == "0")
                     {
                         <li><a onclick='KitabiFavorilereEkle(@item.value.ID, "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
-                        @if (!@item.value.isAnaSayfa && @item.value.TAMAMLANDIMI)
+                        @if (!@item.value.isAnaSayfa) // ana sayfadan gelemeyecek
                         {
-                            <li>
-                                <a onclick='KitabiYayinaGonder(@item.value.ID,"@Model.Tip")'>
-                                    <i class="fa fa-paper-plane"></i>
-                                </a>
-                            </li>
+                            @if ( @item.value.TAMAMLANDIMI) 
+                            {
+                                <li>
+                                    <a onclick='KitabiYayinaGonder(@item.value.ID,"@Model.Tip")'>
+                                        <i class="fa fa-share"></i>
+                                    </a>
+                                </li>
+                            }
+                            // NOT: burda yayında olan kitapları da KitabiYayinaGonder yapsın . ek validatorlerde kontrol yapsın hatta gerek yok 
+                            // yayınlanan kitap farklı bir yayına daha gönderilebilir.
+                            
                         }
-                        
-                    }                    
+
+                    }
+
+
                     <li><a href="/Kisi/Profil?id=@item.value.YazarId"><i class="fa fa-user"></i></a></li>
                 </ul>
             </div>
@@ -75,19 +88,27 @@
 
     function KitabiYayinaGonder(kitapId, tip) {
         console.log("tip: " + tip);
+        console.log("kitapId: " + kitapId);
         $.post("@Url.Action(nameof(KitaplarController.KitabiYayinaGonder), "Kitaplar")", { "kitapid": kitapId }, function (data) {
+            console.log("data: " + data.state);
             if (data.state == 1) {
                 $("#basarili-" + tip).css("display", "block");
+                $("#uyari-" + tip + " #mesaj").html("Tebrikler. Kitabınızı yayına alabilirsiniz. Bunun için ödeme sayfasına yönlendirileceksiniz.");
+                setTimeout(function () {
+                    window.location.href = "/OdemeSayfasi/Odeme";
+                }, 3000);
+            } else {
+                $("#uyari-" + tip).css("display", "block");
+                $("#uyari-" + tip + " #mesaj").html(data.message);
+
+                // test için
                 // setTimeout(function () {
 
                 //     window.location.href = "/OdemeSayfasi/Odeme";
                 // }, 3000);
-            } else {
-                $("#uyari-" + tip).css("display", "block");
-                $("#uyari-" + tip + " #mesaj").html(data.message);
             }
         });
     }
 
-    
+
 </script>
