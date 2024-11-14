@@ -1,0 +1,113 @@
+﻿@using HerkesYazarOlsun.Portal.Controllers;
+@using HerkesYazarOlsun.Portal.Helpers.Extensions
+
+@{
+    string isGozlemciMod = User.GetGozlemciMod();
+}
+<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation" id="gozukecekMiNavbar">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="navbar-header">
+                  
+                    <a class="navbar-brand" href="/Home/Index">Yazar Olun</a>
+                </div>
+            </div>
+            <div style="margin-top:20px"></div>
+            <div class="col-md-1">
+                <span style="color:blue;font-size:30px;display:none;" id="arabutonu"><strong>ARA</strong></span>
+
+            </div>
+            <div class="col-sm-1">
+                <a href="/Arama/Arama">
+                    <img class="input-box-icon" src="~/lib/img/arama2.png" alt="" width="40" onmouseover="bigImg(this)" onmouseout="normalImg(this)" />
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active"><a href="/Home/Index">Anasayfa</a></li>
+                        <li><a href="">Hakkımızda</a></li>
+
+                        <li><a href="">İletişim</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+
+                                @if (!string.IsNullOrEmpty(User.GetEmail()))
+                                {
+                                    @* @User.GetEmail() *@
+                                    <i class="fa fa-user">
+
+                                    </i>
+                                }
+                                else
+                                {
+                                    @:Giriş Yap / Kayıt Ol
+                                }
+                            </a>
+
+                            <ul class="dropdown-menu">                                
+                                @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
+                                {
+                                    <li><a href="/Home/Register">Kayıt Ol</a></li>
+                                    <li><a href="/Kisi/Profil?id=6">Profil</a></li>
+                                    <li><a href="/Kitaplar/TumKitaplar?FavoriKitaplar=true">Favori Kitaplarım</a></li>
+                                    <li><a href="/Kisi/TumYazarlar?FavoriYazarlar=true">Favori Yazarlarım</a></li>
+                                    <li><a href="/Kitaplar/TumKitaplar?BitenKitaplar=true">Yazdığım/Tamamlanan Kitaplar</a></li>
+                                    <li><a href="/Kitaplar/TumKitaplar?DevamEdenKitaplar=true">Henüz Tamamlanmayan Kitaplarım</a></li>
+                                    <li><a href="/Kitaplar/TumKitaplar?YayinlananKitaplar=true">Yayınlanan Kitaplarım</a></li>
+                                    <li><a href="/Ayarlar/Ayarlar">Ayarlar</a></li>
+                                    <li><a href="/Account/Logout">Çıkış Yap</a></li>
+                                }
+                                else
+                                {
+                                    <li><a href="/Account/Login">Giriş Yap</a></li>
+                                }
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div>
+        </div>
+
+    </div><!-- /.container -->
+</nav>
+
+<script>
+    function bigImg(x) {
+        $("#arabutonu").css("display", "block");
+        x.style.height = "64px";
+        x.style.width = "64px";
+    }
+
+    function normalImg(x) {
+        $("#arabutonu").css("display", "none");
+        x.style.height = "32px";
+        x.style.width = "32px";
+    }
+    function AramaYap() {
+
+        var inputVeri = $("#kitap_ara").val();
+        $.get("@Url.Action(nameof(AramaController.Arama), "Arama")", {
+            "KITAP_ADI": inputVeri,
+            "YAZAR_ADI": inputVeri
+        }, function (data) {
+
+            if (data) {
+                $("#tumaramaalar").css("display", "block");
+                $("#arabutonfiltre").css("display", "block");
+
+
+            } else {
+                $("#tumaramaalar").css("display", "block");
+                $("#arabutonfiltre").css("display", "block");
+            }
+
+        });
+    }
+
+</script>

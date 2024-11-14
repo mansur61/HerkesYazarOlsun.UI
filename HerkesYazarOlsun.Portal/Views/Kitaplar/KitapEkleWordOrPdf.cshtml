@@ -1,0 +1,291 @@
+﻿@{
+    ViewData["Title"] = "Kitap Arama";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using HerkesYazarOlsun.Portal.Controllers;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+
+
+<input type="hidden" id="loginId" value="@Model.LoginUserId" />
+
+<input type="hidden" id="kitapaktarmaicin" value="pdfveyawordaktar" />
+
+
+@{
+    string tip = "pdfveyawordaktar";
+}
+<input type="hidden" id="tip" value="@tip" />
+
+@section Styles{
+
+    <link href="~/lib/bootstrap/dist/css/kitapekle.css" rel="stylesheet" />
+    @*<link href="~/dropzone/dropzone.min.css" rel="stylesheet" />*@
+}
+
+
+<div class="container light-style flex-grow-1 container-p-y" style="margin-top:50px">
+
+    <div class="font-weight-bold py-3 mb-4">
+        <div id="title-container">
+            <h2>Herkes Yazar Olsun</h2>
+            <br />
+            <p style="font-size:20px;padding:15px">
+                Siz değerli yazarımız.
+                İçeriğinizi tüm paydaşlarımızla paylaşacağınızdan ötürü mutluluk içirisindeyiz.
+                Bu yolda başarılarınızı temenni ederiz.
+            </p>
+        </div>
+    </div>
+
+    <div style="height:50px;"></div>
+    <div class="card overflow-hidden">
+        <div class="row no-gutters row-bordered row-border-light">
+            <div class="col-md-3 pt-0">
+                <ul class="nav nav-tabs" role="tablist">
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#account-onbilgi" role="tab" aria-selected="false">
+                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                            <span class="hidden-xs-down font-weight-bold">Kitap Ön Bilgileri</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#account-dosyaAktarim" role="tab" aria-selected="false">
+                            <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
+                            <span class="hidden-xs-down font-weight-bold">Dosya Aktarım</span>
+                        </a>
+                    </li>
+
+                </ul>
+                <br />
+
+            </div>
+            <form action="PostKitapEkleWordOrPdf" method="post" enctype="multipart/form-data" class="needs-validation" id="form-harici">
+                <div class="col-md-9">
+
+                    <div class="tab-content">
+
+                        <div class="tab-pane p-20 active" id="account-onbilgi" role="tabpanel">
+                            @Html.Partial("_KitapEkleOnBilgiler",@Model)
+
+                        </div>
+
+                        <div class="tab-pane p-20" id="account-dosyaAktarim" role="tabpanel">
+                            <div class="row">
+                                <h5>Pdf veya Word ? *</h5>
+                                <select class="form-select" style="width:500px;height:30px" id="pdfVeyaWord">
+                                    <option value="1">Word</option>
+                                    <option value="2">Pdf</option>
+                                </select>
+
+                                <h5>Yüklediğiniz Kitap Tamamlanmış Kitap Mıdır? *</h5>
+                                <select class="form-select" style="width:500px;height:30px" id="isPdfVeyaWordTamalama">
+                                    <option value="1">Evet</option>
+                                    <option value="2">Hayır</option>
+                                </select>
+
+                                <div class="card-body">
+
+                                    <h5>Yükleyeceğiniz Dosyayı Aktarınız *</h5>
+                                    <input name="file" type="file" id="dosyaAktar" onchange="dosyaSecim('dosyaAktarmaDisVeri')" />
+                                    <input type="hidden" id="aktarilacakDosya">
+                                </div>
+                                <br />
+                                <div class="progress">
+                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%"></div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Kaydet</button>
+            </form>
+        </div>
+
+        @Html.Partial("_AlertMesaj",@tip)
+
+        <br />
+        <div class="text-right mt-3">
+        </div>
+        <br />
+    </div>
+</div>
+
+<script src="~/js/general.js"></script>
+
+@section Scripts{
+    <!-- SweetAlert2 JS dosyası ve Bootstrap JS dosyası -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+}
+
+<script>
+
+    var progressBar = document.getElementsByClassName('progress-bar')[0];
+    console.log(progressBar);
+
+    //const progress = (value) => { progressBar.style.width = `${value}%`;}
+
+    var tip = $("#tip").val();
+
+    var form = document.getElementById('form-harici');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Formun varsayılan submit işlemini engelle
+
+        var aktarilacakDosya = $("#aktarilacakDosya").val();
+        console.log("bak aktarılacak dosya:" + aktarilacakDosya);
+
+        var formData = new FormData(this); // FormData nesnesini oluştur
+
+        var kitapId = $("#BOOKSID").val();
+        var kitapAdi = $("#kitapAdi").val();
+        var onsoz = $("#onsoz").val();
+        var arkaKapakYazi = $("#arkaKapakYazi").val();
+        var kategori = $("#kitapKetogri").val();
+        var pdfOrWord = $("#pdfVeyaWord").val();
+
+        var durum = false;
+        var yuklenilenKitapTamamMi = $("#isPdfVeyaWordTamalama").val();
+
+        console.log("bak aktarılacak dosya:" + aktarilacakDosya + " pdfOrWord: " + pdfOrWord + " yuklenilenKitapTamamMi : " + yuklenilenKitapTamamMi);
+
+        if (yuklenilenKitapTamamMi == "1") {
+            durum = true;
+        }
+
+
+        formData.append('ID', kitapId);
+        formData.append('isWordPDF', true);
+        formData.append('Name', kitapAdi);
+        formData.append('onsoz', onsoz);
+        formData.append('AktarilanDosya', aktarilacakDosya);
+        formData.append('ARKAKAPAKYAZISI', arkaKapakYazi);
+        formData.append('CategoriId', kategori);
+        formData.append('ARKAKAPAKYAZISI', arkaKapakYazi);
+        formData.append('pdfVeyaWord', parseInt(pdfOrWord));
+        formData.append('isPdfVeyaWordTamalama', durum);
+        formData.append('isTamalama', durum);
+
+
+
+        var dosyaInputs = form.querySelectorAll('input[type="file"]');
+        console.log(dosyaInputs.length);
+        for (var i = 0; i < dosyaInputs.length; i++) {
+            formData.append('dosyalar', dosyaInputs[i].files[0]);
+
+        }
+
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "'Yüklediğiniz Kitap Tamamlanmış Kitap Mıdır?' sorusunu cevapladığınızdan emin olunuz. Aksi durumda eklediğiniz kitap için sadece düzenleme" +
+                " yapabileceksiniz. Kaydetmek için Emin Misiniz?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+               
+                progressBar.style.width = '0%';
+
+                let progress = 0;
+                const interval = setInterval(() => {
+                    /*progress += 10;
+                    progressBar.style.width = `${progress}%`;
+
+                    // Progress bar dolunca veya veri geldiğinde temizle
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                    }*/
+                    if (progress < 90) {  // Sunucu yanıtı gelene kadar %90'a kadar dolmasını sağla
+                        progress += 10;
+                        progressBar.style.width = `${progress}%`;
+                    }
+                }, 3000);
+
+                $.ajax({
+                    url: 'PostKitapEkleWordOrPdf',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log('Başarılı dönüş: response', response);
+                        if (response.state == 1) {
+
+                            clearInterval(interval);
+                            progressBar.style.width = '100%';
+
+                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. İlgili kitaba yönlendiriliyorsunuz..");
+                            setTimeout(function () {
+                                var link = window.location.href;
+                                //console.log("link " + link);
+                                window.location.href = "/Kitaplar/KitapDetay?kitapId=" + kitapId.toString();
+
+                            }, 3000);
+                        }
+                        else {
+                            clearInterval(interval);
+                            progressBar.style.width = `${progress}%`;
+                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);//"Kitabınız Eklenemedi"
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Hata:', error);
+                        clearInterval(interval);
+                        progressBar.style.width = `${progress}%`;
+                      
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Kitap İçerik AKtarma', 'Kitap İçerik Aktarma İşleminde sorun oluştu. Bizim ile iletişime geçiniz', 'error');
+            }
+        });
+    });
+
+    var kitapaktarm = $("#kitapaktarmaicin").val();
+
+    function SayfayiKapat() {
+        window.location.href = "/Home/Index";
+    }
+
+    function BilgiVer(state, basarili, bilgi, uyari, mesaj) {
+        if (state == 1) {
+            $(basarili + tip).css("display", "block");
+            $(basarili + tip + " #mesaj").html(mesaj);
+
+            $(bilgi + tip).css("display", "none");
+            $(uyari + tip).css("display", "none");
+
+        }
+        else if (state == 3) {
+            $(bilgi + tip).css("display", "block");
+            $(bilgi + tip + " #mesaj").html(mesaj);
+
+            $(basarili + tip).css("display", "none");
+            $(uyari + tip).css("display", "none");
+        }
+        else {
+            $(uyari + tip).css("display", "block");
+            $(bilgi + tip).css("display", "none");
+            $(basarili + tip).css("display", "none");
+            $(uyari + tip + " #mesaj").html(mesaj);
+        }
+    }
+
+
+
+</script>
