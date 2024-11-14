@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\HerkesYazarOlsun.Portal.props" />
-</Project>
