@@ -31,6 +31,11 @@ function dosyaSecim(deger) {
         var dosyaAdi = dosya.name;
         $("#aktarilacakDosya").val(dosyaAdi);
     }
+    else if (deger == "dosyaAktarmaDekont") {
+        var dosya = document.getElementById('dekontAktar').files[0];
+        var dosyaAdi = dosya.name;
+        $("#aktarilacakDekont").val(dosyaAdi);
+    }
 
 }
 //"#basarili-"

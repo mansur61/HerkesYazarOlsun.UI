@@ -4,6 +4,7 @@
 }
 
 
+@using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
 
 <style>
@@ -24,8 +25,8 @@
 
 
 <input type="hidden" id="odemeicin" value="odeme" />
-<input type="hidden" id="loginId" value="1" />
-<input type="hidden" id="kitapId" value="1" />
+<input type="hidden" id="loginId" value="@StringCipher.Encrypt(@ViewBag.LoginUserId.ToString())" />
+<input type="hidden" id="kitapId" value="@StringCipher.Encrypt(@ViewBag.KitapId.ToString())" />
 
 @{
     string alertmesajgostermedurumu = "odeme";
@@ -153,9 +154,9 @@
 
                 </div>
 
-               @*  <div class="text-center" style="margin-top:10px;margin-bottom:10px">
+                @*  <div class="text-center" style="margin-top:10px;margin-bottom:10px">
 
-                    <button type="button" class="btn btn-light">  <a href="/OdemeSayfasi/Odeme">Ödeme Sayfasına Geç</a>  </button>
+                <button type="button" class="btn btn-light">  <a href="/OdemeSayfasi/Odeme">Ödeme Sayfasına Geç</a>  </button>
                 </div> *@
             </div>
         </div>
@@ -165,22 +166,24 @@
 <script>
 
 
-    var loginId = $("#loginId").val();
+    var loginUserId = $("#loginId").val();
     var kitapId = $("#kitapId").val();
 
     var odeme = $("#odemeicin").val();
 
 
     function OdemeAl() {
-
-        // window.location.href = "/OdemeSayfasi/SponsorlukBildirimi?kitapId=1&yazarId=1";
-
         var cardNumber = $("#card_number").val();
         var expityMonth = $("#expityMonth").val();
         var expityYear = $("#expityYear").val();
         var cvCode = $("#cvCode").val();
         var cardOnName = $("#cardOnName").val();
         var odemeFiyati = $("#odemeFiyati").val();
+
+
+        // console.log("loginUserId: " + loginUserId + " kitapId: " + kitapId);
+        //  var link =  "/OdemeSayfasi/SponsorlukBildirimi?kitapId=" + kitapId + "&yazarId=" + loginUserId + "";
+        // console.log("link: " + link  );
 
         var odemeFiyati = document.getElementById("odemeFiyati").innerHTML.toString().trim();
 
@@ -189,6 +192,7 @@
         console.log(" cardNumber: " + cardNumber + " expityMonth: " + expityMonth + " expityYear: " + expityYear + " cvCode: " + cvCode + " cardOnName: " + cardOnName);
 
         if (cardNumber == "" && expityMonth == "" && expityYear == "" && cvCode == "" && cardOnName == "") {
+           // console.log(" buraya geldi");
             $("#uyari-" + odeme).css("display", "block");
             $("#bilgi-" + odeme).css("display", "none");
             $("#basarili-" + odeme).css("display", "none");
@@ -196,15 +200,13 @@
             return;
         }
 
-        // input verileri alınmadı kontrol eylersin
-
         $.post("@Url.Action(nameof(OdemeSayfasiController.SaveOdeme), "OdemeSayfasi")", {
             "KartTarihiAy": expityMonth,
             "KartTarihiYil": expityYear,
             "KartUzerindekiIsim": cardOnName,
             "Cvv": cvCode,
             "KartNo": cardNumber,
-            "LoginUserId": loginId,
+            "LoginUserId": loginUserId,
             "KitapId": kitapId,
             "Tutar": odemeFiyati
 
@@ -221,7 +223,7 @@
                     //kitapId şifreli şekilde gidecek
                     //yazarId şifreli şekilde gidebilir
                     //md5 ile şifrelenebilir. çözülebilir. Giriş yaptıktan sonra bu kısma odaklan
-                    window.location.href = "/OdemeSayfasi/SponsorlukBildirimi?kitapId=1&yazarId=1";
+                    window.location.href = "/OdemeSayfasi/SponsorlukBildirimi?kitapId=" + kitapId + "&yazarId=" + loginUserId + "";
                 }, 5000);
             }
             else if (data.state == 3) {
@@ -242,4 +244,5 @@
 
 
     }
+
 </script>

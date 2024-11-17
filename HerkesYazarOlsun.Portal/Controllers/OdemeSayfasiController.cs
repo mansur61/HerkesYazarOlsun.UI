@@ -1,10 +1,10 @@
 ﻿
- using HerkesYazarOlsun.Model.Utils;
+using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
- 
+
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -12,7 +12,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
     {
 
         private EmailService emailService;
-       
+        private string DosyaYolu = "C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/";
+
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
         public OdemeSayfasiController(IHttpContextAccessor contextAccessor)
@@ -21,10 +22,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
             this.emailService = new EmailService();
         }
-        public IActionResult Odeme()
+        public IActionResult Odeme(long? kitapId = null)
         {
+
+            ViewBag.LoginUserId = Lid;
+            ViewBag.KitapId = kitapId;
             return View();
-           
+
         }
 
         [HttpPost]
@@ -33,29 +37,33 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ServiceResult result = new ServiceResult();
             kart.LoginUserId = Lid;
             result = new OdemeService().PostOdeme(kart);
-            
+
 
             return Json(result);
 
         }
-
-        public IActionResult SponsorlukBildirimi(string kitapId,string yazarId)
+       public IActionResult SponsorlukBildirimi(string kitapId, string yazarId)
         {
+            var kitap_id = Convert.ToInt64(StringCipher.Decrypt(kitapId));
+            var yazar_id = Convert.ToInt64(StringCipher.Decrypt(yazarId));
+            var bb = Lid;
             //kitap ve yazarId şifrelerini çöz
             VM_SPONSORLAR vM_SPONSORLAR = new VM_SPONSORLAR();
             vM_SPONSORLAR.SponsorlarList = new SponsorlarService().GetSponsorlar();
             return View(vM_SPONSORLAR);
 
         }
+        //  test edilecek
 
         [HttpPost]
         public JsonResult SaveSponsorlukBildir(VM_ODEME_SPONSORLARI odemeSponsorlar)
         {
             ServiceResult result = new ServiceResult();
             odemeSponsorlar.LoginUserId = Lid;
-            result = new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
+            result = new ServiceResult(state:MessageResultState.ERROR,message:"Olmadi");
+                //new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
 
-            if(result.State == MessageResultState.SUCCESS)
+            if (result.State == MessageResultState.SUCCESS)
             {
                 var mesaj = result.Message;
                 var icerik = new VM_MAIL_ICERIK()

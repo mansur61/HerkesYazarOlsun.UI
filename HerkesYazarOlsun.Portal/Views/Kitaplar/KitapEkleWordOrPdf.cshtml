@@ -88,7 +88,7 @@
                                 <div class="card-body">
 
                                     <h5>Yükleyeceğiniz Dosyayı Aktarınız *</h5>
-                                    <input name="file" type="file" id="dosyaAktar" onchange="dosyaSecim('dosyaAktarmaDisVeri')" />
+                                    <input name="file" type="file" id="dekontAktar" onchange="dosyaSecim('dosyaAktarmaDisVeri')" />
                                     <input type="hidden" id="aktarilacakDosya">
                                 </div>
                                 <br />
@@ -138,7 +138,7 @@
 
     var form = document.getElementById('form-harici');
     form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Formun varsayılan submit işlemini engelle
+        event.preventDefault();  
 
         var aktarilacakDosya = $("#aktarilacakDosya").val();
         console.log("bak aktarılacak dosya:" + aktarilacakDosya);

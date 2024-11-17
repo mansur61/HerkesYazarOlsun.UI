@@ -30,13 +30,20 @@
             @* <p>Tip: @Model.Tip</p> *@
             @* <p> tamam: @item.value.TAMAMLANDIMI - yayin: @item.value.YAYINDAMI</p> *@
             <div class="product__item__pic set-bg" data-setbg="@backgroundImage" style="background-image:url('@backgroundImage')">
+                @if (!string.IsNullOrEmpty(@item.value.CategoryName))
+                {
+                    <div class="discount-badge" style="position:absolute; top:10px; left:10px; background-color:lightgreen; color:white; padding:5px 10px; font-size:12px; font-weight:bold; border-radius:5px;">
+                        @item.value.CategoryName
+                    </div>
+                }
+                
                 <ul class="product__item__pic__hover">
                     @if (isGozlemciMod == "0")
                     {
                         <li><a onclick='KitabiFavorilereEkle(@item.value.ID, "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
                         @if (!@item.value.isAnaSayfa) // ana sayfadan gelemeyecek
                         {
-                            @if ( @item.value.TAMAMLANDIMI) 
+                            @if (@item.value.TAMAMLANDIMI)
                             {
                                 <li>
                                     <a onclick='KitabiYayinaGonder(@item.value.ID,"@Model.Tip")'>
@@ -44,9 +51,9 @@
                                     </a>
                                 </li>
                             }
-                            // NOT: burda yayında olan kitapları da KitabiYayinaGonder yapsın . ek validatorlerde kontrol yapsın hatta gerek yok 
+                            // NOT: burda yayında olan kitapları da KitabiYayinaGonder yapsın . ek validatorlerde kontrol yapsın hatta gerek yok
                             // yayınlanan kitap farklı bir yayına daha gönderilebilir.
-                            
+                            <li><a href="/Kitaplar/KitapGuncelleme?kitapId=@item.value.ID"><i class="fa fa-edit"></i></a></li>
                         }
 
                     }
@@ -95,17 +102,17 @@
                 $("#basarili-" + tip).css("display", "block");
                 $("#uyari-" + tip + " #mesaj").html("Tebrikler. Kitabınızı yayına alabilirsiniz. Bunun için ödeme sayfasına yönlendirileceksiniz.");
                 setTimeout(function () {
-                    window.location.href = "/OdemeSayfasi/Odeme";
+                    window.location.href = "/OdemeSayfasi/Odeme?kitapId=" + kitapId;
                 }, 3000);
             } else {
                 $("#uyari-" + tip).css("display", "block");
                 $("#uyari-" + tip + " #mesaj").html(data.message);
 
-                // test için
-                // setTimeout(function () {
+                //test için
+                setTimeout(function () {
 
-                //     window.location.href = "/OdemeSayfasi/Odeme";
-                // }, 3000);
+                    window.location.href = "/OdemeSayfasi/Odeme?kitapId=" + kitapId;
+                }, 3000);
             }
         });
     }
