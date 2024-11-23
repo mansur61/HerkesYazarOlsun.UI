@@ -1,4 +1,5 @@
 ﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
@@ -40,13 +41,13 @@
                 <ul class="product__item__pic__hover">
                     @if (isGozlemciMod == "0")
                     {
-                        <li><a onclick='KitabiFavorilereEkle(@item.value.ID, "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
+                        <li><a onclick='KitabiFavorilereEkle("@StringCipher.Encrypt(@item.value.ID.ToString())", "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
                         @if (!@item.value.isAnaSayfa) // ana sayfadan gelemeyecek
                         {
                             @if (@item.value.TAMAMLANDIMI)
                             {
                                 <li>
-                                    <a onclick='KitabiYayinaGonder(@item.value.ID,"@Model.Tip")'>
+                                    <a onclick='KitabiYayinaGonder("@StringCipher.Encrypt(@item.value.ID.ToString())","@Model.Tip")'>
                                         <i class="fa fa-share"></i>
                                     </a>
                                 </li>

@@ -1,10 +1,10 @@
 ﻿
+using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -12,6 +12,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
     {
 
         private EmailService emailService;
+
         private string DosyaYolu = "C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/";
 
         private IHttpContextAccessor _contextAccessor;
@@ -22,13 +23,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
             this.emailService = new EmailService();
         }
-        public IActionResult Odeme(long? kitapId = null)
+        public IActionResult Odeme(string kitapId)
         {
 
-            ViewBag.LoginUserId = Lid;
+            ViewBag.LoginUserId = StringCipher.Encrypt(Lid.ToString());
             ViewBag.KitapId = kitapId;
             return View();
-
         }
 
         [HttpPost]
@@ -42,7 +42,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(result);
 
         }
-       public IActionResult SponsorlukBildirimi(string kitapId, string yazarId)
+        public IActionResult SponsorlukBildirimi(string kitapId, string yazarId)
         {
             var kitap_id = Convert.ToInt64(StringCipher.Decrypt(kitapId));
             var yazar_id = Convert.ToInt64(StringCipher.Decrypt(yazarId));
@@ -55,25 +55,82 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
         //  test edilecek
 
+        private async Task<string> GetDosyaPathAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
+        {
+            var dosyalar = odemeSponsorlar.dosyalar;
+            string tempFilePath = "";
+            if (dosyalar != null && dosyalar.Any())
+            {
+                var dosya = odemeSponsorlar.dosyalar!.FirstOrDefault();
+                if (dosya != null)
+                {
+                    // Dosyayı geçici bir dosyaya kaydetme
+                    tempFilePath = Path.Combine(Path.GetTempPath(), dosya.FileName);
+                    using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                    {
+                        await dosya.CopyToAsync(stream); // Dosyayı geçici dosyaya kaydediyoruz
+                    }
+                }
+
+            }
+            return tempFilePath;
+        }
+
         [HttpPost]
-        public JsonResult SaveSponsorlukBildir(VM_ODEME_SPONSORLARI odemeSponsorlar)
+        public async Task<JsonResult> SaveSponsorlukBildirAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
         {
             ServiceResult result = new ServiceResult();
             odemeSponsorlar.LoginUserId = Lid;
-            result = new ServiceResult(state:MessageResultState.ERROR,message:"Olmadi");
-                //new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
+            string tempFilePath = await GetDosyaPathAsync(odemeSponsorlar);
+
+            result = new ServiceResult(state: MessageResultState.ERROR, message: "Olmadi");
+            //new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
+
+            var spnsModel = new SponsorlarService().GetSponsorlarById(odemeSponsorlar.SponsorId);
+            var kisiModel = new KisiService().GetKisiById(Lid);
 
             if (result.State == MessageResultState.SUCCESS)
             {
                 var mesaj = result.Message;
+                //alinan mail
                 var icerik = new VM_MAIL_ICERIK()
                 {
-                    kime = "kayamansur61@gmail.com",
+                    //appjsondan al
+                    username = "kayamansur61@gmail.com",
+                    sifre = "Google.*?61",
                     Host = "smtp.outlook.com",
+
                     konu = "Herkes Yazar Olsun Sponsorluk Seçim Bildirimi",
-                    icerik = mesaj,//hazırlanmış pdf dosyasıda iletilebilir. şuan bu şekilde ilerle
-                    gondericii_mail = "kayamansur61@gmail.com",
-                    gondericii_sifre = "Google.*?61",
+                    icerik = $@"
+                            <html>
+                                <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+                                    <h2 style='color: #2c3e50;'>Sayın Herkes Yazar Olsun Ekibi,</h2>
+                                    <p>
+                                        {odemeSponsorlar.KitapId.ToString()} nolu Kitap bilgisi ile Sponsor seçimi için size ulaşıyorum.
+                                        Sponsor Adı olarak  {spnsModel.SponsorAdi} seçtiğimi belirtmek istiyorum.
+                                    </p>
+                                    <p>
+                                        <strong>İletişim Bilgilerim:</strong><br>
+                                        <strong>Ad Soyad:</strong> {kisiModel.NAME} {kisiModel.SURNAME}<br>
+                                        <strong>Telefon:</strong> {odemeSponsorlar.Tel}<br>
+                                        <strong>Mail:</strong> {odemeSponsorlar.Mail}<br>
+                                    </p>
+                                    <p>
+                                        Ek Açıklamalarım;                                       
+                                    </p>
+                                    <p>
+                                        {odemeSponsorlar.Mesaj}
+                                    </p>
+                                    <hr style='border: 1px solid #ccc;' />
+                                    
+                                </body>
+                            </html>",
+                     
+                    // mail kimden geliyor
+                    gondericii_mail = "kayamansur61@gmail.com", //odemeSponsorlar.Mail,
+                    // mail kime gidiyor
+                    kime = "kayamansur61@gmail.com",
+                    dosyaYolu = tempFilePath,
                 };
 
                 string sonuc = emailService.EmailGonder(icerik);
@@ -86,8 +143,59 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 }
                 else
                 {
-                    result.State = MessageResultState.SUCCESS;
-                    result.Message = mesaj;
+                    //gonderilen nmail
+                    icerik = new VM_MAIL_ICERIK()
+                    { 
+                        
+                        sifre = "Google.*?61",
+                        username = "kayamansur61@gmail.com",
+                        Host = "smtp.outlook.com",
+
+                        konu = "Herkes Yazar Olsun Sponsorluk Seçim Bildirimi Yanıtınız",
+                        icerik = $@"
+                            <html>
+                                <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
+                                    <h2 style='color: #2c3e50;'>Sayın {odemeSponsorlar.NameSurname}  ,</h2>
+                                    <p>
+                                        Sponsor seçiminiz başarılı şekilde yapılmıştır.
+                                        Paylaştığınız mail veya SMS bilgileri ile sizlere en kısa sürede iletişim sağlanacaktır.
+                                    </p>
+                                    <p>
+                                        {mesaj}
+                                    </p>
+                                    <p>
+                                        Sponsorluk süreçleri hakkında daha fazla bilgi almak için bizimle iletişime geçebilirsiniz.
+                                    </p>
+                                    <p>
+                                        Gelen Maillerde spama düşme ihtimali olmaktadır. Spam klasörünüzü kontrol eylemizide rica ederiz.
+                                    </p>
+                                    <hr style='border: 1px solid #ccc;' />
+                                    <p style='font-size: 0.9em; color: #7f8c8d;'>
+                                        Bu mesaj otomatik olarak oluşturulmuştur. Lütfen cevaplamayınız.
+                                    </p>
+                                </body>
+                            </html>",
+
+                        // mail kimden geliyor
+                        gondericii_mail = "kayamansur61@gmail.com",
+                        // mail kime gidiyor
+                        kime = odemeSponsorlar.Mail,
+                    };
+
+                     sonuc = emailService.EmailGonder(icerik);
+
+
+                    if (sonuc == "-1")
+                    {
+                        result.State = MessageResultState.ERROR;
+                        result.Message = "Sponsorluk bildirme de hata meydana geldi. Tekrar deneyiniz.";
+                    }
+                    else
+                    {
+                        result.State = MessageResultState.SUCCESS;
+                        result.Message = mesaj;
+                    }
+                    
                 }
             }
 

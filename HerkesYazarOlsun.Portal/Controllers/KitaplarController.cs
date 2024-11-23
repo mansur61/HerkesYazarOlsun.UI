@@ -392,13 +392,14 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiFavorilereEkle")]
-        public JsonResult KitabiFavorilereEkle(long id)
+        public JsonResult KitabiFavorilereEkle(string id)
         {
-
+            var kId = StringCipher.Decrypt(id.ToString());
+            var KİTAPıD = Convert.ToInt64(kId);
             FavoriBooks fAVORILER = new FavoriBooks()
             {
-                BOOKS_ID = id,
-                USER_ID = 1
+                BOOKS_ID = KİTAPıD,
+                USER_ID = Lid
             };
             var getFavori = new BooksService().PostFavoriBookSave(fAVORILER);
 

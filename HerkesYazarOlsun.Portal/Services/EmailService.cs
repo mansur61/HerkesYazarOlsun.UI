@@ -15,6 +15,7 @@ namespace HerkesYazarOlsun.Portal.Services
         public string EmailGonder(VM_MAIL_ICERIK icerik) //string kime, string? sifre
         {
             MailMessage mailMessage = new MailMessage();
+            // mail kimden geliyor
             string gonderici_mail = icerik.gondericii_mail; 
             mailMessage.From = new MailAddress(gonderici_mail);
 
@@ -32,6 +33,12 @@ namespace HerkesYazarOlsun.Portal.Services
                 mailMessage.Body = "Gelen Kod : " + icerik.sifre; // html formatta ta hazırlanabilir
             }
 
+            if (!string.IsNullOrEmpty(icerik.dosyaYolu))
+            {
+                string dosyaYolu = icerik.dosyaYolu;
+                Attachment dosyaEki = new Attachment(dosyaYolu);
+                mailMessage.Attachments.Add(dosyaEki);
+            }               
 
             SmtpClient smtpClient = new SmtpClient();
             smtpClient.Host = icerik.Host; 
@@ -41,9 +48,10 @@ namespace HerkesYazarOlsun.Portal.Services
             smtpClient.EnableSsl = true;
 
            
-            string gonderici_username = icerik.gondericii_mail; 
-            string gonderici_password = icerik.gondericii_sifre;
-            smtpClient.Credentials = new NetworkCredential(gonderici_username, gonderici_password);
+            string username = icerik.username; 
+            string password = icerik.sifre;
+            smtpClient.Credentials = new NetworkCredential(username, password);
+            
 
 
             try
