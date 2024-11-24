@@ -83,7 +83,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             odemeSponsorlar.LoginUserId = Lid;
             string tempFilePath = await GetDosyaPathAsync(odemeSponsorlar);
 
-            result = new ServiceResult(state: MessageResultState.ERROR, message: "Olmadi");
+            result = new ServiceResult(state: MessageResultState.SUCCESS, message: "Olmadi");
             //new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
 
             var spnsModel = new SponsorlarService().GetSponsorlarById(odemeSponsorlar.SponsorId);

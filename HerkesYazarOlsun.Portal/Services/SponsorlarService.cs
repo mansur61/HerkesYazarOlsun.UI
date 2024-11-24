@@ -32,8 +32,8 @@ namespace HerkesYazarOlsun.Portal.Services
         }
 
         public VM_SPONSORLAR GetSponsorlarById(long id)
-        {;
-            Task<string> jsonContent = GetData("api/Sponsorlar/GetSponsorlar?id=" + id);
+        {
+            Task<string> jsonContent = GetData("api/Sponsorlar/GetSponsorlarById?id=" + id);
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<VM_SPONSORLAR>(jsonContent.Result);
