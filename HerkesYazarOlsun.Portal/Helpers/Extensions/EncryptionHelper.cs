@@ -3,12 +3,7 @@
     using System;
     using System.IO;
     using System.Security.Cryptography;
-    using System.Text;
-
-    using System;
-    using System.IO;
-    using System.Security.Cryptography;
-    using System.Text;
+    using System.Text; 
 
     public class EncryptionHelper
     {
@@ -62,6 +57,23 @@
                         return srDecrypt.ReadToEnd();
                     }
                 }
+            }
+        }
+
+        public static string ComputeSHA256Hash(string input)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+
+                // Hash'i hex formatında döndür
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in hashBytes)
+                {
+                    sb.Append(b.ToString("x2"));
+                }
+                return sb.ToString();
             }
         }
     }

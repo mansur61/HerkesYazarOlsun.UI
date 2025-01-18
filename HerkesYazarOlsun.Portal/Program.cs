@@ -1,10 +1,10 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
-using HerkesYazarOlsun.Portal.Helpers.Extensions;
-using HerkesYazarOlsun.Portal.Middleware;
+using HerkesYazarOlsun.Portal.Helpers.Extensions; 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting.Internal;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +14,7 @@ builder.Services.AddMvc();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 
+builder.Services.Configure<VM_Mail_Settings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddHttpClient();
 
 builder.Services.AddAuthentication(x =>
@@ -29,11 +30,7 @@ builder.Services.AddAuthentication(x =>
 });
 
 var app = builder.Build();
-
-
-//IHostingEnvironment env = new HostingEnvironment();
-//RotativaConfiguration.Setup(env);
-
+ 
 AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
 
 // Configure the HTTP request pipeline.
@@ -45,9 +42,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-//app.UseMiddleware<RequestExceptionMiddleware>();
-
+ 
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -58,11 +53,10 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}");
-});
-
-
-
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+}); 
 
 app.MapRazorPages();
 app.MapControllers();

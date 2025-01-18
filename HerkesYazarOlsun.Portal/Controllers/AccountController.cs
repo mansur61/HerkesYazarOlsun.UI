@@ -4,20 +4,14 @@ using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using HerkesYazarOlsun.Portal.Helpers.Extensions;
+using System.Security.Claims; 
 using HerkesYazarOlsun.Model.Utils;
 using Microsoft.AspNetCore.Authorization;
-using HerkesYazarOlsun.Model.Entity;
-using Microsoft.AspNetCore.Identity;
-using System.Reflection;
-using DocumentFormat.OpenXml.Wordprocessing;
-using HerkesYazarOlsun.Portal.Helpers;
-using DocumentFormat.OpenXml.Presentation;
+using HerkesYazarOlsun.Model.Entity; 
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class AccountController : Controller
     {
         private IHttpContextAccessor _httpContextAccessor;
@@ -25,17 +19,28 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private IWebHostEnvironment _environment;
 
         public string SignInUrl { get { return $"/Home/Index"; } }
+        public string SignUpInUrl { get { return $"/Account/Register"; } }
         public AccountController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
             _environment = environment;
         }
 
+        [HttpGet]
+        public ActionResult Register()
+        {
+            VM_USERS vmUsers = new VM_USERS();
+            return View(vmUsers);
+        }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
+            if (returnUrl != null && returnUrl.Contains("Register"))
+            {
+                return RedirectToAction("Register", "Account");
+            }
 
             if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
@@ -43,7 +48,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 return redirectResult;
             }
 
-            return View(new VM_LOGIN() { RememberLogin = true }); //ReturnUrl = returnUrl 
+            return View(new VM_LOGIN() { RememberLogin = true }); 
 
         }
 

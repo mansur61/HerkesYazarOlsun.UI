@@ -1,20 +1,13 @@
-﻿using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Model.Utils;
+﻿ using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using HerkesYazarOlsun.Portal.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-
-using System.Security.Cryptography;
-using System.Text;
-using System.Security.Claims;
+using HerkesYazarOlsun.Portal.Services; 
+using Microsoft.AspNetCore.Mvc;   
 using Microsoft.AspNetCore.Authorization;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
-    [Authorize]
+   // [Authorize]
     public class HomeController : Controller
     {
         private IHttpContextAccessor _httpContextAccessor;
@@ -75,12 +68,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public ActionResult Dogrulama()
         {
             return View();
-        }
-        public ActionResult Register()
-        {
-            VM_USERS vmUsers = new VM_USERS();
-            return View(vmUsers);
-        }
+        } 
 
         [HttpPost]
         public JsonResult SaveRegister(VM_USERS user)
@@ -107,23 +95,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             }
 
-            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
-
-            byte[] dizi = Encoding.UTF8.GetBytes(user.PASSWORD);
-
-            dizi = md5.ComputeHash(dizi);
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (byte ba in dizi)
-            {
-                sb.Append(ba.ToString("x2").ToLower());
-            }
-
-            user.PASSWORD = sb.ToString();
-
-            result = new KisiService().PostKisiSave(user);
-
+            user.PASSWORD = EncryptionHelper.ComputeSHA256Hash(user.PASSWORD);
+              
+            result = new KisiService().PostKisiSave(user); 
             return Json(result);
 
         }

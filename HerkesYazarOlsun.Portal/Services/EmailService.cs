@@ -1,7 +1,5 @@
-﻿
-using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Model.ViewModel;
-using Newtonsoft.Json;
+﻿ 
+using HerkesYazarOlsun.Model.ViewModel; 
 using System.Net.Mail;
 using System.Net;
 
@@ -9,10 +7,9 @@ namespace HerkesYazarOlsun.Portal.Services
 {
     
     public class EmailService 
-    {
+    { 
 
-
-        public string EmailGonder(VM_MAIL_ICERIK icerik) //string kime, string? sifre
+        public string EmailGonder(VM_MAIL_ICERIK icerik) 
         {
             MailMessage mailMessage = new MailMessage();
             // mail kimden geliyor
@@ -22,7 +19,7 @@ namespace HerkesYazarOlsun.Portal.Services
 
             mailMessage.To.Add(icerik.kime);
 
-            if (string.IsNullOrEmpty(icerik.sifre))
+            if (!string.IsNullOrEmpty(icerik.icerik))
             {
                 mailMessage.Subject = icerik.konu;
                 mailMessage.Body =  icerik.icerik; // html formatta ta hazırlanabilir
@@ -44,16 +41,15 @@ namespace HerkesYazarOlsun.Portal.Services
             smtpClient.Host = icerik.Host; 
 
             smtpClient.Port = 587;
-            //smtpClient.UseDefaultCredentials = true;
+            
             smtpClient.EnableSsl = true;
 
            
             string username = icerik.username; 
-            string password = icerik.sifre;
+            string password = icerik.password;
+
             smtpClient.Credentials = new NetworkCredential(username, password);
-            
-
-
+             
             try
             {
                 smtpClient.Send(mailMessage);

@@ -5,7 +5,7 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
 @using HerkesYazarOlsun.Portal.Controllers;
-@section Styles{
+@section Styles {
 
     <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
 }
@@ -25,7 +25,7 @@
                         <h4>Herkes Yazar Olsun' da Kaydın Var Mı? </h4>
                         <p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyaoruz.</p>
                         <a class="button button-account" href="/Home/Login">Giriş Yap</a>
-                        <a class="button button-account" href="/Home/Dogrulama">Doğrulamalar</a>
+                        <a class="button button-account" href="/Home/Dogrulama">Kaydınızı Doğrulayınız </a>
                     </div>
                 </div>
             </div>
@@ -60,8 +60,11 @@
                         <div class="col-md-12 form-group">
                             <button type="submit" class="button button-register w-100" onclick="KayitOl()">Kayıt Ol</button>
                         </div>
+                        <div id="loading" style="display: none; text-align: center;">
+                            <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+                        </div>
                     </div>
-                    @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
+                    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
 
                 </div>
             </div>
@@ -85,7 +88,7 @@
 
         var register = $("#registericin").val();
         console.log("register :" + register);
-
+        $("#loading").css("display", "block");
         $.post("@Url.Action(nameof(HomeController.SaveRegister), "Home")", {
             "username": uername,
             "email": email,
@@ -93,12 +96,17 @@
             "telno": telno
         }, function (data) {
             console.log(data);
+            $("#loading").css("display", "none");
             if (data.state == 1) {
                 $("#basarili-" + register).css("display", "block");
                 $("#basarili-" + register + " #mesaj").html(data.message);
 
                 $("#bilgi-" + register).css("display", "none");
                 $("#uyari-" + register).css("display", "none");
+
+                // setTimeout(function () {
+                //     window.location.href = "/Home/Index";
+                // }, 3000);
             }
             else if (data.state == 3) {
                 $("#bilgi-" + register).css("display", "block");

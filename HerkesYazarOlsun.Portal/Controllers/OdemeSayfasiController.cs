@@ -5,23 +5,25 @@ using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
     public class OdemeSayfasiController : Controller
     {
-
+        private readonly VM_Mail_Settings _mailSettings;
         private EmailService emailService;
 
         private string DosyaYolu = "C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/";
 
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
-        public OdemeSayfasiController(IHttpContextAccessor contextAccessor)
+        public OdemeSayfasiController(IHttpContextAccessor contextAccessor, IOptions<VM_Mail_Settings> mailSettings)
         {
             _contextAccessor = contextAccessor;
             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
             this.emailService = new EmailService();
+            _mailSettings = mailSettings.Value;
         }
         public IActionResult Odeme(string kitapId)
         {
@@ -92,13 +94,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
             if (result.State == MessageResultState.SUCCESS)
             {
                 var mesaj = result.Message;
+               
                 //alinan mail
                 var icerik = new VM_MAIL_ICERIK()
                 {
-                    //appjsondan al
-                    username = "kayamansur61@gmail.com",
-                    sifre = "Google.*?61",
-                    Host = "smtp.outlook.com",
+                    username = _mailSettings.Username,
+                    password = _mailSettings.Password,
+                    Host = _mailSettings.Host,
 
                     konu = "Herkes Yazar Olsun Sponsorluk Seçim Bildirimi",
                     icerik = $@"
@@ -129,7 +131,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     // mail kimden geliyor
                     gondericii_mail = "kayamansur61@gmail.com", //odemeSponsorlar.Mail,
                     // mail kime gidiyor
-                    kime = "kayamansur61@gmail.com",
+                    kime = _mailSettings.FromEmail,
                     dosyaYolu = tempFilePath,
                 };
 
@@ -145,11 +147,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 {
                     //gonderilen nmail
                     icerik = new VM_MAIL_ICERIK()
-                    { 
-                        
-                        sifre = "Google.*?61",
-                        username = "kayamansur61@gmail.com",
-                        Host = "smtp.outlook.com",
+                    {
+
+                        username = _mailSettings.Username,
+                        password = _mailSettings.Password,
+                        Host = _mailSettings.Host,
 
                         konu = "Herkes Yazar Olsun Sponsorluk Seçim Bildirimi Yanıtınız",
                         icerik = $@"
@@ -177,7 +179,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                             </html>",
 
                         // mail kimden geliyor
-                        gondericii_mail = "kayamansur61@gmail.com",
+                        gondericii_mail = _mailSettings.FromEmail,
                         // mail kime gidiyor
                         kime = odemeSponsorlar.Mail,
                     };

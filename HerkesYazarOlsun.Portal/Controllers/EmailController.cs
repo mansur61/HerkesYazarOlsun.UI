@@ -1,20 +1,25 @@
-﻿
-using HerkesYazarOlsun.Model.Entity;
+﻿ 
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Net.Mail;
+using Microsoft.Extensions.Options;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
     public class EmailController : Controller
     {
-        EmailService emailService;
-        EmailController(EmailService emailService)
+        EmailService _emailService;
+        private readonly VM_Mail_Settings _mailSettings;
+        private IHttpContextAccessor _httpContextAccessor;
+
+        private IWebHostEnvironment _environment;
+        public EmailController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, IOptions<VM_Mail_Settings>   mailSettings)
         {
-            this.emailService = emailService;
+            _httpContextAccessor = httpContextAccessor;
+            _environment = environment;
+            _emailService = new EmailService();
+            _mailSettings = mailSettings.Value;
         }
 
         public IActionResult EmailDogrula()
@@ -53,18 +58,23 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var rnd3 = new Random().Next(0, 10);
             var rnd4 = new Random().Next(0, 10);
 
-            string sifre = rnd1.ToString() + "" + rnd2.ToString() + "" + rnd3.ToString() + "" + rnd4.ToString();
+            string kod = rnd1.ToString() + "" + rnd2.ToString() + "" + rnd3.ToString() + "" + rnd4.ToString();
 
             var icerik = new VM_MAIL_ICERIK()
             {
-                kime = kime,
-                sifre = sifre,
-                Host = "smtp.outlook.com",  //microsoft servislerini kullan
-                gondericii_mail = "kayamansur61@gmail.com",
-                gondericii_sifre = "Google.*?61",
-            };
 
-            string sonuc = emailService.EmailGonder(icerik);
+                username = _mailSettings.Username,  
+                password = _mailSettings.Password,  
+                Host = _mailSettings.Host,  
+
+                sifre = kod,
+                kime = kime,
+                konu = _mailSettings.Subject, 
+                gondericii_mail = _mailSettings.FromEmail 
+            };
+           
+
+            string sonuc = _emailService.EmailGonder(icerik);
 
 
             if (sonuc == "-1")
@@ -75,7 +85,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             else
             {
                 result.State = MessageResultState.SUCCESS;
-                result.Message = sifre;
+                result.Message = kod;
             }
 
             return result;
