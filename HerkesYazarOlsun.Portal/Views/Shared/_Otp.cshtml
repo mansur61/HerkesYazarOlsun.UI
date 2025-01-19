@@ -143,12 +143,28 @@
     }
     timer(60);
 
-    function Dogrula(tip){
-
+    function kontrolEt() {
         var kutu1 = $("#kutu1").val();
         var kutu2 = $("#kutu2").val();
         var kutu3 = $("#kutu3").val();
         var kutu4 = $("#kutu4").val();
+
+        // Tüm kutuları kontrol et
+        if (kutu1.length === 1 && kutu2.length === 1 && kutu3.length === 1 && kutu4.length === 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    function Dogrula(tip){
+
+        if(!kontrolEt()){
+            $("#otpmesaj").css("display", "block");
+            $("#otpmesaj").html("Her kutuya 1 rakam girmeye özen gösteriniz");
+            return;
+        }
 
         if (kutu1 != "" && kutu2 != "" && kutu3 != "" && kutu4 != ""){
           if(tip == 0 ){
@@ -167,12 +183,15 @@
                 console.log("girilenKod : " + girilenKod + " gelenEmailKod: " + gelenEmailKod);
                
                 if (girilenKod === gelenEmailKod){
-                   // alert(" email başarılı");
-                    $("#otpmesaj").css("display", "block");
-                    $("#otpmesaj").html("Kodu başarılı şekilde doğrulandı. Logine Yönlendiriliyorsunuz.");
-                    setTimeout(function () {
-                        window.location.href = "/Account/Login";
-                    }, 5000);
+                   $.post("@Url.Action(nameof(EmailController.PostEmailDogrula), "Email")", { "email": email },
+                    function (data) {
+                        $("#otpmesaj").css("display", "block");
+                        $("#otpmesaj").html("Kodu başarılı şekilde doğrulandı. Logine Yönlendiriliyorsunuz.");
+                        setTimeout(function () {
+                            window.location.href = "/Account/Login";
+                        }, 5000);
+                    });
+                    
                    
                 }else{
                     $("#otpmesaj").css("display", "block");

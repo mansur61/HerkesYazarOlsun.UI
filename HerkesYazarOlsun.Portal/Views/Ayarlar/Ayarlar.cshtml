@@ -44,7 +44,7 @@ else
 
 
 <div class="container light-style flex-grow-1 container-p-y" style="margin-top:50px">
-    <form  method="post" enctype="multipart/form-data" class="needs-validation" id="form-ayarlar">
+    <form method="post" enctype="multipart/form-data" class="needs-validation" id="form-ayarlar">
         @*action="SaveOrUpdateAyarlar"*@
         <h1 class="font-weight-bold py-3 mb-4">
             Ayarlar
@@ -141,25 +141,55 @@ else
                                     }
 
                                     <div class="alert alert-warning mt-3">
-                                        E-postanız onaylanmadı. Lütfen gelen kutunuzu kontrol edin.<br>
-                                        <a href="javascript:void(0)" onclick="EpostaDogrula()">Doğrulamayı tekrar gönder</a>
+                                        @if (@Model.User != null && @Model.User.isEmail == 1)
+                                        {
+                                            <p>Doğrulandı: @Model.User.MODIFIED_AT </p>
+                                        }
+                                        else
+                                        {
+                                            <p>
+                                                E-posta adresiniz onaylanmadı.
+                                                <button type="button" onclick="EpostaDogrula()" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                                    Doğrulama için kod gönder
+                                                </button>
+
+
+
+                                                <input type="hidden" class="form-control" id="maileGidenKod" value="">
+
+                                                <div style="display: flex; align-items: center; gap: 10px;" id="emailKod">
+                                                    <span> Doğrulama Kodu mail adresinize iletildi. Lütfen mail adresinizi Kontrol ediniz </span>
+                                                    <input type="number" class="form-control" id="girilenKod" maxlength="4" value="" placeholder="Doğrulama Kodunu Giriniz..">
+                                                    <button type="button" onclick="PostEpostaDogrula()" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                                        Doğrula
+                                                    </button>
+
+                                                </div>
+                                                <div id="loading" style="display: none; text-align: center;">
+                                                    <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+                                                </div>
+
+                                            </p>
+                                        }
+
+
                                     </div>
                                 </div>
 
                             </div>
                             <div class="card-body pb-2">
 
-                                <div class="form-group">
-                                    <label class="form-label">Mevcur şifre</label>
-                                    @if (@Model.User != null)
-                                    {
-                                        <input type="password" class="form-control" id="mevcutSifre" value="@Model.User.PASSWORD">
-                                    }
-                                    else
-                                    {
-                                        <input type="password" class="form-control" id="mevcutSifre">
-                                    }
-                                </div>
+                                @* <div class="form-group">
+                                <label class="form-label">Mevcur şifre</label>
+                                @if (@Model.User != null)
+                                {
+                                <input type="password" class="form-control" id="mevcutSifre" value="@Model.User.PASSWORD">
+                                }
+                                else
+                                {
+                                <input type="password" class="form-control" id="mevcutSifre">
+                                }
+                                </div> *@
 
                                 <div class="form-group">
                                     <label class="form-label">Yeni şifre</label>
@@ -299,14 +329,14 @@ else
                         <div class="tab-pane p-20" id="account-profil" role="tabpanel">
 
                             <div class="card-body media align-items-center">
-                                
-                                
-                               @* @{
-                                    var backgroundImage = !string.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64) ?
-                                    $"data:image;base64,{Html.Raw(Model.Profile.ProfilResimBase64)}" :
-                                    "https://bootdey.com/img/Content/avatar/avatar1.png";
+
+
+                                @* @{
+                                var backgroundImage = !string.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64) ?
+                                $"data:image;base64,{Html.Raw(Model.Profile.ProfilResimBase64)}" :
+                                "https://bootdey.com/img/Content/avatar/avatar1.png";
                                 }*@
-                               
+
 
                                 @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64))
                                 {
@@ -314,7 +344,7 @@ else
                                 }
                                 else
                                 {
-                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="d-block ui-w-80">
+                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="d-block ui-w-80">
                                 }
 
 
@@ -403,14 +433,14 @@ else
             </div>
         </div>
 
-        @Html.Partial("_AlertMesaj",@tip)
+        @Html.Partial("_AlertMesaj", @tip)
 
         <br />
         <div class="text-right mt-3">
             @*<button type="button" class="btn btn-primary" onclick="Guncelle()">Değişiklikleri Kaydet</button>*@
             <button class="btn btn-primary" type="submit">Kaydet</button>
             &nbsp;
-            <button type="button" class="btn btn-info" onclick="Kapat()">Kaydetme</button>
+            <button type="button" class="btn btn-info" onclick="Kaydetme()">Kaydetme</button>
         </div>
 
     </form>
@@ -450,7 +480,7 @@ else
     var IsKitapYayin = false;
     var IsKitapYorum = false;
 
-    var tip = $("#tip").val();
+    var ayar = $("#tip").val();
 
 
     var ayarEklerForm = document.getElementById('form-ayarlar');
@@ -485,7 +515,7 @@ else
             "ProfilResimName": $("#profilFotoName").val()
         };
 
-       
+
         var usr = {
             "NAME": name,
             "USERNAME": username,
@@ -529,33 +559,33 @@ else
                 console.error('Hata:', error);
             }
         });
-    
-  });
+
+    });
 
     function BilgiVer(state, basarili, bilgi, uyari, mesaj) {
         if (state == 1) {
-            $(basarili + tip).css("display", "block");
-            $(basarili + tip + " #mesaj").html(mesaj);
+            $(basarili + ayar).css("display", "block");
+            $(basarili + ayar + " #mesaj").html(mesaj);
 
-            $(bilgi + tip).css("display", "none");
-            $(uyari + tip).css("display", "none");
-         
+            $(bilgi + ayar).css("display", "none");
+            $(uyari + ayar).css("display", "none");
+
         }
         else if (state == 3) {
-            $(bilgi + tip).css("display", "block");
-            $(bilgi + tip + " #mesaj").html(mesaj);
+            $(bilgi + ayar).css("display", "block");
+            $(bilgi + ayar + " #mesaj").html(mesaj);
 
-            $(basarili + tip).css("display", "none");
-            $(uyari + tip).css("display", "none");
+            $(basarili + ayar).css("display", "none");
+            $(uyari + ayar).css("display", "none");
         }
         else {
-            $(uyari + tip).css("display", "block");
-            $(bilgi + tip).css("display", "none");
-            $(basarili + tip).css("display", "none");
-            $(uyari + tip + " #mesaj").html(mesaj);
+            $(uyari + ayar).css("display", "block");
+            $(bilgi + ayar).css("display", "none");
+            $(basarili + ayar).css("display", "none");
+            $(uyari + ayar + " #mesaj").html(mesaj);
         }
     }
-    
+
     var countChecked = function () {
         var n = $("input:checked").length;
         console.log(n + (n === 1 ? " is" : " are") + " checked!");
@@ -665,18 +695,86 @@ else
 
     }
 
-    function Kapat() {
+    function Kaydetme() {
         location.reload();
-       // window.location.href = "/Home/Index";
+        // window.location.href = "/Home/Index";
     }
 
-    function EpostaDogrula() {
-        console.log("eposta dogrulla");
-        $.get("@Url.Action(nameof(EmailController.Gonder), "Email")", {},
-            function (data) {
+    $("#emailKod").css("display", "none");
 
-                $("#mail_dogulama").html(data);
+
+    function EpostaDogrula() {
+        $("#emailKod").css("display", "block");
+        var email = $("#email").val();
+        $.post("@Url.Action(nameof(EmailController.Gonder), "Email")", { "kime": email },
+            function (data) {
+                //console.log(data.message);
+                $("#maileGidenKod").val(data.message); 
             });
+    }
+
+    function PostEpostaDogrula() {
+
+        var girilenKod = $("#girilenKod").val();
+
+        if (girilenKod.length == 0) {
+            $("#uyari-" + ayar).css("display", "block");
+            $("#uyari-" + ayar + " #mesaj").html("Maile gelen kodu giriniz");
+
+            $("#basarili-" + ayar).css("display", "none");
+            $("#bilgi-" + ayar).css("display", "none");
+            return;
+        }
+        else if (girilenKod.length > 4) {
+            $("#uyari-" + ayar).css("display", "block");
+            $("#uyari-" + ayar + " #mesaj").html("Girilen kod 4 hane olmalıdır");
+
+            $("#basarili-" + ayar).css("display", "none");
+            $("#bilgi-" + ayar).css("display", "none");
+            return;
+        }
+
+        else if (girilenKod.length < 4) {
+            $("#uyari-" + ayar).css("display", "block");
+            $("#uyari-" + ayar + " #mesaj").html("Girilen kod 4 hane olmalıdır");
+
+            $("#basarili-" + ayar).css("display", "none");
+            $("#bilgi-" + ayar).css("display", "none");
+            return;
+        }
+
+        $("#loading").css("display", "block");
+
+        $("#emailKod").css("display", "block");
+        
+        var maileGidenKod = $("#maileGidenKod").val();
+
+        if (girilenKod == maileGidenKod) {
+
+            $.post("@Url.Action(nameof(EmailController.PostEmailDogrula), "Email")", { "email": email },
+                function (data) {
+                    $("#loading").css("display", "none"); 
+                    if (data.state == 1) {
+                        $("#basarili-" + ayar).css("display", "block");
+                        $("#basarili-" + ayar + " #mesaj").html("Kod Doğrulama Başarılı");
+
+                        $("#bilgi-" + ayar).css("display", "none");
+                        $("#uyari-" + ayar).css("display", "none");
+
+                        window.location.href = "/Ayarlar/Ayarlar";
+
+                    }
+                    else {
+                        $("#uyari-" + ayar).css("display", "block");
+                        $("#uyari-" + ayar + " #mesaj").html("Kod doğrulama Başarısız");
+
+                        $("#basarili-" + ayar).css("display", "none");
+                        $("#bilgi-" + ayar).css("display", "none");
+                    }
+                    //window.location.replace("/Ayarlar/Ayarlar");
+                });
+        }
+
     }
 
     function RenkSec(id) {

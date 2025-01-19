@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
@@ -14,7 +14,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private IHttpContextAccessor _httpContextAccessor;
 
         private IWebHostEnvironment _environment;
-        public EmailController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, IOptions<VM_Mail_Settings>   mailSettings)
+        public EmailController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, IOptions<VM_Mail_Settings> mailSettings)
         {
             _httpContextAccessor = httpContextAccessor;
             _environment = environment;
@@ -41,17 +41,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public ServiceResult Gonder(string kime)
         {
             ServiceResult result = new ServiceResult();
-            //kime = "emreyunus616195@gmail.com";
+
             VM_USERS vM_USERS = new VM_USERS();
             vM_USERS.EMAIL = kime;
-
-            // bu kısmı yarın test et
-            ServiceResult updateResult = new KisiService().PostKisiUpdate(vM_USERS);
-            if (updateResult.State != MessageResultState.SUCCESS)
-            {
-                result = updateResult;
-                return result;
-            }
 
             var rnd1 = new Random().Next(0, 10);
             var rnd2 = new Random().Next(0, 10);
@@ -63,19 +55,17 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var icerik = new VM_MAIL_ICERIK()
             {
 
-                username = _mailSettings.Username,  
-                password = _mailSettings.Password,  
-                Host = _mailSettings.Host,  
+                username = _mailSettings.Username,
+                password = _mailSettings.Password,
+                Host = _mailSettings.Host,
 
                 sifre = kod,
                 kime = kime,
-                konu = _mailSettings.Subject, 
-                gondericii_mail = _mailSettings.FromEmail 
+                konu = _mailSettings.Subject,
+                gondericii_mail = _mailSettings.FromEmail
             };
-           
-
-            string sonuc = _emailService.EmailGonder(icerik);
-
+             
+            string sonuc = _emailService.EmailGonder(icerik); 
 
             if (sonuc == "-1")
             {
@@ -85,13 +75,74 @@ namespace HerkesYazarOlsun.Portal.Controllers
             else
             {
                 result.State = MessageResultState.SUCCESS;
-                result.Message = kod;
+                result.Message = kod; 
             }
+
 
             return result;
         }
 
+        [HttpPost]
+        public ServiceResult PostEmailDogrula(string email)
+        {
+            VM_USERS vM_USERS = new VM_USERS();
+            vM_USERS.EMAIL = email;
 
+            ServiceResult result = new KisiService().PostKisiUpdate(vM_USERS);
+            if (result.State != MessageResultState.SUCCESS)
+            { 
+                return result;
+            }
+            return result;
+        }
+
+
+        [HttpPost]
+        public ServiceResult MailBilgilendirme(string kime,string konu, string mesaj,int tip)
+        {
+            ServiceResult result = new ServiceResult();
+
+            VM_USERS vM_USERS = new VM_USERS();
+            vM_USERS.EMAIL = kime;
+             
+            if(tip == 0) // mesaj atan kişi bilgilendirmesi
+            {
+
+            }
+            else // takip eden kişi bilgilendirmesi
+            {
+
+            }
+
+            var mail_icerik = new VM_MAIL_ICERIK()
+            {
+
+                username = _mailSettings.Username,
+                password = _mailSettings.Password,
+                Host = _mailSettings.Host,
+
+                icerik = mesaj, 
+                kime = kime,
+                konu = konu,
+                gondericii_mail = _mailSettings.FromEmail
+            };
+
+            string sonuc = _emailService.EmailGonder(mail_icerik);
+
+            if (sonuc == "-1")
+            {
+                result.State = MessageResultState.ERROR;
+                result.Message = sonuc;
+            }
+            else
+            {
+                result.State = MessageResultState.SUCCESS;
+                result.Message = "Bilgilendime İletildi.";
+            }
+
+
+            return result;
+        }
 
     }
 }

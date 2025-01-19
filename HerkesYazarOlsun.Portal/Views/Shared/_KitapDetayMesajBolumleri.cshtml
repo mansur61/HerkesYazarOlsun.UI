@@ -30,8 +30,8 @@
         }
 
     /*.price-text-color {
-                                                        color:dodgerblue;
-                                                    }*/
+                                                                color:dodgerblue;
+                                                            }*/
 
 </style>
 
@@ -133,25 +133,29 @@
                         <div style="height:30px">
                             <h3><strong>Yorumlar</strong></h3>
                         </div>
+
                         @foreach (var item in @Model.Vm_Book_Comments)
                         {
-                            <div class="comment_list">
-                                <div class="review_item">
-                                    <div class="media">
-                                        <div class="d-flex">
-                                            @*<img src="~/vendors/img/product/review-1.png" alt="">*@
+                            
+
+                            <div class="comment_list" style="border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #f9f9f9;">
+                                <div class="review_item" style="padding: 10px 0;">
+                                    <div class="media" style="align-items: flex-start;">
+                                        <div class="d-flex" style="margin-right: 15px;">
+                                            @* <img src="~/vendors/img/product/review-1.png" alt="Kullanıcı Resmi" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"> *@
                                         </div>
                                         <div class="media-body">
-                                            <h4>@item.NAME</h4>
-                                            <h5>@item.CREATE_AT</h5>
-                                            @*<a class="reply_btn" href="#">Reply</a>*@
+                                            <h4 style="margin: 0; font-size: 18px; font-weight: bold; color: #333;">@item.NAME</h4>
+                                            <h5 style="margin: 5px 0 0; font-size: 14px; color: #777;">@item.CREATE_AT</h5>
+                                            @* <a class="reply_btn" href="#" style="color: #007bff; font-size: 13px; text-decoration: none; cursor: pointer;">Cevapla</a> *@
                                         </div>
                                     </div>
-                                    <p>
+                                    <p style="margin-top: 10px; font-size: 15px; line-height: 1.6; color: #555;">
                                         @item.ACIKLAMA
                                     </p>
                                 </div>
                             </div>
+                             
                         }
 
                     </div>
@@ -326,13 +330,53 @@
 
     var yildizPuani = 0;
 
-    function YorumYap() {
 
-        console.log("geldi.");
+    function Bilgilendirme(mesaj) {
+
         var name = $("#name").val();
         var email = $("#email").val();
         var message = $("#message").val();
 
+        var yorum = "(@Model.Vm_Book.ID - @Model.Vm_Book.Name) adlı kitabınıza " + email + " adlı kullanıcı yorum yaptı. Yorumu;";
+        $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")", {
+            "konu": "Herkes Yazar Olsun'dan Kitabınıza Yorum Geldi",
+            "kime": email,
+            "tip": 0,
+            "mesaj": yorum + "  " + mesaj,
+
+
+        }, function (data) {
+            console.log("data:" + data.state);
+            if (data.state == 1) {
+                $("#basarili-" + yorumicin).css("display", "block");
+                $("#basarili-" + yorumicin + " #mesaj").html(data.message);
+
+                $("#bilgi-" + yorumicin).css("display", "none");
+                $("#uyari-" + yorumicin).css("display", "none");
+
+
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + yorumicin).css("display", "block");
+                $("#bilgi-" + yorumicin + " #mesaj").html(data.message);
+
+                $("#basarili-" + yorumicin).css("display", "none");
+                $("#uyari-" + yorumicin).css("display", "none");
+            }
+            else {
+                $("#uyari-" + yorumicin).css("display", "block");
+                $("#bilgi-" + yorumicin).css("display", "none");
+                $("#basarili-" + yorumicin).css("display", "none");
+                $("#uyari-" + yorumicin + " #mesaj").html(data.message);
+            }
+
+        });
+    }
+    function YorumYap() {
+
+        var name = $("#name").val();
+        var email = $("#email").val();
+        var message = $("#message").val();
         var kitapId = $("#kitapId").val();
         var yorumicin = $("#yorummesajiicin").val();
 
@@ -361,6 +405,9 @@
 
                 $("#bilgi-" + yorumicin).css("display", "none");
                 $("#uyari-" + yorumicin).css("display", "none");
+
+                Bilgilendirme(message);
+
             }
             else if (data.state == 3) {
                 $("#bilgi-" + yorumicin).css("display", "block");

@@ -721,7 +721,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             mesajlar.LoginUserId = Convert.ToInt32(Lid);
             result = new BooksService().PostBooksComments(mesajlar);
-
+             
             return Json(result);
         }
 

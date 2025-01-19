@@ -19,8 +19,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult Ayarlar()
         {
-            long loginId = 6;
-                //LOGIN_USER_ID;
+            long loginId = LOGIN_USER_ID; 
             VM_AYARLAR vmAyr = new VM_AYARLAR();
 
             vmAyr.LoginUserId = loginId;
