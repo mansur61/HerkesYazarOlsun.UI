@@ -56,7 +56,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         //[Route("SaveOrUpdateAyarlar")]
         public async Task<JsonResult> SaveOrUpdateAyarlar(VM_AYARLAR ayr)
         {
-            ayr.LoginUserId = 6;
+            ayr.LoginUserId = LOGIN_USER_ID;//6;
             //LOGIN_USER_ID;
 
             // Deserialize JSON strings to their respective objects

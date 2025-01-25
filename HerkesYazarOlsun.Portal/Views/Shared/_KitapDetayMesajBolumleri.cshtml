@@ -30,12 +30,13 @@
         }
 
     /*.price-text-color {
-                                                                color:dodgerblue;
-                                                            }*/
+                                                                    color:dodgerblue;
+                                                                }*/
 
 </style>
 
 <input type="hidden" id="kitapId" name="kitapId" value="@Model.Vm_Book.ID" />
+@* <input type="hidden" id="kural" name="kural" value="@ViewBag.IsKitapYorum" /> *@
 <input type="hidden" id="degerlendirmemesaicin" value="degerlendirme" />
 <input type="hidden" id="yorummesajiicin" value="yorumicin" />
 
@@ -50,6 +51,7 @@
 @{
     string isGozlemciMod = User.GetGozlemciMod();
 }
+<p id="kural" style="display: none;">@ViewBag.IsKitapYorum</p>
 
 @*<div style="height:30px"></div>*@
 <section class="product_description_area">
@@ -136,7 +138,7 @@
 
                         @foreach (var item in @Model.Vm_Book_Comments)
                         {
-                            
+
 
                             <div class="comment_list" style="border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #f9f9f9;">
                                 <div class="review_item" style="padding: 10px 0;">
@@ -155,7 +157,7 @@
                                     </p>
                                 </div>
                             </div>
-                             
+
                         }
 
                     </div>
@@ -238,10 +240,11 @@
                         </div>
                         @foreach (var item in @Model.Vm_Book_Degerlendirme_List)
                         {
-                            <div class="review_list">
-                                <div class="review_item">
-                                    <div class="media">
-                                        <div class="d-flex">
+                             
+                            <div class="review_list" style="border: 1px solid #ccc;border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #f9f9f9;">
+                                <div class="review_item" style="padding: 10px 0;">
+                                    <div class="media" style="align-items: flex-start;">
+                                        <div class="d-flex" style="margin-right: 15px;">
                                             @*<img src="~/vendors/img/product/review-1.png" alt="">*@
                                         </div>
                                         <div class="media-body">
@@ -374,6 +377,9 @@
     }
     function YorumYap() {
 
+        var kural = $('#kural').text().trim();
+        console.log("kural:" + kural  );
+
         var name = $("#name").val();
         var email = $("#email").val();
         var message = $("#message").val();
@@ -406,8 +412,10 @@
                 $("#bilgi-" + yorumicin).css("display", "none");
                 $("#uyari-" + yorumicin).css("display", "none");
 
-                Bilgilendirme(message);
-
+                if (kural === "True") {
+                    Bilgilendirme("Kitap yorumu aktif!");
+                }
+                
             }
             else if (data.state == 3) {
                 $("#bilgi-" + yorumicin).css("display", "block");
@@ -469,6 +477,11 @@
 
                 $("#bilgi-" + degerlendirme).css("display", "none");
                 $("#uyari-" + degerlendirme).css("display", "none");
+
+                setTimeout(function () {
+                    window.location.href = window.location.href; 
+                }, 3000);
+
             }
             else if (data.state == 3) {
                 $("#bilgi-" + degerlendirme).css("display", "block");

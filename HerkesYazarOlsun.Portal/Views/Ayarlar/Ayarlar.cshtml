@@ -389,21 +389,15 @@ else
                                 <div class="form-group">
 
                                     <label class="switcher">
-                                        <input type="checkbox" class="switcher-input" checked id="yorumchk" value="yorum">
-                                        <span class="switcher-indicator">
-                                            <span class="switcher-yes"></span>
-                                            <span class="switcher-no"></span>
-                                        </span>
+                                        <input type="checkbox"  checked id="yorumchk" value="yorum">
+                                       
                                         <span class="switcher-label">Birisi kitabıma yorum yaptığında bana e-posta gönder</span>
                                     </label>
                                 </div>
                                 <div class="form-group">
                                     <label class="switcher">
-                                        <input type="checkbox" class="switcher-input" id="takipchk" value="takip">
-                                        <span class="switcher-indicator">
-                                            <span class="switcher-yes"></span>
-                                            <span class="switcher-no"></span>
-                                        </span>
+                                        <input type="checkbox"   id="takipchk" value="takip">
+                                 
                                         <span class="switcher-label">Birisi beni takip ettiğinde bana e-posta gönder</span>
                                     </label>
                                 </div>
@@ -415,11 +409,11 @@ else
 
                                 <div class="form-group">
                                     <label class="switcher">
-                                        <input type="checkbox" class="switcher-input" checked="checked" id="yayinchk" value="yayin">
-                                        <span class="switcher-indicator">
+                                        <input type="checkbox"   checked="checked" id="yayinchk" value="yayin">
+                                       @*  <span class="switcher-indicator">
                                             <span class="switcher-yes"></span>
                                             <span class="switcher-no"></span>
-                                        </span>
+                                        </span> *@
                                         <span class="switcher-label">Birisi kitap yayınladığında bana bildirim yolla</span>
                                     </label>
                                 </div>
@@ -482,6 +476,20 @@ else
 
     var ayar = $("#tip").val();
 
+    $('#takipchk').change(function () {
+          isTakip = $(this).is(':checked');  
+        console.log("isTakip:", isTakip);  
+    });
+
+     $('#yorumchk').change(function () {
+          IsKitapYorum = $(this).is(':checked');  
+        console.log("IsKitapYorum:", IsKitapYorum);  
+    });
+
+     $('#yayinchk').change(function () {
+        IsKitapYayin = $(this).is(':checked');  
+        console.log("IsKitapYayin:", IsKitapYayin);  
+    });
 
     var ayarEklerForm = document.getElementById('form-ayarlar');
 

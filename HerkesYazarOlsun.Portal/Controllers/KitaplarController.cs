@@ -11,6 +11,7 @@ using System.Text;
 using iTextSharp.text.pdf.parser;
 using iTextSharp.text.pdf;
 using System.Security.Cryptography;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -639,13 +640,20 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var getBookDetay = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBookDetay, new VM_BOOKS());
 
-            vmBook.isTamalama = getBookDetay.TAMAMLANDIMI;
+            vmBook.isTamalama = getBookDetay?.TAMAMLANDIMI;
             kitapDetay.Vm_Book = vmBook;
             kitapDetay.Vm_Book_Degerlendirme_List = new BooksService().GetDegerlendirmelerBooksById(kitapId);
             kitapDetay.Vm_Book_Comments = new BooksService().GetCommenstBooksById(kitapId);
 
             kitapDetay.Stars = new BooksService().GetMaxStarBooksById(kitapId);
-
+            var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
+            if(Bildirim != null)
+            {
+                ViewBag.isTakip = Bildirim.IsTakip; //Birisi beni takip ettiğinde bana e-posta gönder
+                ViewBag.IsKitapYayin = Bildirim.IsKitapYayin;//Birisi kitap yayınladığında bana bildirim yolla
+                ViewBag.IsKitapYorum = Bildirim.IsKitapYorum;//Birisi kitabıma yorum yaptığında bana e-posta gönder
+            }
+            
             return View(kitapDetay);
         }
 
