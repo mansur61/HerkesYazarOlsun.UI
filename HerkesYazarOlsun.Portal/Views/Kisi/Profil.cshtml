@@ -15,7 +15,7 @@
     @*<link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />*@
 }
 
-@section scripts{
+@section scripts {
     <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
 }
 
@@ -29,6 +29,8 @@
     string alertmesajgostermedurumu = "profil";
 }
 
+<p id="kural" style="display: none;">@ViewBag.isTakip</p>
+
 <div class="row">
     <div style="width:auto;height:auto;background-color:aliceblue;margin:15px;">
 
@@ -40,7 +42,7 @@
                         <div class="card">
                             <div class="rounded-top text-white d-flex flex-row">
                                 <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                                   @* *@
+                                    @* *@
 
                                     @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64))
                                     {
@@ -62,7 +64,7 @@
 
                         </div>
                         <br />
-                        <h4>@Html.Partial("_YildizGoster",@Model.Stars)</h4>
+                        <h4>@Html.Partial("_YildizGoster", @Model.Stars)</h4>
 
 
                     </div>
@@ -98,7 +100,7 @@
                                 }
 
                             </div>
-                        }                        
+                        }
                     }
                 </div>
                 <div class="col-md-12" style="text-align:center;margin:15px 5px;">
@@ -121,7 +123,7 @@
                                 İptal Et
                             </button>
                         }
-                       
+
                     }
                 </div>
             </div>
@@ -130,7 +132,7 @@
 
     </div>
 
-    @Html.Partial("_AlertMesaj",@alertmesajgostermedurumu)
+    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
 </div>
 
 
@@ -148,7 +150,7 @@
             @{
                 Model.Stars.isToplam = false;
             }
-            @Html.Partial("_YildizGoster",@Model.Stars)
+            @Html.Partial("_YildizGoster", @Model.Stars)
 
         </h4>
 
@@ -163,7 +165,7 @@
                 @{
                     Model.Stars.isToplam = true;
                 }
-                @Html.Partial("_YildizGoster",@Model.Stars)
+                @Html.Partial("_YildizGoster", @Model.Stars)
 
             </div>
 
@@ -238,6 +240,54 @@
     var yazarId = $("#yazar_id").val();
     var profil = $("#profilicin").val();
 
+    function Bilgilendirme(follow) {
+
+        var email = @Model.EMAIL;
+        var message = "";
+
+        if (follow == 1) {
+            message = " Takip Etti";
+        } else {
+            message = " Takipten Çıkardı";
+        }
+
+        var yorum = "(@ViewBag.LGN_USER.NAME) adlı kişi sizi " + message;
+
+        $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")", {
+            "konu": "Herkes Yazar Olsun'dan Bildirim",
+            "kime": email,
+            "tip": 0,
+            "mesaj": yorum,
+
+
+        }, function (data) {
+            console.log("data:" + data.state);
+            if (data.state == 1) {
+                $("#basarili-" + profil).css("display", "block");
+                $("#basarili-" + profil + " #mesaj").html(data.message);
+
+                $("#bilgi-" + profil).css("display", "none");
+                $("#uyari-" + profil).css("display", "none");
+
+
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + profil).css("display", "block");
+                $("#bilgi-" + profil + " #mesaj").html(data.message);
+
+                $("#basarili-" + profil).css("display", "none");
+                $("#uyari-" + profil).css("display", "none");
+            }
+            else {
+                $("#uyari-" + profil).css("display", "block");
+                $("#bilgi-" + profil).css("display", "none");
+                $("#basarili-" + profil).css("display", "none");
+                $("#uyari-" + profil + " #mesaj").html(data.message);
+            }
+
+        });
+    }
+
 
     function YildizVer() {
 
@@ -280,6 +330,8 @@
     }
     function YazarTakip(follow) {
 
+        var kural = $('#kural').text().trim();
+
         $.post("@Url.Action(nameof(KisiController.PostWriterFollow), "Kisi")",
             {
                 "id": yazarId,
@@ -293,6 +345,10 @@
 
                     $("#bilgi-" + profil).css("display", "none");
                     $("#uyari-" + profil).css("display", "none");
+
+                    if (kural === "True") {
+                        Bilgilendirme(follow);
+                    } 
                 }
                 else if (data.state == 3) {
                     $("#bilgi-" + profil).css("display", "block");

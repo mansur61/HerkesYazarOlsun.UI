@@ -111,8 +111,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
             vm_kisi.Profile = profile;
             vm_kisi.Stars = new KisiService().GetMaxStarWriterById(id);
-            ViewBag.LOGIN_USER_ID = Lid;
             vm_kisi.vMWriterFollow = new KisiService().GetWriterFollowById(id);
+
+            Users lgn_kisi = new KisiService().GetKisiById(Lid);
+
+            ViewBag.LOGIN_USER_ID = Lid;
+            ViewBag.LGN_USER = lgn_kisi;
+
+
+            var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
+
+            ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder 
+
             return View(vm_kisi);
             
         }

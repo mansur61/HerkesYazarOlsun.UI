@@ -1,5 +1,4 @@
-﻿
-function dosyaSecim(deger) {
+﻿function dosyaSecim(deger) {
     console.log("gelindi general.js : " +deger);
     if (deger == "sayfaFoto") {
         var dosya = document.getElementById('dosyaSayfaFoto').files[0];

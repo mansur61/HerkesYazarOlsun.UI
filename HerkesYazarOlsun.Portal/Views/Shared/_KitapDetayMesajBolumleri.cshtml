@@ -35,8 +35,7 @@
 
 </style>
 
-<input type="hidden" id="kitapId" name="kitapId" value="@Model.Vm_Book.ID" />
-@* <input type="hidden" id="kural" name="kural" value="@ViewBag.IsKitapYorum" /> *@
+<input type="hidden" id="kitapId" name="kitapId" value="@Model.Vm_Book.ID" /> 
 <input type="hidden" id="degerlendirmemesaicin" value="degerlendirme" />
 <input type="hidden" id="yorummesajiicin" value="yorumicin" />
 
@@ -51,6 +50,7 @@
 @{
     string isGozlemciMod = User.GetGozlemciMod();
 }
+
 <p id="kural" style="display: none;">@ViewBag.IsKitapYorum</p>
 
 @*<div style="height:30px"></div>*@
@@ -375,6 +375,8 @@
 
         });
     }
+    
+    
     function YorumYap() {
 
         var kural = $('#kural').text().trim();

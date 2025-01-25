@@ -647,13 +647,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             kitapDetay.Stars = new BooksService().GetMaxStarBooksById(kitapId);
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
-            if(Bildirim != null)
-            {
-                ViewBag.isTakip = Bildirim.IsTakip; //Birisi beni takip ettiğinde bana e-posta gönder
-                ViewBag.IsKitapYayin = Bildirim.IsKitapYayin;//Birisi kitap yayınladığında bana bildirim yolla
-                ViewBag.IsKitapYorum = Bildirim.IsKitapYorum;//Birisi kitabıma yorum yaptığında bana e-posta gönder
-            }
-            
+
+            ViewBag.isTakip = Bildirim?.IsTakip ?? false ; //Birisi beni takip ettiğinde bana e-posta gönder
+            ViewBag.IsKitapYayin = Bildirim?.IsKitapYayin ?? false;//Birisi kitap yayınladığında bana bildirim yolla
+            ViewBag.IsKitapYorum = Bildirim?.IsKitapYorum ?? false;//Birisi kitabıma yorum yaptığında bana e-posta gönder
+
             return View(kitapDetay);
         }
 
