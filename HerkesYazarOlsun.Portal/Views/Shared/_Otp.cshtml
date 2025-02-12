@@ -1,0 +1,208 @@
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_OTP;
+
+@using HerkesYazarOlsun.Portal.Controllers;
+
+<style>
+   
+
+    .text-color {
+        color: #145a32;
+    }
+
+    .card {
+        width: 350px;
+        padding: 10px;
+        border-radius: 20px;
+        background: #d4efdf;
+        border: none;
+        position: relative;
+    }
+
+  
+    .mobile-text {
+        color: #cd5c5c;
+        font-size: 15px;
+    }
+
+    .form-control {
+        margin-right: 12px;
+    }
+
+        .form-control:focus {
+            color: #495057;
+            background-color: #d4efdf;
+            border-color: #c0392b;
+            outline: 0;
+            box-shadow: none;
+        }
+
+    .cursor {
+        cursor: pointer;
+    }
+
+</style>
+
+<input type="hidden" id="mailkod" value="@Model.emailKod"/>
+<input type="hidden" id="smskod" value="@Model.smsKod" />
+
+<div class="modal" id="modalOtp">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="alert alert-warning" role="alert">
+                Doğrulama işlemini burda yapma zorunda değilsiniz. Giriş yaparak Ayarlardan da yapabilirsiniz
+            </div>
+            <div class="d-flex justify-content-center align-items-center continer">
+                <div class="card py-5 px-3" style="width:auto; margin:10px 10px;">
+                    <h5 class="m-0">@Model.baslik</h5>
+                    <span class="mobile-text">
+                        <b>@Model.alt_baslik</b>
+                        @if(@Model.tip == "sms"){
+                            <b class="text-color">@Model.telno</b>
+                        }
+                        else
+                        {
+                            <b class="text-color">@Model.mail</b>
+                        }
+                       
+                        <br />
+                    </span>
+                    <div  class="row">
+
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" autofocus="" id="kutu1" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="kutu2" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="kutu3" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="kutu4" />
+                        </div>
+
+                    </div>
+                    <div class="text-center mt-5">
+                        <span class="d-block mobile-text" id="countdown"></span>
+                        <span class="d-block mobile-text" id="resend"></span>
+                    </div>
+                </div>
+
+              
+            </div>
+
+
+            <p id="otpmesaj" style="display:none;text-align:center"></p>
+
+            <div class="form-actions float-right " style="margin:10px 10px;text-align:center ">
+                <button type="button" class="btn btn-secondary" id="redirectButton" data-dismiss="modal">Kapat</button>
+                
+                @if (@Model.tip == "sms")
+                {
+                    <button type="submit" class="btn btn-success" onclick="Dogrula(0)"> <i class="fa fa-check"></i>Sms Doğrula</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-success" onclick="Dogrula(1)"> <i class="fa fa-check"></i>Email Doğrula</button>
+                }
+               
+            </div>
+        </div>
+    </div>
+</div>
+@*<script src="main.js"></script>*@
+
+<script>
+
+    document.getElementById('redirectButton').addEventListener('click', function () { 
+            window.location.href = "/Account/Login"; 
+        });
+
+    let timerOn = true;
+    function timer(remaining) {
+        var m = Math.floor(remaining / 60);
+        var s = remaining % 60;
+        m = m < 10 ? "0" + m : m;
+        s = s < 10 ? "0" + s : s;
+        document.getElementById("countdown").innerHTML = `Kalan Süre: ${m} : ${s}`;
+        remaining -= 1;
+        if (remaining >= 0 && timerOn) {
+            setTimeout(function () {
+                timer(remaining);
+            }, 1000);
+            document.getElementById("resend").innerHTML = `
+                        `;
+            return;
+        }
+        if (!timerOn) {
+            return;
+        }
+        document.getElementById("resend").innerHTML = `Kodu Alamadınız mı?
+                      <span class="font-weight-bold text-color cursor" onclick="timer(60)">Tekrar Gönder
+                      </span>`;
+    }
+    timer(60);
+
+    function kontrolEt() {
+        var kutu1 = $("#kutu1").val();
+        var kutu2 = $("#kutu2").val();
+        var kutu3 = $("#kutu3").val();
+        var kutu4 = $("#kutu4").val();
+
+        // Tüm kutuları kontrol et
+        if (kutu1.length === 1 && kutu2.length === 1 && kutu3.length === 1 && kutu4.length === 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    function Dogrula(tip){
+
+        if(!kontrolEt()){
+            $("#otpmesaj").css("display", "block");
+            $("#otpmesaj").html("Her kutuya 1 rakam girmeye özen gösteriniz");
+            return;
+        }
+
+        if (kutu1 != "" && kutu2 != "" && kutu3 != "" && kutu4 != ""){
+          if(tip == 0 ){
+               
+                var girilenKod = kutu1 + "" + kutu2 + "" + kutu3 + ""+ kutu4;
+                var gelenEmailKod = $("#mailkod").val();
+                console.log("girilenKod : " + girilenKod + " gelenEmailKod: " + gelenEmailKod);
+
+                if (girilenKod == gelenEmailKod) {
+                    alert(" sms başarılı");
+                }
+          }else{
+                
+                var girilenKod = kutu1 + "" + kutu2 + "" + kutu3 + "" + kutu4;
+                var gelenEmailKod = $("#mailkod").val();
+                console.log("girilenKod : " + girilenKod + " gelenEmailKod: " + gelenEmailKod);
+               
+                if (girilenKod === gelenEmailKod){
+                   $.post("@Url.Action(nameof(EmailController.PostEmailDogrula), "Email")", { "email": email },
+                    function (data) {
+                        $("#otpmesaj").css("display", "block");
+                        $("#otpmesaj").html("Kodu başarılı şekilde doğrulandı. Logine Yönlendiriliyorsunuz.");
+                        setTimeout(function () {
+                            window.location.href = "/Account/Login";
+                        }, 5000);
+                    });
+                    
+                   
+                }else{
+                    $("#otpmesaj").css("display", "block");
+                    $("#otpmesaj").html("Kod eşleşmedi");
+                }
+            }
+        }else{
+            $("#otpmesaj").css("display", "block");
+            $("#otpmesaj").html("Kodu doğru giriniz");
+        }
+
+    }
+
+</script>

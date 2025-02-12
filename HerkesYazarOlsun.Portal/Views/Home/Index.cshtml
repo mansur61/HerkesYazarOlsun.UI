@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using HerkesYazarOlsun.Portal.Helpers.Extensions
+
+@{
+    string isGozlemciMod = User.GetGozlemciMod();
+}
+<br />
+
+@section scripts{
+    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+}
+@section Styles{
+    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
+}
+
+
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-3">
+            <br />
+
+            <ul class="list-group list-group-horizontal">
+
+                <li class="list-group-item"><a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a> </li>
+                <li class="list-group-item"><a href="/Kisi/TumYazarlar">Tüm Yazarlar</a></li>
+                <li class="list-group-item"><a href="">Yayın Evini Kazanan Kitaplar</a></li>
+                @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
+                {
+                    <li class="list-group-item"><strong><a style="font-size:20px" href="/Kitaplar/KitapOlustur">KİTAP YAZ</a></strong></li>
+                    <li class="list-group-item"><strong><a href="/Kitaplar/KitapEkleWordOrPdf"><span style="font-size:20px">WORD</span> veya <span style="font-size:20px">PDF</span>'ten Aktarım</a></strong></li>
+
+                }
+           </ul>
+        </div>
+        <div class="col-md-9">
+            @Html.Partial("_Carousel")
+
+        </div>
+    </div>
+</div>
+
+<br />
+@{
+    string tipsec = "";
+    var tempBookList = Model.VMBooksList;
+}
+<div class="row">
+    <div class="col-md-9">
+        <h3>
+            En Çok Yıldız Alan Kitaplar
+        </h3>
+    </div>
+</div>
+
+@{
+    tipsec = "yildizalan";
+    // tipsec = "yayin";
+    Model.Tip = @tipsec;    
+    Model.VMBooksList = Model.VMBooksList.Where(p => p.Stars.HangiStar == "yildiz5").ToList();
+}
+
+@Html.Partial("_KitapSliderGosterimleri", @Model)
+
+<div style="height:50px;"></div>
+
+<div class="row">
+    <div class="col-md-9">
+        <h3>
+            En Çok Yorum Alan 10 Kitaplar 
+        </h3>
+    </div>
+</div>
+
+@{
+    // tipsec = "begenilen";
+    tipsec = "yorumalan";
+    Model.Tip = @tipsec;
+    // Model.VMBooksList = @tempBookList;
+    // Yorum sayısına göre sıralanmış en çok yorum alan 10 kitabı seç
+    Model.VMBooksList = Model.VMBooksList
+                        .OrderByDescending(b => b.CommentCount)
+                        .Take(10)
+                        .ToList();
+}
+
+@Html.Partial("_KitapSliderGosterimleri",@Model)
+
+<div style="height:50px;"></div>
+
+
+<div class="row">
+    <div class="col-md-9">
+        <h3>
+            Diğer Kitaplar 
+        </h3>
+    </div>
+</div>
+
+@{
+    tipsec = "digerkitaplar";
+    // tipsec = "okunan";
+    Model.Tip = @tipsec;
+    // İlk 10 yorum alan ve 5 yıldızlı kitapları hariç tut
+    Model.VMBooksList = tempBookList
+                        .Where(p => p.CommentCount <= tempBookList.OrderByDescending(b => b.CommentCount).Skip(10).Select(b => b.CommentCount).FirstOrDefault())
+                        .Where(p => p.Stars.HangiStar != "yildiz5")
+                        .ToList();
+}
+
+@Html.Partial("_KitapSliderGosterimleri",@Model)
+
+
+<div style="height:100px;"></div>
+
+
+@Html.Partial("_Sponsorlar")
+<br />
+
+
+<script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
+<script src="~/lib/bootstrap/dist/js/mixitup.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/kitap-arama.js"></script>

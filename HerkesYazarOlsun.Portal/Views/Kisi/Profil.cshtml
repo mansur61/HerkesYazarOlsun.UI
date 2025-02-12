@@ -1,0 +1,440 @@
+﻿@{
+    ViewData["Title"] = "Profil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using HerkesYazarOlsun.Portal.Helpers.Extensions
+
+@{
+    string isGozlemciMod = User.GetGozlemciMod();
+}
+@section Styles {
+
+    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />*@
+}
+
+@section scripts {
+    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+}
+
+@using HerkesYazarOlsun.Portal.Controllers;
+@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
+
+
+<input type="hidden" id="profilicin" value="profil" />
+
+@{
+    string alertmesajgostermedurumu = "profil";
+}
+
+<p id="kural" style="display: none;">@ViewBag.isTakip</p>
+
+<div class="row">
+    <div style="width:auto;height:auto;background-color:aliceblue;margin:15px;">
+
+
+        <section class="h-100 gradient-custom-2">
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col col-md-3" style="padding:5px">
+                        <div class="card">
+                            <div class="rounded-top text-white d-flex flex-row">
+                                <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                                    @* *@
+
+                                    @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64))
+                                    {
+                                        <img src="data:image;base64,@Model?.Profile?.ProfilResimBase64" alt="Profil Resmi"
+                                             style="height:300px;width:215px" class="img-fluid img-thumbnail mt-4 mb-2">
+                                    }
+                                    else
+                                    {
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                                             alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                             style="width: 150px; z-index: 1" />
+                                    }
+                                </div>
+                                <div style="margin-top: 10px;color:black;font-size:30px">
+                                    @Model.NAME @Model.SURNAME
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <br />
+                        <h4>@Html.Partial("_YildizGoster", @Model.Stars)</h4>
+
+
+                    </div>
+
+                    <div class="col-md-2" style="margin-top:80px;text-align:center">
+                        <p style="font-size:30px"><strong>Takipler</strong></p>
+                        <p style="font-size:25px">120</p>
+                    </div>
+                    <div class="col-md-2" style="margin-top:80px;text-align:center">
+                        <p style="font-size:30px">
+                            <strong>Takipçiler</strong>
+                        </p>
+                        <p style="font-size:25px">61</p>
+                    </div>
+
+                    @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
+                    {
+                        @if (isGozlemciMod == "0")
+                        {
+                            <div class="col-md-1" style="text-align:center;margin-top:80px;">
+                                @if (@Model.vMWriterFollow.isFollow == 0)
+                                {
+                                    <button type="button" class="btn btn-info" onclick="YazarTakip(1)">
+                                        Takip Et
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-warning" onclick="YazarTakip(0)">
+                                        Takip Ediliyor
+                                    </button>
+
+                                }
+
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-md-12" style="text-align:center;margin:15px 5px;">
+                    <h4>
+                        <i class="yildizver fa fa-star" onclick="YildizVerChange(1)"> </i>
+                        <i class="yildizver fa fa-star" onclick="YildizVerChange(2)"> </i>
+                        <i class="yildizver fa fa-star" onclick="YildizVerChange(3)"> </i>
+                        <i class="yildizver fa fa-star" onclick="YildizVerChange(4)"> </i>
+                        <i class="yildizver fa fa-star" onclick="YildizVerChange(5)"> </i>
+                    </h4>
+
+                    @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
+                    {
+                        @if (isGozlemciMod == "0")
+                        {
+                            <button type="button" class="btn btn-info" onclick="YildizVer()">
+                                Yıldız Ver
+                            </button>
+                            <button type="button" class="btn btn-error" onclick="YildizIptalEt(0)">
+                                İptal Et
+                            </button>
+                        }
+
+                    }
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
+</div>
+
+
+<input type="hidden" id="yazar_id" value="@Model.ID" />
+
+
+<div class="row">
+
+    <h4>Merhaba <strong>@Model.NAME @Model.SURNAME</strong>, size yıldız veren diğer kullanıcı analizleri aşağıda bulunmaktadır</h4>
+    <hr />
+    <div class="col-md-6">
+
+        <h3>En fazla Yıldız</h3>
+        <h4>
+            @{
+                Model.Stars.isToplam = false;
+            }
+            @Html.Partial("_YildizGoster", @Model.Stars)
+
+        </h4>
+
+        <h6><strong>(@Model.Stars.EnFazlaSitar)</strong></h6>
+
+    </div>
+    <div class="col-md-6">
+        <div class="rating_list">
+            <h3>Yazara ait yıldızlar</h3>
+            <div class="col-sm-7">
+
+                @{
+                    Model.Stars.isToplam = true;
+                }
+                @Html.Partial("_YildizGoster", @Model.Stars)
+
+            </div>
+
+        </div>
+    </div>
+
+    <hr />
+</div>
+
+
+<div style="height:50px;visibility: hidden;"></div>
+
+<section class="product_description_area">
+    <div class="container">
+
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+            <li class="nav-item ">
+                <a class="nav-link  active" id="hakkinda-tab" data-toggle="tab" href="#hakkinda" role="tab" aria-controls="hakkinda" onclick="Hakkinda()"
+                   aria-selected="false">Hakkında</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="devamedenkitaplar-tab" data-toggle="tab" href="#devamedenkitaplar" role="tab" aria-controls="devamedenkitaplar"
+                   onclick="DevamEdenKitaplar()"
+                   aria-selected="false">Devam Eden Kitapları</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="tamamlanankitaplar-tab" data-toggle="tab" href="#tamamlanankitaplar" role="tab" aria-controls="tamamlanankitaplar"
+                   onclick="TamamlananKitaplar()"
+                   aria-selected="false">Tamamlanan Kitapları</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="yayinlanan-tab" data-toggle="tab" href="#yayinlanan" role="tab" aria-controls="yayinlanan"
+                   onclick="YayinlananKitaplar()"
+                   aria-selected="false">Yayınlanan Kitapları</a>
+            </li>
+
+        </ul>
+
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="hakkinda" role="tabpanel" aria-labelledby="hakkinda-tab">
+
+                <div id="bilgi">  @Model.ID.ToString() nolu yazar  @Model.NAME @Model.SURNAME </div>
+            </div>
+            <div class="tab-pane fade" id="devamedenkitaplar" role="tabpanel" aria-labelledby="devamedenkitaplar-tab">
+
+                <div id="devameden">   </div>
+            </div>
+            <div class="tab-pane fade" id="tamamlanankitaplar" role="tabpanel" aria-labelledby="tamamlanankitaplar-tab">
+
+                <div id="tamamlanan"> </div>
+            </div>
+            <div class="tab-pane fade" id="yayinlanan" role="tabpanel" aria-labelledby="yayinlanan-tab">
+
+                <div id="yayin"> </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<br />
+
+<div style="height:300px;visibility: hidden;"></div>
+<script>
+
+    $("#bilgi").css("display", "none");
+
+    var yildizPuani = 0;
+    var yazarId = $("#yazar_id").val();
+    var profil = $("#profilicin").val();
+
+    function Bilgilendirme(follow) {
+
+        var email = @Model.EMAIL;
+        var message = "";
+
+        if (follow == 1) {
+            message = " Takip Etti";
+        } else {
+            message = " Takipten Çıkardı";
+        }
+
+        var yorum = "(@ViewBag.LGN_USER.NAME) adlı kişi sizi " + message;
+
+        $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")", {
+            "konu": "Herkes Yazar Olsun'dan Bildirim",
+            "kime": email,
+            "tip": 0,
+            "mesaj": yorum,
+
+
+        }, function (data) {
+            console.log("data:" + data.state);
+            if (data.state == 1) {
+                $("#basarili-" + profil).css("display", "block");
+                $("#basarili-" + profil + " #mesaj").html(data.message);
+
+                $("#bilgi-" + profil).css("display", "none");
+                $("#uyari-" + profil).css("display", "none");
+
+
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + profil).css("display", "block");
+                $("#bilgi-" + profil + " #mesaj").html(data.message);
+
+                $("#basarili-" + profil).css("display", "none");
+                $("#uyari-" + profil).css("display", "none");
+            }
+            else {
+                $("#uyari-" + profil).css("display", "block");
+                $("#bilgi-" + profil).css("display", "none");
+                $("#basarili-" + profil).css("display", "none");
+                $("#uyari-" + profil + " #mesaj").html(data.message);
+            }
+
+        });
+    }
+
+
+    function YildizVer() {
+
+        if (yildizPuani == 0) {
+            $("#uyari-" + profil).css("display", "block");
+            $("#bilgi-" + profil).css("display", "none");
+            $("#basarili-" + profil).css("display", "none");
+            $("#uyari-" + profil + " #mesaj").html("Yıldız veriniz.");
+            return;
+        }
+
+        $.post("@Url.Action(nameof(KisiController.PostWriterStars), "Kisi")",
+            {
+                "id": yazarId,
+                "puan": yildizPuani
+            },
+
+            function (data) {
+                if (data.state == 1) {
+                    $("#basarili-" + profil).css("display", "block");
+                    $("#basarili-" + profil + " #mesaj").html(data.message);
+
+                    $("#bilgi-" + profil).css("display", "none");
+                    $("#uyari-" + profil).css("display", "none");
+                }
+                else if (data.state == 3) {
+                    $("#bilgi-" + profil).css("display", "block");
+                    $("#bilgi-" + profil + " #mesaj").html(data.message);
+
+                    $("#basarili-" + profil).css("display", "none");
+                    $("#uyari-" + profil).css("display", "none");
+                }
+                else {
+                    $("#uyari-" + profil).css("display", "block");
+                    $("#bilgi-" + profil).css("display", "none");
+                    $("#basarili-" + profil).css("display", "none");
+                    $("#uyari-" + profil + " #mesaj").html(data.message);
+                }
+            });
+    }
+    function YazarTakip(follow) {
+
+        var kural = $('#kural').text().trim();
+
+        $.post("@Url.Action(nameof(KisiController.PostWriterFollow), "Kisi")",
+            {
+                "id": yazarId,
+                "follow": follow
+            },
+
+            function (data) {
+                if (data.state == 1) {
+                    $("#basarili-" + profil).css("display", "block");
+                    $("#basarili-" + profil + " #mesaj").html(data.message);
+
+                    $("#bilgi-" + profil).css("display", "none");
+                    $("#uyari-" + profil).css("display", "none");
+
+                    if (kural === "True") {
+                        Bilgilendirme(follow);
+                    } 
+                }
+                else if (data.state == 3) {
+                    $("#bilgi-" + profil).css("display", "block");
+                    $("#bilgi-" + profil + " #mesaj").html(data.message);
+
+                    $("#basarili-" + profil).css("display", "none");
+                    $("#uyari-" + profil).css("display", "none");
+                }
+                else {
+                    $("#uyari-" + profil).css("display", "block");
+                    $("#bilgi-" + profil).css("display", "none");
+                    $("#basarili-" + profil).css("display", "none");
+                    $("#uyari-" + profil + " #mesaj").html(data.message);
+                }
+            });
+    }
+
+    function Hakkinda() {
+
+        $("#bilgi").css("display", "block");
+    }
+
+    var yildizlar = document.getElementsByClassName("yildizver");
+
+    function YildizIptalEt(adet) {
+
+        yildizPuani = adet;
+        console.log("adet:" + adet);
+        for (var i = 0; i < yildizlar.length; i++) {
+            $(yildizlar[i]).css("color", "black");
+        }
+    }
+
+    function YildizVerChange(adet) {
+
+        yildizPuani = adet;
+        console.log("adet:" + adet);
+        for (var i = 0; i < yildizlar.length; i++) {
+            $(yildizlar[i]).css("color", "black");
+        }
+
+        for (var i = 0; i < adet; i++) {
+            $(yildizlar[i]).css("color", "dodgerblue");
+        }
+    }
+
+    function DevamEdenKitaplar() {
+        $(this).css("color", "red");
+        $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
+            {
+                "yazarIId": yazarId,
+                "DevamEdenKitaplar": true,
+                "profilKitapTuru": "devameden",
+                "tip": profil
+            },
+
+            function (data) {
+                $("#devameden").html(data);
+            });
+    }
+
+    function TamamlananKitaplar() {
+        $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
+            {
+                "yazarIId": yazarId,
+                "BitenKitaplar": true,
+                "profilKitapTuru": "tamamlanan",
+                "tip": profil
+            },
+
+            function (data) {
+                $("#tamamlanan").html(data);
+            });
+    }
+
+    function YayinlananKitaplar() {
+        $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
+            {
+                "yazarIId": yazarId,
+                "YayinlananKitaplar": true,
+                "profilKitapTuru": "yayin",
+                "tip": profil
+            },
+
+            function (data) {
+                $("#yayin").html(data);
+            });
+    }
+</script>

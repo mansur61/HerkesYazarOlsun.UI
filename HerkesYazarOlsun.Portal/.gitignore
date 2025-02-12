@@ -1,0 +1,77 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+[Dd]eploy/
+[Dd]ebug+/
+[Dd]ebug-windows/
+[Dd]ebug-linux/
+[Dd]ebug-macos/
+[Dd]eploy-windows/
+[Dd]eploy-linux/
+[Dd]eploy-macos/
+bin/
+obj/
+out/
+
+# User-specific files
+.vs/
+.vscode/
+.idea/
+userprefs/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer Logs
+*.cab
+
+# User-specific files
+.vs2019/
+.vs2017/
+.vs2015/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer Logs
+*.cab
+*.msi
+*.msm
+*.msp
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# JetBrains Rider
+.idea/
+
+# Node.js dependencies
+node_modules/
+
+# VS Code settings
+.vscode/
+
+# .NET Core SDK
+global.json
+
+# Windows Installer Logs
+*.cab
+*.msi
+*.msm
+*.msp
+
+# User-specific files
+*.user
+*.userosscache

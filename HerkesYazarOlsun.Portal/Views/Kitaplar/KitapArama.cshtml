@@ -1,0 +1,265 @@
+﻿@{
+    ViewData["Title"] = "Kitap Arama";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+}
+@section Styles{
+    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
+}
+
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@using HerkesYazarOlsun.Portal.Controllers;
+
+@{
+    int sidebardaGosterilecekKayit = 3;
+
+    int sidebarKalan = (@Model.BooksList.Count() % sidebardaGosterilecekKayit);
+    int sidebarBolum = (@Model.BooksList.Count() / sidebardaGosterilecekKayit);
+    int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
+
+    int sliderdaGosterilecekKayit = 6;
+
+    int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+
+    int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
+}
+
+<style>
+    .containerPagination {
+        width: 200px;
+        height: 100%;
+        background: lineer-gradient(45deg,#410358,#4700bc);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        color: #383838;
+        padding: 10px 10px;
+        border-radius: 6px;
+    }
+
+    .containerPagination > ul {
+        margin: 20px 30px;
+    }
+
+        .containerPagination > ul li {
+            display: inline-block;
+            text-align: center;
+            margin: 10px 10px;
+            /* background: #acc;*/
+            width: 45px;
+            height: 45px;
+            border-radius: 20%;
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 45px;
+            cursor: pointer;
+            background-position: 0 -45px;
+            transition: background-position 0.5s;
+        }
+
+            .containerPagination > ul li.active {
+                color: #410358;
+                background-color: #3e8e41;
+                /* background-image: lineer-gradient(45deg,#410358,#4700bc);*/
+                background-repeat: no-repeat;
+                background-position: 0 0px;
+            }
+
+    .btn1, .btn2 {
+        display: inline-flex;
+        align-items: center;
+        font-size: 22px;
+        font-weight: 500;
+        color: #383838;
+        background: transparent;
+        outline: none;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-5">
+                <div class="sidebar">
+                    <div class="sidebar__item">
+
+                        <h3>Arama Yapınız</h3>
+                        <div style="height:15px"></div>
+                        <ul>
+                            <li>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        2023 te yazılan kitaplar
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                                    <label class="form-check-label" for="flexCheckDefault2">
+                                        2023 ten önce yazılan kitaplar
+                                    </label>
+                                </div>
+                            </li>
+                            @*<li><a href="#" class="list_underline_none">Vegetables</a></li>
+                            <li><a href="#" class="list_underline_none">Fruit & Nut Gifts</a></li>
+                            <li><a href="#" class="list_underline_none">Fresh Berries</a></li>
+                            <li><a href="#" class="list_underline_none">Ocean Foods</a></li>
+                            <li><a href="#" class="list_underline_none">Butter & Eggs</a></li>
+                            <li><a href="#" class="list_underline_none">Fastfood</a></li>
+                            <li><a href="#" class="list_underline_none">Fresh Onion</a></li>
+                            <li><a href="#" class="list_underline_none">Papayaya & Crisps</a></li>
+                            <li><a href="#" class="list_underline_none">Oatmeal</a></li>*@
+                        </ul>
+
+                    </div>
+
+
+                    <div class="sidebar__item">
+                        <h5>Kategori Seçiniz</h5>
+                        <div style="height:15px"></div>
+                        <div class="price-range-wrap">
+                            <select class="wide">
+                                <option value="1">Hikaye</option>
+                                <option value="2">Roman</option>
+                                <option value="3" disabled>Şiir</option>
+                                <option value="4"></option>
+                            </select>
+                        </div>
+                        <br />
+                    </div>
+                    <br />
+                    <div class="sidebar__item">
+                        <h5>Yazar Giriniz</h5>
+                        <div style="height:15px"></div>
+                        <div class="input-group mb-4">
+                            <input type="text" class="form-control" placeholder="Yazar..." name="yazarAdi">
+                        </div>
+
+                    </div>
+                  
+                    <!--slider sidebar-->
+                    @Html.Partial("_SideBarItem",@Model)
+                </div>
+
+
+            </div>
+            <div class="col-lg-8">
+
+                <div class="filter__item">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-5">
+                            <div style="height:15px"></div>
+                            <div class="filter__sort">
+                                <span>Sıralama</span>
+                                <select class="small">
+                                    <option value="0">Azalan</option>
+                                    <option value="1">Artan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div style="height:15px"></div>
+                            <div class="filter__found">
+                                <h6><span>16</span> Products found</h6>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                            <select class="wide">
+                                <option value="1">İlk 10 Kayıt</option>
+                                <option value="1" disabled>İlk 20 Kayıt</option>
+                                <option value="1">İlk 30 Kayıt</option>
+                                <option value="1">İlk 40 Kayıt</option>
+                                <option value="1">İlk 50 Kayıt</option>
+
+                            </select>
+                            <div class="filter__option">
+
+
+                                @*
+                                <span class="icon_grid-2x2">5556</span>
+                                <span class="icon_ul">9898</span>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-success" id="basarili" style="display:none;">
+                    <strong>Başarılı!</strong> Favorilere Eklendi
+                    <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
+                </div>
+                <br />
+                <div class="alert alert-info" id="uyari" style="display:none;">
+                    <strong>Bilgi!</strong> Favorilere Eklenemedi
+                    <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
+                </div>
+                <br />
+
+                <div class="row">
+                    @Html.Partial("Kitaplar",@Model)
+
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("_PaginationButonlar",@sliderSayisi)
+
+       
+    </div>
+</section>
+
+
+
+<script>
+
+    function Yazarlar(yazarId){
+
+    }
+    function FavorilereEkle(kitapId) {
+
+        $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", { "id": kitapId, }, function (data) {
+            if (data.state == 1) {
+                $("#basarili").css("display", "block");
+            } else {
+                $("#uyari").css("display", "block");
+            }
+
+
+        });
+    }
+
+    function Kapat() {
+        $("#basarili").css("display", "none");
+        $("#uyari").css("display", "none");
+    }
+
+
+
+</script>
+
+<script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
+<script src="~/lib/bootstrap/dist/js/mixitup.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/kitap-arama.js"></script>
+
+
+
+

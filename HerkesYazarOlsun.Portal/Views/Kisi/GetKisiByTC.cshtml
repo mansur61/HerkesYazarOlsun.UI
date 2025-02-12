@@ -1,0 +1,12 @@
+﻿@model HerkesYazarOlsun.Model.Entity.Users
+
+@if(Model != null){
+    @if(Model.EMAIL != null){
+        <p>İlgili Kişi : @Model.EMAIL</p>
+    }else{
+<p>İlgili Kişi </p>
+    }
+
+}else{
+<p>İlgili Kişi  Yok</p>
+}

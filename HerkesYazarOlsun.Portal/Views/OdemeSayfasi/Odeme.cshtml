@@ -1,0 +1,427 @@
+﻿@{
+    ViewData["Title"] = "Ödeme";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using HerkesYazarOlsun.Model.Utils
+@using HerkesYazarOlsun.Portal.Controllers;
+
+<style>
+    .panel-title {
+        display: inline;
+        font-weight: bold;
+    }
+
+    .checkbox.pull-right {
+        margin: 0;
+    }
+
+    .pl-ziro {
+        padding-left: 0px;
+    }
+</style>
+
+<!--Kredi kartı css ler-->
+<style>
+    /* Kart önizleme stil */
+    .card-preview {
+        position: relative;
+        width: 400px;
+        height: 230px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: #333;
+    }
+
+        .card-preview img {
+            width: 100%; /* Resmin tam genişlikte görünmesini sağla */
+            height: 100%; /* Resmin tam yükseklikte görünmesini sağla */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+    /* Kart metinlerinin pozisyonları */
+    #cardNumberDisplay,
+    #cardNameDisplay,
+    #cardExpiryDisplay {
+        position: absolute;
+        left: 20px;
+        font-family: Arial, sans-serif;
+        color: #fff;
+    }
+
+    /* Kart numarası stili */
+    #cardNumberDisplay {
+        top: 80px;
+        font-size: 20px;
+    }
+
+    /* Kart üzerindeki isim stili */
+    #cardNameDisplay {
+        top: 130px;
+        font-size: 16px;
+    }
+
+    /* Son kullanma tarihi (MM/YY) stili */
+    #cardExpiryDisplay {
+        top: 160px;
+        font-size: 16px;
+    }
+
+    /* Form düzeni */
+    .form {
+        margin-top: 20px;
+    }
+
+    /* Etiketler */
+    label {
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    /* Input alanları */
+    input {
+        width: 100%; /* Tam genişlikte input */
+        padding: 8px;
+        margin-top: 5px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px; /* Köşeleri yuvarla */
+        box-sizing: border-box; /* Padding ve border hesaplamalarını genişlik içinde dahil et */
+    }
+
+    /* Ay ve Yıl inputları için özel stil */
+    .expiry-cvv-container {
+        display: flex;
+        gap: 10px;
+    }
+
+        .expiry-cvv-container input {
+            width: 80px; /* Her input'un genişliği */
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+    /* Ayrı Ay (MM) ve Yıl (YY) ve CVV için stil */
+    input[type="number"] {
+        -moz-appearance: textfield; /* Firefox'ta sayı inputlarında spin kutularını engelle */
+    }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+</style>
+
+<input type="hidden" id="odemeicin" value="odeme" />
+<input type="hidden" id="loginId" value="@ViewBag.LoginUserId.ToString()" />
+<input type="hidden" id="kitapId" value="@ViewBag.KitapId.ToString()" />
+
+@{
+    string alertmesajgostermedurumu = "odeme";
+}
+
+
+<div style="height:75px;"></div>
+<h1>Ödeme Sayfası</h1>
+@* <div style="height:75px;"></div> *@
+
+<br />
+<div class="container" style="margin-bottom:50px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Ödeme Detayları
+                        </h3>
+
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="card-preview" style="position: relative; width: 400px; height: 230px; background-color: #333; border-radius: 10px; color: #fff;">
+                                <img id="cardImage" src="~/lib/img/card1.png" alt="" style="width: 100%; height:100%; border-radius: 10px;" />
+                                <div id="cardNumberDisplay" style="position: absolute; top: 80px; left: 20px; font-size: 20px; font-family: Arial, sans-serif;">**** **** **** ****</div>
+                                <div id="cardNameDisplay" style="position: absolute; top: 130px; left: 20px; font-size: 16px; font-family: Arial, sans-serif;">NAME ON CARD</div>
+                                <div id="cardExpiryDisplay" style="position: absolute; top: 160px; left: 20px; font-size: 16px; font-family: Arial, sans-serif;">MM/YY</div>
+                                <div id="cvvDisplay" style="position: absolute; top: 80px; right: 20px; font-size: 16px; font-family: Arial, sans-serif; display: none;">***</div>
+                            </div>
+                            @* "https://via.placeholder.com/400x200.png?text=Credit+Card" *@
+                           
+                            <div class="form">
+                                <label for="cardNumber">Kart Numarası:</label>
+                                <input type="text" id="cardNumber" maxlength="19" placeholder="**** **** **** ****" />
+
+                                <label for="cardName">Kart Üzerindeki İsim:</label>
+                                <input type="text" id="cardName" placeholder="Ad Soyad" />
+
+                                <!-- MM, YY ve CVV tek satırda alınıyor -->
+                                <label for="expiryDate">Son Kullanma Tarihi ve CVV:</label>
+                                <div class="expiry-cvv-container">
+                                    <input type="number" id="expiryMonth" min="1" max="12" placeholder="MM" />
+                                    <input type="number" id="expiryYear" min="2000" placeholder="YY" />
+                                    <input type="number" id="cvv" maxlength="3" placeholder="CVV" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active">
+                        <a>
+                            <span class="badge pull-right">
+                                <span class="fa fa-turkish-lira" id="odemeFiyati">
+                                    4200
+                                </span>
+                                @*4200*@
+
+                            </span> Toplam Ödeme
+                        </a>
+                    </li>
+                </ul>
+                <br />
+                @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
+
+                <a class="btn btn-success btn-lg btn-block" role="button" onclick="OdemeAl()">ÖDEME YAP</a>
+
+            </div>
+            <div class="col-md-6" style="background-color:lightgrey;border-radius:20px;">
+                <div>
+                    <p style="text-align:center;font-size:30px;margin-top:10px">
+                        <i class="fa fa-bell" style="color:green"></i> <strong>TEBRİKLER</strong>
+                        <i class="fa fa-bell" style="color:green"></i>
+                    </p>
+                    <div style="font-size:14px;">
+                        <p>
+                            <strong>Herkes Yazar Olsun</strong>' da emekleriniz hiçbir zaman boşa çıkmayacaktır.
+                            Kitabınızı anlaşmalı olan tüm yayın evlerimizden birine indirimli olarak bizim aracılığımız ile yayınlama hakkı kazandınız.
+                        </p>
+                        <p>
+                            Kitabınızı yayına almak istiyorsanız öncelikle <a href="/Home/Index#sponsorlar">Sponsorlar</a> bağlantısından sponsorlarımızı görebilir,
+                            istediğiniz sponsoru inceleyerek belirleyebilirsiniz
+                        </p>
+                        <p>
+                            Belirlediğiniz sponsorlarımız ile anlaşmalı indirimlerimizden anında faydalanabilirsiniz.
+                            Bunu için yapmanız gereken <strong>Herkes Yazar Olsun</strong>'un belirlediği <span style="text-decoration:underline">sabit fiyatımızı</span> ödeme sayfasından
+                            ödemeniz gerekmektedir.
+                        </p>
+
+                        <p>
+                            Ödemeniz başarılı olması durumunda açılan ekranda belirlediğiniz sponsoru bizlere mail aracılığıyla iletmeniz gerekmektedir.
+                        </p>
+                        <p>
+                            İlettiğiniz mail doğrultusunda sizlere <span style="text-decoration:underline">kitabınızın incelenip,sponsor kodu temin edilerek</span>  bu kod ile belirlediğiniz sponsorla yayın işlemlerini başlatabileceksiniz.
+
+                        </p>
+                        <p>
+                            Sponsor kodunuz ve dataylı bilgilerinizi, bize ilettiğiniz mail adresinize 3 iş günü içinde iletilecektir.
+                        </p>
+                    </div>
+
+                </div>
+
+                @*  <div class="text-center" style="margin-top:10px;margin-bottom:10px">
+
+                <button type="button" class="btn btn-light">  <a href="/OdemeSayfasi/Odeme">Ödeme Sayfasına Geç</a>  </button>
+                </div> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var loginUserId = $("#loginId").val();
+    var kitapId = $("#kitapId").val();
+
+    var odeme = $("#odemeicin").val();
+    // Kart Resmi URL'si, örnek olarak burada bir kart resmi kullanılacaktır
+    const defaultCardImageUrl = "https://localhost:44360/lib/img/card1.png";
+    //"https://via.placeholder.com/400x200.png?text=Credit+Card";
+    const cvvImageUrl = "https://localhost:44360/lib/img/card1_arka.png";
+    //"https://via.placeholder.com/200x100.png?text=CVV+Image";
+
+    function UyariGoster(mesajIlet) {
+        $("#uyari-" + odeme).css("display", "block");
+        $("#bilgi-" + odeme).css("display", "none");
+        $("#basarili-" + odeme).css("display", "none");
+        $("#uyari-" + odeme + " #mesaj").html(mesajIlet);
+    }
+
+    // Kart verilerini kontrol etmek için regexler
+    var cardNumberRegex = /^(\d{4} ){3}\d{4}$/; // Örnek: 1236 2532 4569 1233
+    var monthRegex = /^(0?[1-9]|1[0-2])$/; // Ay: 1-12
+    var yearRegex = /^[2-9]\d{3}$/; // Yıl: 2000 ve sonrası
+    var cvvRegex = /^\d{3}$/; // CVV: 3 rakam
+
+    // Kart numarası girişi
+    $("#cardNumber").on("input", function () {
+        let cardNumber = $(this).val().replace(/\D/g, ""); // Sadece sayılar
+        cardNumber = cardNumber.match(/.{1,4}/g)?.join(" ") || ""; // Her 4 hanede bir boşluk ekle
+        $("#cardNumberDisplay").text(cardNumber || "**** **** **** ****");
+        $(this).val(cardNumber); // Formatlı kart numarasını geri yaz
+    });
+
+    // Kart üzerindeki isim girişi
+    $("#cardName").on("input", function () {
+        const cardName = $(this).val();
+        $("#cardNameDisplay").text(cardName || "NAME ON CARD");
+    });
+
+    // Ay (MM) ve Yıl (YY) girişi
+    $("#expiryMonth, #expiryYear").on("input", function () {
+        const month = $("#expiryMonth").val().padStart(2, '0'); // Ayın iki haneli olması sağlanır
+        const year = $("#expiryYear").val().padStart(2, '0'); // Yılın iki haneli olması sağlanır
+        $("#cardExpiryDisplay").text(`${month}/${year}`); // Ay ve yıl birleştirilir
+    });
+
+    // CVV alanına tıklanıldığında
+    $("#cvv").focus(function () {
+        $("#cardExpiryDisplay").hide();
+        $("#cardNumberDisplay").hide();
+        $("#cardNameDisplay").hide();
+
+        $("#cvvDisplay").show(); // CVV'yi göster
+        $("#cardImage").attr("src", cvvImageUrl); // CVV resmini göster
+    });
+
+    // CVV alanından çıkıldığında
+    $("#cvv").blur(function () {
+        $("#cardExpiryDisplay").show();
+        $("#cardNumberDisplay").show();
+        $("#cardNameDisplay").show();
+
+        $("#cvvDisplay").hide(); // CVV'yi gizle
+        $("#cardImage").attr("src", defaultCardImageUrl); // Varsayılan kart resmine dön
+    });
+
+    // CVV girişi
+    $("#cvv").on("input", function () {
+        const cvv = $(this).val().replace(/\D/g, ""); // Sadece sayılar
+        $("#cvvDisplay").text(cvv || "***");
+        $(this).val(cvv); // Formatlı CVV'yi geri yaz
+    });
+
+    // Doğrulama fonksiyonu
+    function KartBilgileriniDogrula(cardNumber, expityMonth, expityYear, cvCode, cardOnName) {
+
+        if (cardNumber == "" && expityMonth == "" && expityYear == "" && cvCode == "" && cardOnName == "") {
+            UyariGoster("Boş Alan Bırakmayınız");
+            return;
+        }
+
+        // Hata mesajları
+        if (!cardNumberRegex.test(cardNumber)) {
+            UyariGoster("Kart numarası 20 karakter olmalı ve her 4 hanede bir boşluk içermelidir (örn: 1234 5678 9012 3456 7890).");
+            return false;
+        }
+
+        if (!monthRegex.test(expityMonth)) {
+            UyariGoster("Ay bilgisi 1 ile 12 arasında bir sayı olmalıdır.");
+            return false;
+        }
+
+        if (!yearRegex.test(expityYear)) {
+            UyariGoster("Yıl bilgisi 2000 veya daha büyük bir 4 haneli sayı olmalıdır.");
+            return false;
+        }
+
+        if (!cvvRegex.test(cvCode)) {
+            UyariGoster("CVV bilgisi 3 haneli bir sayı olmalıdır.");
+            return false;
+        }
+
+        if (!cardOnName) {
+            UyariGoster("Kart üzerindeki isim boş bırakılamaz.");
+            return false;
+        }
+
+        // Tüm kontroller başarılı
+        console.log("Kart bilgileri doğru!");
+        return true;
+    }
+
+    function OdemeAl() {
+        const cardNumber = $("#cardNumber").val().trim();
+        const expityMonth = $("#expiryMonth").val().trim();
+        const expityYear = $("#expiryYear").val().trim();
+        const cvCode = $("#cvv").val().trim();
+        const cardOnName = $("#cardName").val().trim();
+
+        var odemeFiyati = $("#odemeFiyati").val();
+
+        var odemeFiyati = document.getElementById("odemeFiyati").innerHTML.toString().trim();
+
+        console.log(" odemeFiyati:" + odemeFiyati)
+
+        console.log(" cardNumber: " + cardNumber + " expityMonth: " + expityMonth + " expityYear: " + expityYear + " cvCode: " + cvCode + " cardOnName: " + cardOnName);
+
+        var isChek = KartBilgileriniDogrula(cardNumber, expityMonth, expityYear, cvCode, cardOnName);
+
+        console.log(" isChek:" + isChek);
+
+        if (isChek) {
+            setTimeout(function () {
+                        window.location.href = "/OdemeSayfasi/SponsorlukBildirimi?kitapId=" + kitapId + "&yazarId=" + loginUserId + "";
+                    }, 5000);
+
+            // $.post("@Url.Action(nameof(OdemeSayfasiController.SaveOdeme), "OdemeSayfasi")", {
+            //     "KartTarihiAy": expityMonth,
+            //     "KartTarihiYil": expityYear,
+            //     "KartUzerindekiIsim": cardOnName,
+            //     "Cvv": cvCode,
+            //     "KartNo": cardNumber,
+            //     "LoginUserId": loginUserId,
+            //     "KitapId": kitapId,
+            //     "Tutar": odemeFiyati
+
+            // }, function (data) {
+            //     console.log(data);
+            //     if (data.state == 1) {
+            //         $("#basarili-" + odeme).css("display", "block");
+            //         $("#basarili-" + odeme + " #mesaj").html(data.message + " Sponsorluk Bildirimi için Yönlendiriliyorsunuz. ");
+
+            //         $("#bilgi-" + odeme).css("display", "none");
+            //         $("#uyari-" + odeme).css("display", "none");
+
+            //         setTimeout(function () {
+            //             window.location.href = "/OdemeSayfasi/SponsorlukBildirimi?kitapId=" + kitapId + "&yazarId=" + loginUserId + "";
+            //         }, 5000);
+            //     }
+            //     else if (data.state == 3) {
+            //         $("#bilgi-" + odeme).css("display", "block");
+            //         $("#bilgi-" + odeme + " #mesaj").html(data.message);
+
+            //         $("#basarili-" + odeme).css("display", "none");
+            //         $("#uyari-" + odeme).css("display", "none");
+            //     }
+            //     else {
+            //         $("#uyari-" + odeme).css("display", "block");
+            //         $("#bilgi-" + odeme).css("display", "none");
+            //         $("#basarili-" + odeme).css("display", "none");
+            //         $("#uyari-" + odeme + " #mesaj").html(data.message);
+            //     }
+
+            // });
+
+        }
+
+
+    }
+
+</script>
