@@ -1,39 +1,65 @@
-﻿<div class="section-colored" id="sponsorlar">
+﻿@using HerkesYazarOlsun.Model.ViewModel
 
-    <div class="container">
-        <h3 class="section-title text-center">Sponsorlarımız</h3>
+<style>
+    .sponsor-box {
+        border: 2px solid #007bff; /* Mavi çerçeve */
+        border-radius: 12px; /* Kenarları yuvarlat */
+        padding: 10px; /* İç boşluk */
+        text-align: center; /* Metni ortala */
+        margin: 5px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    }
+</style>
 
-        <div class="container clients">
+@if (@ViewBag.Sponsorlar != null && @ViewBag.Sponsorlar.Count > 0)
+{
+    <div class="section-colored" id="sponsorlar">
+        <div class="container">
+            <h3 class="section-title text-center">Sponsorlarımız</h3>
+            <div class="container clients">
+                <div class="row">
 
-            <div class="row">
-              
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
-                    <a href="#"><img class="img-responsive" src="~/lib/img/client-1.png" alt="client 1"></a>
+                    @foreach (var item in ViewBag.Sponsorlar)
+                    {
+                        var spnstem = item as VM_SPONSORLAR;
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6 sponsor-box">
+                            <a href="#"><img class="img-responsive" src="~/lib/img/tilkikitap.png" alt="client 1"></a>
+                            <p>@spnstem?.SponsorAdi</p>
+                        </div>
+                         
+                    }
+
+                    @* <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                <a href="#"><img class="img-responsive" src="~/lib/img/client-1.png" alt="client 1"></a>
                 </div>
 
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
-                    <a href="#"><img class="img-responsive" src="~/lib/img/client-2.png" alt="client 2"></a>
+                <a href="#"><img class="img-responsive" src="~/lib/img/client-2.png" alt="client 2"></a>
                 </div>
 
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
-                    <a href="#"><img class="img-responsive" src="~/lib/img/client-3.png" alt="client 3"></a>
+                <a href="#"><img class="img-responsive" src="~/lib/img/client-3.png" alt="client 3"></a>
                 </div>
 
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
-                    <a href="#"><img class="img-responsive" src="~/lib/img/client-4.png" alt="client 4"></a>
+                <a href="#"><img class="img-responsive" src="~/lib/img/client-4.png" alt="client 4"></a>
                 </div>
 
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
-                    <a href="#"><img class="img-responsive" src="~/lib/img/client-5.png" alt="client 5"></a>
+                <a href="#"><img class="img-responsive" src="~/lib/img/client-5.png" alt="client 5"></a>
                 </div>
 
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
-                    <a href="#"><img class="img-responsive" src="~/lib/img/client-6.png" alt="client 6"></a>
-                </div>
-            </div><!-- /.row -->
+                <a href="#"><img class="img-responsive" src="~/lib/img/client-6.png" alt="client 6"></a>
+                </div> *@
+                </div><!-- /.row -->
+
+            </div><!-- /.container -->
 
         </div><!-- /.container -->
 
-    </div><!-- /.container -->
+    </div>
 
-</div><!-- /.section-colored -->
+    <!-- /.section-colored -->
+}

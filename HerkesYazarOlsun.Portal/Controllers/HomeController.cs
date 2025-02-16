@@ -34,14 +34,17 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [AllowAnonymous]
         public ActionResult Index()
-        {
-            //var bak = (long)(_httpContextAccessor?.HttpContext?.User.GetLoginUserId());
-            string isGozlemciMod = User.GetGozlemciMod();
-            //var bb = User.GetEmail();
+        { 
+            string isGozlemciMod = User.GetGozlemciMod(); 
             if (!string.IsNullOrEmpty(isGozlemciMod) && isGozlemciMod == "1") // gözlemci mod ile gelinmiş
             {
                 var vM_BOOKS = GetListBooks();
                 vM_BOOKS.isAnaSayfa  = true;
+
+                List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
+                ViewBag.Duyurular = list;
+                List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
+                ViewBag.Sponsorlar = spnlist;
                 return View(vM_BOOKS);
             }
 
@@ -49,6 +52,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
             {
                 var vM_BOOKS = GetListBooks();
                 vM_BOOKS.isAnaSayfa = true;
+
+                List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
+                ViewBag.Duyurular = list;
+                List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
+                ViewBag.Sponsorlar = spnlist;
                 return View(vM_BOOKS);
 
             }
