@@ -28,7 +28,11 @@
             {
                 var duyuruItem = item as VM_CAROUSEL_DUYURU;
                 <div class="item @(index == 0 ? "active" : "")">
-                    <div class="fill" style="background-image:url('~/lib/img/slide/slide1.png');"></div>
+                    <div class="fill"
+                        style="@(string.IsNullOrWhiteSpace(duyuruItem?.RENK)
+                         ? "background-image:url('/lib/img/slide/slide1.png');"
+                         : $"background-color:{duyuruItem.RENK};")">
+                    </div>
                     <div class="carousel-caption">
                         <h2>@duyuruItem?.ICERIK</h2>
                     </div>
