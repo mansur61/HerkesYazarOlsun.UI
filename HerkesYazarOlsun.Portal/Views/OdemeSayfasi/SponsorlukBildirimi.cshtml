@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Kitap Oku";
+    ViewData["Title"] = " ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -282,7 +282,7 @@
             $("#uyari-" + odemesponsor + " #mesaj").html("Sponsor bilgisi seçilmelidir. ");
             return;
         }
-        if (email == "" && name == "" && tel == "") {
+        if (email == "" && ad == "" && tel == "") {
             $("#uyari-" + odemesponsor).css("display", "block");
             $("#bilgi-" + odemesponsor).css("display", "none");
             $("#basarili-" + odemesponsor).css("display", "none");

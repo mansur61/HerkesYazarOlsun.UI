@@ -1,24 +1,36 @@
-﻿<footer id="gozukecekMiFooter">
+﻿@using HerkesYazarOlsun.Portal.Controllers
+
+<input type="hidden" id="footericin" value="footer" />
+
+@{
+    string alertmesajgostermedurumu = "footer";
+}
+
+
+<footer id="gozukecekMiFooter">
     <div class="container">
 
         <div class="row">
-            <div class="col-lg-3 col-md-3">
-                <a class="footer-brand" href="index.html">Banzhow</a>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing. Sed est quam, pretium a vestibulum vel, aliquam vitae eros.</p>
+            <div class="col-md-4">
+                <a class="footer-brand" href="index.html">Herkes Yazar Olsun</a>
+                <p>
+                    Kitap yazarları bir arada topladığımız platformumuzda aynı zamanda, yazarlarımıza anlaşmalı yayın evi sponsorlarıız ile
+                    daha uygun maliyetli kitaplarını yayınlayabilecek köprü kuruyoruz. Haydi sizde bu köprüden geçiniz.
+                </p>
                 <ul class="list-inline list-unstyled social-networks">
-                    <li>
-                        <a href="#">
-                            <div class="icon-social icon-social-facebook normal">
-                                <i class="fa fa-facebook"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-facebook"></i>
-                            </div>
-                        </a>
-                    </li>
+                    @*  <li>
+                    <a href="#">
+                    <div class="icon-social icon-social-facebook normal">
+                    <i class="fa fa-facebook"></i>
+                    </div>
+                    <div class="icon-social hover">
+                    <i class="fa fa-facebook"></i>
+                    </div>
+                    </a>
+                    </li> *@
 
                     <li>
-                        <a href="#">
+                        <a href="https://x.com/kayamansur61">
                             <div class="icon-social icon-social-twitter normal">
                                 <i class="fa fa-twitter"></i>
                             </div>
@@ -28,19 +40,11 @@
                         </a>
                     </li>
 
-                    <li>
-                        <a href="#">
-                            <div class="icon-social icon-social-google-plus normal">
-                                <i class="fa fa-google-plus"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-google-plus"></i>
-                            </div>
-                        </a>
-                    </li>
+
 
                     <li>
-                        <a href="#">
+                        @* target="_blank" *@
+                        <a href="https://www.youtube.com/%40eminyazilim">
                             <div class="icon-social icon-social-youtube normal">
                                 <i class="fa fa-youtube-play"></i>
                             </div>
@@ -51,7 +55,7 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="https://www.linkedin.com/in/mansur-emin-kaya-b61100141/">
                             <div class="icon-social icon-social-linkedin normal">
                                 <i class="fa fa-linkedin"></i>
                             </div>
@@ -61,59 +65,53 @@
                         </a>
                     </li>
 
-                    <li>
-                        <a href="#">
-                            <div class="icon-social icon-social-pinterest normal">
-                                <i class="fa fa-pinterest"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-pinterest"></i>
-                            </div>
-                        </a>
-                    </li>
+
                 </ul>
             </div>
-            <div class="col-lg-3 col-md-3">
-                <h3>CONTACT</h3>
+            <div class="col-md-4">
+                <h3>İLETİŞİM</h3>
                 <address>
-                    <i class="fa fa-map-marker"></i> 123 My Street, Banzhow City, CA 4567<br>
-                    <i class="fa fa-phone"></i> (123) 456-7890<br>
-                    <i class="fa fa-envelope"></i> info@banzhow.com
+                    @* <i class="fa fa-map-marker"></i> 123 My Street, Banzhow City, CA 4567<br> *@
+                    <i class="fa fa-phone"></i> +90 (535) 038-1523<br>
+                    <i class="fa fa-envelope"></i> herkesyazarolsun@gmail.com
                 </address>
             </div>
 
-            <div class="col-lg-3 col-md-3">
-                <h3>LATEST TWEETS</h3>
-                <ul class="latest-tweets">
-                    <li>
-                        <i class="fa fa-twitter"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing
-                    </li>
-                    <li>
-                        <i class="fa fa-twitter"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing
-                    </li>
-                </ul>
-            </div>
+            @* <div class="col-md-4">
+            <h3>LATEST TWEETS</h3>
+            <ul class="latest-tweets">
+            <li>
+            <i class="fa fa-twitter"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing
+            </li>
+            <li>
+            <i class="fa fa-twitter"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing
+            </li>
+            </ul>
+            </div> *@
 
-            <div class="col-lg-3 col-md-3">
-                <h3>NEWSLETTER</h3>
-                <p>Type your email address below and subscribe to our newsletter</p>
+            <div class="col-lg-3 col-md-4">
+                <h3>Haberdar Olunuz</h3>
+                <p>Mailinizi Girerek Geliştirmelerden Sizleri Anında Haberdar Edelim</p>
                 <div class="input-group">
-                    <input type="text" placeholder="Email" class="form-control">
+                    <input type="text" placeholder="Email" id="email" class="form-control">
                     <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button">Go!</button>
+                        <button type="button" class="btn btn-primary" onclick="HaberdarEt()">
+                            Haber Ver
+                        </button>
                     </span>
+
                 </div><!-- /input-group -->
             </div>
         </div><!-- /.row -->
-
+        @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
     </div><!-- /.container -->
 </footer>
 
-<div class="footer-after" id="gozukecekMiFooter">
+<div class="footer-after" id="gozukecekMiFooterCrypt">
     <div class="container">
         <div class="row">
-            <p class="col-md-10">©2014 All rights reserved. Designed by John Doe.</p>
-            <p class="col-md-2 legal"><a href="#" rel="nofollow">Legal Notice</a></p>
+            <p class="col-md-10">©2025 Tüm hakları saklıdır. <a href="https://www.instagram.com/eminyazilim/">Emin Yazılım</a> tarafından tasarlanmıştır.</p>
+            <p class="col-md-2 legal"><a href="#" rel="nofollow">Yasal Uyarı</a></p>
         </div><!-- /.row -->
     </div>
 </div>
@@ -131,3 +129,54 @@
     </ul>
 </div>
  /Switcher -->
+
+
+<script>
+
+    var footer = $("#footericin").val();
+
+    function HaberdarEt() { 
+         
+        var mail = $('#email').val(); 
+
+        console.log("HaberdarEt : "+mail);
+
+         if (mail == ""  ) {
+            $("#uyari-" + footer).css("display", "block");
+            $("#bilgi-" + footer).css("display", "none");
+            $("#basarili-" + footer).css("display", "none");
+            $("#uyari-" + footer + " #mesaj").html("Mail bilginiz boş bırakmayınız.. ");
+            return;
+        }
+        // $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
+        //     {
+        //         "kime": mail,
+        //         "konu": "Footerda Haberdar Olunuz Kısmından Geldim",
+        //         "mesaj": "Haber Bülteninizden beni de haberdar ediniz"
+        //     },
+
+        //     function (data) {
+        //         if (data.state == 1) {
+        //             $("#basarili-" + footer).css("display", "block");
+        //             $("#basarili-" + footer + " #mesaj").html(data.message);
+
+        //             $("#bilgi-" + footer).css("display", "none");
+        //             $("#uyari-" + footer).css("display", "none");
+
+        //         }
+        //         else if (data.state == 3) {
+        //             $("#bilgi-" + footer).css("display", "block");
+        //             $("#bilgi-" + footer + " #mesaj").html(data.message);
+
+        //             $("#basarili-" + footer).css("display", "none");
+        //             $("#uyari-" + footer).css("display", "none");
+        //         }
+        //         else {
+        //             $("#uyari-" + footer).css("display", "block");
+        //             $("#bilgi-" + footer).css("display", "none");
+        //             $("#basarili-" + footer).css("display", "none");
+        //             $("#uyari-" + footer + " #mesaj").html(data.message);
+        //         }
+        //     });
+    }
+</script>
