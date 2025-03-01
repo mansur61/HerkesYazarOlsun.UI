@@ -67,6 +67,14 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         }
 
+        public ActionResult Hakkimizda()
+        {
+            return View();
+        }
+        public ActionResult Iletisim()
+        {
+            return View();
+        }
         public ActionResult HataliGiris()
         {
             return View();

@@ -98,7 +98,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
-        public ServiceResult MailBilgilendirme(string kime,string konu, string mesaj,int tip)
+        public ServiceResult MailBilgilendirme(string kime,string konu, string mesaj,int? tip = 0)
         {
             ServiceResult result = new ServiceResult();
 

@@ -93,7 +93,7 @@
                 <h3>Haberdar Olunuz</h3>
                 <p>Mailinizi Girerek Geliştirmelerden Sizleri Anında Haberdar Edelim</p>
                 <div class="input-group">
-                    <input type="text" placeholder="Email" id="Email" class="form-control">
+                    <input type="text" placeholder="Email" id="email" class="form-control">
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-primary" onclick="HaberdarEt()">
                             Haber Ver
@@ -135,39 +135,48 @@
 
     var footer = $("#footericin").val();
 
-    function HaberdarEt() {
+    function HaberdarEt() { 
+         
+        var mail = $('#email').val(); 
 
-        var mail = $('#Email').text().trim();
+        console.log("HaberdarEt : "+mail);
 
-        $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
-            {
-                "kime": mail,
-                "konu": "Footerda Haberdar Olunuz Kısmından Geldim",
-                "mesaj": "Haber Bülteninizden beni de haberdar ediniz"
-            },
+         if (mail == ""  ) {
+            $("#uyari-" + footer).css("display", "block");
+            $("#bilgi-" + footer).css("display", "none");
+            $("#basarili-" + footer).css("display", "none");
+            $("#uyari-" + footer + " #mesaj").html("Mail bilginiz boş bırakmayınız.. ");
+            return;
+        }
+        // $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
+        //     {
+        //         "kime": mail,
+        //         "konu": "Footerda Haberdar Olunuz Kısmından Geldim",
+        //         "mesaj": "Haber Bülteninizden beni de haberdar ediniz"
+        //     },
 
-            function (data) {
-                if (data.state == 1) {
-                    $("#basarili-" + footer).css("display", "block");
-                    $("#basarili-" + footer + " #mesaj").html(data.message);
+        //     function (data) {
+        //         if (data.state == 1) {
+        //             $("#basarili-" + footer).css("display", "block");
+        //             $("#basarili-" + footer + " #mesaj").html(data.message);
 
-                    $("#bilgi-" + footer).css("display", "none");
-                    $("#uyari-" + footer).css("display", "none");
+        //             $("#bilgi-" + footer).css("display", "none");
+        //             $("#uyari-" + footer).css("display", "none");
 
-                }
-                else if (data.state == 3) {
-                    $("#bilgi-" + footer).css("display", "block");
-                    $("#bilgi-" + footer + " #mesaj").html(data.message);
+        //         }
+        //         else if (data.state == 3) {
+        //             $("#bilgi-" + footer).css("display", "block");
+        //             $("#bilgi-" + footer + " #mesaj").html(data.message);
 
-                    $("#basarili-" + footer).css("display", "none");
-                    $("#uyari-" + footer).css("display", "none");
-                }
-                else {
-                    $("#uyari-" + footer).css("display", "block");
-                    $("#bilgi-" + footer).css("display", "none");
-                    $("#basarili-" + footer).css("display", "none");
-                    $("#uyari-" + footer + " #mesaj").html(data.message);
-                }
-            });
+        //             $("#basarili-" + footer).css("display", "none");
+        //             $("#uyari-" + footer).css("display", "none");
+        //         }
+        //         else {
+        //             $("#uyari-" + footer).css("display", "block");
+        //             $("#bilgi-" + footer).css("display", "none");
+        //             $("#basarili-" + footer).css("display", "none");
+        //             $("#uyari-" + footer + " #mesaj").html(data.message);
+        //         }
+        //     });
     }
 </script>
