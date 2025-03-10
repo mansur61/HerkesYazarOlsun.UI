@@ -663,6 +663,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var getBookList = new BooksService().TumKitaplar(arama);
             vM_BOOKS.VMBooksList = getBookList!;
             vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
+            ViewBag.LOGIN_USER_ID = Lid;
             return View(vM_BOOKS);
         }
         public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
@@ -674,6 +676,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             vM_BOOKS.Tip = arama.profilKitapTuru + "-" + arama.Tip;
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
+            ViewBag.LOGIN_USER_ID = Lid;
+            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
             vM_BOOKS.VMBooksList = bookList!;
 
             return View(vM_BOOKS);

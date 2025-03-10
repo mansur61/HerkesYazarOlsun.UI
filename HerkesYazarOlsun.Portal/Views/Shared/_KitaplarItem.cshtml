@@ -1,4 +1,5 @@
 ﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@using HerkesYazarOlsun.Model.Entity
 @using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
@@ -37,24 +38,41 @@
                         @item.value.CategoryName
                     </div>
                 }
-                
+
                 <ul class="product__item__pic__hover">
                     @if (isGozlemciMod == "0")
                     {
                         <li><a onclick='KitabiFavorilereEkle("@StringCipher.Encrypt(@item.value.ID.ToString())", "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
                         @if (!@item.value.isAnaSayfa) // ana sayfadan gelemeyecek
                         {
-                            @if (@item.value.TAMAMLANDIMI)
+
+                            if (@item.value.LoginUserId == @ViewBag.LOGIN_USER_ID) //ilgili giriş yapan kullanıcı yayına gönderebilir veya editlesin
                             {
-                                <li>
-                                    <a onclick='KitabiYayinaGonder("@StringCipher.Encrypt(@item.value.ID.ToString())","@Model.Tip")'>
-                                        <i class="fa fa-share"></i>
-                                    </a>
-                                </li>
+                                @if (@item.value.TAMAMLANDIMI)
+                                {
+                                    var yayinAyr = @ViewBag.YayinAyar as YayinAyarlari;
+                                    if (yayinAyr != null)
+                                    {
+                                        if (@item.value.iSTATISTIK.ToplamBegeni >= yayinAyr.ToplamBegeni
+                                        && @item.value.iSTATISTIK.ToplamYorum >= yayinAyr.ToplamYorum
+                                        && @item.value.iSTATISTIK.ToplamYildiz >= yayinAyr.ToplamYildiz
+                                        && @item.value.iSTATISTIK.ToplamDegerlendirme >= yayinAyr.ToplamDegerlendirme)
+                                        {
+                                            <li>
+                                                <a onclick='KitabiYayinaGonder("@StringCipher.Encrypt(@item.value.ID.ToString())","@Model.Tip")'>
+                                                    <i class="fa fa-share"></i>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+
+
+                                }
+                                // NOT: burda yayında olan kitapları da KitabiYayinaGonder yapsın . ek validatorlerde kontrol yapsın hatta gerek yok
+                                // yayınlanan kitap farklı bir yayına daha gönderilebilir.
+                                <li><a href="/Kitaplar/KitapGuncelleme?kitapId=@item.value.ID"><i class="fa fa-edit"></i></a></li>
                             }
-                            // NOT: burda yayında olan kitapları da KitabiYayinaGonder yapsın . ek validatorlerde kontrol yapsın hatta gerek yok
-                            // yayınlanan kitap farklı bir yayına daha gönderilebilir.
-                            <li><a href="/Kitaplar/KitapGuncelleme?kitapId=@item.value.ID"><i class="fa fa-edit"></i></a></li>
+                           
                         }
 
                     }

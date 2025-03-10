@@ -8,6 +8,15 @@ using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Session desteðini ekle
+builder.Services.AddDistributedMemoryCache(); // Session için gerekli
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // 30 dakika boyunca session aktif
+    options.Cookie.HttpOnly = true; // Güvenlik için sadece HTTP üzerinden eriþilebilir yapar
+    options.Cookie.IsEssential = true; // Session çerezini zorunlu yapar
+});
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddMvc();
@@ -44,6 +53,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
  
 app.UseStaticFiles();
+
+// Middleware'leri ekleyin
+app.UseSession(); // Session'ý etkinleþtir
 
 app.UseRouting();
 app.UseAuthentication();
