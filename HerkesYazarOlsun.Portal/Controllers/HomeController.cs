@@ -80,6 +80,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             return View();
         }
+        public ActionResult Sozlesme()
+        {
+            return View();
+        }
+
         public ActionResult Iletisim()
         {
             return View();
