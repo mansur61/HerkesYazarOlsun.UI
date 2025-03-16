@@ -17,6 +17,15 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public VM_BOOK_ISTATISTIKLER GetISTATISTIKLERBooksById(long id)
+        {
+            Task<string> jsonContent = GetData("api/Books/GetISTATISTIKLERBooksById?" + "id=" + id);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<VM_BOOK_ISTATISTIKLER>(jsonContent.Result);
+            return result;
+        }
+
         public List<VM_BOOKS_DEGERLENDIRME> GetDegerlendirmelerBooksById(long kitapId)
         {
             Task<string> jsonContent = GetData("api/Books/GetDegerlendirmelerBooksById?" + "kitapId=" + kitapId);

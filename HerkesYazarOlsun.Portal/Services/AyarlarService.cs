@@ -21,7 +21,7 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public YayinAyarlari GetYyainAyarlari()
+        public YayinAyarlari? GetYyainAyarlari()
         { 
             Task<string> jsonContent = GetData("api/Settings/GetYyainAyarlari");
             Task.WaitAll(jsonContent);

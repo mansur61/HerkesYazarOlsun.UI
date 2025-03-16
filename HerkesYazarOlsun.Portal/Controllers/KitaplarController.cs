@@ -112,7 +112,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
 
             string pdfFilePath = DosyaYolu + vM_BOOKS.FDileName;
-           // int paragrafLimiti = 1800;
+            // int paragrafLimiti = 1800;
 
             PdfReader reader = new PdfReader(pdfFilePath);
             string text = string.Empty;
@@ -173,7 +173,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 if (vM_BOOKS.pdfVeyaWord == 1)
                 {
                     // word
-                    result =  await WordDosyasindaAktarma(vM_BOOKS);
+                    result = await WordDosyasindaAktarma(vM_BOOKS);
                 }
                 else
                 {
@@ -350,7 +350,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             bool isAktarma = AlinanDosyayiSablonDosyayaAktarma(hedefDosyaYolu, vM_BOOKS);
             //false;
-           
+
             if (isAktarma)
             {
                 vM_BOOKS.ID = 0;
@@ -640,6 +640,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var getBookDetay = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBookDetay, new VM_BOOKS());
 
+            vmBook.iSTATISTIK = new BooksService().GetISTATISTIKLERBooksById(kitapId);
+            ViewBag.iSTATISTIK = vmBook.iSTATISTIK;
+            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
+
             vmBook.isTamalama = getBookDetay?.TAMAMLANDIMI;
             kitapDetay.Vm_Book = vmBook;
             kitapDetay.Vm_Book_Degerlendirme_List = new BooksService().GetDegerlendirmelerBooksById(kitapId);
@@ -648,10 +652,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.Stars = new BooksService().GetMaxStarBooksById(kitapId);
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
 
-            ViewBag.isTakip = Bildirim?.IsTakip ?? false ; //Birisi beni takip ettiğinde bana e-posta gönder
+            ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder
             ViewBag.IsKitapYayin = Bildirim?.IsKitapYayin ?? false;//Birisi kitap yayınladığında bana bildirim yolla
             ViewBag.IsKitapYorum = Bildirim?.IsKitapYorum ?? false;//Birisi kitabıma yorum yaptığında bana e-posta gönder
-
+           
             return View(kitapDetay);
         }
 
@@ -731,7 +735,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             mesajlar.LoginUserId = Convert.ToInt32(Lid);
             result = new BooksService().PostBooksComments(mesajlar);
-             
+
             return Json(result);
         }
 
