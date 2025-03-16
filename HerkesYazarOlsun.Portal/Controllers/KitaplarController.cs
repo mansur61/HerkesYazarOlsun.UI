@@ -37,8 +37,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View(input);
         }
 
-        public IActionResult KitapOku(long kitapId)
+        public IActionResult KitapOku(string kitap_id)
         {
+            var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
             var getBook = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
             var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
@@ -606,8 +607,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         }
 
-        public IActionResult KitapGuncelleme(long kitapId)
+        public IActionResult KitapGuncelleme(string kitap_id)
         {
+            var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
+
             var getBook = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
             var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
@@ -633,8 +636,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(sonuc);
         }
 
-        public IActionResult KitapDetay(long kitapId)
+        public IActionResult KitapDetay(string kitap_id)
         {
+            var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
             VM_BOOKS_DETAY kitapDetay = new VM_BOOKS_DETAY();
 
             var getBookDetay = new BooksService().GetBooks(kitapId);
@@ -655,7 +659,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder
             ViewBag.IsKitapYayin = Bildirim?.IsKitapYayin ?? false;//Birisi kitap yayınladığında bana bildirim yolla
             ViewBag.IsKitapYorum = Bildirim?.IsKitapYorum ?? false;//Birisi kitabıma yorum yaptığında bana e-posta gönder
-           
+
             return View(kitapDetay);
         }
 

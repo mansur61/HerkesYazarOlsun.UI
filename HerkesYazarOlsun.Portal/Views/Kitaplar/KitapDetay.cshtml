@@ -10,6 +10,7 @@
 <br />
 <br />
 
+@using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
@@ -56,8 +57,8 @@
             @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
             {
                 <div class="col-md-12 text-right">
-                    <button class="btn btn-warming"><a href="/Kitaplar/KitapGuncelleme?kitapId=@Model.Vm_Book.ID">Kitabı Güncelle</a></button>
-                    <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitapId=@Model.Vm_Book.ID">Kitabı Oku</a></button>
+                    <button class="btn btn-warming"><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Kitabı Güncelle</a></button>
+                    <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Kitabı Oku</a></button>
                     @if (!@kitapTamamlamaDurumu)
                     {
                         <button class="btn btn-ligth"><a href="/Kitaplar/KitapOlustur?ID=@Model.Vm_Book.ID">Yazmaya Devam Et</a></button>

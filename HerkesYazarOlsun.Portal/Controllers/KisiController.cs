@@ -103,8 +103,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View(vmUsers);
         }
 
-        public IActionResult Profil(long id)
+        public IActionResult Profil(string pId)
         {
+            var id = Convert.ToInt64(StringCipher.Decrypt(pId));
+
             Users kisi = new KisiService().GetKisiById(id);
             var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
 
