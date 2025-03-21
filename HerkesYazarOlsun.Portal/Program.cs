@@ -8,6 +8,15 @@ using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
+
+
 // Session desteðini ekle
 builder.Services.AddDistributedMemoryCache(); // Session için gerekli
 builder.Services.AddSession(options =>
@@ -39,9 +48,7 @@ builder.Services.AddAuthentication(x =>
 });
 
 var app = builder.Build();
- 
-AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
-
+  
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
