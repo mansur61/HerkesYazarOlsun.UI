@@ -1,10 +1,8 @@
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
-using HerkesYazarOlsun.Portal.Helpers.Extensions; 
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
