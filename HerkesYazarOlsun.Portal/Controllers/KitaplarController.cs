@@ -37,8 +37,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View(input);
         }
 
-        public IActionResult KitapOku(long kitapId)
+        public IActionResult KitapOku(string kitap_id)
         {
+            var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
             var getBook = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
             var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
@@ -112,7 +113,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
 
             string pdfFilePath = DosyaYolu + vM_BOOKS.FDileName;
-           // int paragrafLimiti = 1800;
+            // int paragrafLimiti = 1800;
 
             PdfReader reader = new PdfReader(pdfFilePath);
             string text = string.Empty;
@@ -173,7 +174,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 if (vM_BOOKS.pdfVeyaWord == 1)
                 {
                     // word
-                    result =  await WordDosyasindaAktarma(vM_BOOKS);
+                    result = await WordDosyasindaAktarma(vM_BOOKS);
                 }
                 else
                 {
@@ -350,7 +351,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             bool isAktarma = AlinanDosyayiSablonDosyayaAktarma(hedefDosyaYolu, vM_BOOKS);
             //false;
-           
+
             if (isAktarma)
             {
                 vM_BOOKS.ID = 0;
@@ -606,8 +607,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         }
 
-        public IActionResult KitapGuncelleme(long kitapId)
+        public IActionResult KitapGuncelleme(string kitap_id)
         {
+            var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
+
             var getBook = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
             var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
@@ -633,12 +636,17 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(sonuc);
         }
 
-        public IActionResult KitapDetay(long kitapId)
+        public IActionResult KitapDetay(string kitap_id)
         {
+            var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
             VM_BOOKS_DETAY kitapDetay = new VM_BOOKS_DETAY();
 
             var getBookDetay = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBookDetay, new VM_BOOKS());
+
+            vmBook.iSTATISTIK = new BooksService().GetISTATISTIKLERBooksById(kitapId);
+            ViewBag.iSTATISTIK = vmBook.iSTATISTIK;
+            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
 
             vmBook.isTamalama = getBookDetay?.TAMAMLANDIMI;
             kitapDetay.Vm_Book = vmBook;
@@ -648,7 +656,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.Stars = new BooksService().GetMaxStarBooksById(kitapId);
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
 
-            ViewBag.isTakip = Bildirim?.IsTakip ?? false ; //Birisi beni takip ettiğinde bana e-posta gönder
+            ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder
             ViewBag.IsKitapYayin = Bildirim?.IsKitapYayin ?? false;//Birisi kitap yayınladığında bana bildirim yolla
             ViewBag.IsKitapYorum = Bildirim?.IsKitapYorum ?? false;//Birisi kitabıma yorum yaptığında bana e-posta gönder
 
@@ -663,6 +671,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var getBookList = new BooksService().TumKitaplar(arama);
             vM_BOOKS.VMBooksList = getBookList!;
             vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
+            ViewBag.LOGIN_USER_ID = Lid;
             return View(vM_BOOKS);
         }
         public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
@@ -674,6 +684,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             vM_BOOKS.Tip = arama.profilKitapTuru + "-" + arama.Tip;
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
+            ViewBag.LOGIN_USER_ID = Lid;
+            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
             vM_BOOKS.VMBooksList = bookList!;
 
             return View(vM_BOOKS);
@@ -727,7 +739,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             mesajlar.LoginUserId = Convert.ToInt32(Lid);
             result = new BooksService().PostBooksComments(mesajlar);
-             
+
             return Json(result);
         }
 

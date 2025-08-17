@@ -55,6 +55,12 @@
                         <input type="text" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Şifre Tekrar" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre Tekrar'">
                         </div>*@
 
+                        <div class="col-md-12 form-group">
+                            <input type="checkbox" id="termsCheckbox">
+                            <label for="termsCheckbox">
+                                <a href="/Home/Sozlesme" target="_blank">Kullanıcı Sözleşmesini</a> okudum ve kabul ediyorum.
+                            </label>
+                        </div>
 
 
                         <div class="col-md-12 form-group">
@@ -89,11 +95,22 @@
         var register = $("#registericin").val();
         console.log("register :" + register);
         $("#loading").css("display", "block");
+
+        var isSozlesmeOnay = $("#termsCheckbox").is(":checked") ? 1 : 0;
+
+        if (isSozlesmeOnay === 0) {
+            $("#bilgi-" + register).css("display", "block");
+            $("#bilgi-" + register + " #mesaj").html("Devam edebilmek için Kullanıcı Sözleşmesini kabul etmelisiniz.");
+            $("#loading").css("display", "none");
+            return;
+        }
+
         $.post("@Url.Action(nameof(HomeController.SaveRegister), "Home")", {
             "username": uername,
             "email": email,
             "password": password,
-            "telno": telno
+            "telno": telno,
+            "isSozlesmeOnay": isSozlesmeOnay
         }, function (data) {
             console.log(data);
             $("#loading").css("display", "none");

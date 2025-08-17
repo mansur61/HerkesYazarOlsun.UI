@@ -1,12 +1,28 @@
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
-using HerkesYazarOlsun.Portal.Helpers.Extensions; 
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
+
+
+// Session desteðini ekle
+builder.Services.AddDistributedMemoryCache(); // Session için gerekli
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // 30 dakika boyunca session aktif
+    options.Cookie.HttpOnly = true; // Güvenlik için sadece HTTP üzerinden eriþilebilir yapar
+    options.Cookie.IsEssential = true; // Session çerezini zorunlu yapar
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -30,9 +46,7 @@ builder.Services.AddAuthentication(x =>
 });
 
 var app = builder.Build();
- 
-AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
-
+  
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -44,6 +58,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
  
 app.UseStaticFiles();
+
+// Middleware'leri ekleyin
+app.UseSession(); // Session'ý etkinleþtir
 
 app.UseRouting();
 app.UseAuthentication();

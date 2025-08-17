@@ -4,6 +4,7 @@ using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;   
 using Microsoft.AspNetCore.Authorization;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -13,10 +14,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private IHttpContextAccessor _httpContextAccessor;
 
         private IWebHostEnvironment _environment;
+        private long Lid;
         public HomeController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
             _environment = environment;
+            Lid = (long)(_httpContextAccessor?.HttpContext?.User.GetLoginUserId());
         }
 
         public string SignInUrl { get { return $"/Account/Login"; } }
@@ -57,6 +60,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 ViewBag.Duyurular = list;
                 List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
                 ViewBag.Sponsorlar = spnlist;
+
+                //alternaatif çözüm
+               // HttpContext.Session.SetInt32("LOGIN_USER_ID", int.Parse(Lid.ToString())); 
+                //@Session["LOGIN_USER_ID"] view içinde bu şekilde kullanılır
+                ViewBag.LOGIN_USER_ID = Lid;
+                ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
                 return View(vM_BOOKS);
 
             }
@@ -71,6 +80,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             return View();
         }
+        public ActionResult Sozlesme()
+        {
+            return View();
+        }
+
         public ActionResult Iletisim()
         {
             return View();
