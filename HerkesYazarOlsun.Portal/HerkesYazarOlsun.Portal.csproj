@@ -185,19 +185,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="bootstrap" Version="5.3.3" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.1" />
-    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
+    <PackageReference Include="itext7" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="toastr" Version="2.1.1" />
-  </ItemGroup>  
-  <ItemGroup>
-    <Reference Include="HerkesYazarOlsun.Model">
-      <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net7.0\HerkesYazarOlsun.Model.dll</HintPath>
-    </Reference>
   </ItemGroup>
+
+  
+  
   <ItemGroup>
     <Content Update="wwwroot\lib\img\logo.png">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -252,5 +250,18 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+
+  
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
+  </ItemGroup>
+
+
+  <!--<ItemGroup>
+    <Reference Include="HerkesYazarOlsun.Model">
+      <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net8.0\HerkesYazarOlsun.Model.dll</HintPath>
+    </Reference>
+  </ItemGroup>-->
 
 </Project>

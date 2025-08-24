@@ -104,7 +104,7 @@
                             <h1><strong>Kitabınızın Sayfalarını Oluşturunuz.</strong> </h1>
                             <p>
                                 Kitabta Yazılan İlgili Sayfa No :
-                                @if (@Model.ID != 0)
+                                @if (@Model.ID.HasValue && @Model.ID != 0)
                                 {
                                     <span id="sayfaSayisi" data="@Model.IlgiiSayfaSayisi"> @Model.IlgiiSayfaSayisi </span>
                                 }
@@ -261,7 +261,7 @@
         // data özelliğinden değeri al
         var kategoriAdi = selectlement.getAttribute('data');
         console.log("kategoriAdi : " + kategoriAdi);
-        var metinText = "Seçtiğiniz Kategori (" + kategoriAdi + ") 'ye göre minimum sayfa sayısı 50 sayfad ekleme durumu vardır. Ve birkez kaydetme yaptıktan sonra ilgili kategoriyi değiştiremezsiniz. Yine de emin misiniz?";
+        var metinText = "Seçtiğiniz Kategori (" + kategoriAdi + ") 'ye göre minimum sayfa sayısı 50 sayfa ekleme durumu vardır. Ve birkez kaydetme yaptıktan sonra ilgili kategoriyi değiştiremezsiniz. Yine de emin misiniz?";
 
         //isAlert(metinText);
         if (dataValue == 0 && kitapKatdetmeUyariDurumu == "0") {

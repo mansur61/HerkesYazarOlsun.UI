@@ -5,9 +5,9 @@
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
-    int gosterilecekKayit = Model.sliderdaGosterilecekKayit;
-    int start = Model.Start;
-    int end = Model.Start + gosterilecekKayit;
+    int gosterilecekKayit = Model.sliderdaGosterilecekKayit ?? 0;
+    int start = Model.Start ?? 0;
+    int end = (Model.Start  ?? 0)+ gosterilecekKayit;
     var booksList = Model.VMBooksList.OrderByDescending(p => p.ID).Skip(start).Take(gosterilecekKayit).ToList();
 }
 
@@ -17,7 +17,7 @@
 
 @foreach (var item in booksList.Select((value, index) => new { value, index }))
 {
-    item.value.isAnaSayfa = Model.isAnaSayfa;
+    item.value.isAnaSayfa = Model.isAnaSayfa ?? false;
     <input type="hidden" value="@item.index">
     <input type="hidden" value="@item.value.ID" name="kId">
 
@@ -40,12 +40,12 @@
                     @if (isGozlemciMod == "0")
                     {
                         <li><a onclick='KitabiFavorilereEkle("@StringCipher.Encrypt(@item.value.ID.ToString())", "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
-                        @if (!@item.value.isAnaSayfa) // ana sayfadan gelemeyecek
+                        @if (!(@item.value.isAnaSayfa ?? false)) // ana sayfadan gelemeyecek
                         {
 
                             if (@item.value.LoginUserId == @ViewBag.LOGIN_USER_ID) //ilgili giriş yapan kullanıcı yayına gönderebilir veya editlesin
                             {
-                                @if (@item.value.TAMAMLANDIMI)
+                                @if ((@item.value.TAMAMLANDIMI ?? false))
                                 {
                                     var yayinAyr = @ViewBag.YayinAyar as YayinAyarlari;
                                     if (yayinAyr != null)
