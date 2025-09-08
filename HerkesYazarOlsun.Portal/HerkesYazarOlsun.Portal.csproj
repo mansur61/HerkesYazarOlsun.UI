@@ -51,8 +51,6 @@
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
-    <Content Remove="Helpers\YedekDosyalar\KitapArama.cshtml" />
-    <Content Remove="Helpers\YedekDosyalar\KitapOkuYdk.cshtml" />
     <Content Remove="wwwroot\lib\img\blog\.DS_Store" />
     <Content Remove="wwwroot\lib\img\gallery\.DS_Store" />
   </ItemGroup>
@@ -160,8 +158,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Helpers\YedekDosyalar\KitapArama.cshtml" />
-    <None Include="Helpers\YedekDosyalar\KitapOkuYdk.cshtml" />
     <None Include="wwwroot\lib\img\blog\.DS_Store" />
     <None Include="wwwroot\lib\img\gallery\.DS_Store" />
     <None Include="wwwroot\lib\bootstrap\dist\js\herkesyazarolsun-bootstrap.js" />

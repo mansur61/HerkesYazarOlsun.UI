@@ -28,7 +28,8 @@
                 $"data:image;base64,{Html.Raw(item.value.ONKAPAKFOTO)}" :
                 "http://placehold.it/350x260";
             } 
-            <div class="product__item__pic set-bg" data-setbg="@backgroundImage" style="background-image:url('@backgroundImage')">
+            @* style="background-image:url('@backgroundImage')" @backgroundImage*@
+            <div class="product__item__pic set-bg" data-setbg="https://herkesyazarolsun.com.tr/@item.value.ONKAPAKFOTOPATH">
                 @if (!string.IsNullOrEmpty(@item.value.CategoryName))
                 {
                     <div class="discount-badge" style="position:absolute; top:10px; left:10px; background-color:lightgreen; color:white; padding:5px 10px; font-size:12px; font-weight:bold; border-radius:5px;">
