@@ -23,13 +23,9 @@
 
     <div class="col-lg-4 col-md-6 col-sm-6" style="border: 1px dotted blue;height:auto;width:200px;margin:5px 5px;padding:5px">
         <div class="product__item" style="overflow:hidden;height:360px">
-            @{
-                var backgroundImage = !string.IsNullOrEmpty(item.value.ONKAPAKFOTO) ?
-                $"data:image;base64,{Html.Raw(item.value.ONKAPAKFOTO)}" :
-                "http://placehold.it/350x260";
-            } 
+            
             @* style="background-image:url('@backgroundImage')" @backgroundImage*@
-            <div class="product__item__pic set-bg" data-setbg="https://herkesyazarolsun.com.tr/@item.value.ONKAPAKFOTOPATH">
+            <div class="product__item__pic set-bg" data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.value.ONKAPAKFOTOPATH">
                 @if (!string.IsNullOrEmpty(@item.value.CategoryName))
                 {
                     <div class="discount-badge" style="position:absolute; top:10px; left:10px; background-color:lightgreen; color:white; padding:5px 10px; font-size:12px; font-weight:bold; border-radius:5px;">

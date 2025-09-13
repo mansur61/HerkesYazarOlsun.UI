@@ -1,6 +1,7 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
 using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
@@ -125,8 +126,11 @@ namespace HerkesYazarOlsun.Portal.Services
 
         public async Task<ServiceResult<Books>> PostSaveBook(VM_BOOKS VMbook)
         {
-            using var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44332/");
+            using var client = new HttpClient
+            {
+                BaseAddress = new Uri(AppSettings.ApiPath)
+            };
+
             using var form = new MultipartFormDataContent();
 
             // VM_BOOKS içindeki normal alanları ekle

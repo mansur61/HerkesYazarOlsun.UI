@@ -32,32 +32,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         }
 
-        private async Task<VM_AYARLAR> ModelIlgiliDosyalariDoldur(VM_AYARLAR input, IFormFile file)
-        {
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                byte[] fileBytes = memoryStream.ToArray();
-
-                if (!string.IsNullOrEmpty(input.Profile.ProfilResimName) && input.Profile.ProfilResimName == file.FileName)
-                {
-
-                    string base64String = Convert.ToBase64String(fileBytes);
-                    input.Profile.ProfilResimBase64 = base64String;
-                }
-
-            }
-
-            return input;
-        }
-
         [HttpPost]
         //[Route("SaveOrUpdateAyarlar")]
         public async Task<JsonResult> SaveOrUpdateAyarlar(VM_AYARLAR ayr)
         {
             ayr.LoginUserId = LOGIN_USER_ID;//6;
-            //LOGIN_USER_ID;
+            //LOGIN_USER_ID; 
 
             // Deserialize JSON strings to their respective objects
             if (Request.Form.ContainsKey("UserDetail"))
@@ -77,15 +57,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 ayr.Bildirim = JsonConvert.DeserializeObject<Bildirimler>(Request.Form["Bildirim"]);
             }
 
-            var files = ayr.dosyalar?.FirstOrDefault();
+            var files = ayr.dosyalar;
             if (files != null)
             {
-                ayr = await ModelIlgiliDosyalariDoldur(ayr, files);                
+                //ayr = await ModelIlgiliDosyalariDoldur(ayr, files);
+                ayr.dosyalar = files;
             }
-            
-            ayr.dosyalar = null;
-            var sonuc = new AyarlarService().SaveOrUpdateAyarlar(ayr);
-
+             
+            var sonuc = await  new AyarlarService().SaveOrUpdateAyarlar(ayr);
+             
             return Json(sonuc);
         }
 
