@@ -28,8 +28,8 @@
     <div class="row">
 
         <div class="col-md-3">
-            @*<img class="img-responsive" src="http://placehold.it/350x260" alt="Portfolio 1" style="height:300px">*@
-            <img src="data:image;base64,@Model.Vm_Book.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">
+            <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.Vm_Book.ARKAKAPAKFOTOPATH" alt="Portfolio 1" style="height:300px">
+           @* <img src="data:image;base64,@Model.Vm_Book.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">*@
             @{
                 Model.Stars.isToplam = false;
             }
@@ -47,7 +47,7 @@
             <h3>Kitap Özeti</h3>
             <p>
                 @Model.Vm_Book.ONSOZ
-
+                <br />
                 Lorem Ipsum, dizgi ve baskı endüstrisinde kullanılan mıgır metinlerdir.
                 Lorem Ipsum, adı bilinmeyen bir matbaacının bir hurufat numune kitabı oluşturmak üzere bir yazı galerisini alarak karıştırdığı
                 1500'lerden beri endüstri standardı sahte metinler olarak kullanılmıştır. Beşyüz yıl boyunca varlığını sürdürmekle kalmamış,

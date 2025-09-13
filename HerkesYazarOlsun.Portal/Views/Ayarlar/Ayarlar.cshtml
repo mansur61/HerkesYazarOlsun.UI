@@ -39,7 +39,6 @@ else
     string tip = "ayarlar";
 }
 <input type="hidden" id="tip" value="@tip" />
-<input type="hidden" id="resss" value="@Model?.Profile?.ProfilResimBase64" />
 
 
 
@@ -137,7 +136,7 @@ else
                                     }
                                     else
                                     {
-                                        <input type="password" class="form-control" id="email">
+                                        <input type="password" class="form-control" id="password">
                                     }
 
                                     <div class="alert alert-warning mt-3">
@@ -330,17 +329,11 @@ else
 
                             <div class="card-body media align-items-center">
 
-
-                                @* @{
-                                var backgroundImage = !string.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64) ?
-                                $"data:image;base64,{Html.Raw(Model.Profile.ProfilResimBase64)}" :
-                                "https://bootdey.com/img/Content/avatar/avatar1.png";
-                                }*@
-
-
-                                @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64))
+                                @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimURl))
                                 {
-                                    <img src="data:image;base64,@Model?.Profile?.ProfilResimBase64" alt="Book Image" style="height:300px;width:215px">
+                                    @* <img src="data:image;base64,@Model?.Profile?.ProfilResimBase64" alt="Book Image" style="height:300px;width:215px"> *@
+                                    <img src=" https://herkesyazarolsun.com.tr/Belgeler/@Model?.Profile?.ProfilResimURl" alt=""
+                                         class="d-block ui-w-80" width="200" height="250">
                                 }
                                 else
                                 {
@@ -389,16 +382,16 @@ else
                                 <div class="form-group">
 
                                     <label class="switcher">
-                                        <input type="checkbox"  checked id="yorumchk" value="yorum">
-                                       
+                                        <input type="checkbox" checked id="yorumchk" value="yorum">
+
                                         <span class="switcher-label">Birinin kitabına yorum yapıldığında kitabı yazana e-posta ile bilgi gitsin</span>
                                         @* <span class="switcher-label">Birisi kitabıma yorum yaptığında bana e-posta gönder</span> *@
                                     </label>
                                 </div>
                                 <div class="form-group">
                                     <label class="switcher">
-                                        <input type="checkbox"   id="takipchk" value="takip">
-                                 
+                                        <input type="checkbox" id="takipchk" value="takip">
+
                                         <span class="switcher-label">Birini takip ettiğinde ilgili kişiye e-posta gönder</span>
                                     </label>
                                 </div>
@@ -431,6 +424,9 @@ else
             <button class="btn btn-primary" type="submit">Kaydet</button>
             &nbsp;
             <button type="button" class="btn btn-info" onclick="Kaydetme()">Kaydetme</button>
+        </div>
+        <div id="loading-full" style="display: none; text-align: center;">
+            <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
         </div>
 
     </form>
@@ -473,25 +469,26 @@ else
     var ayar = $("#tip").val();
 
     $('#takipchk').change(function () {
-          isTakip = $(this).is(':checked');  
-        console.log("isTakip:", isTakip);  
+          isTakip = $(this).is(':checked');
+        console.log("isTakip:", isTakip);
     });
 
      $('#yorumchk').change(function () {
-          IsKitapYorum = $(this).is(':checked');  
-        console.log("IsKitapYorum:", IsKitapYorum);  
+          IsKitapYorum = $(this).is(':checked');
+        console.log("IsKitapYorum:", IsKitapYorum);
     });
 
      $('#yayinchk').change(function () {
-        IsKitapYayin = $(this).is(':checked');  
-        console.log("IsKitapYayin:", IsKitapYayin);  
+        IsKitapYayin = $(this).is(':checked');
+        console.log("IsKitapYayin:", IsKitapYayin);
     });
 
     var ayarEklerForm = document.getElementById('form-ayarlar');
 
     ayarEklerForm.addEventListener('submit', function (event) {
+        $("#loading-full").css("display", "block");
         event.preventDefault();
-
+         
         var formData = new FormData(this);
 
         var dosyaInputs = ayarEklerForm.querySelectorAll('input[type="file"]');
@@ -542,6 +539,7 @@ else
         formData.append('User', JSON.stringify(usr));
         formData.append('Bildirim', JSON.stringify(bldirim));
 
+        
         $.ajax({
             url: 'SaveOrUpdateAyarlar', // Formun gönderileceği adresi belirtin
             method: 'POST',
@@ -549,6 +547,7 @@ else
             processData: false,
             contentType: false,
             success: function (response) {
+                 
                 console.log('Başarılı dönüş: response', response);
                 console.log('Başarılı dönüş: response result ', response.result);
                 // Başarılı dönüş sonucunu işleme kodları buraya gelebilir.
@@ -559,8 +558,22 @@ else
                 }
 
             },
-            error: function (xhr, status, error) {
-                console.error('Hata:', error);
+            error: function(xhr, status, error) {
+                
+                 BilgiVer(2, "#basarili-", "#bilgi-", "#uyari-", xhr.responseText);
+                // Konsola detaylı hata
+                console.error('AJAX Hata:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+
+                // Kullanıcıya göster
+                console.log('Hata oluştu: ' + (xhr.responseText || error));
+            },
+            complete: function () {
+                // Spinner gizle ve butonu tekrar aktif et
+                $("#loading-full").css("display", "none");
+                // $btn.prop("disabled", false);
+                // $btn.text(originalText);
             }
         });
 
@@ -713,7 +726,7 @@ else
         $.post("@Url.Action(nameof(EmailController.Gonder), "Email")", { "kime": email },
             function (data) {
                 //console.log(data.message);
-                $("#maileGidenKod").val(data.message); 
+                $("#maileGidenKod").val(data.message);
             });
     }
 
@@ -750,14 +763,14 @@ else
         $("#loading").css("display", "block");
 
         $("#emailKod").css("display", "block");
-        
+
         var maileGidenKod = $("#maileGidenKod").val();
 
         if (girilenKod == maileGidenKod) {
 
             $.post("@Url.Action(nameof(EmailController.PostEmailDogrula), "Email")", { "email": email },
                 function (data) {
-                    $("#loading").css("display", "none"); 
+                    $("#loading").css("display", "none");
                     if (data.state == 1) {
                         $("#basarili-" + ayar).css("display", "block");
                         $("#basarili-" + ayar + " #mesaj").html("Kod Doğrulama Başarılı");

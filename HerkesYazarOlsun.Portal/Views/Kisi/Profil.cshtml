@@ -12,7 +12,7 @@
 
     <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
-    @*<link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />*@
+@*<link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />*@
 }
 
 @section scripts {
@@ -42,19 +42,19 @@
                         <div class="card">
                             <div class="rounded-top text-white d-flex flex-row">
                                 <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                                    @* *@
-
-                                    @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64))
+                                    @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimURl))
                                     {
-                                        <img src="data:image;base64,@Model?.Profile?.ProfilResimBase64" alt="Profil Resmi"
+                                         <img src=" https://herkesyazarolsun.com.tr/Belgeler/@Model?.Profile?.ProfilResimURl"
+                                             alt="Profil Resmi"
                                              style="height:300px;width:215px" class="img-fluid img-thumbnail mt-4 mb-2">
                                     }
                                     else
                                     {
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                                             alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                                             style="width: 150px; z-index: 1" />
+                                        <img src = "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                                                            alt = "Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                                            style="width: 150px; z-index: 1" />
                                     }
+                                   
                                 </div>
                                 <div style="margin-top: 10px;color:black;font-size:30px">
                                     @Model.NAME @Model.SURNAME
@@ -104,12 +104,12 @@
                     }
                 </div>
                 <div class="col-md-12" style="text-align:center;margin:15px 5px;">
-                    <h4>
-                        <i class="yildizver fa fa-star" onclick="YildizVerChange(1)"> </i>
-                        <i class="yildizver fa fa-star" onclick="YildizVerChange(2)"> </i>
-                        <i class="yildizver fa fa-star" onclick="YildizVerChange(3)"> </i>
-                        <i class="yildizver fa fa-star" onclick="YildizVerChange(4)"> </i>
-                        <i class="yildizver fa fa-star" onclick="YildizVerChange(5)"> </i>
+                    <h4> 
+                        <i class="yildizver fa fa-star" data-adet="1"></i>
+                        <i class="yildizver fa fa-star" data-adet="2"></i>
+                        <i class="yildizver fa fa-star" data-adet="3"></i>
+                        <i class="yildizver fa fa-star" data-adet="4"></i>
+                        <i class="yildizver fa fa-star" data-adet="5"></i>
                     </h4>
 
                     @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
@@ -242,7 +242,8 @@
 
     function Bilgilendirme(follow) {
 
-        var email = @Model.EMAIL;
+        //var email = @Model.EMAIL;
+        var email = "@(Model.EMAIL ?? "")";
         var message = "";
 
         if (follow == 1) {
@@ -348,7 +349,7 @@
 
                     if (kural === "True") {
                         Bilgilendirme(follow);
-                    } 
+                    }
                 }
                 else if (data.state == 3) {
                     $("#bilgi-" + profil).css("display", "block");
@@ -373,27 +374,33 @@
 
     var yildizlar = document.getElementsByClassName("yildizver");
 
-    function YildizIptalEt(adet) {
+    function YildizIptalEt() {
+          yildizPuani = 0;
+          console.log("iptal");
+          for (var i = 0; i < yildizlar.length; i++) {
+              $(yildizlar[i]).css("color", "black");
+          }
+      }
 
-        yildizPuani = adet;
-        console.log("adet:" + adet);
-        for (var i = 0; i < yildizlar.length; i++) {
-            $(yildizlar[i]).css("color", "black");
-        }
-    }
-
-    function YildizVerChange(adet) {
-
-        yildizPuani = adet;
-        console.log("adet:" + adet);
-        for (var i = 0; i < yildizlar.length; i++) {
-            $(yildizlar[i]).css("color", "black");
-        }
-
-        for (var i = 0; i < adet; i++) {
-            $(yildizlar[i]).css("color", "dodgerblue");
-        }
-    }
+      function YildizVerChange(adet) {
+          yildizPuani = adet;
+          console.log("adet:" + adet);
+           
+          for (var i = 0; i < yildizlar.length; i++) {
+              $(yildizlar[i]).css("color", "black");
+          }
+           
+          for (var i = 0; i < adet; i++) {
+              $(yildizlar[i]).css("color", "dodgerblue");
+          }
+      }
+       
+      for (var i = 0; i < yildizlar.length; i++) {
+          yildizlar[i].addEventListener("click", function () {
+              var adet = parseInt(this.getAttribute("data-adet"));
+              YildizVerChange(adet);
+          });
+      }
 
     function DevamEdenKitaplar() {
         $(this).css("color", "red");

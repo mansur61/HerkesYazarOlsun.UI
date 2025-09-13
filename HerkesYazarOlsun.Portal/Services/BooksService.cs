@@ -1,6 +1,7 @@
 ﻿using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
 using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
@@ -123,9 +124,67 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public ServiceResult<Books> PostSaveBook(Books book)
+        public async Task<ServiceResult<Books>> PostSaveBook(VM_BOOKS VMbook)
         {
-            string stringData = JsonConvert.SerializeObject(book);
+            using var client = new HttpClient
+            {
+                BaseAddress = new Uri(AppSettings.ApiPath)
+            };
+
+            using var form = new MultipartFormDataContent();
+
+            // VM_BOOKS içindeki normal alanları ekle
+            foreach (var prop in typeof(VM_BOOKS).GetProperties())
+            {
+                if (prop.Name == "dosyalar" || prop.Name == "BookModel")
+                    continue; // dosyaları ayrıca ekleyeceğiz
+
+                var value = prop.GetValue(VMbook);
+                if (value != null)
+                {
+                    form.Add(new StringContent(value.ToString()!), prop.Name);
+                }
+            }
+
+            // BookModel içindeki alanları ekle
+            if (VMbook.BookModel != null)
+            {
+                foreach (var prop in typeof(Books).GetProperties())
+                {
+                    
+                    var value = prop.GetValue(VMbook.BookModel);
+                    if (value != null)
+                    {
+                        form.Add(new StringContent(value.ToString()!), $"BookModel.{prop.Name}");
+                    }
+                }
+            }
+
+            // Dosyaları ekle
+            if (VMbook.dosyalar != null)
+            {
+                foreach (var file in VMbook.dosyalar)
+                {
+                    var streamContent = new StreamContent(file.OpenReadStream());
+                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                    form.Add(streamContent, "dosyalar", file.FileName);
+                }
+            }
+
+            // API'ye gönder
+            var response = await client.PostAsync("api/Books/PostSaveBook", form);
+            var resultJson = await response.Content.ReadAsStringAsync();
+
+            // Doğrudan ServiceResult<Books> deserialize et
+            var sonuc = JsonConvert.DeserializeObject<ServiceResult<Books>>(resultJson);
+
+            return sonuc!;
+        }
+
+         
+        public ServiceResult<Books> PostSaveBook2(VM_BOOKS VMbook)
+        {
+            string stringData = JsonConvert.SerializeObject(VMbook);
             Task<string> jsonContent = PostData("api/Books/PostSaveBook", stringData);
             Task.WaitAll(jsonContent);
 
