@@ -14,8 +14,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private readonly VM_Mail_Settings _mailSettings;
         private EmailService emailService;
 
-        private string DosyaYolu = "C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/";
-
+       
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
         public OdemeSayfasiController(IHttpContextAccessor contextAccessor, IOptions<VM_Mail_Settings> mailSettings)

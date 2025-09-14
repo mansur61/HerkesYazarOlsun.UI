@@ -40,9 +40,9 @@ namespace HerkesYazarOlsun.Portal.Services
             SmtpClient smtpClient = new SmtpClient();
             smtpClient.Host = icerik.Host; 
 
-            smtpClient.Port = 587;
-            
-            smtpClient.EnableSsl = true;
+            smtpClient.Port = icerik.Port ?? 587;
+
+            smtpClient.EnableSsl = icerik.EnableSSL;
 
            
             string username = icerik.username; 

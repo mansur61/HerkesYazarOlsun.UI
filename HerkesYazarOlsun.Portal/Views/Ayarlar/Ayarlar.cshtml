@@ -720,12 +720,12 @@ else
     $("#emailKod").css("display", "none");
 
 
-    function EpostaDogrula() {
-        $("#emailKod").css("display", "block");
+    function EpostaDogrula() {       
         var email = $("#email").val();
         $.post("@Url.Action(nameof(EmailController.Gonder), "Email")", { "kime": email },
             function (data) {
-                //console.log(data.message);
+                console.log(data.message);
+                 $("#emailKod").css("display", "block");
                 $("#maileGidenKod").val(data.message);
             });
     }

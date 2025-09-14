@@ -190,7 +190,15 @@
     <PackageReference Include="toastr" Version="2.1.1" />
   </ItemGroup>
 
-  
+   <!--<ItemGroup>
+    <Reference Include="HerkesYazarOlsun.Model">
+      <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net8.0\HerkesYazarOlsun.Model.dll</HintPath>
+    </Reference>
+  </ItemGroup>-->
+
+ <ItemGroup>
+    <ProjectReference Include="..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
+  </ItemGroup>
   
   <ItemGroup>
     <Content Update="wwwroot\lib\img\logo.png">
@@ -246,18 +254,5 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-
-  
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
-  </ItemGroup>
-
-
-  <!--<ItemGroup>
-    <Reference Include="HerkesYazarOlsun.Model">
-      <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net8.0\HerkesYazarOlsun.Model.dll</HintPath>
-    </Reference>
-  </ItemGroup>-->
-
+ 
 </Project>

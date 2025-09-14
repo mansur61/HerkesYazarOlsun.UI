@@ -58,7 +58,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 username = _mailSettings.Username,
                 password = _mailSettings.Password,
                 Host = _mailSettings.Host,
-
+                Port = _mailSettings.Port,
+                EnableSSL = _mailSettings.EnableSSL,
                 sifre = kod,
                 kime = kime,
                 konu = _mailSettings.Subject,
@@ -70,7 +71,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             if (sonuc == "-1")
             {
                 result.State = MessageResultState.ERROR;
-                result.Message = sonuc;
+                result.Message = "Mail Doğrulama Başarısız";
             }
             else
             {
