@@ -81,55 +81,65 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(VM_LOGIN login)
         {
-           
-            if (ModelState.IsValid)
+            var logFolder = @"C:\herkesyazarolsun_log";
+            if (!Directory.Exists(logFolder))
+                Directory.CreateDirectory(logFolder);
+
+            try
             {
+                if (!ModelState.IsValid)
+                    return View();
+
                 ServiceResult<Users> sonuc = new KisiService().GetKisiByMail(login.email ?? "");
+
+                if (sonuc == null || sonuc.Result == null)
+                {
+                    var json = new
+                    {
+                        Message = "Bir eksiklik var lütfen geliiştiricinize başvurunuz.",
+                        State = MessageResultState.ERROR
+                    };
+                    return Json(json);
+                }
+
                 List<Claim> claims = new List<Claim>();
+
                 if (sonuc.State == MessageResultState.SUCCESS)
                 {
+                    var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
+                             ?? HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
 
-                    //login.ExpiresUtc = login.RememberLogin == true ? DateTime.UtcNow.AddDays(3) : DateTime.UtcNow;
-                    //login.AllowRefresh = login.RememberLogin != true ? false : true;
-                    //login.IsPersistent = login.RememberLogin != true ? false : true;
-                    //login.LoginUserId = sonuc.Result.ID;
-
-                    //ServiceResult sonuc2 = new KisiService().SaveOrUpdateAccountLogin(login);
-                    //sonuc.State = sonuc2.State;
-
-                    var ip = (HttpContext.Request.Headers["X-Forwarded-For"].ToString() != null
-                             && HttpContext.Request.Headers["X-Forwarded-For"].ToString() != "")
-                             ? HttpContext.Request.Headers["X-Forwarded-For"].ToString()
-                             : HttpContext?.Connection?.RemoteIpAddress?.ToString();
-
-                    HttpContext!.Request.Headers["email"] = sonuc.Result.EMAIL ?? "";
-
-                    // yapı tckimlik no üzerinden değil bunun yerine tekil olan email üzerinden ilerlemektedir. Zamanla belki tckimlikno üzerinden ilerleyebilir
+                    HttpContext.Request.Headers["email"] = sonuc.Result.EMAIL ?? "";
 
                     claims.Add(new Claim("telno", sonuc.Result.TELNO ?? ""));
                     claims.Add(new Claim("tckimlikno", "0"));
-                    claims.Add(new Claim("uygulama_id", "1")); //WEB
+                    claims.Add(new Claim("uygulama_id", "1")); // WEB
                     claims.Add(new Claim("email", sonuc.Result.EMAIL ?? ""));
-                    claims.Add(new Claim("ip", ip ?? ""));
+                    claims.Add(new Claim("ip", ip));
                     claims.Add(new Claim("adi", sonuc.Result.NAME ?? ""));
                     claims.Add(new Claim("soyadi", sonuc.Result.SURNAME ?? ""));
 
-
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var principal = new ClaimsPrincipal(identity);
-                    var b = login.RememberLogin; 
-                    var props = new AuthenticationProperties();
-                    props.IsPersistent = true; 
-                        //login.RememberLogin;
-                    props.ExpiresUtc = DateTime.UtcNow.AddDays(3);
-                    props.AllowRefresh = true;
-                    
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
 
+                    var props = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddDays(3),
+                        AllowRefresh = true
+                    };
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
                 }
+
                 return Json(sonuc);
             }
-            return View();
+            catch (Exception ex)
+            {
+                var logFile = Path.Combine(logFolder, $"login_error_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+                await System.IO.File.WriteAllTextAsync(logFile, ex.ToString());
+                return StatusCode(500, "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.");
+            }
         }
 
         [HttpPost]

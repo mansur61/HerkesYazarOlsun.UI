@@ -3,78 +3,84 @@ using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuration ayarlarý
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
 
-AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
+AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings")["ApiPath"];
 
-
-// Session desteðini ekle
-builder.Services.AddDistributedMemoryCache(); // Session için gerekli
+// Session desteði
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // 30 dakika boyunca session aktif
-    options.Cookie.HttpOnly = true; // Güvenlik için sadece HTTP üzerinden eriþilebilir yapar
-    options.Cookie.IsEssential = true; // Session çerezini zorunlu yapar
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
-// Add services to the container.
+// MVC ve Razor Pages
+builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddMvc();
+
+// DI ayarlarý
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
-
 builder.Services.Configure<VM_Mail_Settings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddHttpClient();
 
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-}).AddCookie(x =>
-{
-    x.Cookie.Name = "login";
-    x.LoginPath = "/Account/Login";
-    x.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-});
+// Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "login";
+        options.LoginPath = "/Account/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+    });
 
 var app = builder.Build();
-  
-// Configure the HTTP request pipeline.
+
+// Production ayarlarý
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
- 
+
+// wwwroot içindeki statik dosyalar
 app.UseStaticFiles();
 
-// Middleware'leri ekleyin
-app.UseSession(); // Session'ý etkinleþtir
+// **Belgeler klasörünü servis et**
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "htdocs", "Belgeler")),
+    RequestPath = "/Belgeler"
+});
 
 app.UseRouting();
+
+// Middleware sýrasý kritik
+app.UseSession();
 app.UseAuthentication();
-app.UseCookiePolicy();
-//app.UseSession();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-}); 
+app.UseCookiePolicy();
+
+// Route ayarlarý
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-app.MapControllers();
+
 app.Run();

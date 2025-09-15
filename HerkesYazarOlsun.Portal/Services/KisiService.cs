@@ -48,7 +48,7 @@ namespace HerkesYazarOlsun.Portal.Services
 
         public ServiceResult<Users> GetKisiByMail(string mail)
         {
-            Task<string> jsonContent = GetData("api/Users/GetKisiByMail?" + "mail=" + mail);
+            Task<string> jsonContent = GetData("api/Users/GetKisiByMail?" + "mail=" + mail,eposta:mail);
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<ServiceResult<Users>>(jsonContent.Result);
