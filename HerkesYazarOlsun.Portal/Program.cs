@@ -59,13 +59,24 @@ app.UseHttpsRedirection();
 // wwwroot içindeki statik dosyalar
 app.UseStaticFiles();
 
-// **Belgeler klasörünü servis et**
-app.UseStaticFiles(new StaticFileOptions
+// **Production’da Belgeler klasörünü servis et**
+if (!app.Environment.IsDevelopment())
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "htdocs", "Belgeler")),
-    RequestPath = "/Belgeler"
-});
+    var belgelerPath = Path.Combine(builder.Environment.ContentRootPath, "Belgeler");
+    if (Directory.Exists(belgelerPath))
+    {
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(belgelerPath),
+            RequestPath = "/Belgeler",
+            ServeUnknownFileTypes = true // PDF, DOCX vs için
+        });
+    }
+    else
+    {
+        Console.WriteLine($" Belgeler klasörü bulunamadý: {belgelerPath}");
+    }
+}
 
 app.UseRouting();
 

@@ -44,7 +44,7 @@
                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tel No'">
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="email" name="EMAIL" placeholder="Email Adres" asp-for="EMAIL"
+                            <input type="text" class="form-control" id="reg_email" name="EMAIL" placeholder="Email Adres" asp-for="EMAIL"
                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adres'">
                         </div>
                         <div class="col-md-12 form-group">
@@ -88,7 +88,7 @@
     function KayitOl() {
 
         var uername = $("#username").val();
-        var email = $("#email").val();
+        var email = $("#reg_email").val();
         var password = $("#password").val();
         var telno = $("#telno").val();
 

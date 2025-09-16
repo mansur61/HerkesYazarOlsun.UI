@@ -78,10 +78,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(VM_LOGIN login)
+        [AllowAnonymous] 
+       public async Task<IActionResult> Login(VM_LOGIN login)
         {
-            var logFolder = @"C:\herkesyazarolsun_log";
+            // Log klasörü: hem localde hem plesk httpdocs altında çalışır
+            var logFolder = Path.Combine(_environment.WebRootPath, "herkesyazarolsun_log");
             if (!Directory.Exists(logFolder))
                 Directory.CreateDirectory(logFolder);
 
@@ -90,25 +91,27 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 if (!ModelState.IsValid)
                     return View();
 
+                // Kullanıcıyı mail ile getir
                 ServiceResult<Users> sonuc = new KisiService().GetKisiByMail(login.email ?? "");
 
                 if (sonuc == null || sonuc.Result == null)
                 {
                     var json = new
                     {
-                        Message = "Bir eksiklik var lütfen geliiştiricinize başvurunuz.",
+                        Message = "Bir eksiklik var lütfen geliştiricinize başvurunuz.",
                         State = MessageResultState.ERROR
                     };
                     return Json(json);
                 }
 
-                List<Claim> claims = new List<Claim>();
-
                 if (sonuc.State == MessageResultState.SUCCESS)
                 {
+                    List<Claim> claims = new List<Claim>();
+
                     var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
                              ?? HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
 
+                    // headers içine yazmaya gerek yok aslında ama senin kodunu bozmadım
                     HttpContext.Request.Headers["email"] = sonuc.Result.EMAIL ?? "";
 
                     claims.Add(new Claim("telno", sonuc.Result.TELNO ?? ""));
@@ -124,7 +127,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
                     var props = new AuthenticationProperties
                     {
-                        IsPersistent = true,
+                        IsPersistent = login.RememberLogin, // modelden geleni kullan
                         ExpiresUtc = DateTime.UtcNow.AddDays(3),
                         AllowRefresh = true
                     };
@@ -141,7 +144,6 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 return StatusCode(500, "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
-
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
         public JsonResult SaveOrUpdateAyarlar(VM_AYARLAR ayr)
