@@ -3,6 +3,7 @@ using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,10 +57,24 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// wwwroot içindeki statik dosyalar
-app.UseStaticFiles();
+// ---------- Static Files Ayarý ----------
 
-// **Production’da Belgeler klasörünü servis et**
+// MIME tipleri için provider
+var provider = new FileExtensionContentTypeProvider();
+if (!provider.Mappings.ContainsKey(".mp3"))
+    provider.Mappings[".mp3"] = "audio/mpeg";
+if (!provider.Mappings.ContainsKey(".ogg"))
+    provider.Mappings[".ogg"] = "audio/ogg";
+if (!provider.Mappings.ContainsKey(".wav"))
+    provider.Mappings[".wav"] = "audio/wav";
+
+// wwwroot içindeki dosyalar (CSS, JS, resim, mp3, ogg vs)
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider
+});
+
+// Belgeler klasörü (production için özel)
 if (!app.Environment.IsDevelopment())
 {
     var belgelerPath = Path.Combine(builder.Environment.ContentRootPath, "Belgeler");
@@ -69,6 +84,7 @@ if (!app.Environment.IsDevelopment())
         {
             FileProvider = new PhysicalFileProvider(belgelerPath),
             RequestPath = "/Belgeler",
+            ContentTypeProvider = provider,
             ServeUnknownFileTypes = true // PDF, DOCX vs için
         });
     }
@@ -78,20 +94,17 @@ if (!app.Environment.IsDevelopment())
     }
 }
 
+// ---------- Middleware Sýrasý ----------
 app.UseRouting();
-
-// Middleware sýrasý kritik
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseCookiePolicy();
 
-// Route ayarlarý
+// ---------- Routing ----------
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-
 app.Run();

@@ -3,38 +3,29 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Styles{
+@section Styles {
     <style>
         .js #features {
             margin-left: -12000px;
             width: 100%;
         }
 
-        #gozukecekMiNavbar {
-            display: none;
-        }
-
-        #gozukecekMiFooter {
-            display: none;
-        }
-
+        #gozukecekMiNavbar,
+        #gozukecekMiFooter,
         #gozukecekMiFooterCrypt {
             display: none;
         }
 
-
         #logout img {
-            filter: brightness(1.2); /* Daha parlak yapar */
+            filter: brightness(1.2);
         }
 
         #logout {
-            background-color: #f6f6f6; /* Açık arka plan */
+            background-color: #f6f6f6;
             border: 1px solid #c5c5c5;
             border-radius: 3px;
             padding: 2px;
         }
-
-
     </style>
     <link href="~/wowbook/css/style.css" rel="stylesheet" />
     <link href="~/wowbook/css/wow_book.css" rel="stylesheet" />
@@ -45,82 +36,66 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS
 
- 
 <div id="container">
     <nav>
         <ul>
-            <li><a id='first' href="#" title='goto first page'>First page</a></li>
-            <li><a id='back' href="#" title='go back one page'>Back</a></li>
-            <li><a id='next' href="#" title='go foward one page'>Next</a></li>
-            <li><a id='last' href="#" title='goto last page'>last page</a></li>
-            <li><a id='zoomin' href="#" title='zoom in'>Zoom In</a></li>
-            
-            <li><a id='zoomout' href="#" title='zoom out'>Zoom Out</a></li>
-            <li><a id='slideshow' href="#" title='start slideshow'>Slide Show</a></li>
-            <li><a id='flipsound' href="#" title='flip sound on/off'>Flip sound</a></li>
-            <li><a id='fullscreen' href="#" title='fullscreen on/off'>Fullscreen</a></li>
-            <li><a id='thumbs' href="#" title='thumbnails on/off'>Thumbs</a></li>
+            <li><a id='first' href="#">First page</a></li>
+            <li><a id='back' href="#">Back</a></li>
+            <li><a id='next' href="#">Next</a></li>
+            <li><a id='last' href="#">Last page</a></li>
+            <li><a id='zoomin' href="#">Zoom In</a></li>
+            <li><a id='zoomout' href="#">Zoom Out</a></li>
+            <li><a id='slideshow' href="#">Slide Show</a></li>
+            <li><a id='flipsound' href="#">Flip sound</a></li>
+            <li><a id='fullscreen' href="#">Fullscreen</a></li>
+            <li><a id='thumbs' href="#">Thumbs</a></li>
             <li>
                 <img src="@Url.Content("~/wowbook/images/switch.png")"
                      alt="Çıkış"
                      style="width:45px; height:45px; cursor:pointer;"
                      onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=@ViewBag.KITAPENC';" />
             </li>
-
-            
         </ul>
-       
-
     </nav>
-    @* href="https://herkesyazarolsun.com.tr/Home/Index" *@ 
-    <div id="main">
-        <!--<img id='click_to_open' src="~/wowbook/images/click_to_open.png" alt='click to open' />-->          
 
+    <div id="main">
         <div id='features'>
-            @*kitap başlangıç kapağı id='cover'*@
+           
             <div >
                 <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)" alt="Sayfa resmi" width="100%" height="100%" />
-
-            </div>
-              
-            <!--<audio controls="controls">
-                <source src="~/wowbook/sound/page-flip.mp3" type="audio/mpeg" />
-            </audio>-->
+             </div>
+           
+            <!-- Gizli audio -->
+            <audio id="flipSound" style="display:none">
+                <source src="@Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
+            </audio>
             <h1>
-                <p style="font-size:40px;text-align:center;color:white"> Önsöz</p>
-
-                <p style="font-size:20px;">
-                    @Model.ONSOZ
-
-                </p>
+                <p style="font-size:40px;text-align:center;color:white">Önsöz</p>
+                <p style="font-size:20px;">@Model.ONSOZ</p>
             </h1>
 
             @foreach (var item in @Model.BooksPageList)
             {
-                <div style="overflow:auto;overflow-x: hidden; text-align: justify;padding-right:15px">
-
+                <div style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
                     <div class='feature pagefx hardpage' style="width:350px">
-
-                        <p style="font-size:12px;">
-                            @item.PageWrite
-                        </p>
+                        <p style="font-size:12px;">@item.PageWrite</p>
                     </div>
                 </div>
             }
-             
-            <div class='last_cover'>
-                <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH)" alt="Sayfa resmi" width="100%" height="100%" />
+            
+            <div  >
+                <img src="~/wowbook/images/cover_last.png" alt="Arka Kapak" width="100%" height="100%" />
             </div>
 
-            
-        </div> <!-- features -->
-
+            <div class='feature hardpage'>
+                <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH)" alt="Arka Kapak" width="100%" height="100%" />
+            </div>
+        </div>
+    
     </div>
-
 </div>
 
-@section scripts{
-
+@section scripts {
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>!window.jQuery && document.write(unescape('%3Cscript src="./js/libs/jquery-1.9.1.min.js"%3E%3C/script%3E'))</script>
 
@@ -128,14 +103,14 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#features').wowBook({
-                height: 500
-                , width: 800
-                , centeredWhenClosed: true
-                , hardcovers: true
-                , turnPageDuration: 1000
-                , numberedPages: [1, -2]
-                , controls: {
+            var book = $('#features').wowBook({
+                height: 500,
+                width: 800,
+                centeredWhenClosed: true,
+                hardcovers: true,
+                turnPageDuration: 1000,
+                numberedPages: [1, -2],
+                controls: {
                     zoomIn: '#zoomin',
                     zoomOut: '#zoomout',
                     next: '#next',
@@ -146,61 +121,24 @@
                     flipSound: '#flipsound',
                     thumbnails: '#thumbs',
                     fullscreen: '#fullscreen'
-                }
-                , scaleToFit: "#container"
-                , thumbnailsPosition: 'bottom'
-                , onFullscreenError: function () {
+                },
+                scaleToFit: "#container",
+                thumbnailsPosition: 'bottom',
+                flipSoundPath: '@Url.Content("~/wowbook/sound/")',
+                onFullscreenError: function () {
                     var msg = "Fullscreen failed.";
-                    if (self != top) msg = "The frame is blocking full screen mode. Click on 'remove frame' button above and try to go full screen again."
+                    if (self != top) msg = "The frame is blocking full screen mode.";
                     alert(msg);
                 }
             }).css({ 'display': 'none', 'margin': 'auto' }).fadeIn(1000);
 
-            $("#cover").click(function () {
-                $.wowBook("#features").advance();
+            // Eğer sayfa çevrildiğinde manuel olarak flip sound çalmak istersen
+            var flipAudio = document.getElementById("flipSound");
+            book.on('turned', function() {
+                flipAudio.play();
             });
-
-            //$("#flipsound").click(function () {
-            //   alert();
-            //});
-
-            var book = $.wowBook("#features");
-
-            function rebuildThumbnails() {
-                book.destroyThumbnails()
-                book.showThumbnails()
-                $("#thumbs_holder").css("marginTop", -$("#thumbs_holder").height() / 2)
-            }
-            $("#thumbs_position button").on("click", function () {
-                var position = $(this).text().toLowerCase()
-                if ($(this).data("customized")) {
-                    position = "top"
-                    book.opts.thumbnailsParent = "#thumbs_holder";
-                } else {
-                    book.opts.thumbnailsParent = "body";
-                }
-                book.opts.thumbnailsPosition = position
-                rebuildThumbnails();
-            })
-            $("#thumb_automatic").click(function () {
-                book.opts.thumbnailsSprite = null
-                book.opts.thumbnailWidth = null
-                rebuildThumbnails();
-            })
-            $("#thumb_sprite").click(function () {
-                book.opts.thumbnailsSprite = "images/thumbs.jpg"
-                book.opts.thumbnailWidth = 136
-                rebuildThumbnails();
-            })
-            $("#thumbs_size button").click(function () {
-                var factor = 0.02 * ($(this).index() ? -1 : 1);
-                book.opts.thumbnailScale = book.opts.thumbnailScale + factor;
-                rebuildThumbnails();
-            })
-
         });
     </script>
-
 
     <script src="~/wowbook/js/plugins.js"></script>
     <script src="~/wowbook/js/script.js"></script>
