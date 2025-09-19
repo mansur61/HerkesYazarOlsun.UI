@@ -22,6 +22,19 @@
             display: none;
         }
 
+
+        #logout img {
+            filter: brightness(1.2); /* Daha parlak yapar */
+        }
+
+        #logout {
+            background-color: #f6f6f6; /* Açık arka plan */
+            border: 1px solid #c5c5c5;
+            border-radius: 3px;
+            padding: 2px;
+        }
+
+
     </style>
     <link href="~/wowbook/css/style.css" rel="stylesheet" />
     <link href="~/wowbook/css/wow_book.css" rel="stylesheet" />
@@ -32,6 +45,7 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS
 
+ 
 <div id="container">
     <nav>
         <ul>
@@ -40,21 +54,38 @@
             <li><a id='next' href="#" title='go foward one page'>Next</a></li>
             <li><a id='last' href="#" title='goto last page'>last page</a></li>
             <li><a id='zoomin' href="#" title='zoom in'>Zoom In</a></li>
+            
             <li><a id='zoomout' href="#" title='zoom out'>Zoom Out</a></li>
             <li><a id='slideshow' href="#" title='start slideshow'>Slide Show</a></li>
             <li><a id='flipsound' href="#" title='flip sound on/off'>Flip sound</a></li>
             <li><a id='fullscreen' href="#" title='fullscreen on/off'>Fullscreen</a></li>
             <li><a id='thumbs' href="#" title='thumbnails on/off'>Thumbs</a></li>
+            <li>
+                <img src="@Url.Content("~/wowbook/images/switch.png")"
+                     alt="Çıkış"
+                     style="width:45px; height:45px; cursor:pointer;"
+                     onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=@ViewBag.KITAPENC';" />
+            </li>
+
+            
         </ul>
+       
+
     </nav>
+    @* href="https://herkesyazarolsun.com.tr/Home/Index" *@ 
     <div id="main">
-        <img id='click_to_open' src="~/wowbook/images/click_to_open.png" alt='click to open' />
+        <!--<img id='click_to_open' src="~/wowbook/images/click_to_open.png" alt='click to open' />-->          
+
         <div id='features'>
-            @*kitap başlangıç kapağı*@
-            <div id='cover'> </div>
-            @*<audio controls="controls">
-            <source src="~/wowbook/sound/page-flip.mp3" type="audio/mpeg" />
-            </audio>*@
+            @*kitap başlangıç kapağı id='cover'*@
+            <div >
+                <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)" alt="Sayfa resmi" width="100%" height="100%" />
+
+            </div>
+              
+            <!--<audio controls="controls">
+                <source src="~/wowbook/sound/page-flip.mp3" type="audio/mpeg" />
+            </audio>-->
             <h1>
                 <p style="font-size:40px;text-align:center;color:white"> Önsöz</p>
 
@@ -76,13 +107,12 @@
                     </div>
                 </div>
             }
-
-
-
+             
             <div class='last_cover'>
-                <img src="~/wowbook/images/cover_last.png" alt="" width="100%" height="100%" />
+                <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH)" alt="Sayfa resmi" width="100%" height="100%" />
             </div>
 
+            
         </div> <!-- features -->
 
     </div>

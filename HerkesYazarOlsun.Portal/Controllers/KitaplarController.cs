@@ -38,9 +38,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult KitapOku(string kitap_id)
         {
+            ViewBag.KITAPENC = kitap_id;
             var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
             var getBook = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
+            ViewBag.VM_KITAP = vmBook;
             var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
             getBookPage = getBookPage ?? null;
             vmBook.BooksPageList = ObjectMapper.MapList(getBookPage!, new List<VM_BOOKS_PAGES>());
