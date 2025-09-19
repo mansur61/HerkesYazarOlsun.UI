@@ -133,50 +133,53 @@
 
 <script>
 
-    var footer = $("#footericin").val();
+    $(document).ready(function() {
+        // footer değerini al
+        var footer = $("#footericin").val();
 
-    function HaberdarEt() { 
-         
-        var mail = $('#email').val(); 
+        // HaberdarEt fonksiyonunu tanımla
+        window.HaberdarEt = function() {
+            var mail = $('#email').val().trim(); // trim ile boşlukları temizle
 
-        console.log("HaberdarEt : "+mail);
+            console.log("HaberdarEt : " + mail);
 
-         if (mail == ""  ) {
-            $("#uyari-" + footer).css("display", "block");
-            $("#bilgi-" + footer).css("display", "none");
-            $("#basarili-" + footer).css("display", "none");
-            $("#uyari-" + footer + " #mesaj").html("Mail bilginiz boş bırakmayınız.. ");
-            return;
-        }
-        $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
-            {
-                "kime": mail,
-                "konu": "Herkes Yazar Olsun Bülteni",
-                "mesaj": "Herkes Yazar Olsun Bültenlerinden, anlık geliştirmelerden sizleri de bilgilendireceğiz.\n İlgiliniz için teşekür ederiz"
-            },
+            if (!mail) {
+                $("#uyari-" + footer).css("display", "block");
+                $("#bilgi-" + footer).css("display", "none");
+                $("#basarili-" + footer).css("display", "none");
+                $("#uyari-" + footer + " #mesaj").html("Mail bilginiz boş bırakmayınız.");
+                return;
+            }
 
-            function (data) {
-                if (data.state == 1) {
-                    $("#basarili-" + footer).css("display", "block");
-                    $("#basarili-" + footer + " #mesaj").html(data.message);
-
-                    $("#bilgi-" + footer).css("display", "none");
-                    $("#uyari-" + footer).css("display", "none");
-                    $('#email').val("");
+            $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
+                {
+                    "kime": mail,
+                    "konu": "Herkes Yazar Olsun Bülteni",
+                    "mesaj": "Herkes Yazar Olsun Bültenlerinden, anlık geliştirmelerden sizleri de bilgilendireceğiz.\nİlginiz için teşekkür ederiz"
+                },
+                function (data) {
+                    if (data.state == 1) {
+                        $("#basarili-" + footer).css("display", "block");
+                        $("#basarili-" + footer + " #mesaj").html(data.message);
+                        $("#bilgi-" + footer).css("display", "none");
+                        $("#uyari-" + footer).css("display", "none");
+                        $('#email').val("");
+                    }
+                    else if (data.state == 3) {
+                        $("#bilgi-" + footer).css("display", "block");
+                        $("#bilgi-" + footer + " #mesaj").html(data.message);
+                        $("#basarili-" + footer).css("display", "none");
+                        $("#uyari-" + footer).css("display", "none");
+                    }
+                    else {
+                        $("#uyari-" + footer).css("display", "block");
+                        $("#bilgi-" + footer).css("display", "none");
+                        $("#basarili-" + footer).css("display", "none");
+                        $("#uyari-" + footer + " #mesaj").html(data.message);
+                    }
                 }
-                else if (data.state == 3) {
-                    $("#bilgi-" + footer).css("display", "block");
-                    $("#bilgi-" + footer + " #mesaj").html(data.message);
+            );
+        };
+    });
 
-                    $("#basarili-" + footer).css("display", "none");
-                    $("#uyari-" + footer).css("display", "none");
-                }
-                else {
-                    $("#uyari-" + footer).css("display", "block");
-                    $("#bilgi-" + footer).css("display", "none");
-                    $("#basarili-" + footer).css("display", "none");
-                    $("#uyari-" + footer + " #mesaj").html(data.message);
-                }
-            });
-    }
 </script>
