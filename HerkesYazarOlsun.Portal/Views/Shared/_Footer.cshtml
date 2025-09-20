@@ -18,16 +18,6 @@
                     daha uygun maliyetli kitaplarını yayınlayabilecek köprü kuruyoruz. Haydi sizde bu köprüden geçiniz.
                 </p>
                 <ul class="list-inline list-unstyled social-networks">
-                    @*  <li>
-                    <a href="#">
-                    <div class="icon-social icon-social-facebook normal">
-                    <i class="fa fa-facebook"></i>
-                    </div>
-                    <div class="icon-social hover">
-                    <i class="fa fa-facebook"></i>
-                    </div>
-                    </a>
-                    </li> *@
 
                     <li>
                         <a href="https://x.com/kayamansur61">
@@ -70,38 +60,25 @@
             </div>
             <div class="col-md-4">
                 <h3>İLETİŞİM</h3>
-                <address>
-                    @* <i class="fa fa-map-marker"></i> 123 My Street, Banzhow City, CA 4567<br> *@
-                    <i class="fa fa-phone"></i> +90 (535) 038-1523<br>
-                    <i class="fa fa-envelope"></i> herkesyazarolsun@gmail.com
+                <address>                  
+                    <i class="fa fa-envelope"></i> info@herkesyazarolsun.com.tr
                 </address>
             </div>
 
-            @* <div class="col-md-4">
-            <h3>LATEST TWEETS</h3>
-            <ul class="latest-tweets">
-            <li>
-            <i class="fa fa-twitter"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing
-            </li>
-            <li>
-            <i class="fa fa-twitter"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing
-            </li>
-            </ul>
-            </div> *@
 
             <div class="col-lg-3 col-md-4">
-                <h3>Haberdar Olunuz</h3>
-                <p>Mailinizi Girerek Geliştirmelerden Sizleri Anında Haberdar Edelim</p>
-                <div class="input-group">
-                    <input type="text" placeholder="Email" id="email" class="form-control">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-primary" onclick="HaberdarEt()">
-                            Haber Ver
-                        </button>
-                    </span>
+    <h3>Haberdar Olunuz</h3>
+    <p>Mailinizi Girerek Geliştirmelerden Sizleri Anında Haberdar Edelim</p>
+    <div class="input-group">
+        <input type="email" placeholder="Email" id="footerEmail" class="form-control">
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-primary" id="haberdarBtn">
+                Haber Ver
+            </button>
+        </span>
+    </div>
+</div>
 
-                </div><!-- /input-group -->
-            </div>
         </div><!-- /.row -->
         @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
     </div><!-- /.container -->
@@ -116,70 +93,50 @@
     </div>
 </div>
 
-<!--
-<div id="switcher-options">
-    <a href="#" class="switcher-btn"><i class="fa fa-cog"></i></a>
-    <small>Switch Theme Colour</small>
-    <ul class="list-unstyled list-inline">
-        <li><a href="#" class="theme-colour default" data-name="default"></a></li>
-        <li><a href="#" class="theme-colour blue" data-name="blue"></a></li>
-        <li><a href="#" class="theme-colour violet" data-name="violet"></a></li>
-        <li><a href="#" class="theme-colour red" data-name="red"></a></li>
-        <li><a href="#" class="theme-colour orange" data-name="orange"></a></li>
-    </ul>
-</div>
- /Switcher -->
-
-
 <script>
-
-    $(document).ready(function() {
-        // footer değerini al
+    $(function () {
         var footer = $("#footericin").val();
 
-        // HaberdarEt fonksiyonunu tanımla
-        window.HaberdarEt = function() {
-            var mail = $('#email').val().trim(); // trim ile boşlukları temizle
+        $("#haberdarBtn").on("click", function () {
+            var mail = $("#footerEmail").val().trim();
 
-            console.log("HaberdarEt : " + mail);
+            console.log("HaberdarEt :", mail);
 
             if (!mail) {
-                $("#uyari-" + footer).css("display", "block");
-                $("#bilgi-" + footer).css("display", "none");
-                $("#basarili-" + footer).css("display", "none");
-                $("#uyari-" + footer + " #mesaj").html("Mail bilginiz boş bırakmayınız.");
+                $("#uyari-" + footer).show().find("#mesaj").text("Mail bilginiz boş bırakmayınız.");
+                $("#bilgi-" + footer).hide();
+                $("#basarili-" + footer).hide();
                 return;
             }
 
             $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
                 {
-                    "kime": mail,
-                    "konu": "Herkes Yazar Olsun Bülteni",
-                    "mesaj": "Herkes Yazar Olsun Bültenlerinden, anlık geliştirmelerden sizleri de bilgilendireceğiz.\nİlginiz için teşekkür ederiz"
-                },
-                function (data) {
-                    if (data.state == 1) {
-                        $("#basarili-" + footer).css("display", "block");
-                        $("#basarili-" + footer + " #mesaj").html(data.message);
-                        $("#bilgi-" + footer).css("display", "none");
-                        $("#uyari-" + footer).css("display", "none");
-                        $('#email').val("");
-                    }
-                    else if (data.state == 3) {
-                        $("#bilgi-" + footer).css("display", "block");
-                        $("#bilgi-" + footer + " #mesaj").html(data.message);
-                        $("#basarili-" + footer).css("display", "none");
-                        $("#uyari-" + footer).css("display", "none");
-                    }
-                    else {
-                        $("#uyari-" + footer).css("display", "block");
-                        $("#bilgi-" + footer).css("display", "none");
-                        $("#basarili-" + footer).css("display", "none");
-                        $("#uyari-" + footer + " #mesaj").html(data.message);
-                    }
+                    kime: mail,
+                    konu: "Herkes Yazar Olsun Bülteni",
+                    mesaj: "Herkes Yazar Olsun Bültenlerinden, anlık geliştirmelerden sizleri de bilgilendireceğiz.\nİlginiz için teşekkür ederiz"
                 }
-            );
-        };
+            ).done(function (data) {
+                if (data.state === 1) {
+                    $("#basarili-" + footer).show().find("#mesaj").text(data.message);
+                    $("#bilgi-" + footer).hide();
+                    $("#uyari-" + footer).hide();
+                    $("#footerEmail").val("");
+                }
+                else if (data.state === 3) {
+                    $("#bilgi-" + footer).show().find("#mesaj").text(data.message);
+                    $("#basarili-" + footer).hide();
+                    $("#uyari-" + footer).hide();
+                }
+                else {
+                    $("#uyari-" + footer).show().find("#mesaj").text(data.message);
+                    $("#bilgi-" + footer).hide();
+                    $("#basarili-" + footer).hide();
+                }
+            }).fail(function () {
+                $("#uyari-" + footer).show().find("#mesaj").text("Bir hata oluştu, lütfen tekrar deneyin.");
+                $("#bilgi-" + footer).hide();
+                $("#basarili-" + footer).hide();
+            });
+        });
     });
-
 </script>
