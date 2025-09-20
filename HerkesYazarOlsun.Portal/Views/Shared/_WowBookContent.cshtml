@@ -1,0 +1,109 @@
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS
+<div id="container">
+    <nav>
+        <ul>
+            <li><a id='first' href="#">First page</a></li>
+            <li><a id='back' href="#">Back</a></li>
+            <li><a id='next' href="#">Next</a></li>
+            <li><a id='last' href="#">Last page</a></li>
+            <li><a id='zoomin' href="#">Zoom In</a></li>
+            <li><a id='zoomout' href="#">Zoom Out</a></li>
+            <li><a id='slideshow' href="#">Slide Show</a></li>
+            <li><a id='flipsound' href="#">Flip sound</a></li>
+            <li><a id='fullscreen' href="#">Fullscreen</a></li>
+            <li><a id='thumbs' href="#">Thumbs</a></li>
+            <li>
+                <img src="@Url.Content("~/wowbook/images/switch.png")"
+                alt="Çıkış"
+                style="width:45px; height:45px; cursor:pointer;"
+                onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=@ViewBag.KITAPENC';" />
+            </li>
+        </ul>
+    </nav>
+
+    <div id="main">
+        <div id='features'>
+
+            <div>
+                <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)" alt="Sayfa resmi" width="100%" height="100%" />
+            </div>
+
+            <!-- Gizli audio -->
+            <audio id="flipSound" style="display:none">
+                <source src="@Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
+            </audio>
+            <h1>
+                <p style="font-size:40px;text-align:center;color:white">Önsöz</p>
+                <p style="font-size:20px;">@Model.ONSOZ</p>
+            </h1>
+
+            @foreach (var item in @Model.BooksPageList)
+            {
+                <div style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
+                    @if (Model.IsWowBookEdit)
+                    {
+                        <button class="btn btn-warning" onclick="KitabiGuncelle('@item.ID')">
+                            Sayfayı Güncelle
+                        </button>
+                    }
+                    
+                    <div class='feature pagefx hardpage' style="width:350px">
+                        <p style="font-size:12px;">@item.PageWrite</p>
+                    </div>
+                </div>
+            }
+
+            <div>
+                <img src="~/wowbook/images/cover_last.png" alt="Arka Kapak" width="100%" height="100%" />
+            </div>
+
+            <div class='feature hardpage'>
+                <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH)" alt="Arka Kapak" width="100%" height="100%" />
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div style="height:20px"></div>
+<!-- Popup div -->
+<div id="guncelle" style="
+    display:none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;       /* popup genişliği */
+    max-width: 90%;     /* responsive */
+    max-height: 80vh;   /* ekranın %80'i kadar yükseklik */
+    overflow-y: auto;   /* taşarsa scroll */
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 9999;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+">
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Sayfa Güncelle</h4>
+            <div id="sayfaYaiziyAl" style="height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;"></div>
+        </div>
+    </div>
+    <div style="text-align:right; margin-top:10px;">
+        <button class="btn btn-secondary" onclick="KapatGuncelle()">Kapat</button>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    function AcGuncelle() {
+        document.getElementById('guncelle').style.display = 'block';
+    }
+
+    function KapatGuncelle() {
+        document.getElementById('guncelle').style.display = 'none';
+    }
+
+</script>

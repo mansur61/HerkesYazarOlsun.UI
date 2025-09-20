@@ -55,6 +55,14 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public List<VM_CATEGORI>? GetCategories()
+        {
+            Task<string> jsonContent = GetData("api/Books/GetCategories");
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<List<VM_CATEGORI>>(jsonContent.Result);
+            return result;
+        }
         public VM_Stars GetMaxStarBooks()
         {
             Task<string> jsonContent = GetData("api/Books/GetMaxStarBooks");

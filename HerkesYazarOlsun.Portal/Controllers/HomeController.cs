@@ -28,9 +28,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             VM_BOOKS vM_BOOKS = new VM_BOOKS();
             var getBookList = new BooksService().GetBooksList();
-            vM_BOOKS.VMBooksList = getBookList!;
-            // var bb = vM_BOOKS.VMBooksList.Where(p => p.Stars.HangiStar == "yildiz2").ToList();
-            //  List<string> kitaplar = new List<string>();
+            vM_BOOKS.VMBooksList = getBookList!; 
 
             return vM_BOOKS;
         }

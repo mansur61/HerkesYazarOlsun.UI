@@ -36,64 +36,7 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS
 
-<div id="container">
-    <nav>
-        <ul>
-            <li><a id='first' href="#">First page</a></li>
-            <li><a id='back' href="#">Back</a></li>
-            <li><a id='next' href="#">Next</a></li>
-            <li><a id='last' href="#">Last page</a></li>
-            <li><a id='zoomin' href="#">Zoom In</a></li>
-            <li><a id='zoomout' href="#">Zoom Out</a></li>
-            <li><a id='slideshow' href="#">Slide Show</a></li>
-            <li><a id='flipsound' href="#">Flip sound</a></li>
-            <li><a id='fullscreen' href="#">Fullscreen</a></li>
-            <li><a id='thumbs' href="#">Thumbs</a></li>
-            <li>
-                <img src="@Url.Content("~/wowbook/images/switch.png")"
-                     alt="Çıkış"
-                     style="width:45px; height:45px; cursor:pointer;"
-                     onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=@ViewBag.KITAPENC';" />
-            </li>
-        </ul>
-    </nav>
-
-    <div id="main">
-        <div id='features'>
-           
-            <div >
-                <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)" alt="Sayfa resmi" width="100%" height="100%" />
-             </div>
-           
-            <!-- Gizli audio -->
-            <audio id="flipSound" style="display:none">
-                <source src="@Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
-            </audio>
-            <h1>
-                <p style="font-size:40px;text-align:center;color:white">Önsöz</p>
-                <p style="font-size:20px;">@Model.ONSOZ</p>
-            </h1>
-
-            @foreach (var item in @Model.BooksPageList)
-            {
-                <div style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
-                    <div class='feature pagefx hardpage' style="width:350px">
-                        <p style="font-size:12px;">@item.PageWrite</p>
-                    </div>
-                </div>
-            }
-            
-            <div  >
-                <img src="~/wowbook/images/cover_last.png" alt="Arka Kapak" width="100%" height="100%" />
-            </div>
-
-            <div class='feature hardpage'>
-                <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH)" alt="Arka Kapak" width="100%" height="100%" />
-            </div>
-        </div>
-    
-    </div>
-</div>
+@Html.Partial("_WowBookContent", @Model)
 
 @section scripts {
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>

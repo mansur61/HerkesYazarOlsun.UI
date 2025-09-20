@@ -60,10 +60,10 @@
             {
                 <div class="col-md-12 text-right">
                     <button class="btn btn-warming"><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Kitabı Güncelle</a></button>
-                    <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Kitabı Oku</a></button>
+                            <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Kitabı Oku</a></button>
                     @if (!@kitapTamamlamaDurumu)
                     {
-                        <button class="btn btn-ligth"><a href="/Kitaplar/KitapOlustur?ID=@Model.Vm_Book.ID">Yazmaya Devam Et</a></button>
+                                   <button class="btn btn-ligth"><a href="/Kitaplar/KitapOlustur?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Yazmaya Devam Et</a></button>
                     }
 
                 </div>
