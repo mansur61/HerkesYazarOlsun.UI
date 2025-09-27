@@ -1,0 +1,59 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en"> 
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Herkes Yazar Olsun</title>
+
+    <script>(function (H) { H.className = H.className.replace(/\bno-js\b/, 'js') })(document.documentElement)</script>
+
+    <!-- font-awesome -->
+    <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap core CSS -->
+
+    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
+
+    <link href="~/lib/bootstrap/dist/css/themify-icons.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/lineericaon_style.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/nice-select.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/nouislider.min.css" rel="stylesheet" />
+    
+    
+    @RenderSection("Styles",false)
+
+    <!-- custom CSS -->
+    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" />
+
+    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/herkesyazarolsun-bootstrap.js"></script>
+    <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
+     
+   
+
+    <script src="~/lib/bootstrap/dist/js/skrollr.min.js"></script>
+    
+    
+    @RenderSection("scripts",false)
+ 
+</head>
+<body>
+    @Html.Partial("_Navbar")
+    <br />
+    @RenderBody()
+
+    @Html.Partial("_Footer")
+</body>
+</html>

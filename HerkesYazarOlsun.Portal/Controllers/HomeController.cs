@@ -87,6 +87,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             return View();
         }
+        public ActionResult Tanitim()
+        {
+            return View();
+        }
         public ActionResult HataliGiris()
         {
             return View();
