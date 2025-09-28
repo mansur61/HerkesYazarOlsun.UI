@@ -20,7 +20,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public string SignInUrl { get { return $"/Home/Index"; } }
         public string Onboarding { get { return $"/Home/Tanitim"; } }
-        public string SignUpInUrl { get { return $"/Account/Register"; } }
+        public string SignUpInUrl { get { return $"/Account/KayitOl"; } }
         public AccountController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -28,7 +28,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpGet]
-        public ActionResult Register()
+        public ActionResult KayitOl()
         {
             VM_USERS vmUsers = new VM_USERS();
             return View(vmUsers);
@@ -36,11 +36,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Giris(string returnUrl)
         {
-            if (returnUrl != null && returnUrl.Contains("Register"))
+            if (returnUrl != null && returnUrl.Contains("KayitOl"))
             {
-                return RedirectToAction("Register", "Account");
+                return RedirectToAction("KayitOl", "Account");
             }
 
             if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
@@ -80,7 +80,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(VM_LOGIN login)
+        public async Task<IActionResult> Giris(VM_LOGIN login)
         {
             // Log klasörü: hem localde hem plesk httpdocs altında çalışır
             var logFolder = Path.Combine(_environment.WebRootPath, "herkesyazarolsun_log");
@@ -158,7 +158,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> CikisYap()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignOutAsync("Cookies");

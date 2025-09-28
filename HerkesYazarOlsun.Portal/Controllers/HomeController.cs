@@ -1,14 +1,13 @@
-﻿ using HerkesYazarOlsun.Model.Utils;
+﻿using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
-using HerkesYazarOlsun.Portal.Services; 
-using Microsoft.AspNetCore.Mvc;   
-using Microsoft.AspNetCore.Authorization;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
-using Microsoft.AspNetCore.Http;
+using HerkesYazarOlsun.Portal.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
-   // [Authorize]
+ 
     public class HomeController : Controller
     {
         private IHttpContextAccessor _httpContextAccessor;
