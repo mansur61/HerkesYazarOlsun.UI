@@ -13,33 +13,37 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private IHttpContextAccessor _httpContextAccessor;
 
         private IWebHostEnvironment _environment;
+        private IConfiguration _configuration;
         private long Lid;
-        public HomeController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
+        public HomeController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, IConfiguration configuratioN)
         {
             _httpContextAccessor = httpContextAccessor;
             _environment = environment;
             Lid = (long)(_httpContextAccessor?.HttpContext?.User.GetLoginUserId());
+            _configuration = configuratioN;
         }
 
         public string SignInUrl { get { return $"/Account/Login"; } }
 
-        private VM_BOOKS GetListBooks()
-        {
-            VM_BOOKS vM_BOOKS = new VM_BOOKS();
+        private List<VM_BOOKS> GetListBooks()
+        { 
             var getBookList = new BooksService().GetBooksList();
-            vM_BOOKS.VMBooksList = getBookList!; 
-
-            return vM_BOOKS;
+            var list = getBookList ?? [];
+            return list;
         }
 
         [AllowAnonymous]
         public ActionResult Index()
-        { 
+        {
+            VM_BOOKS vM_BOOKS = new VM_BOOKS();
+            vM_BOOKS.isAnaSayfa = true;
+            vM_BOOKS.Start = 0;
+            vM_BOOKS.sliderdaGosterilecekKayit = 5;
+
             string isGozlemciMod = User.GetGozlemciMod(); 
             if (!string.IsNullOrEmpty(isGozlemciMod) && isGozlemciMod == "1") // gözlemci mod ile gelinmiş
             {
-                var vM_BOOKS = GetListBooks();
-                vM_BOOKS.isAnaSayfa  = true;
+                vM_BOOKS.VMBooksList = GetListBooks();
 
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
                 ViewBag.Duyurular = list;
@@ -50,17 +54,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             if (!string.IsNullOrEmpty(User.GetEmail()))
             {
-                var vM_BOOKS = GetListBooks();
-                vM_BOOKS.isAnaSayfa = true;
+                vM_BOOKS.VMBooksList = GetListBooks(); 
 
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
                 ViewBag.Duyurular = list;
                 List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
                 ViewBag.Sponsorlar = spnlist;
-
-                //alternaatif çözüm
-               // HttpContext.Session.SetInt32("LOGIN_USER_ID", int.Parse(Lid.ToString())); 
-                //@Session["LOGIN_USER_ID"] view içinde bu şekilde kullanılır
+                 
                 ViewBag.LOGIN_USER_ID = Lid;
                 ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
                 return View(vM_BOOKS);
@@ -84,6 +84,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public ActionResult Iletisim()
         {
+            var mail = _configuration.GetSection("AppSettings")["AliciMail"];
+            ViewBag.MAIL = mail;
             return View();
         }
         public ActionResult Tanitim()

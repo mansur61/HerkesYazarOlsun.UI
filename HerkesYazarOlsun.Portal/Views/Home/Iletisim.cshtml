@@ -189,7 +189,7 @@
     function Bilgilendir(email, mesaj) {
         $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
             {
-                "kime": email,
+                "kime": "@ViewBag.MAIL",
                 "konu": "Herkes Yazar Olsun İletişim Formu",
                 "mesaj": email + " mail adresinden ilgili mesaj -> " + mesaj
             }

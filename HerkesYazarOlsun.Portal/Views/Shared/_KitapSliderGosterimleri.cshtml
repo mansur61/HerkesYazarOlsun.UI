@@ -2,26 +2,30 @@
 @using HerkesYazarOlsun.Model.Utils;
 @using HerkesYazarOlsun.Model.ViewModel;
 @using HerkesYazarOlsun.Portal.Controllers;
+@using System.Text.Json
 
-@{
-    //Model.kitapSliderYometimAdi = "index";
-    //int sliderSayisi = 0;
-
+@{ 
     int sliderdaGosterilecekKayit = 5;
     Model.End = sliderdaGosterilecekKayit;
     int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
     int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-    int start = 0;
-    // int end = 5;
-
-
+    int start = 0; 
+     
     Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
     Model.Start = @start;
 }
 
 @*@Html.Partial("_KitapSliderItemYonetimleri",@Model)*@
+@* @if (Model.VMBooksList != null)
+{
+    <pre>@JsonSerializer.Serialize(Model, new JsonSerializerOptions { WriteIndented = true })</pre>
+}
+else
+{
+    <p>booksList boş!</p>
+} *@
 
 <div id="my-pics-@Model.Tip" class="carousel slide" data-ride="carousel"
      style="width:1050px;margin:5px auto;background-color:aliceblue;height:430px">
