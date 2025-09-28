@@ -4,10 +4,10 @@ using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims; 
+using System.Security.Claims;
 using HerkesYazarOlsun.Model.Utils;
 using Microsoft.AspNetCore.Authorization;
-using HerkesYazarOlsun.Model.Entity; 
+using HerkesYazarOlsun.Model.Entity;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -19,7 +19,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private IWebHostEnvironment _environment;
 
         public string SignInUrl { get { return $"/Home/Index"; } }
-        public string SignUpInUrl { get { return $"/Account/Register"; } }
+        public string Onboarding { get { return $"/Home/Tanitim"; } }
+        public string SignUpInUrl { get { return $"/Account/KayitOl"; } }
         public AccountController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -27,7 +28,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpGet]
-        public ActionResult Register()
+        public ActionResult KayitOl()
         {
             VM_USERS vmUsers = new VM_USERS();
             return View(vmUsers);
@@ -35,11 +36,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Giris(string returnUrl)
         {
-            if (returnUrl != null && returnUrl.Contains("Register"))
+            if (returnUrl != null && returnUrl.Contains("KayitOl"))
             {
-                return RedirectToAction("Register", "Account");
+                return RedirectToAction("KayitOl", "Account");
             }
 
             if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
@@ -48,7 +49,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 return redirectResult;
             }
 
-            return View(new VM_LOGIN() { RememberLogin = true }); 
+            return View(new VM_LOGIN() { RememberLogin = true });
 
         }
 
@@ -56,7 +57,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GozlemciModLogin(string email)
         {
-            ServiceResult result = new ServiceResult(message:"Gözlemci Modda Girişiniz Algılandı",state:MessageResultState.SUCCESS);
+            ServiceResult result = new ServiceResult(message: "Gözlemci Modda Girişiniz Algılandı", state: MessageResultState.SUCCESS);
             try
             {
                 List<Claim> claims = new List<Claim>();
@@ -78,8 +79,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous] 
-       public async Task<IActionResult> Login(VM_LOGIN login)
+        [AllowAnonymous]
+        public async Task<IActionResult> Giris(VM_LOGIN login)
         {
             // Log klasörü: hem localde hem plesk httpdocs altında çalışır
             var logFolder = Path.Combine(_environment.WebRootPath, "herkesyazarolsun_log");
@@ -144,6 +145,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 return StatusCode(500, "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
+        
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
         public JsonResult SaveOrUpdateAyarlar(VM_AYARLAR ayr)
@@ -156,12 +158,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> CikisYap()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignOutAsync("Cookies");
 
-            return Redirect(SignInUrl);
+            return Redirect(Onboarding);
         }
     }
 }

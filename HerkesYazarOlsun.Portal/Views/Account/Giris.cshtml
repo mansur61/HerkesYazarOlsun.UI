@@ -32,7 +32,7 @@
                     <div class="hover">
                         <h4>Herkes Yazar Olsun' a Hoşgeldiniz !</h4>
                         <p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyoruz.</p>
-                        <a class="button button-account" href="/Account/Register">Kayıt Olunuz</a>
+                        <a class="button button-account" href="/Account/KayitOl">Kayıt Olunuz</a>
                     </div>
                 </div>
             </div>
@@ -213,7 +213,7 @@
          
        $("#loading").css("display", "block");
 
-        $.post("@Url.Action(nameof(AccountController.Login), "Account")", {
+        $.post("@Url.Action(nameof(AccountController.Giris), "Account")", {
             "RememberLogin": rememberlogin,
             "email": email,
             "sifre": sifre,
