@@ -1,9 +1,6 @@
-﻿
-using DocumentFormat.OpenXml.EMMA;
-using HerkesYazarOlsun.Model.Entity;
+﻿using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -46,7 +43,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
             if (Request.Form.ContainsKey("Profile"))
             {
-                ayr.Profile = JsonConvert.DeserializeObject<Profil>(Request.Form["Profile"]);
+                ayr.Profile = JsonConvert.DeserializeObject<VM_PROFILE>(Request.Form["Profile"]);
             }
             if (Request.Form.ContainsKey("User"))
             {

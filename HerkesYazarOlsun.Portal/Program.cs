@@ -102,9 +102,14 @@ app.UseAuthorization();
 app.UseCookiePolicy();
 
 // ---------- Routing ----------
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Tanitim}/{id?}");
+
 
 app.MapRazorPages();
 app.Run();
