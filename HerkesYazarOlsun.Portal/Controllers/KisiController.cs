@@ -30,7 +30,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult TumYazarlar(VM_ARAMA_INPUT arama)
         {
-            VM_USERS vmUsers = new VM_USERS();
+            VM_USERS_DETAIL vmUsers = new VM_USERS_DETAIL();
 
             vmUsers.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
@@ -93,7 +93,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult AraButonFiltrelemeYazarlar(VM_ARAMA_INPUT arama)
         {
-            VM_USERS vmUsers = new VM_USERS();
+            VM_USERS_DETAIL vmUsers = new VM_USERS_DETAIL();
 
             vmUsers.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
@@ -102,7 +102,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             return View(vmUsers);
         }
-
+        // buda reviz edilecek aslında
         public IActionResult Profil(string? pId)
         {
             //var userId = pId != null ? pId : Lid.ToString();
@@ -113,9 +113,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
 
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
+
             vm_kisi.Profile = profile;
             vm_kisi.Stars = new KisiService().GetMaxStarWriterById(id);
-            vm_kisi.vMWriterFollow = new KisiService().GetWriterFollowById(id);
+            ViewBag.vMWriterFollow = new KisiService().GetWriterFollowById(id);
 
             Users lgn_kisi = new KisiService().GetKisiById(Lid);
 

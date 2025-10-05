@@ -11,20 +11,20 @@
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
 }
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Portal.Controllers;
 
 @{
     int sidebardaGosterilecekKayit = 3;
 
-    int sidebarKalan = (@Model.BooksList.Count() % sidebardaGosterilecekKayit);
-    int sidebarBolum = (@Model.BooksList.Count() / sidebardaGosterilecekKayit);
+    int sidebarKalan = (@Model.VMBooksList.Count() % sidebardaGosterilecekKayit);
+    int sidebarBolum = (@Model.VMBooksList.Count() / sidebardaGosterilecekKayit);
     int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
 
     int sliderdaGosterilecekKayit = 6;
 
-    int kalan = (@Model.BooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.BooksList.Count() / sliderdaGosterilecekKayit);
+    int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
+    int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
 }

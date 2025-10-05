@@ -1,4 +1,4 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAY;
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Model.Entity
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Controllers;
@@ -93,7 +93,7 @@
     }
 </style>
 
-<input type="hidden" id="kitapId" name="kitapId" value="@Model.Vm_Book.ID" />
+<input type="hidden" id="kitapId" name="kitapId" value="@Model.BookModel.ID" />
 <input type="hidden" id="degerlendirmemesaicin" value="degerlendirme" />
 <input type="hidden" id="yorummesajiicin" value="yorumicin" />
 
@@ -143,7 +143,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="aciklama" role="tabpanel" aria-labelledby="aciklama-tab">
                 <p>
-                    @Model.Vm_Book.ARKAKAPAKYAZISI
+                    @Model.BookModel.ARKAKAPAKYAZISI
                 </p>
 
             </div>
@@ -198,7 +198,7 @@
                             <h3><strong>Yorumlar</strong></h3>
                         </div>
 
-                        @foreach (var item in @Model.Vm_Book_Comments)
+                        @foreach (var item in @Model.BookModel.BooksComments)
                         {
 
 
@@ -272,24 +272,24 @@
                                     <h5>En fazla Yıldız</h5>
 
                                     @{
-                                        Model.Stars.isToplam = false;
+                                        Model.BookModel.Stars.isToplam = false;
                                     }
 
-                                    <h4>@Html.Partial("_YildizGoster", @Model.Stars)</h4>
+                                    <h4>@Html.Partial("_YildizGoster", @Model.BookModel.Stars)</h4>
 
 
-                                    <h6><strong>(@Model.Stars.EnFazlaSitar)</strong></h6>
+                                    <h6><strong>(@Model.BookModel.Stars.EnFazlaSitar)</strong></h6>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="rating_list">
                                     <h3>Kitaba ait yıldızlar</h3>
                                     @{
-                                        Model.Stars.isToplam = true;
+                                        Model.BookModel.Stars.isToplam = true;
                                     }
 
                                     <div class="col-sm-7">
-                                        @Html.Partial("_YildizGoster", @Model.Stars)
+                                        @Html.Partial("_YildizGoster", @Model.BookModel.Stars)
 
                                     </div>
 
@@ -300,7 +300,7 @@
                         <div style="height:30px">
                             <h3><strong>Değerlendimeler</strong></h3>
                         </div>
-                        @foreach (var item in @Model.Vm_Book_Degerlendirme_List)
+                        @foreach (var item in @Model.BookModel.BooksDegerlendirme)
                         {
 
                             <div class="review_list" style="border: 1px solid #ccc;border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #f9f9f9;">
@@ -403,7 +403,7 @@
                                 <td>Toplam Beğeni</td>
                                 <td>
                                     <span class="oran-value">
-                                        @Model.Vm_Book.iSTATISTIK.ToplamBegeni / @yayinAyar?.ToplamBegeni
+                                        @Model.BookModel.iSTATISTIK.ToplamBegeni / @yayinAyar?.ToplamBegeni
                                     </span>
                                 </td> 
 
@@ -413,7 +413,7 @@
                                 <td>Toplam Yorum</td>
                                 <td>
                                     <span class="oran-value">
-                                        @Model.Vm_Book.iSTATISTIK.ToplamYorum / @yayinAyar?.ToplamYorum
+                                        @Model.BookModel.iSTATISTIK.ToplamYorum / @yayinAyar?.ToplamYorum
                                     </span>
                                 </td>
                             </tr>
@@ -421,7 +421,7 @@
                                 <td>Toplam Yıldız</td>
                                 <td>
                                     <span class="oran-value">
-                                        @Model.Vm_Book.iSTATISTIK.ToplamYildiz / @yayinAyar?.ToplamYildiz
+                                        @Model.BookModel.iSTATISTIK.ToplamYildiz / @yayinAyar?.ToplamYildiz
                                     </span>
                                 </td>
                             </tr>
@@ -429,7 +429,7 @@
                                 <td>Toplam Değerlendirme</td>
                                 <td>
                                     <span class="oran-value">
-                                        @Model.Vm_Book.iSTATISTIK.ToplamDegerlendirme / @yayinAyar?.ToplamDegerlendirme
+                                        @Model.BookModel.iSTATISTIK.ToplamDegerlendirme / @yayinAyar?.ToplamDegerlendirme
                                     </span>
                                 </td>
                             </tr>
@@ -451,7 +451,7 @@
     $(document).ready(function () {
         var ctx = $('#istatistikChart')[0].getContext('2d');
          
-        var istatistik = @Html.Raw(Json.Serialize(Model.Vm_Book.iSTATISTIK));
+        var istatistik = @Html.Raw(Json.Serialize(Model.BookModel.iSTATISTIK));
         var yayinAyar = @Html.Raw(Json.Serialize(ViewBag.YayinAyar));
         
 
@@ -515,7 +515,7 @@
         var email = $("#email").val();
         var message = $("#message").val();
 
-        var yorum = "(@Model.Vm_Book.ID - @Model.Vm_Book.Name) adlı kitabınıza " + email + " adlı kullanıcı yorum yaptı. Yorumu;";
+        var yorum = "(@Model.BookModel.ID - @Model.BookModel.Name) adlı kitabınıza " + email + " adlı kullanıcı yorum yaptı. Yorumu;";
         $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")", {
             "konu": "Herkes Yazar Olsun'dan Kitabınıza Yorum Geldi",
             "kime": email,

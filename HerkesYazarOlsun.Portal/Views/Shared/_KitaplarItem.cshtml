@@ -1,4 +1,4 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Model.Entity
 @using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
@@ -18,7 +18,7 @@
 
 @foreach (var item in booksList.Select((value, index) => new { value, index }))
 {
-    item.value.isAnaSayfa = Model.isAnaSayfa ?? false;
+     
     <input type="hidden" value="@item.index">
     <input type="hidden" value="@item.value.ID" name="kId">
 
@@ -27,10 +27,10 @@
             
             @* style="background-image:url('@backgroundImage')" @backgroundImage*@
             <div class="product__item__pic set-bg" data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.value.ONKAPAKFOTOPATH">
-                @if (!string.IsNullOrEmpty(@item.value.CategoryName))
+                @if (!string.IsNullOrEmpty(@item.value.Categories.Name))
                 {
                     <div class="discount-badge" style="position:absolute; top:10px; left:10px; background-color:lightgreen; color:white; padding:5px 10px; font-size:12px; font-weight:bold; border-radius:5px;">
-                        @item.value.CategoryName
+                        @item.value.Categories.Name
                     </div>
                 }
 
@@ -38,12 +38,12 @@
                     @if (isGozlemciMod == "0")
                     {
                         <li><a onclick='KitabiFavorilereEkle("@StringCipher.Encrypt(@item.value.ID.ToString())", "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
-                        @if (!(@item.value.isAnaSayfa ?? false)) // ana sayfadan gelemeyecek
+                        @if (!(@Model.isAnaSayfa ?? false)) // ana sayfadan gelemeyecek
                         {
 
                             if (@item.value.LoginUserId == @ViewBag.LOGIN_USER_ID) //ilgili giriş yapan kullanıcı yayına gönderebilir veya editlesin
                             {
-                                @if ((@item.value.TAMAMLANDIMI ?? false))
+                                @if ((@item.value.TAMAMLANDIMI))
                                 {
                                     var yayinAyr = @ViewBag.YayinAyar as YayinAyarlari;
                                     if (yayinAyr != null)

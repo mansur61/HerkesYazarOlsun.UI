@@ -1,4 +1,4 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Model.Utils;
 @using HerkesYazarOlsun.Model.ViewModel;
 @using HerkesYazarOlsun.Portal.Controllers;
@@ -16,16 +16,16 @@
     Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
     Model.Start = @start;
 }
-
-@*@Html.Partial("_KitapSliderItemYonetimleri",@Model)*@
-@* @if (Model.VMBooksList != null)
+ 
+@if (Model.VMBooksList != null)
 {
-    <pre>@JsonSerializer.Serialize(Model, new JsonSerializerOptions { WriteIndented = true })</pre>
+    <p>booksList @Model.VMBooksList.Count()</p>
+    @* <pre>@JsonSerializer.Serialize(Model, new JsonSerializerOptions { WriteIndented = true })</pre> *@
 }
 else
 {
     <p>booksList boş!</p>
-} *@
+}
 
 <div id="my-pics-@Model.Tip" class="carousel slide" data-ride="carousel"
      style="width:1050px;margin:5px auto;background-color:aliceblue;height:430px">

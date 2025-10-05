@@ -5,14 +5,14 @@
 @{
 }
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Portal.Controllers;
 
 @{
     int sidebardaGosterilecekKayit = 3;
 
-    int sidebarKalan = (@Model.BooksList.Count() % sidebardaGosterilecekKayit);
-    int sidebarBolum = (@Model.BooksList.Count() / sidebardaGosterilecekKayit);
+    int sidebarKalan = (@Model.VMBooksList.Count() % sidebardaGosterilecekKayit);
+    int sidebarBolum = (@Model.VMBooksList.Count() / sidebardaGosterilecekKayit);
     int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
 
    
@@ -30,7 +30,7 @@
                 <div class="latest-prdouct__slider__item">
 
 
-                    @foreach (var item in @Model.BooksList.Take(range: new Range(start, sidebardaGosterilecekKayit)))
+                    @foreach (var item in @Model.VMBooksList.Take(range: new Range(start, sidebardaGosterilecekKayit)))
                     {
                         <a href="#" class="latest-product__item">
                             <div class="latest-product__item__pic">

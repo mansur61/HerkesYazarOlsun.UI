@@ -1,5 +1,5 @@
 ﻿@using HerkesYazarOlsun.Portal.Controllers;
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
 <div class="card-body">
 
@@ -43,9 +43,9 @@
 
 
         <select class="form-select" style="width:500px;height:30px" id="kitapKategori" name="CategoriId">
-            @foreach (var category in Model.Categories)
+            @foreach (var category in Model.Katergoriler)
             {
-                <option value="@category.Id" data="@category.Name" @(Model.CategoriId == category.Id ? "selected" : "")>
+                <option value="@category.Id" data="@category.Name"  >
                     @category.Name
                 </option>
             }

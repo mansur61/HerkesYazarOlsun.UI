@@ -1,4 +1,4 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 <div id="container">
     <nav>
         <ul>
@@ -34,10 +34,10 @@
             </audio>
             <h1>
                 <p style="font-size:40px;text-align:center;color:white">Önsöz</p>
-                <p style="font-size:20px;">@Model.ONSOZ</p>
+                <p style="font-size:20px;">@Model.BookModel.ONSOZ</p>
             </h1>
 
-            @foreach (var item in @Model.BooksPageList)
+            @foreach (var item in @Model.BookModel.BooksPageList)
             {
                 <div style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
                     @if (Model.IsWowBookEdit)

@@ -23,28 +23,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
             _configuration = configuratioN;
         }
 
-        public string SignInUrl { get { return $"/Account/Login"; } }
-
-        private List<VM_BOOKS> GetListBooks()
-        { 
-            var getBookList = new BooksService().GetBooksList();
-            var list = getBookList ?? [];
-            return list;
-        }
-
+        public string SignInUrl { get { return $"/Account/Giris"; } }
+ 
         [AllowAnonymous]
         public ActionResult Index()
         {
-            VM_BOOKS vM_BOOKS = new VM_BOOKS();
+            VM_BOOKS_DETAIL vM_BOOKS = new BooksService().GetBooksList();
             vM_BOOKS.isAnaSayfa = true;
             vM_BOOKS.Start = 0;
             vM_BOOKS.sliderdaGosterilecekKayit = 5;
 
             string isGozlemciMod = User.GetGozlemciMod(); 
             if (!string.IsNullOrEmpty(isGozlemciMod) && isGozlemciMod == "1") // gözlemci mod ile gelinmiş
-            {
-                vM_BOOKS.VMBooksList = GetListBooks();
-
+            { 
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
                 ViewBag.Duyurular = list;
                 List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
@@ -53,9 +44,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
 
             if (!string.IsNullOrEmpty(User.GetEmail()))
-            {
-                vM_BOOKS.VMBooksList = GetListBooks(); 
-
+            { 
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
                 ViewBag.Duyurular = list;
                 List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
