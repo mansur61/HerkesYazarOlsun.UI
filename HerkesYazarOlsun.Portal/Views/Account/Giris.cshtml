@@ -5,13 +5,13 @@
 
 @section Styles {
 
-                <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
-                <style>
-                    #normalLoginTab {
-                        background-color: lightgray; /* Aktif tab için mavi arka plan */
-                        color: white; /* Yazıyı beyaz yapar */
-                    }
-                </style>
+    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+    <style>
+        #normalLoginTab {
+            background-color: lightgray; /* Aktif tab için mavi arka plan */
+            color: white; /* Yazıyı beyaz yapar */
+        }
+    </style>
 }
 
 @using HerkesYazarOlsun.Portal.Controllers;
@@ -69,16 +69,16 @@
                                         {
                                             @if (@Model.benihatirla == "0")
                                             {
-                                                                        <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
+                                                <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
                                             }
                                             else
                                             {
-                                                                        <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' checked value="true">
+                                                <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' checked value="true">
                                             }
                                         }
                                         else
                                         {
-                                                        <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
+                                            <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
                                         }
                                         <label for="f-option2">Oturumumu açık tut</label>
                                     </div>
@@ -88,9 +88,9 @@
                                     <br />
                                     <a href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
                                 </div>
-                                    <div id="loading" style="display: none; text-align: center;">
-                                        <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
-                                    </div>
+                                <div id="loading" style="display: none; text-align: center;">
+                                    <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+                                </div>
                             </div>
                         </div>
 
@@ -210,7 +210,7 @@
         var email = $("#email").val();
         var sifre = $("#sifre").val();
 
-         
+
        $("#loading").css("display", "block");
 
         $.post("@Url.Action(nameof(AccountController.Giris), "Account")", {
@@ -223,7 +223,7 @@
              $("#loading").css("display", "none");
             console.log("data.state:" + data.state);
             if (data.state == 1) {
-               
+
                 $("#basarili-" + login).css("display", "block");
                 $("#basarili-" + login + " #mesaj").html(data.message + " Giriş işlemi Başarılı Anasayfaya yönlendiriliyorsunuz.");
 

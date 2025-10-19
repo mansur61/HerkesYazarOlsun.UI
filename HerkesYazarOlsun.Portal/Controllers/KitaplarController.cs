@@ -375,8 +375,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var KİTAPıD = Convert.ToInt64(kId);
             FavoriBooks fAVORILER = new FavoriBooks()
             {
-                BOOKS_ID = KİTAPıD,
-                USER_ID = Lid
+                BookId = KİTAPıD,
+                UserId = Lid
             };
             var getFavori = new BooksService().PostFavoriBookSave(fAVORILER);
 
@@ -546,7 +546,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         {
                             input.BookPagesModel.ID = bookPages.Result.ID;
                             sayfaId = (int)bookPages.Result.ID;
-                            sayfaCount = new BooksPagesService().GetPagesByBooks(book.Result.Result.ID)!.Where(p => p.BooksId == book.Result.Result.ID).Count();
+                            sayfaCount = new BooksPagesService().GetPagesByBooks(book.Result.Result.ID)!.Where(p => p.BookId == book.Result.Result.ID).Count();
 
                             result.State = MessageResultState.SUCCESS;
                         }
