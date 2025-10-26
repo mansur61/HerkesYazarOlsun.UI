@@ -34,7 +34,7 @@
             </audio>
             <h1>
                 <p style="font-size:40px;text-align:center;color:white">Önsöz</p>
-                <p style="font-size:20px;">@Model.BookModel.ONSOZ</p>
+                <p style="font-size:20px;">@Html.Raw(Model.BookModel.ONSOZ)</p>
             </h1>
 
             @foreach (var item in @Model.BookModel.BooksPageList)
@@ -48,7 +48,7 @@
                     }
                     
                     <div class='feature pagefx hardpage' style="width:350px">
-                        <p style="font-size:12px;">@item.PageWrite</p>
+                        <p style="font-size:12px;">@Html.Raw(@item.PageWrite) </p>
                     </div>
                 </div>
             }
@@ -86,7 +86,10 @@
     <div class="row">
         <div class="col-md-12">
             <h4>Sayfa Güncelle</h4>
-            <div id="sayfaYaiziyAl" style="height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;"></div>
+            @* <div id="sayfaYaiziyAl" style="height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;"></div> *@
+            <div id="sayfaYaiziyAlEditor" style="height: 400px;"></div>
+
+            <textarea id="sayfaYaiziyAl" name="SAYFAYAZI" hidden></textarea>
         </div>
     </div>
     <div style="text-align:right; margin-top:10px;">
@@ -95,8 +98,44 @@
 </div>
 
 
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            if (typeof Quill === 'undefined') {
+            console.error('Quill yüklü değil! CDN/Script include kontrol et.');
+            return;
+            }
+
+            window.quill = window.quill || new Quill('#sayfaYaiziyAlEditor', {
+            theme: 'snow',
+            placeholder: 'Sayfanızı buraya yazın...',
+            modules: {
+                toolbar: [
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['link', 'image'],
+                [{ 'align': [] }],
+                ['clean']
+                ]
+            }
+            });
 
 
+        const hiddenTextarea = document.getElementById('sayfaYaiziyAl');
+
+        if (!hiddenTextarea) {
+            console.error('Textarea #sayfaYaiziyAl bulunamadı!');
+            return;
+        }
+        window.quill.on('text-change', () => { hiddenTextarea.value = window.quill.root.innerHTML; });
+        // Form gönderiminde içeriği textarea’ya aktar
+        document.querySelector('form')?.addEventListener('submit', function () {
+            document.getElementById('sayfaYaiziyAl').value = quill.root.innerHTML;
+        });
+
+    });
+</script>
+ 
 <script type="text/javascript">
     function AcGuncelle() {
         document.getElementById('guncelle').style.display = 'block';

@@ -17,16 +17,15 @@
     Model.Start = @start;
 }
  
-@if (Model.VMBooksList != null)
+@* @if (Model.VMBooksList != null)
 {
-    <p>booksList @Model.VMBooksList.Count()</p>
-    @* <pre>@JsonSerializer.Serialize(Model, new JsonSerializerOptions { WriteIndented = true })</pre> *@
+    <p>booksList @Model.VMBooksList.Count()</p> 
 }
 else
 {
     <p>booksList boş!</p>
 }
-
+ *@
 <div id="my-pics-@Model.Tip" class="carousel slide" data-ride="carousel"
      style="width:1050px;margin:5px auto;background-color:aliceblue;height:430px">
    @*  <p>@Model.isAnaSayfa</p> *@

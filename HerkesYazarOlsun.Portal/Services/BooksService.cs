@@ -160,29 +160,37 @@ namespace HerkesYazarOlsun.Portal.Services
             // VM_BOOKS içindeki normal alanları ekle
             foreach (var prop in typeof(VM_BOOKS).GetProperties())
             {
-                if (prop.Name == "dosyalar" || prop.Name == "BookModel")
-                    continue; // dosyaları ayrıca ekleyeceğiz
-
-                var value = prop.GetValue(VMbook);
-                if (value != null)
+                try
                 {
-                    form.Add(new StringContent(value.ToString()!), prop.Name);
+                    if (prop.Name == "dosyalar" || prop.Name == "BookModel")
+                        continue; // dosyaları ayrıca ekleyeceğiz
+
+                    var value = prop.GetValue(VMbook.BookModel);
+                    if (value != null)
+                    {
+                        //form.Add(new StringContent(value.ToString()!), prop.Name);
+                        form.Add(new StringContent(value.ToString()!), $"BookModel.{prop.Name}");
+                    }
+                }
+                catch(Exception e)
+                {
+                    var _ = e.Message;
                 }
             }
 
             // BookModel içindeki alanları ekle
-            if (VMbook.BookModel != null)
-            {
-                foreach (var prop in typeof(Books).GetProperties())
-                {
+            //if (VMbook.BookModel != null)
+            //{
+            //    foreach (var prop in typeof(Books).GetProperties())
+            //    {
                     
-                    var value = prop.GetValue(VMbook.BookModel);
-                    if (value != null)
-                    {
-                        form.Add(new StringContent(value.ToString()!), $"BookModel.{prop.Name}");
-                    }
-                }
-            }
+            //        var value = prop.GetValue(VMbook.BookModel);
+            //        if (value != null)
+            //        {
+            //            form.Add(new StringContent(value.ToString()!), $"BookModel.{prop.Name}");
+            //        }
+            //    }
+            //}
 
             // Dosyaları ekle
             if (VMbook.dosyalar != null)

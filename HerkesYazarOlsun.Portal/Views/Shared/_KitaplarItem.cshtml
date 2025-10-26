@@ -27,10 +27,10 @@
             
             @* style="background-image:url('@backgroundImage')" @backgroundImage*@
             <div class="product__item__pic set-bg" data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.value.ONKAPAKFOTOPATH">
-                @if (!string.IsNullOrEmpty(@item.value.Categories.Name))
+                @if (!string.IsNullOrEmpty(@item.value.Categori.Name))
                 {
                     <div class="discount-badge" style="position:absolute; top:10px; left:10px; background-color:lightgreen; color:white; padding:5px 10px; font-size:12px; font-weight:bold; border-radius:5px;">
-                        @item.value.Categories.Name
+                        @item.value.Categori.Name
                     </div>
                 }
 

@@ -28,9 +28,9 @@
     <div class="row">
 
         <div class="col-md-3">
-            <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH" alt="Portfolio 1" 
-            style="height:300px">
-           @* <img src="data:image;base64,@Model.BookModel.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">*@
+            <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH" alt="Portfolio 1"
+                 style="height:300px">
+            @* <img src="data:image;base64,@Model.BookModel.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">*@
             @{
                 Model.BookModel.Stars.isToplam = false;
             }
@@ -47,7 +47,8 @@
             <p><small>@Model.BookModel.User.NAME</small></p>
             <h3>Kitap Özeti</h3>
             <p>
-                @Model.BookModel.ONSOZ
+                @Html.Raw(Model.BookModel.ONSOZ)
+               
                 <br />
                 <!--<p>
                 Lorem Ipsum, dizgi ve baskı endüstrisinde kullanılan mıgır metinlerdir.
@@ -61,17 +62,21 @@
             {
                 <div class="col-md-12 text-right">
                     <button class="btn btn-warming"><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@Model.BookModel.ID.ToString())">Kitabı Güncelle</a></button>
-                            <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(@Model.BookModel.ID.ToString())">Kitabı Oku</a></button>
-                    @if (!@kitapTamamlamaDurumu)
+                    <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(@Model.BookModel.ID.ToString())">Kitabı Oku</a></button>
+                    @if (!kitapTamamlamaDurumu)
                     {
-                                   <button class="btn btn-ligth"><a href="/Kitaplar/KitapOlustur?kitap_id=@StringCipher.Encrypt(@Model.BookModel.ID.ToString())">Yazmaya Devam Et</a></button>
+                        <a class="btn btn-light"
+                           href="/Kitaplar/KitapOlustur?kitap_id=@StringCipher.Encrypt(Model.BookModel.ID.ToString())&isYazmayaDevamEt=true">
+                            Yazmaya Devam Et
+                        </a>
                     }
+
 
                 </div>
             }
 
         </div>
-     
+
     </div>
 
     <br />

@@ -38,7 +38,10 @@
                 @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                 {
                     <li class="list-group-item">
-                        <i class="bi bi-pencil-square"></i> <strong><a style="font-size:20px" href="/Kitaplar/KitapOlustur">KİTAP YAZ</a></strong>
+                        <i class="bi bi-pencil-square"></i> <strong>
+                            <a style="font-size:20px" href="/Kitaplar/KitapOlustur?isYazmayaDevamEt=false">KİTAP YAZ</a>
+                             
+                        </strong>
                     </li>
                     <li class="list-group-item">
                         <i class="bi bi-file-earmark-arrow-up"></i>

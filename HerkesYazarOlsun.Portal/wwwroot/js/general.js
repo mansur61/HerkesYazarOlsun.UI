@@ -10,6 +10,8 @@
         var dosya = document.getElementById('dosyaOnKapakFoto').files[0];
         var dosyaAdi = dosya.name;
         $("#ONKAPAKFOTO").val(dosyaAdi);
+        console.log("  dosyaAdi : " + dosyaAdi);
+        //console.log("  dosyaAdi2 : " + $("#ONKAPAKFOTO").val());
     }
     else if (deger == "arkaKapakFoto") {
         var dosya = document.getElementById('dosyaArkaKapakFoto').files[0];
@@ -17,6 +19,7 @@
             var dosyaAdi = dosya.name;
             $("#ARKAKAPAKFOTO").val(dosyaAdi);
         }
+        console.log("  dosyaAdi : " + dosyaAdi);
         
     }
     else if (deger == "profilFoto") {
