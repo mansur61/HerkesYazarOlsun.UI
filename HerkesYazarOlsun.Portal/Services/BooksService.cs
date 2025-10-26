@@ -177,20 +177,7 @@ namespace HerkesYazarOlsun.Portal.Services
                     var _ = e.Message;
                 }
             }
-
-            // BookModel içindeki alanları ekle
-            //if (VMbook.BookModel != null)
-            //{
-            //    foreach (var prop in typeof(Books).GetProperties())
-            //    {
-                    
-            //        var value = prop.GetValue(VMbook.BookModel);
-            //        if (value != null)
-            //        {
-            //            form.Add(new StringContent(value.ToString()!), $"BookModel.{prop.Name}");
-            //        }
-            //    }
-            //}
+             
 
             // Dosyaları ekle
             if (VMbook.dosyalar != null)

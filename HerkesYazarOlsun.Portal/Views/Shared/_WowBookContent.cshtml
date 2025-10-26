@@ -1,4 +1,12 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
+﻿@using HerkesYazarOlsun.Portal.Controllers
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
+
+@{
+    string tip = "ilgilisayfaguncelle";
+}
+<input type="hidden" id="tip" value="@tip" />
+
+
 <div id="container">
     <nav>
         <ul>
@@ -14,16 +22,17 @@
             <li><a id='thumbs' href="#">Thumbs</a></li>
             <li>
                 <img src="@Url.Content("~/wowbook/images/switch.png")"
-                alt="Çıkış"
-                style="width:45px; height:45px; cursor:pointer;"
-                onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=@ViewBag.KITAPENC';" />
+                     alt="Çıkış"
+                     style="width:45px; height:45px; cursor:pointer;"
+                     onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=@ViewBag.KITAPENC';" />
             </li>
         </ul>
     </nav>
-
+    <input type="hidden" id="guncellenecekSayfaId" />
     <div id="main">
+        
         <div id='features'>
-
+            
             <div>
                 <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)" alt="Sayfa resmi" width="100%" height="100%" />
             </div>
@@ -46,7 +55,7 @@
                             Sayfayı Güncelle
                         </button>
                     }
-                    
+
                     <div class='feature pagefx hardpage' style="width:350px">
                         <p style="font-size:12px;">@Html.Raw(@item.PageWrite) </p>
                     </div>
@@ -61,31 +70,25 @@
                 <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH)" alt="Arka Kapak" width="100%" height="100%" />
             </div>
         </div>
-        
+
     </div>
 </div>
 <div style="height:20px"></div>
+@Html.Partial("_AlertMesaj", @tip)
+
 <!-- Popup div -->
 <div id="guncelle" style="
-    display:none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display:none; position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);
     width: 600px;       /* popup genişliği */
     max-width: 90%;     /* responsive */
     max-height: 80vh;   /* ekranın %80'i kadar yükseklik */
     overflow-y: auto;   /* taşarsa scroll */
-    background-color: #fff;
-    border: 2px solid #333;
-    border-radius: 8px;
-    padding: 20px;
-    z-index: 9999;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-">
+    background-color: #fff;    border: 2px solid #333;
+    border-radius: 8px; padding: 20px;z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
     <div class="row">
         <div class="col-md-12">
             <h4>Sayfa Güncelle</h4>
+            <br />
             @* <div id="sayfaYaiziyAl" style="height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;"></div> *@
             <div id="sayfaYaiziyAlEditor" style="height: 400px;"></div>
 
@@ -93,9 +96,36 @@
         </div>
     </div>
     <div style="text-align:right; margin-top:10px;">
-        <button class="btn btn-secondary" onclick="KapatGuncelle()">Kapat</button>
+        <button class="btn btn-warning" onclick="Guncelle()">
+            Güncelle
+        </button>
+        <button class="btn btn-info" onclick="KapatGuncelle()">Kapat</button>
+    </div>
+    
+   
+</div>
+
+<!-- Progress overlay -->
+<div id="progressOverlay" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 99999;
+    text-align:center;
+">
+    <div style="
+        position:absolute;
+        top:50%; left:50%;
+        transform:translate(-50%, -50%);
+        color:white;
+        font-size:18px;
+    ">
+        Güncelleniyor... Lütfen bekleyin
     </div>
 </div>
+
 
 
 <script>
@@ -129,14 +159,46 @@
         }
         window.quill.on('text-change', () => { hiddenTextarea.value = window.quill.root.innerHTML; });
         // Form gönderiminde içeriği textarea’ya aktar
-        document.querySelector('form')?.addEventListener('submit', function () {
+        /*document.querySelector('form')?.addEventListener('submit', function () {
             document.getElementById('sayfaYaiziyAl').value = quill.root.innerHTML;
-        });
+        });*/
 
     });
 </script>
- 
+
+
+<script>
+    window.bookPagesData = {};
+    @foreach (var item in Model.BookModel.BooksPageList)
+    {
+        <text>
+            window.bookPagesData["@item.ID"] = @Html.Raw(Json.Serialize(item.PageWrite));
+        </text>
+    }
+</script>
+
 <script type="text/javascript">
+
+    function KitabiGuncelle(id) { 
+        $("#guncelle").css("display", "block");
+        $("#guncellenecekSayfaId").val(id);
+
+        var sayfaIcerik = window.bookPagesData[id] || "";
+
+        // Quill editöre yükle
+        if (window.quill) {
+            window.quill.root.innerHTML = sayfaIcerik;
+            document.getElementById('sayfaYaiziyAl').value = sayfaIcerik;
+        } else {
+            console.error("Quill yüklenmedi!");
+        }
+     
+        // Eğer hidden textarea’ya da ekleyeceksen
+        document.getElementById('sayfaYaiziyAl').value = sayfaIcerik;
+
+
+    }
+
     function AcGuncelle() {
         document.getElementById('guncelle').style.display = 'block';
     }
@@ -144,5 +206,66 @@
     function KapatGuncelle() {
         document.getElementById('guncelle').style.display = 'none';
     }
+
+         function Guncelle() {
+           var id = $("#guncellenecekSayfaId").val();        // hidden input’tan al
+           if(!id) { console.error("Sayfa ID yok!"); return; }
+
+            var kitapSayfaYazi = $("#sayfaYaiziyAl").val();  // Quill’in içeriği
+
+            console.log("kitapSayfaYazi:", kitapSayfaYazi, "id:", id);
+
+            var tip = $("#tip").val();
+            console.log("tip" ,tip );
+
+            // Progress overlay göster
+             $("#progressOverlay").show();
+                setTimeout(function() {  }, 3000);
+
+                 $.post("@Url.Action(nameof(KitaplarController.PostBooksPageUpdate), "Kitaplar")", { 
+                     "ID": id, "PageWrite": kitapSayfaYazi,
+                      "PageWriteBase64":"PageWriteBase64",
+                      "PageFoto":"PageFoto"
+                 },
+                function (data) {
+                    $("#progressOverlay").hide(); // işlemin sonunda gizle
+
+                    if (data.state == 1) {
+                        $("#basarili-" + tip).css("display", "block");
+                        $("#basarili-" + tip + " #mesaj").html("Güncellendi");
+
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#uyari-" + tip).css("display", "none");
+
+                        setTimeout(function () {
+                            var link = window.location.href;
+
+                            window.location.href = link;
+                            console.log("link " + link);
+
+                            window.location.reload()
+
+                        }, 3000);
+                    }
+                    else if (data.state == 3) {
+                        $("#bilgi-" + tip).css("display", "block");
+                        $("#bilgi-" + tip + " #mesaj").html("Güncellenemedi");
+
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip).css("display", "none");
+                    }
+                    else {
+                        $("#uyari-" + tip).css("display", "block");
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip + " #mesaj").html("Güncellenemedi");
+                    }
+
+                }).fail(function(){
+                        $("#progressOverlay").hide();
+                        alert("Sunucu hatası! Lütfen tekrar deneyin.");
+                    });
+   
+        }
 
 </script>

@@ -106,7 +106,8 @@
 
 @{
     string isGozlemciMod = User.GetGozlemciMod();
-    var yayinAyar = ViewBag.YayinAyar as YayinAyarlari;
+    var yayinAyar2 = ViewBag.YayinAyar as YayinAyarlari;
+    var yayinAyar = ViewBag.YayinAyar  ?? Model.BookModel?.Categori?.CategoryYayinAyarlari  ;
 }
  
 <p id="kural" style="display: none;">@ViewBag.IsKitapYorum</p>
@@ -455,6 +456,11 @@
         var istatistik = @Html.Raw(Json.Serialize(Model.BookModel.iSTATISTIK));
         var yayinAyar = @Html.Raw(Json.Serialize(ViewBag.YayinAyar));
         
+        // Eğer yayın ayar boşsa modelden al
+        if (!yayinAyar || Object.keys(yayinAyar).length === 0) {
+            yayinAyar = @Html.Raw(Json.Serialize(Model?.BookModel?.Categori?.CategoryYayinAyarlari));
+             console.log(" CategoryCategriAyarlari yayinAyar:", yayinAyar);
+        }
 
         console.log("istatistik:", istatistik);
         console.log("yayinAyar:", yayinAyar);
@@ -464,6 +470,7 @@
              var oran = (toplam && toplam !== 0) ? (deger / toplam * 100) : 0; 
             return isNaN(oran) ? 0 : toplam;
         }
+        console.log("yayinAyar?.toplamYildiz  ",yayinAyar?.toplamYildiz );
 
         var toplamYildizOran = hesaplaOran(yayinAyar?.toplamYildiz ?? 0, istatistik.toplamYildiz);
         var toplamBegeniOran = hesaplaOran(yayinAyar?.toplamBegeni ?? 0, istatistik.toplamBegeni);

@@ -86,16 +86,7 @@
             });
         });
 
-        function KitabiGuncelle(id) { 
-            var location = window.location;
-            var href = window.location.href; 
-            $.get("@Url.Action(nameof(KitaplarController.GetIlgiliKitapSayfasi), "Kitaplar")", { "kitapSayfaId": id },
-                function (data) {
-                    $("#guncelle").css("display", "block");
-                    $("#sayfaYaiziyAl").html(data);
-                });
-
-        }
+        
     </script>
 
     <script src="~/wowbook/js/plugins.js"></script>
