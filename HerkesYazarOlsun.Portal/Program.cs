@@ -111,7 +111,7 @@ Bunlar genelde zararlı içerik yüklemek için kullanılır.
  * 
  * ***/
 // CSP ve diğer güvenlik header'ları
-app.Use(async (context, next) =>
+app.Use(async (context, next) => //Use bir middleware bunlar için ayrı bir dosyadan yönet
 {
     var env = app.Environment;
     var configuration = app.Configuration;
