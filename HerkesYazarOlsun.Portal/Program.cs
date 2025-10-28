@@ -94,12 +94,46 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// CSP ve diğer güvenli header'lar (basit)
+// Güvenli header'lar (CSP, X-Frame-Options, nosniff, vs.)
+/**** 
+ * default-src 'self':
+Tüm kaynaklar (resim, CSS, JS vb.) sadece kendi domain’inden (aynı origin) yüklenebilir.
+Yani başka bir siteden script, iframe, resim çekemezsin.
+
+* script-src 'self':
+JavaScript dosyaları sadece kendi domain’inden yüklenebilir.
+CDN veya üçüncü parti script (ör. Google Analytics, Bootstrap CDN) engellenir.
+
+*object-src 'none':
+<object>, <embed>, <applet> gibi eski HTML etiketlerinden hiçbirine izin verilmez.
+Bunlar genelde zararlı içerik yüklemek için kullanılır.
+ * 
+ * 
+ * ***/
+// CSP ve diğer güvenlik header'ları
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none';");
-    context.Response.Headers.Add("X-Frame-Options", "DENY");
-    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    var env = app.Environment;
+    var configuration = app.Configuration;
+
+    // Ortama göre CSP seç
+    // Ortama göre CSP listesini al
+    var cspList = env.IsDevelopment()
+        ? configuration.GetSection("CSP:Development").Get<string[]>()
+        : configuration.GetSection("CSP:Default").Get<string[]>();
+
+    // Dizi varsa string'e birleştir
+    string cspPolicy = cspList != null ? string.Join("; ", cspList) + ";" : null;
+
+    // CSP header’ı ekle
+    if (!string.IsNullOrEmpty(cspPolicy))
+    {
+        context.Response.Headers["Content-Security-Policy"] = cspPolicy;
+    }
+
+    // Diğer güvenlik header'ları
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
     await next();
 });
 
