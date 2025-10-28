@@ -36,7 +36,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;            // JS ile okunamaz
     options.Cookie.IsEssential = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.Lax; // veya Strict (uygulamanıza göre)
+    options.Cookie.SameSite = SameSiteMode.Strict; // veya CSRF’ye karş
 });
 
 // --- Cookie  yapılandırma ---
@@ -52,7 +52,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
     options.SlidingExpiration = true;
 });
-// --- Antiforgery (CSRF) ---
+// --- Antiforgery (CSRF) --- CSRF için ek güvenlkik
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN"; // AJAX istekleri için header üzerinden gönder
@@ -132,7 +132,7 @@ app.Use(async (context, next) => //Use bir middleware bunlar için ayrı bir dos
     }
 
     // Diğer güvenlik header'ları
-    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["X-Frame-Options"] = "DENY"; //Clickjacking’e karşı
     context.Response.Headers["X-Content-Type-Options"] = "nosniff";
     await next();
 });
