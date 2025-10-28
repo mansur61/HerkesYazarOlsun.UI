@@ -1,4 +1,4 @@
-using HerkesYazarOlsun.Model.ViewModel;
+﻿using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration ayarlar�
+// Configuration ayarları
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -17,49 +17,97 @@ builder.Configuration
 
 AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings")["ApiPath"];
 
-// Session deste�i
+/*** Cookie ayarları 
+ * SameSite=Strict → Cookie hiçbir cross-site istekte gönderilmez (en katı). Kullanıcı başka siteden geldiğinde oturum cookie gönderilmez.
+ * 
+ * SameSite=Lax → Güvenli GET navigasyonlarında cookie gönderilebilir (ör. linke tıklama). 
+ * POST gibi cross-site state‑değiştiren isteklerde gönderilmez.
+ * 
+ * SameSite=None; Secure → Cookie cross-site isteklerde de gönderilir (üçüncü taraf), ama Secure olmalı (HTTPS).
+ * 
+ * ***/
+
+// Session desteği
 builder.Services.AddDistributedMemoryCache();
+// Session (örnek)
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
+    options.Cookie.HttpOnly = true;            // JS ile okunamaz
     options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax; // veya Strict (uygulamanıza göre)
+});
+
+// --- Cookie  yapılandırma ---
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict; // veya Lax
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
+    // Varsayılan cookie auth davranışı (login path vb)
+    options.Cookie.Name = "login";
+    options.LoginPath = "/Account/Giris";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.SlidingExpiration = true;
+});
+// --- Antiforgery (CSRF) ---
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN"; // AJAX istekleri için header üzerinden gönder
 });
 
 // MVC ve Razor Pages
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// DI ayarlar�
+// DI ayarları
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 builder.Services.Configure<VM_Mail_Settings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddHttpClient();
 
 // Authentication
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.Cookie.Name = "login";
-        options.LoginPath = "/Account/Giris";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        options.SlidingExpiration = true;
-    });
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+      .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+      {
+          // Yukarıdaki ConfigureApplicationCookie zaten bu cookie'yi yapılandırdı ama
+          // burada tekrar ayar yapmak istersen ekleyebilirsin.
+          options.Cookie.Name = "login";
+          options.LoginPath = "/Account/Giris";
+          options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+          options.SlidingExpiration = true;
+      });
 
 var app = builder.Build();
 
-// Production ayarlar�
+// Production ayarları
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
+// CSP ve diğer güvenli header'lar (basit)
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none';");
+    context.Response.Headers.Add("X-Frame-Options", "DENY");
+    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    await next();
+});
+
 app.UseHttpsRedirection();
 
-// ---------- Static Files Ayar� ----------
+// ---------- Static Files Ayarı ----------
 
-// MIME tipleri i�in provider
+// MIME tipleri için provider
 var provider = new FileExtensionContentTypeProvider();
 if (!provider.Mappings.ContainsKey(".mp3"))
     provider.Mappings[".mp3"] = "audio/mpeg";
@@ -68,13 +116,13 @@ if (!provider.Mappings.ContainsKey(".ogg"))
 if (!provider.Mappings.ContainsKey(".wav"))
     provider.Mappings[".wav"] = "audio/wav";
 
-// wwwroot i�indeki dosyalar (CSS, JS, resim, mp3, ogg vs)
+// wwwroot içindeki dosyalar (CSS, JS, resim, mp3, ogg vs)
 app.UseStaticFiles(new StaticFileOptions
 {
     ContentTypeProvider = provider
 });
 
-// Belgeler klas�r� (production i�in �zel)
+// Belgeler klasörü (production için özel)
 if (!app.Environment.IsDevelopment())
 {
     var belgelerPath = Path.Combine(builder.Environment.ContentRootPath, "Belgeler");
@@ -85,16 +133,16 @@ if (!app.Environment.IsDevelopment())
             FileProvider = new PhysicalFileProvider(belgelerPath),
             RequestPath = "/Belgeler",
             ContentTypeProvider = provider,
-            ServeUnknownFileTypes = true // PDF, DOCX vs i�in
+            ServeUnknownFileTypes = true // PDF, DOCX vs için
         });
     }
     else
     {
-        Console.WriteLine($" Belgeler klas�r� bulunamad�: {belgelerPath}");
+        Console.WriteLine($" Belgeler klasörü bulunamadı: {belgelerPath}");
     }
 }
 
-// ---------- Middleware S�ras� ----------
+// ---------- Middleware Sırası ----------
 app.UseRouting();
 app.UseSession();
 app.UseAuthentication();
