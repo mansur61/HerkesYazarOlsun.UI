@@ -17,6 +17,10 @@ builder.Configuration
 
 AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings")["ApiPath"];
 
+builder.Services.Configure<HelperSettings>(
+    builder.Configuration.GetSection("HelperSettings"));
+
+
 /*** Cookie ayarları 
  * SameSite=Strict → Cookie hiçbir cross-site istekte gönderilmez (en katı). Kullanıcı başka siteden geldiğinde oturum cookie gönderilmez.
  * 
@@ -120,7 +124,7 @@ app.Use(async (context, next) => //Use bir middleware bunlar için ayrı bir dos
     // Ortama göre CSP listesini al
     var cspList = env.IsDevelopment()
         ? configuration.GetSection("CSP:Development").Get<string[]>()
-        : configuration.GetSection("CSP:Default").Get<string[]>();
+        : configuration.GetSection("CSP:Prod").Get<string[]>();
 
     // Dizi varsa string'e birleştir
     string cspPolicy = cspList != null ? string.Join("; ", cspList) + ";" : null;

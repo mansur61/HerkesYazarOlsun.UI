@@ -4,13 +4,14 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 using System.Text;
 
 namespace HerkesYazarOlsun.Portal.Controllers
@@ -20,11 +21,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
     {
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
-        private string DosyaYolu = "C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/";
-        public KitaplarController(IHttpContextAccessor contextAccessor)
+        private int ParagrafLimiti = 0;
+         
+        private readonly string _dosyaBaseUrl;
+        // kullanımdan alındı
+        private string DosyaYolu = "";
+        public KitaplarController(IHttpContextAccessor contextAccessor, IOptions<HelperSettings> helperSettings)
         {
             _contextAccessor = contextAccessor;
             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
+            _dosyaBaseUrl = helperSettings.Value.DosyaBaseUrl;
+            ParagrafLimiti =  helperSettings.Value.ParagrafLimiti ;
+            DosyaYolu = _dosyaBaseUrl;
         }
         public IActionResult KitapOlustur(VM_BOOKS_DETAIL input)
         {
@@ -73,76 +81,116 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View(vM_BOOKS_det);
         }
 
-        private async Task<ServiceResult> WordDosyasindaAktarma(VM_BOOKS_DETAIL vM_BOOKS)
+        /// <summary>
+        /// Pdf lerde sayfa sayfa veri tabanına ekleme yapıldı. {ParagrafLimiti} limiti şeklinde ekleme
+        /// </summary>
+        /// <param name="vM_BOOKS"></param>
+        private async Task<ServiceResult> WordDosyasindaAktarmaAsync(VM_BOOKS_DETAIL vM_BOOKS)
         {
-            string docxFilePath = DosyaYolu + vM_BOOKS.FDileName;
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            using (WordprocessingDocument doc = WordprocessingDocument.Open(docxFilePath, false))
+
+            try
             {
-                // Access the main document part
-                var mainPart = doc.MainDocumentPart;
-
-                // Access the document body
-                var body = mainPart!.Document.Body;
-
-                var pageBreakCount = mainPart.Document.Descendants<LastRenderedPageBreak>().Count();
-
-                int pageCount = pageBreakCount + 1;// word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bir fazlası veriyor
-
-                int partCount = doc.Parts.Count(); // word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bİr eksik veriyor
-
-                // Console.WriteLine($"Total Parts: {partCount}");
-
-                int targetPageNumber = 2;
-                string pageText = GetTextFromPage(body!, targetPageNumber);
-
-                int wordCount = CountWords(pageText);
-
-                var toplamParagrafUzunlugu = body.Elements<Paragraph>().ToList().Sum(p => p.InnerText.Length);
-
-                string sayfaYazisi = "";
-
-                int paragrafLimiti = 1800, paragrafU = 0;
-
-
-
-                var toplamSayfaSayisiBelirlenenSayfaBasinaParagrafLimitiOlarak = toplamParagrafUzunlugu / paragrafLimiti;
-                var yuvarlaSayfaIndex = Math.Ceiling(Convert.ToDecimal(toplamSayfaSayisiBelirlenenSayfaBasinaParagrafLimitiOlarak));
-
-                foreach (var paragraph in body!.Elements<Paragraph>())
+                if (vM_BOOKS.DocMemoryStream == null)
                 {
-                    paragrafU = paragrafU + paragraph.InnerText.Length;
-                    sayfaYazisi += paragraph.InnerText;
-
+                    result.Message = "DocMemoryStream boş.";
+                    result.State = MessageResultState.ERROR;
+                    return result;
                 }
-                //paragrafLimiti, iligli uzunluk: 220-230 cümleye denk gelmektedir.
-                result = await SayfalariVeriTabaninaAktar(vM_BOOKS, sayfaYazisi, paragrafLimiti);
 
+                // Stream başa alınmalı
+                vM_BOOKS.DocMemoryStream.Position = 0;
+
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(vM_BOOKS.DocMemoryStream, false))
+                {
+                    if (doc.MainDocumentPart == null || doc.MainDocumentPart.Document?.Body == null)
+                    {
+                        result.Message = "Belge yapısı geçersiz.";
+                        result.State = MessageResultState.ERROR;
+                        return result;
+                    }
+
+                    // Access the main document part
+                    var mainPart = doc.MainDocumentPart;
+
+                    // Access the document body
+                    var body = mainPart.Document.Body;
+
+                    var pageBreakCount = mainPart.Document.Descendants<LastRenderedPageBreak>().Count();
+
+                    // Word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bir fazlası veriyor
+                    int pageCount = pageBreakCount + 1;
+
+                    // Word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bir eksik veriyor
+                    int partCount = doc.Parts.Count();
+
+                    int targetPageNumber = 2;
+                    string pageText = GetTextFromPage(body, targetPageNumber);
+
+                    int wordCount = CountWords(pageText);
+
+                    var paragraphs = body.Elements<Paragraph>().ToList();
+                    var toplamParagrafUzunlugu = paragraphs.Sum(p => p.InnerText.Length);
+
+                    // RAM tasarrufu için StringBuilder kullanıyoruz (özellikle büyük belgelerde fark yaratır)
+                    StringBuilder sayfaYazisiBuilder = new StringBuilder();
+
+                    int paragrafLimiti = ParagrafLimiti;
+                    int paragrafU = 0;
+
+                    var toplamSayfaSayisiBelirlenenSayfaBasinaParagrafLimitiOlarak = toplamParagrafUzunlugu / paragrafLimiti;
+                    var yuvarlaSayfaIndex = Math.Ceiling(Convert.ToDecimal(toplamSayfaSayisiBelirlenenSayfaBasinaParagrafLimitiOlarak));
+
+                    foreach (var paragraph in paragraphs)
+                    {
+                        paragrafU += paragraph.InnerText.Length;
+                        sayfaYazisiBuilder.Append(paragraph.InnerText);
+                    }
+
+                    string sayfaYazisi = sayfaYazisiBuilder.ToString();
+
+                    // paragrafLimiti, ilgili uzunluk: 220-230 cümleye denk gelmektedir.
+                    result = await SayfalariVeriTabaninaAktar(vM_BOOKS, sayfaYazisi, paragrafLimiti);
+                }
+
+                return result;
             }
-            return result;
-
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.State = MessageResultState.ERROR;
+                return result;
+            }
         }
 
         /// <summary>
-        /// Pdf lerde sayfa sayfa veri tabanına ekleme yapıldı. 1800 limite şuan uyulmadı.
+        /// Pdf lerde sayfa sayfa veri tabanına ekleme yapıldı. {ParagrafLimiti} limite şuan uyulmadı.
         /// </summary>
         /// <param name="vM_BOOKS"></param>
 
         private async Task<ServiceResult> PdfDosyasindanOkumaAsync(VM_BOOKS_DETAIL vM_BOOKS_det)
         {
-            ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
-
-            string pdfFilePath = DosyaYolu + vM_BOOKS_det.FDileName;
+            ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);             
             vM_BOOKS_det.BookModel = new VM_BOOKS();
             try
             {
+                if (vM_BOOKS_det.PdfMemoryStream == null)
+                {
+                    sonuc.Message = "PdfMemoryStream  boş.";
+                    sonuc.State = MessageResultState.ERROR;
+                    return sonuc;
+                }
+
+                // Stream başa alınmalı
+                vM_BOOKS_det.PdfMemoryStream.Position = 0;
+
                 // İlk etapta kitabı ekle
                 var eklemeDurumu = await KitapEkle(vM_BOOKS_det);
 
                 if (eklemeDurumu.State == MessageResultState.SUCCESS)
                 {
                     // PdfReader ve PdfDocument iText7 ile açılır
-                    using var pdfReader = new PdfReader(pdfFilePath);
+                    using var pdfReader = new PdfReader(vM_BOOKS_det.PdfMemoryStream);
                     using var pdfDoc = new PdfDocument(pdfReader);
 
                     for (int page = 1; page <= pdfDoc.GetNumberOfPages(); page++)
@@ -176,41 +224,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var eklemeDurumu = await KitapEkle(vM_BOOKS_det);//ilk etap kitabı ekle
             vM_BOOKS_det.BookModel = new VM_BOOKS();
             result.State = eklemeDurumu.State;
+            result.Message = eklemeDurumu.Message;            
 
             if (eklemeDurumu.State == MessageResultState.SUCCESS)
             {
                 vM_BOOKS_det.BookModel.ID = (int)eklemeDurumu.Result.BookID;
                 result = await BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(vM_BOOKS_det, sayfaYazisi, aktarilmakIstenenLimit);
-
+                
             }
+            result.Result = StringCipher.Encrypt(eklemeDurumu.Result.BookID.ToString()); // ilgili kitabın enc hali
             return result;
         }
-        private async Task<ServiceResult> DosyadanKitapAktar(VM_BOOKS_DETAIL vM_BOOKS_Det)
-        {
-            //string docxFilePath = DosyaYolu + vM_BOOKS.FDileName;
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            try
-            {
-                if (vM_BOOKS_Det.pdfVeyaWord == 1)
-                {
-                    // word
-                    result = await WordDosyasindaAktarma(vM_BOOKS_Det);
-                }
-                else
-                {
-                    // pdf okuma işlemini getir.
-                    result = await PdfDosyasindanOkumaAsync(vM_BOOKS_Det);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                result.State = MessageResultState.ERROR;
-                Console.WriteLine($"Hata: {ex.Message}");
-            }
-            return result;
-        }
-
+        
         private async Task<ServiceResult> BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(VM_BOOKS_DETAIL vM_BOOKS_det, string input, int uzunluk)
         {
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
@@ -265,56 +290,73 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 sonuc.State = MessageResultState.ERROR;
             }
 
-            sonuc.Result = string.Join(" ", parcalar);
+            //sonuc.Result = string.Join(" ", parcalar);
             return sonuc;
         }
 
-        private bool AlinanDosyayiSablonDosyayaAktarma(string hedefDosyaYolu, VM_BOOKS_DETAIL vM_BOOKS)
+        private async Task<ServiceResult> AlinanDosyayiBellekteAktarmaAsync(VM_BOOKS_DETAIL vM_BOOKS)
         {
-            var file = vM_BOOKS.dosyalar?.Where(p => p.FileName == vM_BOOKS.AktarilanDosya).FirstOrDefault();
-            //Request.Form.Files;
+            var sonuc  = new ServiceResult(state: MessageResultState.SUCCESS);
             try
             {
+                // Kullanıcıdan gelen dosyayı bul
+                var file = vM_BOOKS.dosyalar?.FirstOrDefault(p => p.FileName == vM_BOOKS.AktarilanDosya);
+                if (file == null)
+                {
+                    sonuc.State = MessageResultState.ERROR;
+                    sonuc.Message = "Dosya Yükleyiniz";
+                    return sonuc;
+                }
+
                 if (file != null)
                 {
-                    if (file.Length > 0)
+                    var uzanti = Path.GetExtension(file.FileName)?.ToLower();
+                    if (uzanti != ".pdf" && uzanti != ".docx" && uzanti != ".doc")
                     {
-                        using (MemoryStream memoryStream = new MemoryStream())
-                        {
-                            file.CopyTo(memoryStream);
-
-                            using (FileStream hedefDosya = new FileStream(hedefDosyaYolu, FileMode.Create))
-                            {
-                                // MemoryStream'deki veriyi hedef dosyaya kopyala
-                                memoryStream.WriteTo(hedefDosya);
-                            }
-                        }
+                        sonuc.State = MessageResultState.ERROR;
+                        sonuc.Message = "Yalnızca PDF veya Word dosyaları yükleyebilirsiniz.";
+                        return sonuc;
                     }
-                    return true;
                 }
-                else
+
+                // Kullanıcı dosyasını belleğe oku
+                using (var tempStream = new MemoryStream())
                 {
-                    return false;
+                    await file!.CopyToAsync(tempStream); // asenkron ve thread-safe
+                    tempStream.Position = 0;
+
+                    // Bellekteki veriyi vM_BOOKS.DocMemoryStream'e kopyala
+                    if(vM_BOOKS.pdfVeyaWord == 1)
+                    {
+                        vM_BOOKS.DocMemoryStream = new MemoryStream(tempStream.ToArray());
+                        vM_BOOKS.DocMemoryStream.Position = 0;
+                    }
+                    else
+                    {
+                        vM_BOOKS.PdfMemoryStream = new MemoryStream(tempStream.ToArray());
+                        vM_BOOKS.PdfMemoryStream.Position = 0;
+                    }
+                    
                 }
-
-
+                
+                return sonuc;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Hata :" + ex.Message);
-                return false;
+                Console.WriteLine($"Hata: {ex.Message}");
+
+                sonuc.State = MessageResultState.ERROR;
+                sonuc.Message = ex.Message;                
+                return sonuc;
             }
-
-
-
         }
 
         [HttpPost]
         public async Task<JsonResult> PostKitapEkleWordOrPdf(VM_BOOKS_DETAIL vM_BOOKS_det)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            var vM_BOOKS = new VM_BOOKS();
-            vM_BOOKS_det.BookModel = vM_BOOKS;
+            //var vM_BOOKS = new VM_BOOKS();
+            //vM_BOOKS_det.BookModel = vM_BOOKS;
 
             string dosya = "";
 
@@ -328,22 +370,41 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
 
             string hedefDosyaYolu = DosyaYolu + dosya;
+            vM_BOOKS_det.FDileName = dosya; 
 
-            vM_BOOKS_det.FDileName = dosya;
+            ServiceResult isAktarma = await AlinanDosyayiBellekteAktarmaAsync( vM_BOOKS_det);
 
-            bool isAktarma = AlinanDosyayiSablonDosyayaAktarma(hedefDosyaYolu, vM_BOOKS_det);
-
-            if (isAktarma)
+            if (isAktarma.State == MessageResultState.SUCCESS)
             {
                 vM_BOOKS_det.BookModel.ID = 0;
                 vM_BOOKS_det.isWordPDF = true;
-                result = await DosyadanKitapAktar(vM_BOOKS_det);
+                // result = await DosyadanKitapAktar(vM_BOOKS_det);
+                try
+                {
+                    if (vM_BOOKS_det.pdfVeyaWord == 1)
+                    {
+                        // word
+                        result = await WordDosyasindaAktarmaAsync(vM_BOOKS_det);
+                    }
+                    else
+                    {
+                        // pdf okuma işlemini getir.
+                        result = await PdfDosyasindanOkumaAsync(vM_BOOKS_det);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    result.State = MessageResultState.ERROR;
+                    Console.WriteLine($"Hata: {ex.Message}");
+                }
                 var bak = result;
             }
             else
             {
-                result.State = MessageResultState.ERROR;
-                result.Message = "Dosya eklemede durumunda hata oluştu.";
+                //result.State = MessageResultState.ERROR;
+               // result.Message = "Dosya ekleme  durumunda hata oluştu.";
+                return Json(isAktarma);
             }
 
 
@@ -460,7 +521,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         }
 
-
+        /// <summary>
+        /// Kitap ve kitaba ait sayfalar bu metot ile eklenir.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ServiceResult<VM_KITAP_EKLE>> KitapEkle(VM_BOOKS_DETAIL input)
         {
@@ -479,10 +544,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 {
                     isWordPDF = input.isWordPDF ?? false,
                     BooksId = input.BookModel.ID ?? 0,
-                    PageWrite = input.BookPagesModel.PageWrite,
-                    ID = input.BookPagesModel.ID,
-                    PageFoto = input.BookPagesModel.PageFoto ?? "",
-                    PageWriteBase64 = input.BookPagesModel.PageWriteBase64 ?? ""
+                    PageWrite = input.BookPagesModel?.PageWrite ?? "",
+                    ID = input.BookPagesModel?.ID ?? 0,
+                    PageFoto = input.BookPagesModel?.PageFoto ?? "",
+                    PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? ""
 
                 };
                 var bookPages = new BooksPagesService().PostSaveBooksPages(bookPapers);

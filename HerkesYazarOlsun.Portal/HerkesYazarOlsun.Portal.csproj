@@ -16,6 +16,16 @@
     <EmbeddedResource Remove="Models\**" />
     <None Remove="Models\**" />
   </ItemGroup>
+  <!-- publis için-->
+  <ItemGroup>
+    <None Update="Helpers\SablonWordBelge.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Helpers\SablonPdfBelge.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
   <ItemGroup>
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.css" />

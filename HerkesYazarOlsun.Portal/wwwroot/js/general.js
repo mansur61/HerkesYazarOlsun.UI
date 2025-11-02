@@ -2,16 +2,21 @@
     console.log("gelindi general.js : " +deger);
     if (deger == "sayfaFoto") {
         var dosya = document.getElementById('dosyaSayfaFoto').files[0];
-        var dosyaAdi = dosya.name;
-        $("#KITAPSAYFAFOTO").val(dosyaAdi);
-        console.log(deger + " geldi....  , dosyaAdi : " + dosyaAdi);
+        if (dosya) {
+            var dosyaAdi = dosya.name;
+            $("#KITAPSAYFAFOTO").val(dosyaAdi);
+            console.log(deger + " geldi....  , dosyaAdi : " + dosyaAdi);
+        }
+        
     }
     else if (deger == "onKapakFoto") {
         var dosya = document.getElementById('dosyaOnKapakFoto').files[0];
-        var dosyaAdi = dosya.name;
-        $("#ONKAPAKFOTO").val(dosyaAdi);
-        console.log("  dosyaAdi : " + dosyaAdi);
-        //console.log("  dosyaAdi2 : " + $("#ONKAPAKFOTO").val());
+        if (dosya) {
+            var dosyaAdi = dosya.name;
+            $("#ONKAPAKFOTO").val(dosyaAdi);
+            console.log("  dosyaAdi : " + dosyaAdi); 
+        }
+       
     }
     else if (deger == "arkaKapakFoto") {
         var dosya = document.getElementById('dosyaArkaKapakFoto').files[0];
@@ -24,19 +29,28 @@
     }
     else if (deger == "profilFoto") {
         var dosya = document.getElementById('proFotoSec').files[0];
-        var dosyaAdi = dosya.name;
-        $("#profilFotoName").val(dosyaAdi);
+        if (dosya) {
+            var dosyaAdi = dosya.name;
+            $("#profilFotoName").val(dosyaAdi);
+        }
+        
     }
 
     else if (deger == "dosyaAktarmaDisVeri") {
-        var dosya = document.getElementById('dosyaAktar').files[0];
-        var dosyaAdi = dosya.name;
-        $("#aktarilacakDosya").val(dosyaAdi);
+        var dosya = document.getElementById('dosyaAktarmaDis').files[0];
+        if (dosya) {
+            var dosyaAdi = dosya.name;
+            $("#aktarilacakDosya").val(dosyaAdi);
+        }
+        
     }
     else if (deger == "dosyaAktarmaDekont") {
         var dosya = document.getElementById('dekontAktar').files[0];
-        var dosyaAdi = dosya.name;
-        $("#aktarilacakDekont").val(dosyaAdi);
+        if (dosya) {
+            var dosyaAdi = dosya.name;
+            $("#aktarilacakDekont").val(dosyaAdi);
+        }
+        
     }
 
 }
