@@ -7,6 +7,10 @@
 
 @{
     string isGozlemciMod = User.GetGozlemciMod();
+    var temp = Model.VMBooksList?.ToList(); // ✅ Kopya liste oluştur
+    var tempDigerBookList = temp?.ToList();
+    var tempYorumBookList = temp?.ToList();
+    var tempYildizBookList = temp?.ToList();
 }
 <br />
 
@@ -64,13 +68,12 @@
 
 <br />
 @{
-    string tipsec = "";
-    var tempBookList = Model.VMBooksList;
+    string tipsec = "";    
 }
 <div class="row">
     <div class="col-md-9">
         <h3>
-            En Çok Yıldız Alan Kitaplar
+            5 Yıldız Alan Kitaplar
         </h3>
     </div>
 </div>
@@ -79,9 +82,10 @@
     tipsec = "yildizalan";
     // tipsec = "yayin";
     Model.Tip = @tipsec;    
-    Model.VMBooksList = Model.VMBooksList.Where(p => p.Stars.HangiStar == "yildiz5").ToList();
+    tempYildizBookList = temp.Where(p => p.Stars.HangiStar == "yildiz5").ToList();
+    Model.VMBooksList = tempYildizBookList;
 }
-
+@* <p>5 yildizalan kitap sayısı: @(tempYildizBookList?.Count ?? 0)</p> *@
 @Html.Partial("_KitapSliderGosterimleri", @Model)
 
 <div style="height:50px;"></div>
@@ -92,20 +96,20 @@
             En Çok Yorum Alan 10 Kitaplar 
         </h3>
     </div>
-</div>
-
+</div> 
 @{
     // tipsec = "begenilen";
     tipsec = "yorumalan";
     Model.Tip = @tipsec;
-    // Model.VMBooksList = @tempBookList;
     // Yorum sayısına göre sıralanmış en çok yorum alan 10 kitabı seç
-    Model.VMBooksList = Model.VMBooksList
-                        .OrderByDescending(b => b.BooksComments.Count)
-                        .Take(10)
-                        .ToList();
+    Model.VMBooksList = temp;
+    tempYorumBookList = temp.Where(p => p.Stars.HangiStar != "yildiz5" && p.BooksComments?.Count > 0)
+                     .OrderByDescending(b => b.BooksComments?.Count) 
+     //.Take(10)
+     .ToList();
+    Model.VMBooksList = tempYorumBookList;
 }
-
+@* <p>Yorum alan kitap sayısı: @(tempYorumBookList?.Count ?? 0)</p> *@
 @Html.Partial("_KitapSliderGosterimleri",@Model)
 
 <div style="height:50px;"></div>
@@ -123,13 +127,15 @@
     tipsec = "digerkitaplar";
     // tipsec = "okunan";
     Model.Tip = @tipsec;
+    Model.VMBooksList = temp;
     // İlk 10 yorum alan ve 5 yıldızlı kitapları hariç tut
-    Model.VMBooksList = tempBookList
-                        .Where(p => p.BooksComments.Count <= tempBookList.OrderByDescending(b => b.BooksComments.Count).Skip(10).Select(b => b.BooksComments.Count).FirstOrDefault())
+    tempDigerBookList = temp
+                        .Where(p => p.BooksComments.Count <= tempDigerBookList.OrderByDescending(b => b.BooksComments.Count).Skip(10).Select(b => b.BooksComments.Count).FirstOrDefault())
                         .Where(p => p.Stars.HangiStar != "yildiz5")
                         .ToList();
+    Model.VMBooksList = tempDigerBookList;
 }
-
+@* <p>digerkitaplar kitap sayısı: @(tempDigerBookList?.Count ?? 0)</p> *@
 @Html.Partial("_KitapSliderGosterimleri",@Model)
 
 

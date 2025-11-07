@@ -685,7 +685,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
-
+             
+            ViewBag.KITAPENC = kitapId;
             var vmBook = new BooksService().GetBooks(kitapId);
             ViewBag.iSTATISTIK = vmBook?.iSTATISTIK;
 

@@ -39,8 +39,12 @@ else
 {
     @if (@Model.HangiStar == "yildiz1")
     {
-        <i class="price-text-color fa fa-star"> </i>
-
+        @* <i class="price-text-color fa fa-star"> </i> *@
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
 
     }
     else
@@ -48,21 +52,20 @@ else
     {
         <i class="price-text-color fa fa-star"> </i>
         <i class="price-text-color fa fa-star"> </i>
-        @if (@Model.isToplam)
-        {
-            <strong>(@Model.IkiStarToplam) </strong>
-        }
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+
     }
     else  @if (@Model.HangiStar == "yildiz3")
     {
         <i class="price-text-color fa fa-star"> </i>
         <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        @if (@Model.isToplam)
-        {
+        <i class="price-text-color fa fa-star"> </i> 
 
-            <strong>(@Model.UcStarToplam) </strong>
-        }
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+       
     }
     else  @if (@Model.HangiStar == "yildiz4")
     {
@@ -70,26 +73,24 @@ else
         <i class="price-text-color fa fa-star"> </i>
         <i class="price-text-color fa fa-star"> </i>
         <i class="price-text-color fa fa-star"> </i>
-
-        @if (@Model.isToplam)
-        {
-
-            <strong>(@Model.DortStarToplam) </strong>
-        }
+        <i class="fa fa-star text-secondary"></i> 
     }
-    else
+    else @if (@Model.HangiStar == "yildiz5")
     {
         <i class="price-text-color fa fa-star"> </i>
         <i class="price-text-color fa fa-star"> </i>
         <i class="price-text-color fa fa-star"> </i>
         <i class="price-text-color fa fa-star"> </i>
         <i class="price-text-color fa fa-star"> </i>
+    }
+    else
+    {
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
 
-        @if (@Model.isToplam)
-        {
-
-            <strong>(@Model.BesStarToplam) </strong>
-        }
     }
 
 }

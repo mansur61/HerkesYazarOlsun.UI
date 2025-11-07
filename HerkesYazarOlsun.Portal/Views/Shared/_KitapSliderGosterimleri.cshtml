@@ -17,15 +17,6 @@
     Model.Start = @start;
 }
  
-@* @if (Model.VMBooksList != null)
-{
-    <p>booksList @Model.VMBooksList.Count()</p> 
-}
-else
-{
-    <p>booksList boş!</p>
-}
- *@
 <div id="my-pics-@Model.Tip" class="carousel slide" data-ride="carousel"
      style="width:1050px;margin:5px auto;background-color:aliceblue;height:430px">
    @*  <p>@Model.isAnaSayfa</p> *@
@@ -45,10 +36,7 @@ else
     </ol>
 
     <!-- Content -->
-    <div class="carousel-inner" role="listbox" style="width:100%">
-
-        @*@Html.Partial("Kitaplar",@Model)*@
-        @*@Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)*@
+    <div class="carousel-inner" role="listbox" style="width:100%"> 
 
         @for (int i = 0; i < @sliderSayisi; i++)
         {

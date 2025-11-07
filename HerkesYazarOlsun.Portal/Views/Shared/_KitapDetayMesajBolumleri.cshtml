@@ -1,5 +1,6 @@
 ﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Model.Entity
+@using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Controllers;
 
@@ -243,7 +244,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <textarea class="form-control" type="text" id="message" name="message" rows="1" placeholder="Mesajınız"></textarea>
+                                        <textarea class="form-control" type="text" id="message" name="message" rows="10" placeholder="Mesajınız"></textarea>
                                     </div>
                                 </div>
                                 @{
@@ -516,7 +517,10 @@
 </script>
 
 <script>
+    var kId = '@StringCipher.Encrypt(ViewBag.KITAPENC.ToString())';
+    //console.log("kId: "+kId);
     var yildizPuani = 0; 
+
     function Bilgilendirme(mesaj) {
 
         var name = $("#name").val();
@@ -600,7 +604,10 @@
                 if (kural === "True") {
                     Bilgilendirme("Kitap yorumu aktif!");
                 }
+                 setTimeout(function () {                    
+                    window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + kId.toString();
 
+                }, 3000);
             }
             else if (data.state == 3) {
                 $("#bilgi-" + yorumicin).css("display", "block");
@@ -663,8 +670,12 @@
                 $("#bilgi-" + degerlendirme).css("display", "none");
                 $("#uyari-" + degerlendirme).css("display", "none");
 
-                setTimeout(function () {
-                    window.location.href = window.location.href;
+                // setTimeout(function () {
+                //     window.location.href = window.location.href;
+                // }, 3000);
+                 setTimeout(function () {
+                    window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + kId.toString();
+
                 }, 3000);
 
             }
