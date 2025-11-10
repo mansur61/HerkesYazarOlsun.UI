@@ -242,11 +242,20 @@
                             clearInterval(interval);
                             progressBar.style.width = '100%';
 
-                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. İlgili kitaba yönlendiriliyorsunuz..");
+                            var mesaj = "";
+                            if (response && response.result){
+                                mesaj = "İlgili kitaba yönlendiriliyorsunuz..";
+                            }
+                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. " +mesaj);
                             setTimeout(function () {
                                 var link = window.location.href;
+                                    if (response && response.result) {
+                                    window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + response.result.toString();
+                                }else{
+                                    window.location.href = link;
+                                }
                                 //console.log("link " + link);
-                                window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + response.result.toString();
+                               // window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + response.result.toString();
 
                             }, 3000);
                         }

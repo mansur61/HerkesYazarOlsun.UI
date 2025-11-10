@@ -156,29 +156,29 @@
                 <div class="table-responsive">
                     <table class="table">
                         <tbody>
-
                             <tr>
                                 <td>
-                                    <h5>Genişlik</h5>
+                                    <h5>Kitap No</h5>
                                 </td>
                                 <td>
-                                    <h5>128mm</h5>
+                                    <h5>@Model.BookModel?.ID</h5>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <h5>Yükseklik</h5>
+                                    <h5>Yazarı</h5>
                                 </td>
                                 <td>
-                                    <h5>508mm</h5>
+                                    <h5>@Model.BookModel?.User?.USERNAME</h5>
                                 </td>
                             </tr>
+                            
                             <tr>
                                 <td>
                                     <h5>Sayfa Sayısı</h5>
                                 </td>
                                 <td>
-                                    <h5>10</h5>
+                                    <h5>@Model.BookModel?.BooksPageList?.Count</h5>
                                 </td>
                             </tr>
                             <tr>
@@ -186,7 +186,7 @@
                                     <h5>Konusu</h5>
                                 </td>
                                 <td>
-                                    <h5>Hikaye</h5>
+                                    <h5>@Model.BookModel?.Categori?.Name</h5>
                                 </td>
                             </tr>
 

@@ -224,15 +224,21 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var eklemeDurumu = await KitapEkle(vM_BOOKS_det);//ilk etap kitabı ekle
             vM_BOOKS_det.BookModel = new VM_BOOKS();
             result.State = eklemeDurumu.State;
-            result.Message = eklemeDurumu.Message;            
-
+            result.Message = eklemeDurumu.Message;
+            if(eklemeDurumu.Result != null)
+            {
+                result.Result = StringCipher.Encrypt(eklemeDurumu.Result.BookID.ToString());
+            }
+            
             if (eklemeDurumu.State == MessageResultState.SUCCESS)
             {
                 vM_BOOKS_det.BookModel.ID = (int)eklemeDurumu.Result.BookID;
+               
                 result = await BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(vM_BOOKS_det, sayfaYazisi, aktarilmakIstenenLimit);
                 
             }
-            result.Result = StringCipher.Encrypt(eklemeDurumu.Result.BookID.ToString()); // ilgili kitabın enc hali
+             
+           // ilgili kitabın enc hali
             return result;
         }
         
@@ -509,11 +515,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        public ServiceResult<Books> KitabiTamamla(VM_BOOKS input)
+        public ServiceResult<Books> KitabiTamamla(VM_BOOKS_DETAIL input)
         {
 
-            var getBook = new BooksService().GetBooks(input.ID ?? 0);
+            var getBook = new BooksService().GetBooks(input.BookModel?.ID ?? 0);
             var _book = ObjectMapper.Map(getBook, new Books());
+            _book.TAMAMLANDIMI = input.isTamalama ?? false;
 
             ServiceResult<Books> updaterBook = new BooksService().UpdateBook(_book);
 
@@ -770,7 +777,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
             else
             {
-                result.State = MessageResultState.ERROR;
+                result.State = sonuc.State;
+                result.Message = sonuc.Message;
+                result.Result = sonuc.Result;
             }
 
             return Json(result);
