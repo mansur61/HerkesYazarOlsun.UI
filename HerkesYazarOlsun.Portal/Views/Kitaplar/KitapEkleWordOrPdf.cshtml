@@ -246,6 +246,7 @@
                             if (response && response.result){
                                 mesaj = "İlgili kitaba yönlendiriliyorsunuz..";
                             }
+                            
                             BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. " +mesaj);
                             setTimeout(function () {
                                 var link = window.location.href;

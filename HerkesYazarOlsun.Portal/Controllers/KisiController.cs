@@ -31,11 +31,17 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public IActionResult TumYazarlar(VM_ARAMA_INPUT arama)
         {
             VM_USERS_DETAIL vmUsers = new VM_USERS_DETAIL();
+            if (arama.FavoriYazarlar.HasValue)
+            {
+                arama.yazarIId = Lid;
+            }
+
+            ViewBag.FavoriYazarlar = arama.FavoriYazarlar;
 
             vmUsers.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
             List<VM_USERS> usersList = new KisiService().GetKisiler(arama).ToList();
-            vmUsers.VMUsersList = usersList;
+            vmUsers.VMUsersList = usersList;//.Where(p=>p.ID != Lid).ToList();
 
             return View(vmUsers); 
         }
@@ -52,10 +58,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 YazarId = id,
                 tck = tck
             };
-            var getFavori_yazar = new KisiService().PostFavoriSaveWriter(fav_yazar);
+            var result = new KisiService().PostFavoriSaveWriter(fav_yazar);
 
-
-            return Json(getFavori_yazar);
+            return Json(result);
         }
 
         [HttpPost]
@@ -102,6 +107,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             return View(vmUsers);
         }
+
         // buda reviz edilecek aslında
         public IActionResult Profil(string? pId)
         {

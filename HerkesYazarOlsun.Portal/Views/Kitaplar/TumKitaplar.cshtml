@@ -14,10 +14,32 @@
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Portal.Controllers;
 
+ 
+@if (ViewBag.DevamEdenKitaplar != null && ViewBag.DevamEdenKitaplar)
+{
+    <h3 style="margin: 50px auto;">Devam Eden Kitaplar</h3>
+}
+else if (ViewBag.FavoriKitaplar != null && ViewBag.FavoriKitaplar)
+{
+    <h3 style="margin: 50px auto;">Favori Kitaplar</h3>
+}
+else if (ViewBag.YayinlananKitaplar != null && ViewBag.YayinlananKitaplar)
+{
+    <h3 style="margin: 50px auto;">Yayınlanan Kitaplar</h3>
+}
+else if (ViewBag.BitenKitaplar != null && ViewBag.BitenKitaplar)
+{
+    <h3 style="margin: 50px auto;">Biten Kitaplar</h3>
+}
+else
+{
+    <h3 style="margin: 50px auto;">Tüm Kitaplar</h3>
+}
 
-<h3 style="margin: 50px auto;">Tüm Kitaplar</h3>
 <h6><span>@Model.VMBooksList.Count()</span> Kayıt Var </h6>
+
 <hr />
+
 
 @Html.Partial("_KitapFiltreleme")
 
@@ -52,7 +74,7 @@
     function Ara() {
 
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
-
+        console.log(" kitap arama "+listelenecek_kayit_sayisi);
         if(listelenecek_kayit_sayisi == 0){
             return ;
         }
@@ -80,7 +102,7 @@
 
 
             } else {
-                alert("olumsuz");
+                 
                 $("#tumkitaplar").css("display", "block");
                 $("#arabutonfiltre").css("display", "block");
             }

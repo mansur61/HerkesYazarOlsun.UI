@@ -40,11 +40,11 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a href="/Kitaplar/KitapDetay?kitapId=@item.ID">@item.NAME </a></h6>
+                                    <h6><a href="/Kitaplar/KitapDetay?kitapId=@item.ID">@item.USERNAME </a></h6>
                                     <div class="row">
                                         <div class="rating hidden-sm col-sm-7">
 
-                                            @for (int m = 0; m < @item.Stars.EnFazlaSitar; m++)
+                                            @for (int m = 0; m < @item.Stars?.EnFazlaSitar; m++)
                                             {
                                                 <i class="price-text-color fa fa-star"></i>
                                             }
@@ -75,18 +75,20 @@
     </div>
 
 </div>
+ 
+@* @Html.Partial("_AlertMesaj", @Model.Tip)   *@
 
-
-<script>
-
+<script> 
   
     function YazariFavorilereEkle(yazarId, tck,tip) {
-
+          
         $.post("@Url.Action(nameof(KisiController.YazariFavorilereEkle), "Kisi")", { "id": yazarId, "tck": tck }, function (data) {
             if (data) {
-                $("#basarili-" + tip).css("display", "block");
-            } else {
-                $("#uyari-" + tip).css("display", "block");
+                console.log("data ",data); 
+                UyariVer(data.state, "#basarili-"+ tip, "#bilgi-"+ tip, "#uyari-"+ tip, data.message);
+               
+            } else { 
+               UyariVer(data.state, "#basarili-"+ tip, "#bilgi-"+ tip, "#uyari-"+ tip, data.message);
             }
 
 

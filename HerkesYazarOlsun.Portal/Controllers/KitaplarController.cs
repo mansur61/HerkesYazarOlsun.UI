@@ -171,7 +171,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private async Task<ServiceResult> PdfDosyasindanOkumaAsync(VM_BOOKS_DETAIL vM_BOOKS_det)
         {
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);             
-            vM_BOOKS_det.BookModel = new VM_BOOKS();
+            //vM_BOOKS_det.BookModel = new VM_BOOKS();
             try
             {
                 if (vM_BOOKS_det.PdfMemoryStream == null)
@@ -186,6 +186,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
                 // İlk etapta kitabı ekle
                 var eklemeDurumu = await KitapEkle(vM_BOOKS_det);
+
+                if (eklemeDurumu.State == MessageResultState.SUCCESS && eklemeDurumu.Result != null)
+                { 
+                    sonuc.Result = StringCipher.Encrypt(eklemeDurumu.Result.BookID.ToString());
+                }
 
                 if (eklemeDurumu.State == MessageResultState.SUCCESS)
                 {
@@ -208,6 +213,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         _ = await KitapEkle(vM_BOOKS_det);
                     }
                 }
+                else
+                {
+                    sonuc.State = MessageResultState.ERROR;
+                    sonuc.Message = eklemeDurumu.Message;
+                }
             }
             catch (Exception ex)
             {
@@ -225,7 +235,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             vM_BOOKS_det.BookModel = new VM_BOOKS();
             result.State = eklemeDurumu.State;
             result.Message = eklemeDurumu.Message;
-            if(eklemeDurumu.Result != null)
+            if(eklemeDurumu.State == MessageResultState.SUCCESS && eklemeDurumu.Result != null )
             {
                 result.Result = StringCipher.Encrypt(eklemeDurumu.Result.BookID.ToString());
             }
@@ -716,6 +726,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
             kitapDetay.BookModel = new VM_BOOKS();
 
+            if(arama.FavoriYazarlar != null || arama.DevamEdenKitaplar != null ||
+                arama.FavoriKitaplar != null ||  arama.YayinlananKitaplar != null ||  arama.BitenKitaplar != null)
+            {
+                arama.yazarIId = Lid;
+            }
+
             var getBookList = new BooksService().TumKitaplar(arama);
             kitapDetay.VMBooksList = getBookList!;
 
@@ -723,9 +739,17 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
             ViewBag.LOGIN_USER_ID = Lid;
+             
+            ViewBag.DevamEdenKitaplar = arama.DevamEdenKitaplar;
+            ViewBag.FavoriKitaplar = arama.FavoriKitaplar;
+            ViewBag.YayinlananKitaplar = arama.YayinlananKitaplar;
+            ViewBag.BitenKitaplar = arama.BitenKitaplar; 
 
             return View(kitapDetay);
         }
+
+        [HttpPost]
+        [Route("AraButonFiltrelemeKitaplar")]
         public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
@@ -738,7 +762,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
             ViewBag.LOGIN_USER_ID = Lid;
-            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
+            //ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
             kitapDetay.VMBooksList = bookList!;
 
             return View(kitapDetay);

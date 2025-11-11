@@ -59,11 +59,11 @@
 //"#uyari-"
 /*function BilgiVer(state,basarili,bilgi,uyari,mesaj) {
     if (state == 1) {
-        $(basarili + tip).css("display", "block");
-        $(basarili + tip + " #mesaj").html(mesaj);
+        $(basarili  ).css("display", "block");
+        $(basarili   + " #mesaj").html(mesaj);
 
-        $(bilgi + tip).css("display", "none");
-        $(uyari + tip).css("display", "none");
+        $(bilgi  ).css("display", "none");
+        $(uyari  ).css("display", "none");
 
         setTimeout(function () {
             var link = window.location.href;
@@ -76,17 +76,17 @@
         }, 3000);
     }
     else if (state == 3) {
-        $(bilgi + tip).css("display", "block");
-        $(bilgi + tip + " #mesaj").html(mesaj);
+        $(bilgi  ).css("display", "block");
+        $(bilgi   + " #mesaj").html(mesaj);
 
-        $(basarili + tip).css("display", "none");
-        $(uyari + tip).css("display", "none");
+        $(basarili  ).css("display", "none");
+        $(uyari  ).css("display", "none");
     }
     else {
-        $(uyari + tip).css("display", "block");
-        $(bilgi + tip).css("display", "none");
-        $(basarili + tip).css("display", "none");
-        $(uyari + tip + " #mesaj").html(mesaj);
+        $(uyari  ).css("display", "block");
+        $(bilgi  ).css("display", "none");
+        $(basarili  ).css("display", "none");
+        $(uyari   + " #mesaj").html(mesaj);
     }
 }*/
 
@@ -109,4 +109,38 @@ function isAlert(metinText) {
             return false;
         }
     });
+}
+
+function UyariVer(state, basarili, bilgi, uyari, mesaj) {
+    //console.log("geldi UyariVer ", state);
+    if (state == 1) {
+        $(basarili  ).css("display", "block");
+        $(basarili   + " #mesaj").html(mesaj);
+
+        $(bilgi  ).css("display", "none");
+        $(uyari  ).css("display", "none");
+
+        /*setTimeout(function () {
+            var link = window.location.href;
+
+            window.location.href = link;
+            console.log("link " + link);
+
+            window.location.reload()
+
+        }, 3000);*/
+    }
+    else if (state == 3) {
+        $(bilgi  ).css("display", "block");
+        $(bilgi   + " #mesaj").html(mesaj);
+
+        $(basarili  ).css("display", "none");
+        $(uyari  ).css("display", "none");
+    }
+    else {
+        $(uyari  ).css("display", "block");
+        $(bilgi  ).css("display", "none");
+        $(basarili  ).css("display", "none");
+        $(uyari   + " #mesaj").html(mesaj);
+    }
 }
