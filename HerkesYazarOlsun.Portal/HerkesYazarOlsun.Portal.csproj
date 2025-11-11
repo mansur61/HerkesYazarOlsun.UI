@@ -10,6 +10,16 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
+  <Target Name="CopyBootstrapIcons" AfterTargets="Build">
+    <ItemGroup>
+      <BootstrapIcons Include="node_modules\bootstrap-icons\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(BootstrapIcons)"
+          DestinationFolder="$(ProjectDir)wwwroot\lib\bootstrap-icons\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+
   <ItemGroup>
     <Compile Remove="Models\**" />
     <Content Remove="Models\**" />
