@@ -41,10 +41,12 @@
         </div>
 
         <div class="col-md-9">
+            <h3><small>Kitabın Adı </small></h3>
+            <small>@Model.BookModel.Name</small>
             <h3><small>Yazılma Tarihi</small></h3>
             <small>@Model.BookModel.CREATE_AT</small>
             <h3><small>Yazarı</small></h3>
-            <p><small>@Model.BookModel.User.NAME</small></p>
+            <p><small>@Model.BookModel.User.USERNAME</small></p>
             <h3>Kitap Özeti</h3>
             <p>
                 @Html.Raw(Model.BookModel.ONSOZ)

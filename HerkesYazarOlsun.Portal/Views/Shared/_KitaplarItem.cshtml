@@ -36,17 +36,25 @@
                 <ul class="product__item__pic__hover">
                     @if (isGozlemciMod == "0")
                     {
+                        
                         <li><a onclick='KitabiFavorilereEkle("@StringCipher.Encrypt(@item.value.ID.ToString())", "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
                         @if (!(@Model.isAnaSayfa ?? false)) // ana sayfadan gelemeyecek
                         {
-
-                            if (@item.value.LoginUserId == @ViewBag.LOGIN_USER_ID) //ilgili giriş yapan kullanıcı yayına gönderebilir veya editlesin
+                           
+                            if (@item.value.YazarId == @ViewBag.LOGIN_USER_ID) //ilgili giriş yapan kullanıcı yayına gönderebilir veya editlesin
                             {
                                 @if ((@item.value.TAMAMLANDIMI))
                                 {
-                                    var yayinAyr = @ViewBag.YayinAyar as YayinAyarlari;
+                                    @* var yayinAyr = @ViewBag.YayinAyar as YayinAyarlari; *@
+                                   
+                                    var yayinAyr = (ViewBag.YayinAyar != null && ViewBag.YayinAyar.Count > 0)
+                                        ? ViewBag.YayinAyar
+                                        : item.value.Categori?.CategoryYayinAyarlari;
+                                     
+
                                     if (yayinAyr != null)
                                     {
+                                        
                                         if (@item.value.iSTATISTIK.ToplamBegeni >= yayinAyr.ToplamBegeni
                                         && @item.value.iSTATISTIK.ToplamYorum >= yayinAyr.ToplamYorum
                                         && @item.value.iSTATISTIK.ToplamYildiz >= yayinAyr.ToplamYildiz
@@ -62,9 +70,7 @@
 
 
                                 }
-                                // NOT: burda yayında olan kitapları da KitabiYayinaGonder yapsın . ek validatorlerde kontrol yapsın hatta gerek yok
-                                // yayınlanan kitap farklı bir yayına daha gönderilebilir.
-                                <li><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@item.value.ID.ToString())"><i class="fa fa-edit"></i></a></li>
+                                @* <li><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@item.value.ID.ToString())"><i class="fa fa-edit"></i></a></li> *@
                             }
                            
                         }
@@ -144,12 +150,7 @@
             } else {
                 $("#uyari-" + tip).css("display", "block");
                 $("#uyari-" + tip + " #mesaj").html(data.message);
-
-                //test için
-                setTimeout(function () {
-
-                    window.location.href = "/OdemeSayfasi/Odeme?kitapId=" + kitapId;
-                }, 3000);
+                 
             }
         });
     }

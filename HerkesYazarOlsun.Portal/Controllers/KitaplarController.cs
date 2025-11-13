@@ -467,11 +467,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiYayinaGonder")]
-        public JsonResult KitabiYayinaGonder(long kitapid)
+        public JsonResult KitabiYayinaGonder(string kitapid)
         {
-            var getBook = new BooksService().GetBooks(kitapid);
-            var _book = ObjectMapper.Map(getBook, new Books());
-            ServiceResult<Books> checkerBook = new BooksService().CheckBook(_book);
+            var kId = StringCipher.Decrypt(kitapid.ToString());
+            var KİTAPıD = Convert.ToInt64(kId); 
+            ServiceResult<Books> checkerBook = new BooksService().CheckBook(KİTAPıD);
+            //checkerBook.State = MessageResultState.SUCCESS; //test
             return Json(checkerBook);
         }
 
@@ -560,7 +561,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 var bookPapers = new VM_BOOKS_PAGES()
                 {
                     isWordPDF = input.isWordPDF ?? false,
-                    BooksId = input.BookModel.ID ?? 0,
+                    BookId = input.BookModel.ID ?? 0,
                     PageWrite = input.BookPagesModel?.PageWrite ?? "",
                     ID = input.BookPagesModel?.ID ?? 0,
                     PageFoto = input.BookPagesModel?.PageFoto ?? "",
@@ -613,7 +614,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         var bookPapers = new VM_BOOKS_PAGES()
                         {
                             isWordPDF = input.isWordPDF ?? false,
-                            BooksId = book.Result.ID,
+                            BookId = book.Result.ID,
                             PageWrite = input.BookPagesModel?.PageWrite,
                             PageFoto = input.BookPagesModel?.PageFoto ?? "",
                             PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? ""

@@ -231,10 +231,10 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public ServiceResult<Books> CheckBook(Books book)
+        public ServiceResult<Books> CheckBook(long id)
         {
-            string stringData = JsonConvert.SerializeObject(book);
-            Task<string> jsonContent = PostData("api/Books/CheckBook", stringData);
+            //string stringData = JsonConvert.SerializeObject(id);
+            Task<string> jsonContent = GetData("api/Books/CheckBook?" + "id=" + id);
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<ServiceResult<Books>>(jsonContent.Result);
