@@ -8,8 +8,8 @@
 
 
 <input type="hidden" id="odemesponsoricin" value="odemesponsor" />
-<input type="hidden" id="loginId" value="1" />
-<input type="hidden" id="kitapId" value="1" />
+<input type="hidden" id="loginId" value="@ViewBag.LoginUserId.ToString()" />
+<input type="hidden" id="kitapId" value="@ViewBag.KitapId.ToString()" />
 
 @{
     string alertmesajgostermedurumu = "odemesponsor";
@@ -224,7 +224,7 @@
                             clearInterval(interval);
                             progressBar.style.width = '100%';
 
-                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. İlgili kitaba yönlendiriliyorsunuz..");
+                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Sponsor Bildiriminiz Alınmıştır. İlgili kitaba yönlendiriliyorsunuz..");
                             // setTimeout(function () {
                             //     var link = window.location.href;
                             //      window.location.href = "/Kitaplar/KitapDetay?kitapId=" + kitapId.toString();
@@ -234,7 +234,7 @@
                         else {
                             clearInterval(interval);
                             progressBar.style.width = `${progress}%`;
-                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);//"Kitabınız Eklenemedi"
+                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message); 
                         }
 
                     },

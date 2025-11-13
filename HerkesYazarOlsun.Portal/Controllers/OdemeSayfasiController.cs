@@ -56,9 +56,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
         public IActionResult SponsorlukBildirimi(string kitapId, string yazarId)
         {
-            var kitap_id = Convert.ToInt64(StringCipher.Decrypt(kitapId));
-            var yazar_id = Convert.ToInt64(StringCipher.Decrypt(yazarId));
-            var bb = Lid;
+            //var kitap_id = Convert.ToInt64(StringCipher.Decrypt(kitapId));
+            //var yazar_id = Convert.ToInt64(StringCipher.Decrypt(yazarId));
+            //var bb = Lid;
+            ViewBag.LoginUserId = yazarId;
+            ViewBag.KitapId = kitapId;
             //kitap ve yazarId şifrelerini çöz
             VM_SPONSORLAR vM_SPONSORLAR = new VM_SPONSORLAR();
             vM_SPONSORLAR.SponsorlarList = new SponsorlarService().GetSponsorlar();
