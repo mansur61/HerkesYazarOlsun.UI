@@ -4,6 +4,7 @@
     {
         public string DosyaBaseUrl { get; set; }
         public int ParagrafLimiti { get; set; }
+        public int DefaultYayinUcreti { get; set; }
     }
 
 }

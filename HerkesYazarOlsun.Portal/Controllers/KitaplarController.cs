@@ -472,7 +472,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             var kId = StringCipher.Decrypt(kitapid.ToString());
             var KİTAPıD = Convert.ToInt64(kId); 
             ServiceResult<Books> checkerBook = new BooksService().CheckBook(KİTAPıD);
-            //checkerBook.State = MessageResultState.SUCCESS; //test
+            // checkerBook.State = MessageResultState.SUCCESS; //test
             return Json(checkerBook);
         }
 

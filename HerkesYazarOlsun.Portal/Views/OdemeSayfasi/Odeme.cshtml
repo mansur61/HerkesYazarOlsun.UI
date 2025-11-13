@@ -186,7 +186,7 @@
                         <a>
                             <span class="badge pull-right">
                                 <span class="fa fa-turkish-lira" id="odemeFiyati">
-                                    4200
+                                    @ViewBag.DefaultYayinUcreti
                                 </span>
                                 @*4200*@
 
@@ -198,7 +198,9 @@
                 @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
 
                 <a class="btn btn-success btn-lg btn-block" role="button" onclick="OdemeAl()">ÖDEME YAP</a>
-
+                <div id="loading" style="display: none; text-align: center;">
+                    <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+                </div>
             </div>
             <div class="col-md-6" style="background-color:lightgrey;border-radius:20px;">
                 <div>
@@ -370,16 +372,19 @@
 
         var odemeFiyati = document.getElementById("odemeFiyati").innerHTML.toString().trim();
 
-        console.log(" odemeFiyati:" + odemeFiyati)
+        // console.log(" odemeFiyati:" + odemeFiyati)
 
-        console.log(" cardNumber: " + cardNumber + " expityMonth: " + expityMonth + " expityYear: " + expityYear + " cvCode: " + cvCode + " cardOnName: " + cardOnName);
+        // console.log(" cardNumber: " + cardNumber + " expityMonth: " + expityMonth + " expityYear: " + expityYear + " cvCode: " + cvCode + " cardOnName: " + cardOnName);
 
         var isChek = KartBilgileriniDogrula(cardNumber, expityMonth, expityYear, cvCode, cardOnName);
 
-        console.log(" isChek:" + isChek);
+        //console.log(" isChek:" + isChek);
 
         if (isChek) {
+              $("#loading").css("display", "block");
             setTimeout(function () {
+                $("#loading").css("display", "none");
+                // bu kısmı entegre edilen ödeme alt yapı sayfasaına yönlendirilecek
                         window.location.href = "/OdemeSayfasi/SponsorlukBildirimi?kitapId=" + kitapId + "&yazarId=" + loginUserId + "";
                     }, 5000);
 

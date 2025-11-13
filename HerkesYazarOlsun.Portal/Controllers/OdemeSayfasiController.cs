@@ -1,37 +1,48 @@
-﻿
-using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Model.Utils;
+﻿using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Net.Mail;
+using System.Security.Cryptography;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
     public class OdemeSayfasiController : Controller
     {
         private readonly VM_Mail_Settings _mailSettings;
+        private readonly HelperSettings helperSettings;
         private EmailService emailService;
 
        
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
-        public OdemeSayfasiController(IHttpContextAccessor contextAccessor, IOptions<VM_Mail_Settings> mailSettings)
+        public OdemeSayfasiController(IHttpContextAccessor contextAccessor, 
+            IOptions<VM_Mail_Settings> mailSettings, 
+            IOptions<HelperSettings> _helperSettings)
         {
             _contextAccessor = contextAccessor;
             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
             this.emailService = new EmailService();
             _mailSettings = mailSettings.Value;
+            helperSettings = _helperSettings.Value;
         }
         public IActionResult Odeme(string kitapId)
         {
 
             ViewBag.LoginUserId = StringCipher.Encrypt(Lid.ToString());
             ViewBag.KitapId = kitapId;
+            ViewBag.DefaultYayinUcreti = helperSettings.DefaultYayinUcreti;
             return View();
         }
 
+
+        /**
+         * //Ödeme alt yapısına gider. (iyizico vs.) Başarılı ise Ödeme tablosuna kayıt atar. isOdeme durumu belilerlenir.
+         *  // buradan ilgili ödeme entegrasyonu sayfasına yönlendir. callback url de bu endpoinmti kullanırsın
+         * */
         [HttpPost]
         public JsonResult SaveOdeme(VM_KARTLAR kart)
         {
@@ -54,35 +65,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View(vM_SPONSORLAR);
 
         }
-        //  test edilecek
-
-        private async Task<string> GetDosyaPathAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
-        {
-            var dosyalar = odemeSponsorlar.dosyalar;
-            string tempFilePath = "";
-            if (dosyalar != null && dosyalar.Any())
-            {
-                var dosya = odemeSponsorlar.dosyalar!.FirstOrDefault();
-                if (dosya != null)
-                {
-                    // Dosyayı geçici bir dosyaya kaydetme
-                    tempFilePath = Path.Combine(Path.GetTempPath(), dosya.FileName);
-                    using (var stream = new FileStream(tempFilePath, FileMode.Create))
-                    {
-                        await dosya.CopyToAsync(stream); // Dosyayı geçici dosyaya kaydediyoruz
-                    }
-                }
-
-            }
-            return tempFilePath;
-        }
-
+     
         [HttpPost]
         public async Task<JsonResult> SaveSponsorlukBildirAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
         {
             ServiceResult result = new ServiceResult();
-            odemeSponsorlar.LoginUserId = Lid;
-            string tempFilePath = await GetDosyaPathAsync(odemeSponsorlar);
+            odemeSponsorlar.LoginUserId = Lid; 
 
             result = new ServiceResult(state: MessageResultState.SUCCESS, message: "Olmadi");
             //new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
@@ -92,10 +80,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             if (result.State == MessageResultState.SUCCESS)
             {
-                var mesaj = result.Message;
-               
-                //alinan mail
-                var icerik = new VM_MAIL_ICERIK()
+                var mesaj = result.Message; 
+                 //alinan mail
+                 var icerik = new VM_MAIL_ICERIK()
                 {
                     username = _mailSettings.Username,
                     password = _mailSettings.Password,
@@ -131,10 +118,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     gondericii_mail = "kayamansur61@gmail.com", //odemeSponsorlar.Mail,
                     // mail kime gidiyor
                     kime = _mailSettings.FromEmail,
-                    dosyaYolu = tempFilePath,
-                };
+                    //dosyaYolu = tempFilePath,
+                    dosyalar = odemeSponsorlar.dosyalar != null &&  odemeSponsorlar.dosyalar.Any() ? odemeSponsorlar.dosyalar : null
+                 };
 
-                string sonuc = emailService.EmailGonder(icerik);
+                string sonuc = await emailService.EmailGonder(icerik);
 
 
                 if (sonuc == "-1")
@@ -183,7 +171,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         kime = odemeSponsorlar.Mail,
                     };
 
-                     sonuc = emailService.EmailGonder(icerik);
+                     sonuc = await emailService.EmailGonder(icerik);
 
 
                     if (sonuc == "-1")
