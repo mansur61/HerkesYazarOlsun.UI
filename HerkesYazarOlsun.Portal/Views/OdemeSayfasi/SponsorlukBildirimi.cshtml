@@ -43,16 +43,16 @@
             <p></p>
             <p> * Kitabınızın içeriği ile alakalı olabilmektedir. (Argo kelimeler, cinsellik durumları vs.) </p>
             <p> * Yayın evinin düzeltmesini istediği format bazlı durumlar olabilmektedir </p>
-           
+
         </div>
         <div>
-            <span style="color:red"><strong>ÖNEMLİ </strong></span>  <span style="text-decoration:underline"> 
-                3 iş günü içinde size  sponsor koudunuz iletilmesi halinde 
-            </span> <span style="text-decoration:underline;color:red"> 
-                 PARANIZ İADE EDİLMEYECEKTİR !!!
+            <span style="color:red"><strong>ÖNEMLİ </strong></span>  <span style="text-decoration:underline">
+                3 iş günü içinde size  sponsor koudunuz iletilmesi halinde
+            </span> <span style="text-decoration:underline;color:red">
+                PARANIZ İADE EDİLMEYECEKTİR !!!
             </span>
             <p></p>
-            
+
         </div>
         <br /><br />
         <div class="col-sm-8">
@@ -83,7 +83,7 @@
 
                             @foreach (var item in @Model.SponsorlarList)
                             {
-                                <li><a class="spns" value="@item.ID" name="@item.SponsorAdi" onclick="SponsorSec(@item.ID)">@item.SponsorAdi</a></li>
+                                <li><a class="spns" value="@item.ID" name="@item.SponsorAdi" onclick="SponsorSec(this)">@item.SponsorAdi</a></li>
 
                             }
                         </ul>
@@ -131,7 +131,7 @@
     <!-- SweetAlert2 JS dosyası ve Bootstrap JS dosyası-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     @* <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> *@
-    
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="~/js/general.js"></script>
@@ -173,7 +173,8 @@
 
         var formData = new FormData(this);
 
-        formData.append('KitapId', kitapId);
+        //formData.append('KitapId', kitapId);
+        formData.append('KitapIdENC', kitapId);        
         formData.append('LoginUserId', loginId);
         formData.append('NameSurname', ad);
         formData.append('Mail', email);
@@ -225,16 +226,16 @@
                             progressBar.style.width = '100%';
 
                             BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Sponsor Bildiriminiz Alınmıştır. İlgili kitaba yönlendiriliyorsunuz..");
-                            // setTimeout(function () {
-                            //     var link = window.location.href;
-                            //      window.location.href = "/Kitaplar/KitapDetay?kitapId=" + kitapId.toString();
+                            setTimeout(function () {
+                                 
+                                 window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + kitapId.toString();
 
-                            // }, 3000);
+                            }, 3000);
                         }
                         else {
                             clearInterval(interval);
                             progressBar.style.width = `${progress}%`;
-                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message); 
+                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);
                         }
 
                     },
@@ -337,25 +338,17 @@
 
     }
 
-    function SponsorSec(id) {
-        sponsorMenuId = id;
-        var nodeNameProperty = SponsorAdiGetir(id - 1);
-        console.log("nodeNameProperty :" + nodeNameProperty);
-        $("#seciim").html(nodeNameProperty);
+     function SponsorSec(el) {
+        const sponsorId = el.getAttribute("value");
+        const sponsorName = el.getAttribute("name");
 
+        sponsorMenuId = sponsorId;
+        $("#seciim").html(sponsorName);
+
+        console.log("Seçilen sponsor adı:", sponsorName);
     }
-    function SponsorAdiGetir(id) {
-        var nodeNameProperty = "";
-        const nodeList = document.querySelectorAll(".spns");
 
-        for (let i = 0; i < nodeList.length; i++) {
 
-            if (id == i) {
-                nodeNameProperty = nodeList[i].name;
-            }
-        }
-        return nodeNameProperty;
-    }
 
 
 </script>

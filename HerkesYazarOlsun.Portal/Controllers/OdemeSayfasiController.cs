@@ -72,18 +72,20 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public async Task<JsonResult> SaveSponsorlukBildirAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
         {
             ServiceResult result = new ServiceResult();
-            odemeSponsorlar.LoginUserId = Lid; 
+            odemeSponsorlar.LoginUserId = Lid;
+            var kitap_id = Convert.ToInt64(StringCipher.Decrypt(odemeSponsorlar.KitapIdENC));
 
-            result = new ServiceResult(state: MessageResultState.SUCCESS, message: "Olmadi");
+            result = new ServiceResult(state: MessageResultState.SUCCESS, message: "Başarılı");
             //new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
 
             var spnsModel = new SponsorlarService().GetSponsorlarById(odemeSponsorlar.SponsorId);
-            var kisiModel = new KisiService().GetKisiById(Lid);
+            //var kisiModel = new KisiService().GetKisiById(Lid);
+
+            //odemeSponsorlar.Mail = "kayamansur61@gmail.com"; //test
 
             if (result.State == MessageResultState.SUCCESS)
-            {
-                var mesaj = result.Message; 
-                 //alinan mail
+            { 
+                 //alinan mail, formdan herkes yazar olsuna mail gelecek
                  var icerik = new VM_MAIL_ICERIK()
                 {
                     username = _mailSettings.Username,
@@ -96,12 +98,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
                                 <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
                                     <h2 style='color: #2c3e50;'>Sayın Herkes Yazar Olsun Ekibi,</h2>
                                     <p>
-                                        {odemeSponsorlar.KitapId.ToString()} nolu Kitap bilgisi ile Sponsor seçimi için size ulaşıyorum.
-                                        Sponsor Adı olarak  {spnsModel.SponsorAdi} seçtiğimi belirtmek istiyorum.
+                                        Merhabalar, {odemeSponsorlar.Mail.ToString()} ilgili mail adresimdir. 
                                     </p>
                                     <p>
-                                        <strong>İletişim Bilgilerim:</strong><br>
-                                        <strong>Ad Soyad:</strong> {kisiModel.NAME} {kisiModel.SURNAME}<br>
+                                        {kitap_id.ToString()} nolu Kitap bilgisi ile Sponsor seçimi için size ulaşıyorum.
+                                        Sponsor Adı olarak  '{spnsModel.SponsorAdi}' seçtiğimi belirtmek istiyorum.
+                                    </p>
+                                    <p> 
+                                        <strong>İletişim Bilgilerim:</strong><br> 
+                                        <strong>Ad Soyad:</strong> {odemeSponsorlar.NameSurname} <br>
                                         <strong>Telefon:</strong> {odemeSponsorlar.Tel}<br>
                                         <strong>Mail:</strong> {odemeSponsorlar.Mail}<br>
                                     </p>
@@ -117,7 +122,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                             </html>",
                      
                     // mail kimden geliyor
-                    gondericii_mail = "kayamansur61@gmail.com", //odemeSponsorlar.Mail,
+                    gondericii_mail = _mailSettings.FromEmail, //odemeSponsorlar.Mail,
                     // mail kime gidiyor
                     kime = _mailSettings.FromEmail,
                     //dosyaYolu = tempFilePath,
@@ -134,8 +139,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 }
                 else
                 {
+                    // mail sana geliyse otomatik cevap ilet mail gönderen kişiye
                     //gonderilen nmail
-                    icerik = new VM_MAIL_ICERIK()
+                    var replyMail = new VM_MAIL_ICERIK()
                     {
 
                         username = _mailSettings.Username,
@@ -149,10 +155,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
                                     <h2 style='color: #2c3e50;'>Sayın {odemeSponsorlar.NameSurname}  ,</h2>
                                     <p>
                                         Sponsor seçiminiz başarılı şekilde yapılmıştır.
-                                        Paylaştığınız mail veya SMS bilgileri ile sizlere en kısa sürede iletişim sağlanacaktır.
+                                        Paylaştığınız mail {(odemeSponsorlar.Mail) } veya SMS bilgileri ile sizlere en kısa sürede iletişim sağlanacaktır.
                                     </p>
                                     <p>
-                                        {mesaj}
+                                        {odemeSponsorlar.Mesaj}
                                     </p>
                                     <p>
                                         Sponsorluk süreçleri hakkında daha fazla bilgi almak için bizimle iletişime geçebilirsiniz.
@@ -173,19 +179,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         kime = odemeSponsorlar.Mail,
                     };
 
-                     sonuc = await emailService.EmailGonder(icerik);
+                     sonuc = await emailService.EmailGonder(replyMail);
 
 
-                    if (sonuc == "-1")
-                    {
-                        result.State = MessageResultState.ERROR;
-                        result.Message = "Sponsorluk bildirme de hata meydana geldi. Tekrar deneyiniz.";
-                    }
-                    else
-                    {
-                        result.State = MessageResultState.SUCCESS;
-                        result.Message = mesaj;
-                    }
+                    //if (sonuc == "-1")
+                    //{
+                    //    result.State = MessageResultState.ERROR;
+                    //    result.Message = "Sponsorluk bildirme de hata meydana geldi. Tekrar deneyiniz.";
+                    //}
+                    //else
+                    //{
+                    //    result.State = MessageResultState.SUCCESS;
+                    //    result.Message = mesaj;
+                    //}
                     
                 }
             }

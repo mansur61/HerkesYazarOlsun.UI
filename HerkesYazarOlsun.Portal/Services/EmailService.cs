@@ -11,6 +11,8 @@ namespace HerkesYazarOlsun.Portal.Services
         {
             using (var mailMessage = new MailMessage())
             {
+                mailMessage.IsBodyHtml = true;
+
                 // Gönderen
                 string gonderici_mail = icerik.gondericii_mail;
                 mailMessage.From = new MailAddress(gonderici_mail);
