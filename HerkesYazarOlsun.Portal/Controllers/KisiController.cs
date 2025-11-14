@@ -111,18 +111,23 @@ namespace HerkesYazarOlsun.Portal.Controllers
         // buda reviz edilecek aslında
         public IActionResult Profil(string? pId)
         {
-            //var userId = pId != null ? pId : Lid.ToString();
-            //var id = Convert.ToInt64(StringCipher.Decrypt(userId.ToString()));
-            var id = Lid;
+            long id = Lid;
 
-            Users kisi = new KisiService().GetKisiById(id);
-            var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
-
+            if (!string.IsNullOrEmpty(pId))
+            { 
+                id = Convert.ToInt64(StringCipher.Decrypt(pId.ToString()));
+            } 
+             
+             Users kisi = new KisiService().GetKisiById(id);
+            //var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
+            var vm_profil = ObjectMapper.Map(kisi.Profil, new VM_PROFILE());
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
 
-            vm_kisi.Profile = profile;
+            vm_kisi.Profile = vm_profil;
             vm_kisi.Stars = new KisiService().GetMaxStarWriterById(id);
-            ViewBag.vMWriterFollow = new KisiService().GetWriterFollowById(id);
+            //ViewBag.vMWriterFollow = new KisiService().GetWriterFollowById(id);
+
+            ViewBag.IsTakip = vm_kisi.WriterFollowLoginList?.Where(p => p.YazarId == id && p.YazarId != Lid).Any() ?? false;
 
             Users lgn_kisi = new KisiService().GetKisiById(Lid);
 
@@ -132,7 +137,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
 
-            ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder 
+            ViewBag.isBildirimTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder 
 
             return View(vm_kisi);
             

@@ -12,7 +12,7 @@
 
     <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
-@*<link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />*@
+    @*<link href="~/lib/bootstrap/dist/css/style_kitap_detay.css" rel="stylesheet" />*@
 }
 
 @section scripts {
@@ -29,7 +29,7 @@
     string alertmesajgostermedurumu = "profil";
 }
 
-<p id="kural" style="display: none;">@ViewBag.isTakip</p>
+<p id="kural" style="display: none;">@ViewBag.isBildirimTakip</p>
 
 <div class="row">
     <div style="width:auto;height:auto;background-color:aliceblue;margin:15px;">
@@ -44,17 +44,17 @@
                                 <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
                                     @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimURl))
                                     {
-                                         <img src=" https://herkesyazarolsun.com.tr/Belgeler/@Model?.Profile?.ProfilResimURl"
+                                        <img src=" https://herkesyazarolsun.com.tr/Belgeler/@Model?.Profile?.ProfilResimURl"
                                              alt="Profil Resmi"
                                              style="height:300px;width:215px" class="img-fluid img-thumbnail mt-4 mb-2">
                                     }
                                     else
                                     {
-                                        <img src = "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                                                            alt = "Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                                                            style="width: 150px; z-index: 1" />
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                                             alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                             style="width: 150px; z-index: 1" />
                                     }
-                                   
+
                                 </div>
                                 <div style="margin-top: 10px;color:black;font-size:30px">
                                     @Model.NAME @Model.SURNAME
@@ -66,18 +66,17 @@
                         <br />
                         <h4>@Html.Partial("_YildizGoster", @Model.Stars)</h4>
 
-
                     </div>
 
                     <div class="col-md-2" style="margin-top:80px;text-align:center">
                         <p style="font-size:30px"><strong>Takipler</strong></p>
-                        <p style="font-size:25px">120</p>
+                        <p style="font-size:25px">@Model.WriterFollowLoginList?.Count()</p>
                     </div>
                     <div class="col-md-2" style="margin-top:80px;text-align:center">
                         <p style="font-size:30px">
                             <strong>Takipçiler</strong>
                         </p>
-                        <p style="font-size:25px">61</p>
+                        <p style="font-size:25px">@Model.WriterFollowYazarList?.Count()</p>
                     </div>
 
                     @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
@@ -85,7 +84,7 @@
                         @if (isGozlemciMod == "0")
                         {
                             <div class="col-md-1" style="text-align:center;margin-top:80px;">
-                                @if (@ViewBag.vMWriterFollow.isFollow == 0)
+                                @if (!@ViewBag.IsTakip)
                                 {
                                     <button type="button" class="btn btn-info" onclick="YazarTakip(1)">
                                         Takip Et
@@ -103,29 +102,33 @@
                         }
                     }
                 </div>
-                <div class="col-md-12" style="text-align:center;margin:15px 5px;">
-                    <h4> 
-                        <i class="yildizver fa fa-star" data-adet="1"></i>
-                        <i class="yildizver fa fa-star" data-adet="2"></i>
-                        <i class="yildizver fa fa-star" data-adet="3"></i>
-                        <i class="yildizver fa fa-star" data-adet="4"></i>
-                        <i class="yildizver fa fa-star" data-adet="5"></i>
-                    </h4>
 
-                    @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
+
+
+                @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
+                {
+                    @if (isGozlemciMod == "0")
                     {
-                        @if (isGozlemciMod == "0")
-                        {
+                        <div class="col-md-12" style="text-align:center;margin:15px 5px;">
+                            <h4>
+                                <i class="yildizver fa fa-star" data-adet="1"></i>
+                                <i class="yildizver fa fa-star" data-adet="2"></i>
+                                <i class="yildizver fa fa-star" data-adet="3"></i>
+                                <i class="yildizver fa fa-star" data-adet="4"></i>
+                                <i class="yildizver fa fa-star" data-adet="5"></i>
+                            </h4>
+
                             <button type="button" class="btn btn-info" onclick="YildizVer()">
                                 Yıldız Ver
                             </button>
                             <button type="button" class="btn btn-error" onclick="YildizIptalEt(0)">
                                 İptal Et
                             </button>
-                        }
-
+                        </div>
                     }
-                </div>
+
+                }
+
             </div>
 
         </section>
@@ -385,16 +388,16 @@
       function YildizVerChange(adet) {
           yildizPuani = adet;
           console.log("adet:" + adet);
-           
+
           for (var i = 0; i < yildizlar.length; i++) {
               $(yildizlar[i]).css("color", "black");
           }
-           
+
           for (var i = 0; i < adet; i++) {
               $(yildizlar[i]).css("color", "dodgerblue");
           }
       }
-       
+
       for (var i = 0; i < yildizlar.length; i++) {
           yildizlar[i].addEventListener("click", function () {
               var adet = parseInt(this.getAttribute("data-adet"));
