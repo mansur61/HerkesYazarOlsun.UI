@@ -31,12 +31,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         //[Route("SaveOrUpdateAyarlar")]
-        public async Task<JsonResult> SaveOrUpdateAyarlar(VM_AYARLAR ayr)
+        public async Task<JsonResult> SaveOrUpdateAyarlar([FromForm] VM_AYARLAR ayr)
         {
             ayr.LoginUserId = LOGIN_USER_ID;//6;
-            //LOGIN_USER_ID; 
+                                            //LOGIN_USER_ID; 
 
-            // Deserialize JSON strings to their respective objects
+            //Deserialize JSON strings to their respective objects
             if (Request.Form.ContainsKey("UserDetail"))
             {
                 ayr.UserDetail = JsonConvert.DeserializeObject<UsersDetails>(Request.Form["UserDetail"]);
