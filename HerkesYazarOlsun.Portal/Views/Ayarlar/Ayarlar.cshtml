@@ -503,14 +503,14 @@ else
             "InstagramLink": inst,
             "LoginUserId": loginId
         };
-        console.log("userDetail",userDetail);
+       // console.log("userDetail",userDetail);
         var profil = {
             "LoginUserId": loginId,
             "ProfilArkaplanResmi": profilarkaplanirengi,
             "ProfilArkaplanRenkKodu": profilarkaplanrenkkodu,
             "ProfilResimName": $("#profilFotoName").val()
         };
-        console.log("profil",profil);
+       // console.log("profil",profil);
 
         var usr = {
             "NAME": name,
@@ -518,7 +518,7 @@ else
             "EMAIL": email,
             "PASSWORD": yeniSifre
         };
-        console.log("usr",usr);
+        //console.log("usr",usr);
 
         var bldirim = {
             "IsTakip": isTakip,
@@ -526,7 +526,7 @@ else
             "IsKitapYorum": IsKitapYorum,
             "LoginUserId": loginId
         };
-         console.log("bldirim",bldirim);
+        // console.log("bldirim",bldirim);
         formData.append('LoginUserId', loginId);
         formData.append('UserDetailId', UserDetailId);
         formData.append('ProfileId', ProfileId);
