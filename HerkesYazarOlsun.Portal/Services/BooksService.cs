@@ -9,15 +9,15 @@ namespace HerkesYazarOlsun.Portal.Services
     
     public class BooksService : BaseService
     {
-        public Books? GetBooks(long id)
+        public VM_BOOKS? GetBooks(long id)
         {
             Task<string> jsonContent = GetData("api/Books/GetBooks?" + "id=" + id);
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<Books>(jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<VM_BOOKS>(jsonContent.Result);
             return result;
         }
-
+         
         public VM_BOOK_ISTATISTIKLER GetISTATISTIKLERBooksById(long id)
         {
             Task<string> jsonContent = GetData("api/Books/GetISTATISTIKLERBooksById?" + "id=" + id);
@@ -44,14 +44,30 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<List<VM_BOOKS_COMMENT>>(jsonContent.Result);
             return result;
         }
+        public VM_BOOKS_DETAIL GetBooksList()
+        {
+            Task<string> jsonContent = GetData("api/Books/GetBooksList");
+            Task.WaitAll(jsonContent);
 
+            var result = JsonConvert.DeserializeObject<VM_BOOKS_DETAIL>(jsonContent.Result);
+            return result;
+        }
 
-        public List<VM_BOOKS>? GetBooksList()
+        public List<VM_BOOKS>? GetBooksList2()
         {
             Task<string> jsonContent = GetData("api/Books/GetBooksList");
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<List<VM_BOOKS>>(jsonContent.Result);
+            return result;
+        }
+
+        public VM_CATEGORI? GetCategory()
+        {
+            Task<string> jsonContent = GetData("api/Books/GetCategory");
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<VM_CATEGORI>(jsonContent.Result);
             return result;
         }
 
@@ -132,7 +148,7 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public async Task<ServiceResult<Books>> PostSaveBook(VM_BOOKS VMbook)
+        public async Task<ServiceResult<Books>> PostSaveBook(VM_BOOKS_DETAIL VMbook)
         {
             using var client = new HttpClient
             {
@@ -144,29 +160,24 @@ namespace HerkesYazarOlsun.Portal.Services
             // VM_BOOKS içindeki normal alanları ekle
             foreach (var prop in typeof(VM_BOOKS).GetProperties())
             {
-                if (prop.Name == "dosyalar" || prop.Name == "BookModel")
-                    continue; // dosyaları ayrıca ekleyeceğiz
-
-                var value = prop.GetValue(VMbook);
-                if (value != null)
+                try
                 {
-                    form.Add(new StringContent(value.ToString()!), prop.Name);
-                }
-            }
+                    if (prop.Name == "dosyalar" || prop.Name == "BookModel")
+                        continue; // dosyaları ayrıca ekleyeceğiz
 
-            // BookModel içindeki alanları ekle
-            if (VMbook.BookModel != null)
-            {
-                foreach (var prop in typeof(Books).GetProperties())
-                {
-                    
                     var value = prop.GetValue(VMbook.BookModel);
                     if (value != null)
                     {
+                        //form.Add(new StringContent(value.ToString()!), prop.Name);
                         form.Add(new StringContent(value.ToString()!), $"BookModel.{prop.Name}");
                     }
                 }
+                catch(Exception e)
+                {
+                    var _ = e.Message;
+                }
             }
+             
 
             // Dosyaları ekle
             if (VMbook.dosyalar != null)
@@ -220,10 +231,10 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public ServiceResult<Books> CheckBook(Books book)
+        public ServiceResult<Books> CheckBook(long id)
         {
-            string stringData = JsonConvert.SerializeObject(book);
-            Task<string> jsonContent = PostData("api/Books/CheckBook", stringData);
+            //string stringData = JsonConvert.SerializeObject(id);
+            Task<string> jsonContent = GetData("api/Books/CheckBook?" + "id=" + id);
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<ServiceResult<Books>>(jsonContent.Result);

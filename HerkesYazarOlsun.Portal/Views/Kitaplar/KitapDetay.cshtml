@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAY;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
 @Html.Partial("_Navbar")
 
@@ -18,7 +18,7 @@
 }
 
 @{
-    bool kitapTamamlamaDurumu = @Model.Vm_Book.isTamalama ?? false;
+    bool kitapTamamlamaDurumu = @Model.isTamalama ?? false;
 }
 
 <br />
@@ -28,25 +28,29 @@
     <div class="row">
 
         <div class="col-md-3">
-            <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.Vm_Book.ARKAKAPAKFOTOPATH" alt="Portfolio 1" style="height:300px">
-           @* <img src="data:image;base64,@Model.Vm_Book.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">*@
+            <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH" alt="Portfolio 1"
+                 style="height:300px">
+            @* <img src="data:image;base64,@Model.BookModel.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">*@
             @{
-                Model.Stars.isToplam = false;
+                Model.BookModel.Stars.isToplam = false;
             }
             <div style="margin-top:10px;text-align:center">
-                @Html.Partial("_YildizGoster", @Model.Stars)
+                @Html.Partial("_YildizGoster", @Model.BookModel.Stars)
             </div>
 
         </div>
 
         <div class="col-md-9">
+            <h3><small>Kitabın Adı </small></h3>
+            <small>@Model.BookModel.Name</small>
             <h3><small>Yazılma Tarihi</small></h3>
-            <small>@Model.Vm_Book.CREATE_AT</small>
+            <small>@Model.BookModel.CREATE_AT</small>
             <h3><small>Yazarı</small></h3>
-            <p><small>Mansur Emin Kaya</small></p>
+            <p><small>@Model.BookModel.User.USERNAME</small></p>
             <h3>Kitap Özeti</h3>
             <p>
-                @Model.Vm_Book.ONSOZ
+                @Html.Raw(Model.BookModel.ONSOZ)
+               
                 <br />
                 <!--<p>
                 Lorem Ipsum, dizgi ve baskı endüstrisinde kullanılan mıgır metinlerdir.
@@ -59,18 +63,22 @@
             @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
             {
                 <div class="col-md-12 text-right">
-                    <button class="btn btn-warming"><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Kitabı Güncelle</a></button>
-                            <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Kitabı Oku</a></button>
-                    @if (!@kitapTamamlamaDurumu)
+                    <button class="btn btn-warming"><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@Model.BookModel.ID.ToString())">Kitabı Güncelle</a></button>
+                    <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(@Model.BookModel.ID.ToString())">Kitabı Oku</a></button>
+                    @if (!kitapTamamlamaDurumu)
                     {
-                                   <button class="btn btn-ligth"><a href="/Kitaplar/KitapOlustur?kitap_id=@StringCipher.Encrypt(@Model.Vm_Book.ID.ToString())">Yazmaya Devam Et</a></button>
+                        <a class="btn btn-light"
+                           href="/Kitaplar/KitapOlustur?kitap_id=@StringCipher.Encrypt(Model.BookModel.ID.ToString())&isYazmayaDevamEt=true">
+                            Yazmaya Devam Et
+                        </a>
                     }
+
 
                 </div>
             }
 
         </div>
-     
+
     </div>
 
     <br />

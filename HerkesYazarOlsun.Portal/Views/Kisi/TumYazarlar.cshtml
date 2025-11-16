@@ -13,21 +13,34 @@
 }
 
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_USERS_DETAIL;
 @using HerkesYazarOlsun.Portal.Controllers;
 
-<h3 style="margin: 50px auto;">Tüm Yazarlar</h3>
+ 
+@if (ViewBag.FavoriYazarlar != null && ViewBag.FavoriYazarlar)
+{
+    <h3 style="margin: 50px auto;">Favori Yazarlar</h3>
+}
+else  
+{
+    <h3 style="margin: 50px auto;">Tüm Yazarlar</h3>
+}
 <h6><span>@Model.VMUsersList.Count()</span> Kayıt Var </h6>
 <hr />
 
-@Html.Partial("_YazarFiltreleme")
+ 
 
 @{
-    Model.Tip = "tumyazarlar";
+    string tip = "tumyazarlar";
+    Model.Tip =  tip;
 }
+<input type="hidden" id="tip" value="@tip" />
 
-@Html.Partial("_AlertMesaj",@Model.Tip)
 
+  @Html.Partial("_AlertMesaj", @tip) 
+
+@Html.Partial("_YazarFiltreleme")
+  
 
 <div id="tumyazarlar">
     @{
@@ -43,16 +56,16 @@
 
 
 <div id="arabutonfiltre"></div>
-                
+<script src="~/js/general.js"></script>
 
 <script>
 
-    $("#arabutonfiltre").css("display", "none");
-   
+    $("#arabutonfiltre").css("display", "none"); 
+
     function Ara() {
-
+       //UyariVer(1, "#basarili-", "#bilgi-", "#uyari-", "Kitap Tamamlandı. İlgili kitaba yönlendiriliyorsunuz..");
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
-
+        console.log(" YazariFavorilereEkle ara "+listelenecek_kayit_sayisi);
         if(listelenecek_kayit_sayisi == 0){
             return ;
         }
@@ -75,12 +88,7 @@
                 $("#arabutonfiltre").css("display", "block");
                
                 $("#tumyazarlar").css("display", "none");
-
-                //const nodeList = document.querySelectorAll("#gozukecekMiFooter");
-                //for (let i = 0; i < nodeList.length; i++) {
-                //    nodeList[i].style.display = "none";
-                //}
-
+                 
 
             } else {
                 alert("olumsuz");
@@ -90,12 +98,7 @@
 
         });
     }
-
-
-    //function Kapat() {
-    //    $("#basarili").css("display", "none");
-    //    $("#uyari").css("display", "none");
-    //}
+     
 </script>
 
 <script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>

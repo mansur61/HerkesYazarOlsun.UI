@@ -7,6 +7,10 @@
 
 @{
     string isGozlemciMod = User.GetGozlemciMod();
+    var temp = Model.VMBooksList?.ToList(); // ✅ Kopya liste oluştur
+    var tempDigerBookList = temp?.ToList();
+    var tempYorumBookList = temp?.ToList();
+    var tempYildizBookList = temp?.ToList();
 }
 <br />
 
@@ -19,7 +23,7 @@
 }
 
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 <div class="container">
 
     <div class="row">
@@ -27,21 +31,24 @@
             <br />
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item">
-                    <i class="bi bi-book"></i> <a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a>
+                    <i class="bi bi-book"><span style="width:5px;"></span></i> <a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a>
                 </li>
                 <li class="list-group-item">
-                    <i class="bi bi-person-lines-fill"></i> <a href="/Kisi/TumYazarlar">Tüm Yazarlar</a>
+                    <i class="bi bi-person-lines-fill"><span style="width:5px;"></span></i> <a href="/Kisi/TumYazarlar">Tüm Yazarlar</a>
                 </li>
                 <li class="list-group-item">
-                    <i class="bi bi-building"></i> <a href="">Yayın Evini Kazanan Kitaplar</a>
+                    <i class="bi bi-building"><span style="width:5px;"></span></i> <a href="">Yayın Evini Kazanan Kitaplar</a>
                 </li>
                 @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                 {
                     <li class="list-group-item">
-                        <i class="bi bi-pencil-square"></i> <strong><a style="font-size:20px" href="/Kitaplar/KitapOlustur">KİTAP YAZ</a></strong>
+                        <i class="bi bi-pencil-square"><span style="width:5px;"></span></i> <strong>
+                            <a style="font-size:20px" href="/Kitaplar/KitapOlustur?isYazmayaDevamEt=false">KİTAP YAZ</a>
+                             
+                        </strong>
                     </li>
                     <li class="list-group-item">
-                        <i class="bi bi-file-earmark-arrow-up"></i>
+                        <i class="bi bi-file-earmark-arrow-up"><span style="width:5px;"></span></i>
                         <strong>
                             <a href="/Kitaplar/KitapEkleWordOrPdf">
                                 <span style="font-size:20px">WORD</span> veya <span style="font-size:20px">PDF</span>'ten Aktarım
@@ -61,13 +68,12 @@
 
 <br />
 @{
-    string tipsec = "";
-    var tempBookList = Model.VMBooksList;
+    string tipsec = "";    
 }
 <div class="row">
     <div class="col-md-9">
         <h3>
-            En Çok Yıldız Alan Kitaplar
+            5 Yıldız Alan Kitaplar
         </h3>
     </div>
 </div>
@@ -76,9 +82,10 @@
     tipsec = "yildizalan";
     // tipsec = "yayin";
     Model.Tip = @tipsec;    
-    Model.VMBooksList = Model.VMBooksList.Where(p => p.Stars.HangiStar == "yildiz5").ToList();
+    tempYildizBookList = temp.Where(p => p.Stars.HangiStar == "yildiz5").ToList();
+    Model.VMBooksList = tempYildizBookList;
 }
-
+@* <p>5 yildizalan kitap sayısı: @(tempYildizBookList?.Count ?? 0)</p> *@
 @Html.Partial("_KitapSliderGosterimleri", @Model)
 
 <div style="height:50px;"></div>
@@ -89,20 +96,20 @@
             En Çok Yorum Alan 10 Kitaplar 
         </h3>
     </div>
-</div>
-
+</div> 
 @{
     // tipsec = "begenilen";
     tipsec = "yorumalan";
     Model.Tip = @tipsec;
-    // Model.VMBooksList = @tempBookList;
     // Yorum sayısına göre sıralanmış en çok yorum alan 10 kitabı seç
-    Model.VMBooksList = Model.VMBooksList
-                        .OrderByDescending(b => b.CommentCount)
-                        .Take(10)
-                        .ToList();
+    Model.VMBooksList = temp;
+    tempYorumBookList = temp.Where(p => p.Stars.HangiStar != "yildiz5" && p.BooksComments?.Count > 0)
+                     .OrderByDescending(b => b.BooksComments?.Count) 
+     //.Take(10)
+     .ToList();
+    Model.VMBooksList = tempYorumBookList;
 }
-
+@* <p>Yorum alan kitap sayısı: @(tempYorumBookList?.Count ?? 0)</p> *@
 @Html.Partial("_KitapSliderGosterimleri",@Model)
 
 <div style="height:50px;"></div>
@@ -120,13 +127,15 @@
     tipsec = "digerkitaplar";
     // tipsec = "okunan";
     Model.Tip = @tipsec;
+    Model.VMBooksList = temp;
     // İlk 10 yorum alan ve 5 yıldızlı kitapları hariç tut
-    Model.VMBooksList = tempBookList
-                        .Where(p => p.CommentCount <= tempBookList.OrderByDescending(b => b.CommentCount).Skip(10).Select(b => b.CommentCount).FirstOrDefault())
+    tempDigerBookList = temp
+                        .Where(p => p.BooksComments.Count <= tempDigerBookList.OrderByDescending(b => b.BooksComments.Count).Skip(10).Select(b => b.BooksComments.Count).FirstOrDefault())
                         .Where(p => p.Stars.HangiStar != "yildiz5")
                         .ToList();
+    Model.VMBooksList = tempDigerBookList;
 }
-
+@* <p>digerkitaplar kitap sayısı: @(tempDigerBookList?.Count ?? 0)</p> *@
 @Html.Partial("_KitapSliderGosterimleri",@Model)
 
 

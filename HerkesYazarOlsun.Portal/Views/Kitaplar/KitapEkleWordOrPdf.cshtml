@@ -4,10 +4,10 @@
 }
 
 @using HerkesYazarOlsun.Portal.Controllers;
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
 
-<input type="hidden" id="loginId" value="@Model.LoginUserId" />
+<input type="hidden" id="loginId" value="@Model.BookModel.LoginUserId" />
 
 <input type="hidden" id="kitapaktarmaicin" value="pdfveyawordaktar" />
 
@@ -18,6 +18,8 @@
 <input type="hidden" id="tip" value="@tip" />
 
 @section Styles{
+    <!-- richt text için-->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
     <link href="~/lib/bootstrap/dist/css/kitapekle.css" rel="stylesheet" />
     @*<link href="~/dropzone/dropzone.min.css" rel="stylesheet" />*@
@@ -88,7 +90,7 @@
                                 <div class="card-body">
 
                                     <h5>Yükleyeceğiniz Dosyayı Aktarınız *</h5>
-                                    <input name="file" type="file" id="dekontAktar" onchange="dosyaSecim('dosyaAktarmaDisVeri')" />
+                                    <input class="form-control"  type="file" id="dosyaAktarmaDis" onchange="dosyaSecim('dosyaAktarmaDisVeri')" /> 
                                     <input type="hidden" id="aktarilacakDosya">
                                 </div>
                                 <br />
@@ -124,13 +126,15 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!-- richt text için-->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 }
 
 <script>
 
     var progressBar = document.getElementsByClassName('progress-bar')[0];
-    console.log(progressBar);
+    //console.log(progressBar);
 
     //const progress = (value) => { progressBar.style.width = `${value}%`;}
 
@@ -149,8 +153,9 @@
         var kitapAdi = $("#kitapAdi").val();
         var onsoz = $("#onsoz").val();
         var arkaKapakYazi = $("#arkaKapakYazi").val();
-        var kategori = $("#kitapKetogri").val();
+        var kategori = $("#kitapKategori").val();
         var pdfOrWord = $("#pdfVeyaWord").val();
+        console.log({ kitapId, kitapAdi, onsoz, arkaKapakYazi, kategori, pdfOrWord });
 
         var durum = false;
         var yuklenilenKitapTamamMi = $("#isPdfVeyaWordTamalama").val();
@@ -161,20 +166,29 @@
             durum = true;
         }
 
-
-        formData.append('ID', kitapId);
-        formData.append('isWordPDF', true);
-        formData.append('Name', kitapAdi);
-        formData.append('onsoz', onsoz);
-        formData.append('AktarilanDosya', aktarilacakDosya);
-        formData.append('ARKAKAPAKYAZISI', arkaKapakYazi);
-        formData.append('CategoriId', kategori);
+         
+         formData.append('FDileName', aktarilacakDosya);
+        formData.append('AktarilanDosya', aktarilacakDosya); 
         formData.append('ARKAKAPAKYAZISI', arkaKapakYazi);
         formData.append('pdfVeyaWord', parseInt(pdfOrWord));
         formData.append('isPdfVeyaWordTamalama', durum);
         formData.append('isTamalama', durum);
 
+         formData.append('BookModel.ID',  kitapId == -1 ? 0 :kitapId);
+        formData.append('BookModel.Name', kitapAdi);
+        formData.append('BookModel.onsoz', onsoz);
+        formData.append('BookModel.ARKAKAPAKYAZISI', arkaKapakYazi);
+        formData.append('BookModel.CategoriId', kategori);
+        formData.append('isWordPDF', true);
+        // formData.append('BookPagesModel.PageWrite', sayfaYazi);
+        // formData.append('BookPagesModel.ID', sayfaId);
 
+        formData.append('BookModel.ONKAPAKFOTO', $("#ONKAPAKFOTO").val());
+        formData.append('BookModel.ARKAKAPAKFOTO', $("#ARKAKAPAKFOTO").val());
+        formData.append('BookModel.ARKAKAPAKFOTOPATH', "ARKAKAPAKFOTOPATH");
+        formData.append('BookModel.ONKAPAKFOTOPATH', "ONKAPAKFOTOPATH");
+
+        
 
         var dosyaInputs = form.querySelectorAll('input[type="file"]');
         console.log(dosyaInputs.length);
@@ -228,11 +242,21 @@
                             clearInterval(interval);
                             progressBar.style.width = '100%';
 
-                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. İlgili kitaba yönlendiriliyorsunuz..");
+                            var mesaj = "";
+                            if (response && response.result){
+                                mesaj = "İlgili kitaba yönlendiriliyorsunuz..";
+                            }
+                            
+                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. " +mesaj);
                             setTimeout(function () {
                                 var link = window.location.href;
+                                    if (response && response.result) {
+                                    window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + response.result.toString();
+                                }else{
+                                    window.location.href = link;
+                                }
                                 //console.log("link " + link);
-                                window.location.href = "/Kitaplar/KitapDetay?kitapId=" + kitapId.toString();
+                               // window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + response.result.toString();
 
                             }, 3000);
                         }

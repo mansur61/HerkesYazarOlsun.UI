@@ -1,65 +1,73 @@
-﻿ 
-using HerkesYazarOlsun.Model.ViewModel; 
-using System.Net.Mail;
+﻿using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.ViewModel;
 using System.Net;
+using System.Net.Mail;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
-    
-    public class EmailService 
-    { 
-
-        public string EmailGonder(VM_MAIL_ICERIK icerik) 
+    public class EmailService
+    {
+        public async Task<string> EmailGonder(VM_MAIL_ICERIK icerik)
         {
-            MailMessage mailMessage = new MailMessage();
-            // mail kimden geliyor
-            string gonderici_mail = icerik.gondericii_mail; 
-            mailMessage.From = new MailAddress(gonderici_mail);
-
-
-            mailMessage.To.Add(icerik.kime);
-
-            if (!string.IsNullOrEmpty(icerik.icerik))
+            using (var mailMessage = new MailMessage())
             {
-                mailMessage.Subject = icerik.konu;
-                mailMessage.Body =  icerik.icerik; // html formatta ta hazırlanabilir
-            }
-            else
-            {
-                mailMessage.Subject = "Herkes Yazar Olsun Mail Doğrulama";
-                mailMessage.Body = "Gelen Kod : " + icerik.sifre; // html formatta ta hazırlanabilir
-            }
+                mailMessage.IsBodyHtml = true;
 
-            if (!string.IsNullOrEmpty(icerik.dosyaYolu))
-            {
-                string dosyaYolu = icerik.dosyaYolu;
-                Attachment dosyaEki = new Attachment(dosyaYolu);
-                mailMessage.Attachments.Add(dosyaEki);
-            }               
+                // Gönderen
+                string gonderici_mail = icerik.gondericii_mail;
+                mailMessage.From = new MailAddress(gonderici_mail);
 
-            SmtpClient smtpClient = new SmtpClient();
-            smtpClient.Host = icerik.Host; 
+                // Alıcı
+                mailMessage.To.Add(icerik.kime);
 
-            smtpClient.Port = icerik.Port ?? 587;
+                // Konu ve içerik
+                if (!string.IsNullOrEmpty(icerik.icerik))
+                {
+                    mailMessage.Subject = icerik.konu;
+                    mailMessage.Body = icerik.icerik;
+                }
+                else
+                {
+                    mailMessage.Subject = "Herkes Yazar Olsun Mail Doğrulama";
+                    mailMessage.Body = "Gelen Kod : " + icerik.sifre;
+                }
 
-            smtpClient.EnableSsl = icerik.EnableSSL;
+                // Dosya ekleri (birden fazla olabilir)
+                if (icerik.dosyalar != null && icerik.dosyalar.Any())
+                {
+                    foreach (var dosya in icerik.dosyalar)
+                    {
+                        if (dosya != null && dosya.Length > 0)
+                        {
+                            var memoryStream = new MemoryStream();
+                            await dosya.CopyToAsync(memoryStream);
+                            memoryStream.Position = 0;
 
-           
-            string username = icerik.username; 
-            string password = icerik.password;
+                            var attachment = new Attachment(memoryStream, dosya.FileName, dosya.ContentType);
+                            mailMessage.Attachments.Add(attachment);
+                        }
+                    }
+                }
 
-            smtpClient.Credentials = new NetworkCredential(username, password);
-             
-            try
-            {
-                smtpClient.Send(mailMessage);
-                return "1";
-            }
-            catch (Exception ex)
-            {
-                return "-1";
+                using (var smtpClient = new SmtpClient())
+                {
+                    smtpClient.Host = icerik.Host;
+                    smtpClient.Port = icerik.Port ?? 587;
+                    smtpClient.EnableSsl = icerik.EnableSSL;
+
+                    smtpClient.Credentials = new NetworkCredential(icerik.username, icerik.password);
+
+                    try
+                    {
+                        await smtpClient.SendMailAsync(mailMessage);
+                        return "1";
+                    }
+                    catch (Exception)
+                    {
+                        return "-1";
+                    }
+                }
             }
         }
-
     }
 }

@@ -99,7 +99,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 {
                     var json = new
                     {
-                        Message = "Bir eksiklik var lütfen geliştiricinize başvurunuz.",
+                        Message = "Bir eksiklik var lütfen geliştiricinize başvurunuz veya giriş için kayıt yaptırdığınızdan emin olunuz !",
                         State = MessageResultState.ERROR
                     };
                     return Json(json);

@@ -108,14 +108,25 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        public YayinAyarlari? GetYyainAyarlari()
+        public List<YayinAyarlari>? GetYyainAyarlari()
         {
             Task<string> jsonContent = GetData("api/Settings/GetYyainAyarlari");
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<List<YayinAyarlari>>(jsonContent.Result);
+            return result;
+        }
+
+        public YayinAyarlari? GetYayinAyarlariByBookId(long id)
+        {
+            Task<string> jsonContent = GetData("api/Settings/GetYayinAyarlariByBookId?id="+id);
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<YayinAyarlari>(jsonContent.Result);
             return result;
         }
+
+        
 
     }
 }

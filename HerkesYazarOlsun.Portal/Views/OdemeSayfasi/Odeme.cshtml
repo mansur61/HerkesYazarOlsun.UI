@@ -159,7 +159,7 @@
                                 <div id="cvvDisplay" style="position: absolute; top: 80px; right: 20px; font-size: 16px; font-family: Arial, sans-serif; display: none;">***</div>
                             </div>
                             @* "https://via.placeholder.com/400x200.png?text=Credit+Card" *@
-                           
+
                             <div class="form">
                                 <label for="cardNumber">Kart Numarası:</label>
                                 <input type="text" id="cardNumber" maxlength="19" placeholder="**** **** **** ****" />
@@ -186,7 +186,7 @@
                         <a>
                             <span class="badge pull-right">
                                 <span class="fa fa-turkish-lira" id="odemeFiyati">
-                                    4200
+                                    @ViewBag.DefaultYayinUcreti
                                 </span>
                                 @*4200*@
 
@@ -198,7 +198,9 @@
                 @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
 
                 <a class="btn btn-success btn-lg btn-block" role="button" onclick="OdemeAl()">ÖDEME YAP</a>
-
+                <div id="loading" style="display: none; text-align: center;">
+                    <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+                </div>
             </div>
             <div class="col-md-6" style="background-color:lightgrey;border-radius:20px;">
                 <div>
@@ -217,7 +219,7 @@
                         </p>
                         <p>
                             Belirlediğiniz sponsorlarımız ile anlaşmalı indirimlerimizden anında faydalanabilirsiniz.
-                            Bunu için yapmanız gereken <strong>Herkes Yazar Olsun</strong>'un belirlediği <span style="text-decoration:underline">sabit fiyatımızı</span> ödeme sayfasından
+                            Bunu için yapmanız gereken <strong>Herkes Yazar Olsun</strong>'un belirlediği <span style="text-decoration:underline">sabit fiyatımızı (@ViewBag.DefaultYayinUcreti)</span> ödeme sayfasından
                             ödemeniz gerekmektedir.
                         </p>
 
@@ -250,11 +252,8 @@
     var kitapId = $("#kitapId").val();
 
     var odeme = $("#odemeicin").val();
-    // Kart Resmi URL'si, örnek olarak burada bir kart resmi kullanılacaktır
-    const defaultCardImageUrl = "https://localhost:44360/lib/img/card1.png";
-    //"https://via.placeholder.com/400x200.png?text=Credit+Card";
-    const cvvImageUrl = "https://localhost:44360/lib/img/card1_arka.png";
-    //"https://via.placeholder.com/200x100.png?text=CVV+Image";
+    const defaultCardImageUrl = `${window.location.origin}/lib/img/card1.png`;
+    const cvvImageUrl = `${window.location.origin}/lib/img/card1_arka.png`;
 
     function UyariGoster(mesajIlet) {
         $("#uyari-" + odeme).css("display", "block");
@@ -349,6 +348,12 @@
         if (!cardOnName) {
             UyariGoster("Kart üzerindeki isim boş bırakılamaz.");
             return false;
+        }else{
+            const nameRegex = /^[A-Za-zÇĞİÖŞÜçğıöşü\s]+$/;
+                if (!nameRegex.test(cardOnName)) {
+                UyariGoster("Lütfen Kart üzerindeki isimde yalnızca harf kullanın (rakam veya özel karakter girmeyin).");
+                       return false;
+            }
         }
 
         // Tüm kontroller başarılı
@@ -367,16 +372,19 @@
 
         var odemeFiyati = document.getElementById("odemeFiyati").innerHTML.toString().trim();
 
-        console.log(" odemeFiyati:" + odemeFiyati)
+        // console.log(" odemeFiyati:" + odemeFiyati)
 
-        console.log(" cardNumber: " + cardNumber + " expityMonth: " + expityMonth + " expityYear: " + expityYear + " cvCode: " + cvCode + " cardOnName: " + cardOnName);
+        // console.log(" cardNumber: " + cardNumber + " expityMonth: " + expityMonth + " expityYear: " + expityYear + " cvCode: " + cvCode + " cardOnName: " + cardOnName);
 
         var isChek = KartBilgileriniDogrula(cardNumber, expityMonth, expityYear, cvCode, cardOnName);
 
-        console.log(" isChek:" + isChek);
+        //console.log(" isChek:" + isChek);
 
         if (isChek) {
+              $("#loading").css("display", "block");
             setTimeout(function () {
+                $("#loading").css("display", "none");
+                // bu kısmı entegre edilen ödeme alt yapı sayfasaına yönlendirilecek
                         window.location.href = "/OdemeSayfasi/SponsorlukBildirimi?kitapId=" + kitapId + "&yazarId=" + loginUserId + "";
                     }, 5000);
 

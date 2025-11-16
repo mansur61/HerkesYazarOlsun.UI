@@ -10,6 +10,33 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
+  <Target Name="CopyBootstrapIcons" AfterTargets="Build">
+    <ItemGroup>
+      <BootstrapIcons Include="node_modules\bootstrap-icons\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(BootstrapIcons)"
+          DestinationFolder="$(ProjectDir)wwwroot\lib\bootstrap-icons\%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+
+  <ItemGroup>
+    <Compile Remove="Models\**" />
+    <Content Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+  <!-- publis için-->
+  <ItemGroup>
+    <None Update="Helpers\SablonWordBelge.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Helpers\SablonPdfBelge.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
   <ItemGroup>
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.css" />
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.css.map" />
@@ -158,10 +185,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\lib\img\blog\.DS_Store" />
     <None Include="wwwroot\lib\img\gallery\.DS_Store" />
     <None Include="wwwroot\lib\bootstrap\dist\js\herkesyazarolsun-bootstrap.js" />
@@ -201,7 +224,7 @@
   </ItemGroup>-->
 
  <ItemGroup>
-    <ProjectReference Include="..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
+    <ProjectReference Include="..\..\HerkesYazarOlsun.API\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
   </ItemGroup>
   
   <ItemGroup>

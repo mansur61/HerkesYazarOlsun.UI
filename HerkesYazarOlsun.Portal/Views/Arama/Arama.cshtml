@@ -11,7 +11,7 @@
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
 }
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Portal.Controllers;
 
 @{
@@ -128,7 +128,7 @@
                         <div class="col-lg-4 col-md-4">
                             <div style="height:15px"></div>
                             <div class="filter__found">
-                                <h6><span>@Model.BooksList.Count() </span> Ürün Bulunmaktadır.</h6>
+                                <h6><span>@Model.VMBooksList.Count() </span> Ürün Bulunmaktadır.</h6>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-3">
