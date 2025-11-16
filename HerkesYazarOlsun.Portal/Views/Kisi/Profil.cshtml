@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@using HerkesYazarOlsun.Model.Enums
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
@@ -70,13 +71,13 @@
 
                     <div class="col-md-2" style="margin-top:80px;text-align:center">
                         <p style="font-size:30px"><strong>Takipler</strong></p>
-                        <p style="font-size:25px">@Model.WriterFollowLoginList?.Count()</p>
+                        <p style="font-size:25px">@Model.WriterFollowLoginList?.Where(p => p.isFollow == (int)Takip.TakipEt).Count()</p>
                     </div>
                     <div class="col-md-2" style="margin-top:80px;text-align:center">
                         <p style="font-size:30px">
                             <strong>Takipçiler</strong>
                         </p>
-                        <p style="font-size:25px">@Model.WriterFollowYazarList?.Count()</p>
+                        <p style="font-size:25px">@Model.WriterFollowYazarList?.Where(p=>p.isFollow == (int)Takip.TakipEt).Count()</p>
                     </div>
 
                     @if (@ViewBag.LOGIN_USER_ID != @Model.ID)
@@ -310,12 +311,18 @@
             },
 
             function (data) {
+                console.log("data YildizVer ",data);
                 if (data.state == 1) {
                     $("#basarili-" + profil).css("display", "block");
                     $("#basarili-" + profil + " #mesaj").html(data.message);
 
                     $("#bilgi-" + profil).css("display", "none");
                     $("#uyari-" + profil).css("display", "none");
+
+                       setTimeout(function () {
+                        window.location.reload();
+                    }, 3000);
+
                 }
                 else if (data.state == 3) {
                     $("#bilgi-" + profil).css("display", "block");
@@ -343,6 +350,7 @@
             },
 
             function (data) {
+                console.log("data yazartakip ",data);
                 if (data.state == 1) {
                     $("#basarili-" + profil).css("display", "block");
                     $("#basarili-" + profil + " #mesaj").html(data.message);
@@ -353,6 +361,9 @@
                     if (kural === "True") {
                         Bilgilendirme(follow);
                     }
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 3000);
                 }
                 else if (data.state == 3) {
                     $("#bilgi-" + profil).css("display", "block");

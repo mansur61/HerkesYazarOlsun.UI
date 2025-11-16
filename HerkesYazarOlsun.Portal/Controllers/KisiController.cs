@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Enums;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
@@ -118,18 +119,32 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 id = Convert.ToInt64(StringCipher.Decrypt(pId.ToString()));
             } 
              
-             Users kisi = new KisiService().GetKisiById(id);
+             Users kisi = new KisiService().GetKisiById(id); 
             //var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
             var vm_profil = ObjectMapper.Map(kisi.Profil, new VM_PROFILE());
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
+
+            Users kisiL = new KisiService().GetKisiById(Lid);
+            var vm_kisi_L = ObjectMapper.Map(kisiL, new VM_USERS());
 
             vm_kisi.Profile = vm_profil;
             vm_kisi.Stars = new KisiService().GetMaxStarWriterById(id);
             //ViewBag.vMWriterFollow = new KisiService().GetWriterFollowById(id);
 
-            ViewBag.IsTakip = vm_kisi.WriterFollowLoginList?.Where(p => p.YazarId == id && p.YazarId != Lid).Any() ?? false;
+            if (!string.IsNullOrEmpty(pId))
+            {
+                // başkasının profilini gir tekipte misin  bak
+                ViewBag.IsTakip = vm_kisi_L.WriterFollowLoginList?.Where(p => p.LoginUserId == Lid && p.isFollow == (int)Takip.TakipEt
+                && p.YazarId == kisi.ID).Any() ?? false;
+            }
+            else
+            {
+               ViewBag.IsTakip = vm_kisi.WriterFollowLoginList?.Where(p => p.LoginUserId == id
+                && p.isFollow == (int)Takip.TakipEt ).Any() ?? false;//&& p.YazarId != Lid
+            }
 
-            Users lgn_kisi = new KisiService().GetKisiById(Lid);
+
+                Users lgn_kisi = new KisiService().GetKisiById(Lid);
 
             ViewBag.LOGIN_USER_ID = Lid;
             ViewBag.LGN_USER = lgn_kisi;
