@@ -476,6 +476,16 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(checkerBook);
         }
 
+        [HttpPost]
+        [Route("KitabiSil")]
+        public JsonResult KitabiSil(string kitapid)
+        {
+            var kId = StringCipher.Decrypt(kitapid.ToString());
+            var KİTAPıD = Convert.ToInt64(kId);
+            ServiceResult<bool> result = new BooksService().DeleteBookById(KİTAPıD); 
+            return Json(result);
+        }
+
 
         [HttpPost]
         public string DosyaYukle(IFormFile dosya, VM_BOOKS input)

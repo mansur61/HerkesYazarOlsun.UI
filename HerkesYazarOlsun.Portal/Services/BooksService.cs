@@ -221,6 +221,15 @@ namespace HerkesYazarOlsun.Portal.Services
             //return result;
         }
 
+        public ServiceResult<bool> DeleteBookById(long kId)
+        {
+            Task<string> jsonContent = GetData("api/Books/DeleteBookById?" + "kId=" + kId);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<ServiceResult<bool>>(jsonContent.Result);
+            return result;
+        }
+
         public ServiceResult<Books> UpdateBook(Books book)
         {
             string stringData = JsonConvert.SerializeObject(book);

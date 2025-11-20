@@ -16,6 +16,7 @@
 }
 
 
+
 @foreach (var item in booksList.Select((value, index) => new { value, index }))
 { 
     <input type="hidden" value="@item.index">
@@ -38,7 +39,7 @@
                     {
                         
                         <li><a onclick='KitabiFavorilereEkle("@StringCipher.Encrypt(@item.value.ID.ToString())", "@Model.Tip")'><i class="fa fa-heart"></i></a></li>
-                        @if (!(@Model.isAnaSayfa ?? false)) // ana sayfadan gelemeyecek
+                        @if (!(@Model.isAnaSayfa ?? false)) // ana sayfadan gelmeyecek
                         {
                            
                             if (@item.value.YazarId == @ViewBag.LOGIN_USER_ID) //ilgili giriş yapan kullanıcı yayına gönderebilir veya editlesin
@@ -71,7 +72,18 @@
 
                                 }
                                 @* <li><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@item.value.ID.ToString())"><i class="fa fa-edit"></i></a></li> *@
-                            }
+                               <li onclick='KitabiSil("@StringCipher.Encrypt(@item.value.ID.ToString())","@Model.Tip")' aria-label="Sil">
+                                <span style="
+                                    font-size:18px;
+                                    display:inline-block;
+                                    vertical-align:middle;
+                                    cursor:pointer;
+                                    margin-right:4px;
+                                ">&#x1F5D1;&#xFE0F;</span>
+    
+                                </li>
+
+                             }
                            
                         }
 
@@ -151,6 +163,25 @@
                 $("#uyari-" + tip).css("display", "block");
                 $("#uyari-" + tip + " #mesaj").html(data.message);
                  
+            }
+        });
+    }
+     function KitabiSil(kitapId, tip) {
+        console.log("tip: " + tip);
+        console.log("kitapId: " + kitapId);
+        $.post("@Url.Action(nameof(KitaplarController.KitabiSil), "Kitaplar")", { "kitapid": kitapId }, function (data) {
+            console.log("data: " + data.state);
+            if (data.state == 1) {
+                $("#basarili-" + tip).css("display", "block");
+                $("#uyari-" + tip + " #mesaj").html("Kitap Silindi");
+                 setTimeout(function () {
+                     window.location.reload();
+                }, 3000);
+               
+            } else {
+                $("#uyari-" + tip).css("display", "block");
+                $("#uyari-" + tip + " #mesaj").html(data.message);
+
             }
         });
     }
