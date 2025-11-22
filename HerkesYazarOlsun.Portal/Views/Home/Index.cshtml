@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
@@ -43,7 +44,7 @@
 
                 <li class="list-group-item">
                     <span class="me-2">🏢</span>
-                    <a href="">Yayın Evini Kazanan Kitaplar</a>
+                    <a href="/Kitaplar/TumKitaplar?YayinlananKitaplar=true">Yayın Evini Kazanan Kitaplar</a>
                 </li>
 
                 @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
@@ -88,13 +89,38 @@
     </div>
 </div>
 
+@functions {
+    private string GetDominantStar(VM_Stars stars)
+    {
+        var values = new Dictionary<string, int>
+        {
+            { "yildiz1", stars.BirStarToplam },
+            { "yildiz2", stars.IkiStarToplam },
+            { "yildiz3", stars.UcStarToplam },
+            { "yildiz4", stars.DortStarToplam },
+            { "yildiz5", stars.BesStarToplam }
+        };
+
+        int maxValue = values.Max(v => v.Value);
+        var maxItems = values.Where(v => v.Value == maxValue).ToList();
+
+        if (maxItems.Count > 1)
+            return "yildiz5";
+
+        return maxItems.First().Key;
+    }
+}
+
 @{
     tipsec = "yildizalan";
     // tipsec = "yayin";
     Model.Tip = @tipsec;    
-    tempYildizBookList = temp.Where(p => p.Stars.HangiStar == "yildiz5").ToList();
+    tempYildizBookList = temp
+         .Where(p => GetDominantStar(p.Stars) == "yildiz5")
+         .ToList();
     Model.VMBooksList = tempYildizBookList;
 }
+
 @* <p>5 yildizalan kitap sayısı: @(tempYildizBookList?.Count ?? 0)</p> *@
 @Html.Partial("_KitapSliderGosterimleri", @Model)
 
