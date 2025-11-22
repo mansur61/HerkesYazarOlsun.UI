@@ -731,7 +731,26 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             return View(kitapDetay);
         }
+        public IActionResult YayinEviKitaplar(VM_ARAMA_INPUT arama)
+        {
+            VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
+            kitapDetay.BookModel = new VM_BOOKS();
+  
+            var getBookList = new BooksService().TumKitaplar(arama);
+            kitapDetay.VMBooksList = getBookList!;
 
+            kitapDetay.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+
+            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
+            ViewBag.LOGIN_USER_ID = Lid;
+
+            ViewBag.DevamEdenKitaplar = arama.DevamEdenKitaplar;
+            ViewBag.FavoriKitaplar = arama.FavoriKitaplar;
+            ViewBag.YayinlananKitaplar = arama.YayinlananKitaplar;
+            ViewBag.BitenKitaplar = arama.BitenKitaplar;
+
+            return View("TumKitaplar", kitapDetay);
+        }
         public IActionResult TumKitaplar(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
