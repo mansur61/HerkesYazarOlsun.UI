@@ -63,9 +63,11 @@ else
     $("#arabutonfiltre").css("display", "none"); 
 
     function Ara() {
+        
        //UyariVer(1, "#basarili-", "#bilgi-", "#uyari-", "Kitap Tamamlandı. İlgili kitaba yönlendiriliyorsunuz..");
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
         console.log(" YazariFavorilereEkle ara "+listelenecek_kayit_sayisi);
+       
         if(listelenecek_kayit_sayisi == 0){
             return ;
         }
@@ -75,12 +77,12 @@ else
             listelenecek_kayit_sayisi = 10;
         }
 
-        var kitap_ara = $("#kitap_ara").val();
-
+        var yazar_ara = $("#yazar_ara").val();
+         alert(yazar_ara);
       
         $.post("@Url.Action(nameof(KisiController.AraButonFiltrelemeYazarlar), "Kisi")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
-            "YAZAR_ADI": kitap_ara
+            "YAZAR_ADI": yazar_ara
         }, function (data) {
             if (data) {
                 

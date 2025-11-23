@@ -119,11 +119,15 @@
                         </h2>
 
                         <div class="follow-stats">
-                            <div class="stat">
-                                @for (int m = 0; m < 5; m++)
+                            <div class="stat"> 
+                                @if (item.Stars != null)
                                 {
-                                    <i class="fa fa-star text-warning"></i>
+                                    item.Stars.isToplam = false;
+                                    <div class="mb-3 mt-1 text-center">
+                                        @Html.Partial("_YildizGoster", @item.Stars)
+                                    </div>
                                 }
+
                             </div>
                         </div>
                     </div>
