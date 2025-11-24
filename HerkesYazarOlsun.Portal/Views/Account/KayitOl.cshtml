@@ -5,10 +5,15 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
 @using HerkesYazarOlsun.Portal.Controllers;
-@section Styles {
+@* @section Styles {
 
     <link href="~/lib/bootstrap/dist/css/style_aroma_template.css?v=@DateTime.Now.Ticks" rel="stylesheet" />
+} *@
+
+@section Styles {
+    <link href="@Url.Content("~/lib/bootstrap/dist/css/style_aroma_template.css")" rel="stylesheet" />
 }
+
 
 <input type="hidden" id="registericin" value="register" />
 
