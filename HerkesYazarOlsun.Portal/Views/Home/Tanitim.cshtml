@@ -2,11 +2,177 @@
     ViewData["Title"] = "Ana Sayfa";
     Layout = "~/Views/Shared/_LayoutOnlyScript.cshtml";
 }
+
+@section Styles{
+    <style>
+       
+        /* Kartların arasındaki ikon + ok */
+        .step-connector {
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .connector-icon {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            animation: fadeIn 1.2s ease, floatAnim 4s ease-in-out infinite;
+            opacity: 0.95;
+        }
+
+        /* Aşağıya doğru küçük zarif ok */
+        .arrow-down {
+            width: 18px;
+            height: 18px;
+            border-left: 3px solid #4CAF50;
+            border-bottom: 3px solid #4CAF50;
+            transform: rotate(-45deg);
+            margin: 10px auto 0;
+            animation: arrowBounce 1.6s infinite;
+        }
+
+        /* Fade-in efekti */
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+            transform: scale(0.6);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        }
+
+        /* Hafif yukarı-aşağı "floating" efekti */
+        @@keyframes floatAnim {
+            0%, 100%
+
+        {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+
+        }
+
+        /* Ok zıplama efekti */
+        @@keyframes arrowBounce {
+            0%, 100%
+
+        {
+            transform: rotate(-45deg) translateY(0);
+        }
+
+        50% {
+            transform: rotate(-45deg) translateY(5px);
+        }
+
+        }
+
+        /* Mobil uyumlu */
+        @@media(max - width: 768px)
+
+        {
+            .connector-icon
+
+        {
+            width: 60px;
+            height: 60px;
+        }
+
+        }
+
+        /* Logo üstte ortalanmış */
+        .center-logo-top {
+            width: 100%;
+            text-align: center;
+            margin: 20px 0; /* üst-alt boşluk */
+        }
+
+        /* Logo boyutu ve animasyon */
+        .center-logo-top-img {
+            width: 140px; /* Masaüstü */
+            height: 140px;
+            max-width: 90%;
+            object-fit: contain;
+            animation: fadeIn 1.2s ease, floatAnim 4s ease-in-out infinite;
+            opacity: 0.95;
+            transition: transform 0.3s ease;
+        }
+
+            /* Hover hafif büyüme */
+            .center-logo-top-img:hover {
+                transform: scale(1.08);
+            }
+
+        /* Fade-in animasyonu */
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        /* Hafif yukarı-aşağı animasyon */
+        @@keyframes floatAnim {
+            0%, 100%
+
+        {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+
+        }
+
+        /* Mobil uyum */
+        @@media(max - width: 768px)
+
+        {
+            .center-logo-top-img
+
+        {
+            width: 90px;
+            height: 90px;
+        }
+
+        .center-logo-top {
+            margin: 15px 0;
+        }
+
+        }
+
+    </style>
+}
+
+<div class="center-logo-top">
+    <img src="@Url.Content("~/lib/img/book_2.png")" class="center-logo-top-img" />
+</div>
+
+
 <div class="container p-20" style="overflow-x:hidden; background-color:#ffffff;">
-    <br />
-    <br />
+  
+    
     <!-- Adım 1 -->
     <div class="row align-items-center vh-100 p-5">
+       
         <div class="col-md-4 reveal-left">
             <div class="card onboarding-card h-100 p-4 shadow-sm" style="border:none; background:#f9fdf9; font-size:20px;padding:15px">
                 <h5 class="card-title fw-semibold fs-3" style="color:#4CAF50; font-family:'Poppins', sans-serif;">✍️ Yazmaya Başla</h5>
@@ -26,6 +192,10 @@
                 </p>
             </div>
         </div>
+    </div>
+    <div class="step-connector">
+        <img src="/lib/img/stack-of-books.png" class="connector-icon" />
+        <div class="arrow-down"></div>
     </div>
     <br />
     <!-- Adım 2 (ters yerleşim) -->
@@ -52,6 +222,10 @@
                 </p>
             </div>
         </div>
+    </div>
+    <div class="step-connector">
+        <img src="/lib/img/stack-of-books.png" class="connector-icon" />
+        <div class="arrow-down"></div>
     </div>
     <br />
     <!-- Adım 3 -->
