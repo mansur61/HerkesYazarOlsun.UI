@@ -10,6 +10,10 @@
     string isGozlemciMod = User.GetGozlemciMod();
 }
 
+@section scripts {
+    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+}
+
 <style>
     /* PROFILE CARD */
     .profile-card {
@@ -102,7 +106,7 @@
                         @if (isGozlemciMod == "0")
                             {
                                 <li>
-                                    <a onclick='YazariFavorilereEkle(@item.ID,@item.ID,"@Model.Tip")'>
+                                    <a id="favBtn_@item.ID" onclick='YazariFavorilereEkle(@item.ID,@item.ID,"@Model.Tip")'>
                                         <i class="fa fa-heart text-danger"></i>
                                     </a>
                                 </li>
@@ -138,21 +142,77 @@
     </div>
 </div>
 
-<script> 
-  
-    function YazariFavorilereEkle(yazarId, tck,tip) {
-          
-        $.post("@Url.Action(nameof(KisiController.YazariFavorilereEkle), "Kisi")", { "id": yazarId, "tck": tck }, function (data) {
-            if (data) {
-                console.log("data ",data); 
-                UyariVer(data.state, "#basarili-"+ tip, "#bilgi-"+ tip, "#uyari-"+ tip, data.message);
-               
-            } else { 
-               UyariVer(data.state, "#basarili-"+ tip, "#bilgi-"+ tip, "#uyari-"+ tip, data.message);
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<script>
+
+    function YazariFavorilereEkle(yazarId, tck, tip) {
+
+        const btn = document.getElementById("favBtn_" + yazarId);
+        const originalIcon = btn.innerHTML; // eski hali sakla
+
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Favorilere eklemek istiyor musunuz?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger'
+            }
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                // Kullanıcı evet dedi → spinner başlasın
+                btn.innerHTML = '<i class="fa fa-spinner fa-spin text-primary"></i>';
+
+                $.post("@Url.Action(nameof(KisiController.YazariFavorilereEkle), "Kisi")",
+                    { id: yazarId, tck: tck },
+                    function (data) {
+
+                        // AJAX tamamlandıktan sonra ikonu geri döndür
+                        btn.innerHTML = originalIcon;
+
+                        if (data) {
+                            UyariVer(
+                                data.state,
+                                "#basarili-" + tip,
+                                "#bilgi-" + tip,
+                                "#uyari-" + tip,
+                                data.message
+                            );
+                        }
+                        else {
+                            UyariVer(
+                                "warning",
+                                "#basarili-" + tip,
+                                "#bilgi-" + tip,
+                                "#uyari-" + tip,
+                                "Beklenmeyen bir hata oluştu"
+                            );
+                        }
+                    }
+                )
+                .fail(function() {
+                    btn.innerHTML = originalIcon;
+                    UyariVer("error", "#basarili-" + tip, "#bilgi-" + tip, "#uyari-" + tip, "Sunucu hatası.");
+                });
+
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                Swal.fire(
+                    'İşlem İptal',
+                    'Favori ekleme işlemi iptal edildi.',
+                    'info'
+                );
             }
 
-
         });
-    }
 
+    }
 </script>

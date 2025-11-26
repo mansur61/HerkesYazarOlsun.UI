@@ -46,7 +46,7 @@
                     <ul class="dropdown-menu">
                         @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                         {
-                            <li><a href="/Kisi/Profil">Profil </a></li>
+                            <li><a href="/Kisi/Profil">Profil @User.GetUserName() </a></li>
                             <li><a href="/Kitaplar/TumKitaplar?FavoriKitaplar=true">Favori Kitaplarım</a></li>
                             <li><a href="/Kisi/TumYazarlar?FavoriYazarlar=true">Favori Yazarlarım</a></li>
                             <li><a href="/Kitaplar/TumKitaplar?BitenKitaplar=true">Yazdığım/Tamamlanan Kitaplar</a></li>
