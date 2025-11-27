@@ -573,7 +573,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     isWordPDF = input.isWordPDF ?? false,
                     BookId = input.BookModel.ID ?? 0,
                     PageWrite = input.BookPagesModel?.PageWrite ?? "",
-                    ID = input.BookPagesModel?.ID ?? 0,
+                   // ID = input.BookPagesModel?.ID + 1  ?? 0,
                     PageFoto = input.BookPagesModel?.PageFoto ?? "",
                     PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? ""
 
@@ -597,7 +597,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 vmKitap.BookID = input.BookModel.ID ?? 0;
                 vmKitap.BooksPageCount = sayfaCount + 1;
                 vmKitap.BooksPageID = sayfaId;
-                input.IlgiiSayfaSayisi = sayfaId;
+                input.IlgiiSayfaSayisi = sayfaCount + 1;
 
             }
             else
@@ -636,8 +636,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         {
                             input.BookPagesModel.ID = bookPages.Result.ID;
                             sayfaId = (int)bookPages.Result.ID;
-                            sayfaCount = (int)bookPages.Result.ID + 1;
-                            //new BooksPagesService().GetPagesByBooks(book.Result.ID)!.Where(p => p.BookId == book.Result.ID).Count();
+                            sayfaCount = 
+                                //(int)bookPages.Result.ID + 1;
+                            new BooksPagesService().GetPagesByBooks(book.Result.ID)!.Where(p => p.BookId == book.Result.ID).Count();
 
                             result.State = MessageResultState.SUCCESS;
                         }

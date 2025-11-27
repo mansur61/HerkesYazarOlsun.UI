@@ -100,6 +100,8 @@
             { "yildiz4", stars.DortStarToplam },
             { "yildiz5", stars.BesStarToplam }
         };
+        if (values.All(v => v.Value == 0))
+            return "yildiz0";
 
         int maxValue = values.Max(v => v.Value);
         var maxItems = values.Where(v => v.Value == maxValue).ToList();
@@ -112,16 +114,15 @@
 }
 
 @{
-    tipsec = "yildizalan";
-    // tipsec = "yayin";
+    tipsec = "yildizalan"; 
     Model.Tip = @tipsec;    
     tempYildizBookList = temp
          .Where(p => GetDominantStar(p.Stars) == "yildiz5")
          .ToList();
     Model.VMBooksList = tempYildizBookList;
 }
+ 
 
-@* <p>5 yildizalan kitap sayısı: @(tempYildizBookList?.Count ?? 0)</p> *@
 @Html.Partial("_KitapSliderGosterimleri", @Model)
 
 <div style="height:50px;"></div>
@@ -134,7 +135,7 @@
     </div>
 </div> 
 @{
-    // tipsec = "begenilen";
+    
     tipsec = "yorumalan";
     Model.Tip = @tipsec;
     // Yorum sayısına göre sıralanmış en çok yorum alan 10 kitabı seç
@@ -144,8 +145,8 @@
      //.Take(10)
      .ToList();
     Model.VMBooksList = tempYorumBookList;
-}
-@* <p>Yorum alan kitap sayısı: @(tempYorumBookList?.Count ?? 0)</p> *@
+} 
+
 @Html.Partial("_KitapSliderGosterimleri",@Model)
 
 <div style="height:50px;"></div>
@@ -160,8 +161,7 @@
 </div>
 
 @{
-    tipsec = "digerkitaplar";
-    // tipsec = "okunan";
+    tipsec = "digerkitaplar"; 
     Model.Tip = @tipsec;
     Model.VMBooksList = temp;
     // İlk 10 yorum alan ve 5 yıldızlı kitapları hariç tut

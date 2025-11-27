@@ -12,6 +12,8 @@
             { "yildiz4", stars.DortStarToplam },
             { "yildiz5", stars.BesStarToplam }
         };
+        if (values.All(v => v.Value == 0))
+            return "yildiz0";
 
         int maxValue = values.Max(v => v.Value);
         var maxItems = values.Where(v => v.Value == maxValue).ToList();

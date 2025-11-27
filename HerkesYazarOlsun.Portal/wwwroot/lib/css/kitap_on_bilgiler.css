@@ -38,7 +38,7 @@ h4 {
 .form-control {
     width: 100%;
     padding: 10px 12px;
-    font-size: 1rem;
+    font-size: 1.5rem;
     border-radius: 5px;
     border: 1px solid #ccc;
     transition: border-color 0.3s, box-shadow 0.3s;
@@ -72,13 +72,13 @@ h4 {
 
 /* Form text (yardım metni) */
 .form-text.text-info {
-    font-size: 0.85rem;
+    font-size: 1.3rem;
     color: #17a2b8;
 }
 
 /* File input */
 input[type="file"] {
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 /* Responsive row */
@@ -91,6 +91,9 @@ select.form-control {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+    padding: 0.375rem 0.75rem; /* Bootstrap default */
+    line-height: 1.5;
+    height: calc(1.5em + 0.75rem + 2px); /* Bootstrap default height */
 }
 
 /* Responsive düzen */
