@@ -65,7 +65,7 @@ else
 
 <div class="container light-style flex-grow-1 container-p-y" style="margin-top:50px">
     <form method="post" enctype="multipart/form-data" class="needs-validation" id="form-ayarlar">
-        @*action="SaveOrUpdateAyarlar"*@
+         
         <h1 class="font-weight-bold py-3 mb-4">
             Ayarlar
         </h1>
@@ -447,6 +447,23 @@ else
             var seciliRenk = $(".renkler[id='" + seciliRenkKodu + "']").attr("name");
             $("#seciim").text(seciliRenk);
         }
+
+         $('.nav-tabs .nav-link').on('click', function (e) {
+            e.preventDefault(); // URL’de # değişmesini engeller
+
+            // Tüm tab linklerinden aktif sınıfı kaldır
+            $('.nav-tabs .nav-link').removeClass('active');
+
+            // Tüm tab pane’lerden aktif ve show sınıflarını kaldır
+            $('.tab-pane').removeClass('active show');
+
+            // Tıklanan tab’a active sınıfını ekle
+            $(this).addClass('active');
+
+            // Hedef tab-pane’i aktif yap
+            var target = $(this).attr('href');
+            $(target).addClass('active show');
+        });
     });
         var profilarkaplanirengi = "";
     var profilarkaplanrenkkodu = "";
@@ -568,7 +585,9 @@ else
                 // Başarılı dönüş sonucunu işleme kodları buraya gelebilir.
                 if (response.state == 1) {
                     BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);
+                    history.replaceState(null, null, ' ');
                     window.location.reload();
+
                 } else {
                     BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);
                 }

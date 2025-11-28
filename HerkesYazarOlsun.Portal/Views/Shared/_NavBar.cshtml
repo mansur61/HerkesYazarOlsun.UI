@@ -4,9 +4,35 @@
 @{
     string isGozlemciMod = User.GetGozlemciMod();
 }
+<style>
+    /* Desktop: dropdown scroll */
+    .navbar .dropdown-menu {
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 2000;
+    }
 
+    /* Mobil: collapse içindeki dropdown */
+    @@media (max-width: 767px) {
+        #main-navbar
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"  >
+    {
+        max-height: 80vh; /* Mobilde navbar yüksekliğini sınırla */
+        overflow-y: auto; /* Scroll navbar içinde olacak */
+    }
+
+    .navbar .dropdown-menu {
+        max-height: none; /* Scroll dropdown değil, navbar scroll olacak */
+        overflow-y: visible;
+    }
+
+    .navbar .dropdown.open .dropdown-menu {
+        display: block !important;
+    }
+
+    }
+</style>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <!-- Navbar Header: Logo + Hamburger -->
         <div class="navbar-header">
@@ -32,7 +58,7 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a   class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         @if (!string.IsNullOrEmpty(User.GetEmail()))
                         {
                             <i class="fa fa-user"></i>
@@ -62,10 +88,11 @@
                     </ul>
                 </li>
             </ul>
+
         </div>
     </div>
 </nav>
- 
+
 <script>
     function bigImg(x) {
         $("#arabutonu").css("display", "block");
@@ -86,4 +113,7 @@
     if (window.location.href.endsWith("#")) {
         history.replaceState(null, null, window.location.href.replace(/#$/, ""));
     }
+
 </script>
+
+<script src="~/js/hamburger.js"></script>
