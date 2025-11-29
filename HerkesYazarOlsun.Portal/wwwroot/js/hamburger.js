@@ -1,46 +1,38 @@
-﻿ $(document).ready(function () {
-        // Desktop: hover ile aç/kapa
-        $('.dropdown').hover(
-            function () {
-                if ($(window).width() >= 768) {
-                    $(this).addClass('open');
-                }
-            },
-            function () {
-                if ($(window).width() >= 768) {
-                    $(this).removeClass('open');
-                }
-            }
-        );
+﻿(function ($) {
+    $(function () {
+        // URL sonu # varsa temizle
+        if (window.location.href.endsWith("#")) {
+            history.replaceState(null, null, window.location.href.replace(/#$/, ""));
+        }
 
-        // Mobil: dropdown toggle
-        $('.dropdown-toggle').click(function (e) {
-            if ($(window).width() < 768) {
+        // Desktop hover
+        $('.dropdown').on('mouseenter', function () {
+            if (window.innerWidth >= 768) $(this).addClass('open');
+        }).on('mouseleave', function () {
+            if (window.innerWidth >= 768) $(this).removeClass('open');
+        });
+
+        // Mobile click dropdown
+        $('.dropdown-toggle').on('click', function (e) {
+            if (window.innerWidth < 768) {
                 e.preventDefault();
-                var $parent = $(this).parent('.dropdown');
-                $parent.toggleClass('open');
+                $(this).parent().toggleClass('open');
             }
         });
 
         // Hamburger toggle
-        $('.navbar-toggle').click(function () {
+        $('.navbar-toggle').on('click', function () {
             $('#main-navbar').slideToggle();
         });
 
-        // Sayfa resize
-        $(window).resize(function () {
-            if ($(window).width() >= 768) {
-                $('#main-navbar').show().css('max-height', '');
+        // Window resize
+        $(window).on('resize', function () {
+            if (window.innerWidth >= 768) {
+                $('#main-navbar').show();
             } else {
-                $('#main-navbar').hide().css('max-height', '80vh');
+                $('#main-navbar').hide();
                 $('.dropdown').removeClass('open');
             }
         });
-
-        // Başlangıç kontrolü
-        if ($(window).width() >= 768) {
-            $('#main-navbar').show();
-        } else {
-            $('#main-navbar').hide().css('max-height', '80vh');
-        }
     });
+})(jQuery);

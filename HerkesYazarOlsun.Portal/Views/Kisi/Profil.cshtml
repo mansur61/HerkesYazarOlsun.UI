@@ -3,6 +3,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div id="globalSpinner" class="spinner text-center" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999;">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+</div>
+
 @using HerkesYazarOlsun.Model.Enums
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
@@ -96,86 +100,76 @@
         /* 🔥 PROFİL MOBILE RESPONSIVE TASARIM */
         @@media (max-width: 768px) {
             /* Profil kartı: dikey hizaya geçsin */
-            .profile-card
+            .profile-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+                /* Resim alanı ortalansın */
+                .profile-card .col-md-2 {
+                    width: 100%;
+                    margin-bottom: 15px;
+                }
 
-        {
-            flex-direction: column;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* Resim alanı ortalansın */
-        .profile-card .col-md-2 {
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        .profile-card img {
-            width: 120px !important;
-            height: 120px !important;
-            margin: 0 auto 10px auto;
-        }
-
-        /* Yıldızlar ortalansın */
-        .profile-card .mb-3 {
-            text-align: center !important;
-            width: 100%;
-        }
-
-        /* Bilgi alanı tam genişlik */
-        .profile-info {
-            width: 100%;
-            text-align: center;
-        }
-
-            .profile-info h2 {
-                font-size: 22px;
-                margin-top: 10px;
+                .profile-card img {
+                    width: 120px !important;
+                    height: 120px !important;
+                    margin: 0 auto 10px auto;
+                }
+                /* Yıldızlar ortalansın */
+                .profile-card .mb-3 {
+                    text-align: center !important;
+                    width: 100%;
+                }
+            /* Bilgi alanı tam genişlik */
+            .profile-info {
+                width: 100%;
+                text-align: center;
             }
 
-        /* Takip – takipçi sayıları dikey hizalansın */
-        .follow-stats {
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-            .follow-stats .stat p {
-                font-size: 15px;
+                .profile-info h2 {
+                    font-size: 22px;
+                    margin-top: 10px;
+                }
+            /* Takip – takipçi sayıları dikey hizalansın */
+            .follow-stats {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
             }
 
-        /* Buton grubu alt alta gelsin */
-        .btn-group-custom {
-            justify-content: center;
-            flex-direction: column;
-            width: 100%;
-        }
-
-            .btn-group-custom button {
+                .follow-stats .stat p {
+                    font-size: 15px;
+                }
+            /* Buton grubu alt alta gelsin */
+            .btn-group-custom {
+                justify-content: center;
+                flex-direction: column;
                 width: 100%;
             }
 
-        /* Yıldız verme butonları ortalansın */
-        .yildizver {
-            font-size: 28px;
-        }
-
-        /* Tab yapısı tam mobil uyumlu */
-        .nav-tabs .nav-link {
-            font-size: 14px;
-            padding: 10px 8px;
-            text-align: center;
-        }
-
+                .btn-group-custom button {
+                    width: 100%;
+                }
+            /* Yıldız verme butonları ortalansın */
+            .yildizver {
+                font-size: 28px;
+            }
+            /* Tab yapısı tam mobil uyumlu */
+            .nav-tabs .nav-link {
+                font-size: 14px;
+                padding: 10px 8px;
+                text-align: center;
+            }
         }
     </style>
 
 
 }
 
-@section scripts {
+@* @section scripts {
     <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-}
+} *@
 
 <input type="hidden" id="profilicin" value="profil" />
 <input type="hidden" id="yazar_id" value="@Model.ID" />
@@ -187,8 +181,8 @@
     <div class="profile-card">
         <div class="col-md-2 d-flex flex-column align-items-center">
             <img src="@(!string.IsNullOrEmpty(Model?.Profile?.ProfilResimURl)
-                                                                    ? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
-                                                                    : Url.Content("~/lib/img/user.png"))"
+                                                                                     ? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
+                                                                                     : Url.Content("~/lib/img/user.png"))"
                  alt="Profil Resmi"
                  class="img-fluid img-thumbnail mt-4 mb-2"
                  style="width: 150px;" />
@@ -270,7 +264,7 @@
                     <div class="mb-3">
                         @Html.Partial("_YildizGoster", @Model.Stars)
                     </div>
-                    
+
                     <div class="mt-3">
                         <span class="badge bg-primary p-2 px-3">
                             Toplam: @Model.Stars.EnFazlaSitar
@@ -298,6 +292,7 @@
     }
     @Html.Partial("_AlertMesaj", "profil")
 
+
     <!-- PROFİL SEKME ALANI -->
     <section class="product_description_area">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -319,17 +314,68 @@
             <div class="tab-pane fade show active" id="hakkinda" role="tabpanel">
                 <div id="bilgi">@Model.ID.ToString() nolu yazar: @Model.NAME @Model.SURNAME</div>
             </div>
-            <div class="tab-pane fade" id="devamedenkitaplar" role="tabpanel"><div id="devameden"></div></div>
-            <div class="tab-pane fade" id="tamamlanankitaplar" role="tabpanel"><div id="tamamlanan"></div></div>
-            <div class="tab-pane fade" id="yayinlanan" role="tabpanel"><div id="yayin"></div></div>
+            <div class="tab-pane fade" id="devamedenkitaplar" role="tabpanel">
+
+                <div id="devameden"></div>
+            </div>
+            <div class="tab-pane fade" id="tamamlanankitaplar" role="tabpanel">
+
+                <div id="tamamlanan"></div>
+            </div>
+            <div class="tab-pane fade" id="yayinlanan" role="tabpanel">
+
+                <div id="yayin"></div>
+            </div>
         </div>
     </section>
 </div>
+<div class="spinner text-center" style="display:none;">
+    <i class="fa fa-spinner fa-spin fa-2x"></i>
+</div>
 
+
+<script>
+    $(document).ready(function() {
+        // URL'deki tüm hash’leri kaldır
+        if (window.location.hash) {
+            history.replaceState(null, null, window.location.href.split('#')[0]);
+        }
+
+        $('.nav-tabs .nav-link').on('click', function (e) {
+            e.preventDefault(); // URL’de # değişmesini engelle
+
+            // Tüm tab linklerinden aktif sınıfı kaldır
+            $('.nav-tabs .nav-link').removeClass('active');
+
+            // Tüm tab pane’lerden aktif ve show sınıflarını kaldır
+            $('.tab-pane').removeClass('active show');
+
+            // Tıklanan tab’a active sınıfını ekle
+            $(this).addClass('active');
+
+            // Hedef tab-pane’i aktif yap
+            var target = $(this).attr('href');
+            $(target).addClass('active show');
+
+            // Eğer onclick fonksiyonu varsa çalıştır
+            var onclickFn = $(this).attr('onclick');
+            if (onclickFn) {
+                eval(onclickFn);
+            }
+        });
+    });
+</script>
 
 
 <script>
 
+        function showSpinner() {
+        $("#globalSpinner").show();
+    }
+
+    function hideSpinner() {
+        $("#globalSpinner").hide();
+    }
     $("#bilgi").css("display", "none");
 
     var yildizPuani = 0;
@@ -431,6 +477,7 @@
                 }
             });
     }
+
     function YazarTakip(follow) {
 
         var kural = $('#kural').text().trim();
@@ -508,8 +555,9 @@
           });
       }
 
-    function DevamEdenKitaplar() {
-        $(this).css("color", "red");
+           function DevamEdenKitaplar() {
+        showSpinner();
+
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
             {
                 "yazarIId": yazarId,
@@ -517,13 +565,17 @@
                 "profilKitapTuru": "devameden",
                 "tip": profil
             },
-
             function (data) {
                 $("#devameden").html(data);
+            })
+            .always(function () {
+                hideSpinner();
             });
     }
 
     function TamamlananKitaplar() {
+        showSpinner();
+
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
             {
                 "yazarIId": yazarId,
@@ -531,13 +583,17 @@
                 "profilKitapTuru": "tamamlanan",
                 "tip": profil
             },
-
             function (data) {
                 $("#tamamlanan").html(data);
+            })
+            .always(function () {
+                hideSpinner();
             });
     }
 
     function YayinlananKitaplar() {
+        showSpinner();
+
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
             {
                 "yazarIId": yazarId,
@@ -545,9 +601,11 @@
                 "profilKitapTuru": "yayin",
                 "tip": profil
             },
-
             function (data) {
                 $("#yayin").html(data);
+            })
+            .always(function () {
+                hideSpinner();
             });
     }
 </script>

@@ -1,11 +1,45 @@
 ﻿@using HerkesYazarOlsun.Portal.Controllers
+@using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 <input type="hidden" id="footericin" value="footer" />
 
 @{
     string alertmesajgostermedurumu = "footer";
 }
+<style>
+    .footer-title {
+        color: #ffffff;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        font-size: 16px;
+    }
 
+    .footer-links li a {
+        color: #b0b0b0;
+        display: block;
+        padding: 5px 0;
+        transition: color 0.2s;
+    }
+
+        .footer-links li a:hover {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 767px) {
+        .footer-title
+
+    {
+        font-size: 14px;
+    }
+
+    .footer-links li a {
+        font-size: 13px;
+    }
+
+    }
+</style>
 
 <footer id="gozukecekMiFooter">
     <div class="container">
@@ -64,20 +98,31 @@
                     <i class="fa fa-envelope"></i> info@herkesyazarolsun.com.tr
                 </address>
             </div>
-
+            @{
+                string isGozlemciMod = User.GetGozlemciMod();
+            }
 
             <div class="col-lg-3 col-md-4">
-                <h3>Haberdar Olunuz</h3>
-                <p>Mailinizi Girerek Geliştirmelerden Sizleri Anında Haberdar Edelim</p>
-                <div class="input-group">
-                    <input type="email" placeholder="Email" id="footerEmail" class="form-control">
+                <h5 class="footer-title">Hızlı Erişim</h5>
+                <ul class="footer-links list-unstyled">
+                    <li><a href="/Home/Index">Anasayfa</a></li>
+                    <li><a href="/Home/Hakkimizda">Hakkımızda</a></li>
+                    <li><a href="/Home/Iletisim">İletişim</a></li>
 
-                </div><p class="input-group-btn">
-                    <button type="button" class="btn btn-primary" id="haberdarBtn">
-                        Haber Ver
-                    </button>
-                </p>
+                    @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
+                    {
+                        <li><a href="/Kitaplar/TumKitaplar?FavoriKitaplar=true">Favori Kitaplarım</a></li>
+                        <li><a href="/Kisi/TumYazarlar?FavoriYazarlar=true">Favori Yazarlarım</a></li>
+                        <li><a href="/Kitaplar/TumKitaplar?BitenKitaplar=true">Yazdığım/Tamamlanan Kitaplar</a></li>
+                        <li><a href="/Kitaplar/TumKitaplar?DevamEdenKitaplar=true">Henüz Tamamlanmayan Kitaplarım</a></li>
+                        <li><a href="/Kitaplar/TumKitaplar?YayinlananKitaplar=true">Yayınlanan Kitaplarım</a></li>
+                        <li><a href="/Kisi/Profil">Profil</a></li>
+                        <li><a href="/Ayarlar/Ayarlar">Ayarlar</a></li>
+                    }
+                </ul>
             </div>
+
+
 
         </div><!-- /.row -->
         @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
@@ -93,7 +138,7 @@
     </div>
 </div>
 
-<script>
+@* <script>
     $(function () {
         var footer = $("#footericin").val();
 
@@ -140,3 +185,4 @@
         });
     });
 </script>
+ *@
