@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Kitap Arama";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.FooterGoster = false;
 }
 
 @using HerkesYazarOlsun.Portal.Controllers;
@@ -115,7 +116,11 @@
 
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Kaydet</button>
+                <button type="submit" class="btn btn-primary btn-block"
+                        style="background-color: #00C9A7; border-color: #00C9A7; color: #fff; font-size: 16px; padding: 10px 20px;">
+                    Kaydet
+                </button>
+
             </form>
         </div>
 

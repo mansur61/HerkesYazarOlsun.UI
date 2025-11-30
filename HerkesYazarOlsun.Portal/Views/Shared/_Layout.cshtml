@@ -152,7 +152,10 @@
         @RenderBody()
 
     </div>
-
-    @Html.Partial("_Footer")
+    @if (ViewBag.FooterGoster != false)
+    {
+        @Html.Partial("_Footer")
+    }
+   
 </body>
 </html>

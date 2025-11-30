@@ -3,9 +3,11 @@ using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Enums;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -13,10 +15,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
     {
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
-        public KisiController(IHttpContextAccessor contextAccessor)
+        private int SliderdaGosterilecekKayit = 0;
+        private int DefaultSliderdaGosterilecekKayit = 0;
+        public KisiController(IHttpContextAccessor contextAccessor, IOptions<HelperSettings> helperSettings)
         {
             _contextAccessor = contextAccessor;
              Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
+
+            SliderdaGosterilecekKayit = helperSettings.Value.SliderdaGosterilecekKayit;
+            DefaultSliderdaGosterilecekKayit = helperSettings.Value.DefaultSliderdaGosterilecekKayit;
+
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
         }
         public IActionResult Index()
         {
@@ -43,6 +53,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             List<VM_USERS> usersList = new KisiService().GetKisiler(arama).ToList();
             vmUsers.VMUsersList = usersList;//.Where(p=>p.ID != Lid).ToList();
+
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
 
             return View(vmUsers); 
         }

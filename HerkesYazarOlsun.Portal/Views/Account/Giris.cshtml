@@ -4,9 +4,9 @@
 }
 
 @section Styles {
-    <link href="@Url.Content("~/lib/bootstrap/dist/css/style_aroma_template.css")" rel="stylesheet" />
+    @* <link href="@Url.Content("~/lib/bootstrap/dist/css/style_aroma_template.css")" rel="stylesheet" /> *@
 
-    @* <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" /> *@
+   <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />  
     <style>
         #normalLoginTab {
             background-color: lightgray; /* Aktif tab için mavi arka plan */
@@ -29,7 +29,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
-                <div class="login_box_img">
+                <div class="login_box_img" style="background-color: #00C9A7;">
                     <div class="hover">
                         <h4>Herkes Yazar Olsun' a Hoşgeldiniz !</h4>
                         <p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyoruz.</p>

@@ -6,6 +6,7 @@
 @{
     string alertmesajgostermedurumu = "footer";
 }
+
 <style>
     .footer-title {
         color: #ffffff;
@@ -43,7 +44,6 @@
 
 <footer id="gozukecekMiFooter">
     <div class="container">
-
         <div class="row">
             <div class="col-md-4">
                 <a class="footer-brand" href="Index">Herkes Yazar Olsun</a>
@@ -137,52 +137,3 @@
         </div><!-- /.row -->
     </div>
 </div>
-
-@* <script>
-    $(function () {
-        var footer = $("#footericin").val();
-
-        $("#haberdarBtn").on("click", function () {
-            var mail = $("#footerEmail").val().trim();
-
-            console.log("HaberdarEt :", mail);
-
-            if (!mail) {
-                $("#uyari-" + footer).show().find("#mesaj").text("Mail bilginiz boş bırakmayınız.");
-                $("#bilgi-" + footer).hide();
-                $("#basarili-" + footer).hide();
-                return;
-            }
-
-            $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
-                {
-                    kime: mail,
-                    konu: "Herkes Yazar Olsun Bülteni",
-                    mesaj: "Herkes Yazar Olsun Bültenlerinden, anlık geliştirmelerden sizleri de bilgilendireceğiz.\nİlginiz için teşekkür ederiz"
-                }
-            ).done(function (data) {
-                if (data.state === 1) {
-                    $("#basarili-" + footer).show().find("#mesaj").text(data.message);
-                    $("#bilgi-" + footer).hide();
-                    $("#uyari-" + footer).hide();
-                    $("#footerEmail").val("");
-                }
-                else if (data.state === 3) {
-                    $("#bilgi-" + footer).show().find("#mesaj").text(data.message);
-                    $("#basarili-" + footer).hide();
-                    $("#uyari-" + footer).hide();
-                }
-                else {
-                    $("#uyari-" + footer).show().find("#mesaj").text(data.message);
-                    $("#bilgi-" + footer).hide();
-                    $("#basarili-" + footer).hide();
-                }
-            }).fail(function () {
-                $("#uyari-" + footer).show().find("#mesaj").text("Bir hata oluştu, lütfen tekrar deneyin.");
-                $("#bilgi-" + footer).hide();
-                $("#basarili-" + footer).hide();
-            });
-        });
-    });
-</script>
- *@

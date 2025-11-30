@@ -576,7 +576,7 @@
           });
       }
 
-      function DevamEdenKitaplar() {
+          function DevamEdenKitaplar() {
         showSpinner();
 
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
@@ -587,46 +587,56 @@
                 "tip": profil
             },
             function (data) {
-                $("#devameden").html(data);
-            })
-            .always(function () {
-                hideSpinner();
-            });
+                $("#devameden").html(data); // veri DOM’a eklendi
+                hideSpinner();              // spinner şimdi kapat
+            }
+        ).fail(function() {
+            hideSpinner();
+            console.log("Veri yüklenirken bir hata oluştu.");
+        });
     }
 
-    function TamamlananKitaplar() {
+        function loadKitaplar(tabId, postData, targetDivId) {
+        
+        if ($("#" + targetDivId).children().length > 0) return;
+
         showSpinner();
 
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
+            postData,
+            function (data) {
+                $("#" + targetDivId).html(data); // veri DOM’a eklendi
+            })
+            .fail(function () {
+                console.log("Veri yüklenirken bir hata oluştu.");
+            })
+            .always(function () {
+                hideSpinner(); // spinner veri DOM’a geldikten sonra kapanır
+            });
+    }
+        
+    function TamamlananKitaplar() {
+        loadKitaplar("tamamlanankitaplar",
             {
                 "yazarIId": yazarId,
                 "BitenKitaplar": true,
                 "profilKitapTuru": "tamamlanan",
                 "tip": profil
             },
-            function (data) {
-                $("#tamamlanan").html(data);
-            })
-            .always(function () {
-                hideSpinner();
-            });
+            "tamamlanan"
+        );
     }
 
+    
     function YayinlananKitaplar() {
-        showSpinner();
-
-        $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")",
+        loadKitaplar("yayinlanankitaplar",
             {
                 "yazarIId": yazarId,
                 "YayinlananKitaplar": true,
                 "profilKitapTuru": "yayin",
                 "tip": profil
             },
-            function (data) {
-                $("#yayin").html(data);
-            })
-            .always(function () {
-                hideSpinner();
-            });
+            "yayin"
+        );
     }
 </script>
