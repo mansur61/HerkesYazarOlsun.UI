@@ -22,7 +22,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
         private int ParagrafLimiti = 0;
-         
+        private int SliderdaGosterilecekKayit = 0;
+        private int DefaultSliderdaGosterilecekKayit = 0;
         private readonly string _dosyaBaseUrl;
         // kullanımdan alındı
         private string DosyaYolu = "";
@@ -32,6 +33,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
             _dosyaBaseUrl = helperSettings.Value.DosyaBaseUrl;
             ParagrafLimiti =  helperSettings.Value.ParagrafLimiti ;
+            SliderdaGosterilecekKayit = helperSettings.Value.SliderdaGosterilecekKayit;
+            DefaultSliderdaGosterilecekKayit = helperSettings.Value.DefaultSliderdaGosterilecekKayit;
+
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+
             DosyaYolu = _dosyaBaseUrl;
         }
         public IActionResult KitapOlustur(VM_BOOKS_DETAIL input)
@@ -784,9 +791,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
+            //kitapDetay.isAnaSayfa = true;
+            //kitapDetay.Start = 0;
+            //kitapDetay.sliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+
             kitapDetay.BookModel = new VM_BOOKS();
 
-            kitapDetay.sliderdaGosterilecekKayit = (arama.listelenecek_kayit_sayisi != 0 ? arama.listelenecek_kayit_sayisi : 0);
+            kitapDetay.sliderdaGosterilecekKayit = 
+                (arama.listelenecek_kayit_sayisi != 0 ? arama.listelenecek_kayit_sayisi :  SliderdaGosterilecekKayit);
+
             kitapDetay.profilKitapTuru = arama.profilKitapTuru ?? "";
             kitapDetay.isAnaSayfa = false;
             kitapDetay.Tip = arama.profilKitapTuru + "-" + arama.Tip;
