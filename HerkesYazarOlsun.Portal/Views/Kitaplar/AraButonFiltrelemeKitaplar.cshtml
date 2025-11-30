@@ -1,5 +1,4 @@
-﻿@using HerkesYazarOlsun.Model.ViewModel
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 
 @{
     Model.kitapSliderYometimAdi = "kitaplar" + Model.profilKitapTuru ?? "";
@@ -14,67 +13,11 @@
 @section Styles {
     <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
+
+
+
 }
 
-<style>
-    .containerPagination {
-        width: 200px;
-        height: 100%;
-        background: lineer-gradient(45deg,#410358,#4700bc);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .pagination {
-        display: flex;
-        align-items: center;
-        background: #fff;
-        color: #383838;
-        padding: 10px 10px;
-        border-radius: 6px;
-    }
-
-    .containerPagination > ul {
-        margin: 20px 30px;
-    }
-
-        .containerPagination > ul li {
-            display: inline-block;
-            text-align: center;
-            margin: 10px 10px;
-            /* background: #acc;*/
-            width: 45px;
-            height: 45px;
-            border-radius: 20%;
-            font-size: 22px;
-            font-weight: 500;
-            line-height: 45px;
-            cursor: pointer;
-            background-position: 0 -45px;
-            transition: background-position 0.5s;
-        }
-
-            .containerPagination > ul li.active {
-                color: #410358;
-                background-color: #3e8e41;
-                /* background-image: lineer-gradient(45deg,#410358,#4700bc);*/
-                background-repeat: no-repeat;
-                background-position: 0 0px;
-            }
-
-    .btn1, .btn2 {
-        display: inline-flex;
-        align-items: center;
-        font-size: 22px;
-        font-weight: 500;
-        color: #383838;
-        background: transparent;
-        outline: none;
-        border: none;
-        cursor: pointer;
-    }
-</style>
 
 
 @{
@@ -90,58 +33,10 @@
 
     @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
 
-    @* @Html.Partial("Kitaplar",@Model) *@
-
-   
-   int perSlide = (int)Math.Ceiling(Model.VMBooksList.Count / (double)Model.vM_PAGINATION_BUTTONS.sliderSayisi);
- 
-
-    @for (int i = 0; i < Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
-    {
-        var slideModel = new VM_BOOKS_DETAIL
-        {
-            VMBooksList = Model.VMBooksList.Skip(i * perSlide).Take(perSlide).ToList(),
-            Tip = Model.Tip,
-            isAnaSayfa = Model.isAnaSayfa
-        };
-
-        <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName"
-             data-index="@i"
-             style="display:none;">
-            @Html.Partial("_KitaplarItem", slideModel)
-        </div>
-    }
+    @Html.Partial("Kitaplar", @Model)
 
 
-
-    @* @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS) *@
-    <div class="containerPagination" style="margin:10px auto;" id="butonlar">
-
-        <button class="btn1" onclick="backBtn()">Geri</button>
-
-        <ul class="pagination">
-            @for (int i = 0; i < @Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
-            {
-                @if (i == 0)
-                {
-                    <li class="page-item-@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName active" onclick="activeLink()" value="@(i)">
-                        @(i + 1)
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item-@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName " onclick="activeLink()" value="@(i)">
-                        @(i + 1)
-                    </li>
-                }
-
-            }
-
-        </ul>
-        <button class="btn2" onclick="nextBtn()">İleri</button>
-
-
-    </div>
+    @Html.Partial("_PaginationButonlar", @Model.vM_PAGINATION_BUTTONS)
 
 }
 else
@@ -150,175 +45,6 @@ else
 }
 
 
-<script>
-
-    var pageItem = document.getElementsByClassName("page-item-@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName");
-    var durum = document.getElementsByClassName("durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName");
-
-    console.log("pageItem: " + pageItem.length + " durum :" + durum.length);
-
-    for (l of durum) {
-        l.style.display = "none";
-    }
-
-    var isActive = false;
-    var currentValue = 1;
-    var currentIndex = 0;
-        if(durum && durum[currentIndex]){
-        durum[currentIndex].style.display = "block";
-    }
-
-
-
-    function activeLink() {
-        isActive = true;
-        for (l of pageItem) {
-            l.classList.remove("active");
-        }
-        event.target.classList.add("active");
-        currentValue = event.target.value;
-        console.log("activeLink event.target.value: " + currentValue);
-        //sayfaGoster(currentValue);
-        let previous_step = currentValue - 1;
-        for (var i = 0; i < durum.length; i++) {
-            if (currentValue == i) {
-                durum[i].style.display = "block";
-            } else {
-                durum[i].style.display = "none";
-            }
-        }
-
-    }
-
-    function backBtn() {
-        if (!durum || !pageItem || durum.length === 0) return;
-
-        // Tüm aktifleri kaldır
-        for (let l of pageItem) {
-            if (l && l.classList) l.classList.remove("active");
-        }
-
-        let isCurrentIndexDurumEquals = false;
-
-        if (currentIndex === durum.length) {
-            isCurrentIndexDurumEquals = true;
-            const idx = durum.length - (currentIndex - 1);
-            if (pageItem[idx]) pageItem[idx].classList.add("active");
-            currentIndex = idx;
-        } else {
-            currentIndex = currentIndex - 1;
-            if (currentIndex < 0) {
-                currentIndex = 0;
-            }
-        }
-
-        if (isActive) {
-            currentIndex = currentValue;
-
-            if (currentIndex > 0) {
-                currentIndex = currentValue - 1;
-            } else {
-                currentIndex = 0;
-            }
-
-            currentValue = currentIndex;
-
-            if (currentIndex > 0) {
-                if (pageItem[currentValue]) {
-                    pageItem[currentValue].classList.add("active");
-                }
-            } else {
-                if (pageItem[currentIndex]) {
-                    pageItem[currentIndex].classList.add("active");
-                }
-            }
-        } else {
-            if (pageItem[currentIndex]) {
-                pageItem[currentIndex].classList.add("active");
-            }
-        }
-
-        for (let i = 0; i < durum.length; i++) {
-            if (!durum[i]) continue; // güvenlik
-            durum[i].style.display = (currentIndex === i) ? "block" : "none";
-        }
-    }
-
-
-       function nextBtn() {
-        console.log("currentIndex:", currentIndex);
-
-        // Güvenlik kontrolleri
-        if (!durum || !pageItem || durum.length === 0) return;
-
-        // Index sınırlarını kontrol et
-        if (currentIndex >= durum.length - 1) {
-            currentIndex = durum.length - 1;
-        } else {
-            currentIndex++;
-        }
-
-        // Tüm "active" sınıflarını kaldır
-        for (let l of pageItem) {
-            l.classList.remove("active");
-        }
-
-        // isActive durumuna göre index ayarlaması
-        if (isActive) {
-            if (typeof currentValue === "undefined") currentValue = 0;
-
-            currentIndex = currentValue + 1;
-            if (currentIndex >= durum.length) {
-                currentIndex = durum.length - 1;
-            }
-            currentValue = currentIndex;
-        }
-
-        // Geçerli index’teki elemanı "active" yap
-        const activeIndex =
-            currentIndex < durum.length ? currentIndex : durum.length - 1;
-
-        if (pageItem[activeIndex]) {
-            pageItem[activeIndex].classList.add("active");
-        }
-
-        // Durumların görünürlüğünü ayarla
-        for (let i = 0; i < durum.length; i++) {
-            durum[i].style.display = i === activeIndex ? "block" : "none";
-        }
-
-        console.log("currentIndex:", currentIndex);
-    }
-
-
-    function sayfaGoster(sayfaIndex) {
-
-        console.log("durum.length:  " + durum.length);
-        console.log("currentValue:  " + sayfaIndex);
-        console.log("sayfaIndex:  " + sayfaIndex);
-
-        if (sayfaIndex <= durum.length) {
-            let previous_step = currentValue - 1;
-            console.log("previous_step: " + previous_step);
-
-            if (sayfaIndex == durum.length) {
-
-                durum[previous_step - 1].style.display = "none";
-                durum[sayfaIndex - 1].style.display = "block";
-            } else {
-                if (sayfaIndex == 1) {
-                    durum[previous_step].style.display = "block";
-                    durum[sayfaIndex].style.display = "block";
-                } else {
-                    durum[previous_step].style.display = "none";
-                    durum[sayfaIndex].style.display = "block";
-                }
-
-            }
-
-        }
-    }
-</script>
 
 
 <script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>

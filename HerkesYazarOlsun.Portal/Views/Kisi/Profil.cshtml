@@ -3,9 +3,30 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div id="globalSpinner" class="spinner text-center" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999;">
+<style>
+    #globalSpinner i {
+        color: transparent !important;
+        background: linear-gradient(45deg, #ff0000, #ffea00);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-size: 60px !important; /* daha büyük görünür */
+        filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+    }
+
+    #globalSpinner {
+        /* Arka plan hafif mavi overlay */
+        background: rgba(0, 60, 255, 0.15);
+        padding: 20px 25px;
+        border-radius: 15px;
+    }
+
+</style>
+
+<div id="globalSpinner" class="spinner text-center"
+     style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999;">
     <i class="fa fa-spinner fa-spin fa-3x"></i>
 </div>
+
 
 @using HerkesYazarOlsun.Model.Enums
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
@@ -369,7 +390,7 @@
 
 <script>
 
-        function showSpinner() {
+    function showSpinner() {
         $("#globalSpinner").show();
     }
 

@@ -1,29 +1,33 @@
-﻿
-
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
+@using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Controllers;
-
-
+ 
 
 <div class="container my-4">
     <div class="row">
 
-        @*<div class="col-lg-12">*@
+        @{
+            int perSlide = Model.sliderdaGosterilecekKayit ?? ViewBag.SliderdaGosterilecekKayit;
+        }
+         
 
-            @for (int i = 0; i < @Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
+        @for (int i = 0; i < Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
+        {
+            var slideModel = new VM_BOOKS_DETAIL
             {
-                <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName" style="height:auto">
+                VMBooksList = Model.VMBooksList.Skip(i * perSlide).Take(perSlide).ToList(),
+                Tip = Model.Tip,
+                isAnaSayfa = Model.isAnaSayfa
+            };
 
-                    @Html.Partial("_KitaplarItem",@Model)
-                    
-                </div>
-                <br />
-            }
+            <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName"
+                 data-index="@i"
+                 style="display:none;">
+                @Html.Partial("_KitaplarItem", slideModel)
+            </div>
+        }
 
-          
-        @*</div>*@
 
-       
     </div>
 
 </div>

@@ -36,17 +36,36 @@
             color: #a71d2a; /* Icon rengi değişir */
             transform: scale(1.1); /* Hafif büyüme efekti */
         }
+
+    .book-item {
+        flex: 0 0 50%; /* her satırda 2 adet */
+        max-width: 220px; /* senin istediğin genişlik */
+        box-sizing: border-box;
+        padding: 5px;
+        margin: 5px;
+        border: 1px dotted blue;
+    }
+
+    .books-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+
 </style>
 
-  
 
+<div class="books-wrapper">
 @foreach (var item in Model.VMBooksList)
 {
     try
     {
         <input type="hidden" value="@item.ID" name="kId">
 
-        <div class="col-lg-4 col-md-6 col-sm-6" style="border:1px dotted blue;height:auto;width:200px;margin:5px 5px;padding:5px">
+            <div class="col-6 col-sm-6 col-md-4 col-lg-3 book-item">
+
+
             <div class="product__item" style="overflow:hidden;height:360px">
 
                 <div class="product__item__pic set-bg" data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.ONKAPAKFOTOPATH">
@@ -123,6 +142,7 @@
                 </div>
             </div>
         </div>
+       
     }
     catch (Exception ex)
     {
@@ -131,6 +151,7 @@
         </div>
     }
 }
+ </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
