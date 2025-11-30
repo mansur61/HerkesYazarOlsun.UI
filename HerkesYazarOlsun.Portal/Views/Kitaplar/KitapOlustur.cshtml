@@ -130,14 +130,14 @@
 }
 
 
-
 <script>
-    // Quill başlat
-    var quill = new Quill('#arkaKapakYaziEditor', {
+    // Arka Kapak Editörü
+    var arkaKapakQuill = new Quill('#arkaKapakYaziEditor', {
       theme: 'snow',
       placeholder: 'Kapak yazınızı buraya yazın...',
       modules: {
         toolbar: [
+          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
           ['bold', 'italic', 'underline', 'strike'],
           [{ 'list': 'ordered' }, { 'list': 'bullet' }],
           ['link', 'image'],
@@ -147,17 +147,13 @@
       }
     });
 
-    // Form gönderiminde içeriği textarea’ya aktar
-    document.querySelector('form')?.addEventListener('submit', function () {
-      document.getElementById('arkaKapakYazi').value = quill.root.innerHTML;
-      document.getElementById('onsoz').value = quill.root.innerHTML;
-    });
-
-    var quill = new Quill('#onSozEditor', {
+    // Önsöz Editörü
+    var onSozQuill = new Quill('#onSozEditor', {
       theme: 'snow',
       placeholder: 'Önsözünüzü buraya yazın...',
       modules: {
         toolbar: [
+          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
           ['bold', 'italic', 'underline', 'strike'],
           [{ 'list': 'ordered' }, { 'list': 'bullet' }],
           ['link', 'image'],
@@ -167,7 +163,11 @@
       }
     });
 
-
+    // Form gönderiminde içerikleri textarea'lara aktar
+    document.querySelector('form')?.addEventListener('submit', function () {
+      document.getElementById('arkaKapakYazi').value = arkaKapakQuill.root.innerHTML;
+      document.getElementById('onsoz').value = onSozQuill.root.innerHTML;
+    });
 </script>
 
 
@@ -184,20 +184,21 @@
         let quill; // Quill değişkenini global tanımlıyoruz
         const hiddenTextarea = document.getElementById('sayfaYazi');
 
-        function initQuill() {
+        function initQuill() { 
             if (!quill) {
                 quill = new Quill('#sayfaYaziEditor', {
                     theme: 'snow',
                     placeholder: 'Sayfanızı buraya yazın...',
                     modules: {
-                        toolbar: [
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                            ['link', 'image'],
-                            [{ 'align': [] }],
-                            ['clean']
-                        ]
-                    }
+        toolbar: [
+          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          ['link', 'image'],
+          [{ 'align': [] }],
+          ['clean']
+        ]
+      }
                 });
 
                 quill.on('text-change', () => {
@@ -303,6 +304,7 @@
 
 
     $("#tamam-btn").on("click", function () {
+        console.log("tamam-btn"  );
         var kategoriBilgisi = $("#kitapKategori").val();
         if(kategoriBilgisi){
             console.log("kategoriBilgisi : " + kategoriBilgisi);
@@ -370,7 +372,7 @@
     });
 
     $("#devamet-btn").on("click", function () {
-
+         console.log("devamet-btn"  );
         var kitapId = $("#BOOKSID").val();
         var sayfaYazi = $("#sayfaYazi").val();
         console.log(" sayfaYazi:",sayfaYazi);
@@ -390,7 +392,9 @@
             function (data) {
                 console.log("data:" + data);
                 if (data.state == 1) {
-                    window.quill.setContents([]);
+                   window.quill?.setContents([]);
+                     $("#sayfaYazi").html("");
+                      window.quill?.setText("");
                     BilgiVer(data.state, "#basarili-", "#bilgi-", "#uyari-", "Sayfa Eklendi, yeni sayfadan devam edebilirsizniz");
                      window.location.reload();
 
@@ -408,7 +412,7 @@
     var kitapOlusturForm = document.getElementById('form-wrapper');
     kitapOlusturForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Formun varsayılan submit işlemini engelle
-
+        console.log("kitapOlusturForm"  );
         var kitapKatdetmeUyariDurumu = $("#kitapKatdetmeUyariDurumu").val();
         console.log("kitapKatdetmeUyariDurumu : " + kitapKatdetmeUyariDurumu);
         var kategoriBilgiId = $("#kitapKategori").val();
@@ -482,10 +486,10 @@
             },
             function (data) {
                 console.log("data:" + data);
-                if (data.state == 1) {
-                      window.quill.setContents([]);
-                       $("#sayfaYazi").html("");
-                       window.quill.setText("");
+                if (data.state == 1) { 
+                     window.quill?.setContents([]);
+                     $("#sayfaYazi").html("");
+                      window.quill?.setText("");
                     BilgiVer(data.state, "#basarili-", "#bilgi-", "#uyari-",  (mesaj && mesaj.trim() !== "") ? mesaj : "Kitaba Sayfa Eklenmiştir.");
 
                     $("#BOOKSID").val(data.result.bookID);
@@ -556,9 +560,9 @@
                 console.log('Başarılı dönüş: response result ', response.result);
                 // Başarılı dönüş sonucunu işleme kodları buraya gelebilir.
                 if (response.state == 1) {
-                    window.quill.setContents([]);
+                    window.quill?.setContents([]);
                      $("#sayfaYazi").html("");
-                      window.quill.setText("");
+                      window.quill?.setText("");
                     BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitap ve Sayfası Eklenmiştir.");
 
                     $("#BOOKSID").val(response.result.bookID);

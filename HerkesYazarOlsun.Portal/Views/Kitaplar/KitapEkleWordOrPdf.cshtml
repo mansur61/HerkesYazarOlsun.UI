@@ -148,6 +148,45 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 }
 
+<script>
+    // Arka Kapak Editörü
+    var arkaKapakQuill = new Quill('#arkaKapakYaziEditor', {
+      theme: 'snow',
+      placeholder: 'Kapak yazınızı buraya yazın...',
+      modules: {
+        toolbar: [
+          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          ['link', 'image'],
+          [{ 'align': [] }],
+          ['clean']
+        ]
+      }
+    });
+
+    // Önsöz Editörü
+    var onSozQuill = new Quill('#onSozEditor', {
+      theme: 'snow',
+      placeholder: 'Önsözünüzü buraya yazın...',
+      modules: {
+        toolbar: [
+          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          ['link', 'image'],
+          [{ 'align': [] }],
+          ['clean']
+        ]
+      }
+    });
+
+    // Form gönderiminde içerikleri textarea'lara aktar
+    document.querySelector('form')?.addEventListener('submit', function () {
+      document.getElementById('arkaKapakYazi').value = arkaKapakQuill.root.innerHTML;
+      document.getElementById('onsoz').value = onSozQuill.root.innerHTML;
+    });
+</script>
 
 <script>
 
