@@ -763,6 +763,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ViewBag.YayinlananKitaplar = arama.YayinlananKitaplar;
             ViewBag.BitenKitaplar = arama.BitenKitaplar;
 
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+
             return View("TumKitaplar", kitapDetay);
         }
         public IActionResult TumKitaplar(VM_ARAMA_INPUT arama)

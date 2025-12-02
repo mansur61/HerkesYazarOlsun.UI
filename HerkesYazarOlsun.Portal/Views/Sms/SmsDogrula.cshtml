@@ -5,25 +5,22 @@
  
 @using HerkesYazarOlsun.Portal.Controllers;
 
-@section Styles{
-
-    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
-}
+ 
 @{
     string tip = "email";
 }
 <input type="hidden" id="tip" value="@tip" />
 
+@section Styles {
+    <link href="~/lib/css/giris_kayit_dogrulama.css" rel="stylesheet" />
+}
 
-<section class="login_box_area section-margin">
+<section  >
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="login_box_img">
-                    <div class="hover">
-                        
-                        <h4>Herkes Yazar Olsun' da </h4> <h4>Sms Doğrulama İşlemi </h4>
-                    </div>
+        <div class="row"> 
+            <div class="col-lg-6 mb-4">
+                <div id="title-container">
+                    <h4>Herkes Yazar Olsun' da,  Sms Doğrulama İşlemi </h4>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -38,7 +35,7 @@
                         </div>
                        
                         <div class="col-md-12 form-group">
-                            <button type="submit" class="button button-register w-100" onclick="SmsGonder()">Sms Gönder</button>
+                            <button type="submit" class="auth-primary-btn flex-fill text-center" onclick="SmsGonder()">Sms Gönder</button>
                         </div>
                     </div>
                     @Html.Partial("_AlertMesaj",@tip)
@@ -51,6 +48,8 @@
 
 <div id="otp"></div>
 
+<div style="height:150px"></div>
+
 <script>
     function SmsGonder() {
 
@@ -60,7 +59,14 @@
             "telno": sms
         }, function (data) {
             console.log(data);
-            if (data.state == 1) {
+           
+                  $("#bilgi-" + tip).css("display", "block");
+                $("#bilgi-" + tip + " #mesaj").html("Henüz Desteklenmemektedir.");
+
+                $("#basarili-" + tip).css("display", "none");
+                $("#uyari-" + tip).css("display", "none");
+
+            /*if (data.state == 1) {
 
                 $.get("@Url.Action(nameof(SmsController.SmsOtp), "Sms")", {
                     "telno": sms,
@@ -86,7 +92,7 @@
                 $("#basarili-" + tip).css("display", "none");
                 $("#uyari-" + tip + " #mesaj").html(data.message);
             }
-
+            */
         });
 
        

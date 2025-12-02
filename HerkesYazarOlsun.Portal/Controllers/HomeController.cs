@@ -57,7 +57,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
                 ViewBag.Duyurular = list;
                 List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
-                ViewBag.Sponsorlar = spnlist;
+                ViewBag.Sponsorlar = spnlist.Where(p => p.IS_DELETED != 1).ToList();
                  
                 ViewBag.LOGIN_USER_ID = Lid;
                 ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
