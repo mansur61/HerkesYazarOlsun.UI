@@ -17,6 +17,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private long Lid;
         private int SliderdaGosterilecekKayit = 0;
         private int DefaultSliderdaGosterilecekKayit = 0;
+        private int KitapTamamlamaSayisi = 0;
         public KisiController(IHttpContextAccessor contextAccessor, IOptions<HelperSettings> helperSettings)
         {
             _contextAccessor = contextAccessor;
@@ -24,9 +25,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             SliderdaGosterilecekKayit = helperSettings.Value.SliderdaGosterilecekKayit;
             DefaultSliderdaGosterilecekKayit = helperSettings.Value.DefaultSliderdaGosterilecekKayit;
+            KitapTamamlamaSayisi = helperSettings.Value.KitapTamamlamaSayisi;
 
             ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
             ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+            ViewBag.KitapTamamlamaSayisi = KitapTamamlamaSayisi;
         }
         public IActionResult Index()
         {

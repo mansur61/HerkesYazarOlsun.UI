@@ -24,6 +24,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private int ParagrafLimiti = 0;
         private int SliderdaGosterilecekKayit = 0;
         private int DefaultSliderdaGosterilecekKayit = 0;
+        private int KitapTamamlamaSayisi = 0;
         private readonly string _dosyaBaseUrl;
         // kullanımdan alındı
         private string DosyaYolu = "";
@@ -35,14 +36,17 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ParagrafLimiti = helperSettings.Value.ParagrafLimiti;
             SliderdaGosterilecekKayit = helperSettings.Value.SliderdaGosterilecekKayit;
             DefaultSliderdaGosterilecekKayit = helperSettings.Value.DefaultSliderdaGosterilecekKayit;
+            KitapTamamlamaSayisi = helperSettings.Value.KitapTamamlamaSayisi;
 
             ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
             ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+            ViewBag.KitapTamamlamaSayisi = KitapTamamlamaSayisi;
 
             DosyaYolu = _dosyaBaseUrl;
         }
         public IActionResult KitapOlustur(VM_BOOKS_DETAIL input)
         {
+            ViewBag.KitapTamamlamaSayisi = KitapTamamlamaSayisi;
             long bookID = Convert.ToInt64(StringCipher.Decrypt(input.kitap_id));
             ViewBag.BOOK_ID = bookID;
 
@@ -571,6 +575,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             int sayfaId = 0;
             int sayfaCount = 0;
+            ViewBag.KitapTamamlamaSayisi = KitapTamamlamaSayisi;
 
             ServiceResult<VM_KITAP_EKLE> result = new ServiceResult<VM_KITAP_EKLE>();
 
@@ -586,7 +591,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     BookId = input.BookModel.ID ?? 0,
                     PageWrite = input.BookPagesModel?.PageWrite ?? "",
                     // ID = input.BookPagesModel?.ID + 1  ?? 0,
-                    PageFoto = input.BookPagesModel?.PageFoto ?? "",
+                    PageFoto = input.BookPagesModel?.PageFoto ,
                     PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? ""
 
                 };
@@ -638,7 +643,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                             isWordPDF = input.isWordPDF ?? false,
                             BookId = book.Result.ID,
                             PageWrite = input.BookPagesModel?.PageWrite,
-                            PageFoto = input.BookPagesModel?.PageFoto ?? "",
+                            PageFoto = input.BookPagesModel?.PageFoto ,
                             PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? ""
 
                         };

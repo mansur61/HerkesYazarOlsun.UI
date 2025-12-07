@@ -6,7 +6,7 @@
         public int ParagrafLimiti { get; set; }
         public int SliderdaGosterilecekKayit { get; set; }
         public int DefaultSliderdaGosterilecekKayit { get; set; }
-        
+        public int KitapTamamlamaSayisi { get; set; }        
         public int DefaultYayinUcreti { get; set; }
         
     }
