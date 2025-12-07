@@ -59,6 +59,11 @@
                     <li><a href="/Kisi/Profil">Profil</a></li>
                     <li><a href="/Ayarlar/Ayarlar">Ayarlar</a></li>
                 }
+               @*  @if (string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod != "0")
+                {
+                    <li><a href="/Account/CikisYap">Çıkış Yap</a></li>
+                    
+                } *@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -66,10 +71,18 @@
 
                     @if (string.IsNullOrEmpty(User.GetEmail()))
                     {
-                        <!-- Giriş yapmamış: direkt link -->
-                        <a href="/Account/Giris">
-                            Giriş Yap <span class="caret"></span>
-                        </a>
+                        if (isGozlemciMod != "0")
+                        {
+                            <a href="/Account/CikisYap">Çıkış Yap</a>
+                        }
+                        else
+                        {
+                            <!-- Giriş yapmamış: direkt link -->
+                            <a href="/Account/Giris">
+                                Giriş Yap <span class="caret"></span>
+                            </a>
+                        }
+
                     }
                     else
                     {
