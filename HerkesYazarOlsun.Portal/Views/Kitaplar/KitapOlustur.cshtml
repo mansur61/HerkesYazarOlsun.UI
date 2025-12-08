@@ -113,7 +113,7 @@
                     {
                         @* <button id="devamet-btn" type="button">Devam Et</button> *@
                         <button id="submit-btn" type="submit">Kaydet</button>
-                        if (ViewBag.KitapTamamlamaSayisi >=50)
+                        if (ViewBag.KitapTamamlamaSayisi >50)
                         {
                             <button id="tamam-btn" type="button">Tamamla</button>
                         }
@@ -124,7 +124,11 @@
                         <button id="prev-btn" type="button">Geri</button>
                         <button id="next-btn" type="button">İleri</button>
                         <button id="submit-btn" type="submit">Kaydet</button>
-                        <button id="tamam-btn" type="button">Tamamla</button>
+                        @* <button id="tamam-btn" type="button">Tamamla</button> *@
+                        if (ViewBag.KitapTamamlamaSayisi > 50)
+                        {
+                            <button id="tamam-btn" type="button">Tamamla</button>
+                        }
                     }
                 </div>
                 <div>
@@ -233,15 +237,15 @@
                     theme: 'snow',
                     placeholder: 'Sayfanızı buraya yazın...',
                     modules: {
-        toolbar: [
-          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
-          ['bold', 'italic', 'underline', 'strike'],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          [  'image'],
-          [{ 'align': [] }],
-          ['clean']
-        ]
-      }
+                        toolbar: [
+                          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
+                          ['bold', 'italic', 'underline', 'strike'],
+                          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                          [  'image'],
+                          [{ 'align': [] }],
+                          ['clean']
+                        ]
+                      }
                 });
 
                 quill.on('text-change', () => {
@@ -269,26 +273,31 @@
             }
             //console.log("index ",index);
             var isYazmayaDevamEt = @(Model.isYazmayaDevamEt.HasValue && Model.isYazmayaDevamEt.Value ? "true" : "false");
-
+             console.log("index ",index+ " isYazmayaDevamEt, "+isYazmayaDevamEt);
             // Butonlar
             if (index === 0) {
-
                 if (prevBtn) prevBtn.style.display = 'none';
                 if (nextBtn) nextBtn.style.display = 'inline-block';
-                if (submitBtn) submitBtn.style.display = 'inline-block';
-                if (tamamBtn) {
-                    if(isYazmayaDevamEt){
-                         tamamBtn.style.display = 'inline-block';
-                    }else{
-                         tamamBtn.style.display = 'none';
-                    }
 
+                if(isYazmayaDevamEt){
+                    console.log("true");
+                    submitBtn.style.display = 'inline-block';
+                    if (tamamBtn) tamamBtn.style.display = 'inline-block';
+                }else{
+                    console.log("false");
+                    submitBtn.style.display = 'none';                    
+                    if (tamamBtn) tamamBtn.style.display = 'inline-block';
                 }
+
+                
+                
+               
             } else if (index === stepCount - 1) {
                 prevBtn.style.display = 'inline-block';
                 nextBtn.style.display = 'none';
                 submitBtn.style.display = 'inline-block';
-                tamamBtn.style.display = 'inline-block';
+                if (tamamBtn) tamamBtn.style.display = 'inline-block';
+                //tamamBtn.style.display = 'inline-block';
             } else {
                 prevBtn.style.display = 'inline-block';
                 nextBtn.style.display = 'inline-block';
