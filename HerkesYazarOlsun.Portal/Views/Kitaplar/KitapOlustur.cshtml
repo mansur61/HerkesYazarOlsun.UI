@@ -92,7 +92,7 @@
 
                         <input type="hidden" id="kitapKatdetmeUyariDurumu" value="0">
                         <input type="hidden" id="BOOKSID" value="@ViewBag.BOOK_ID">
-                        <input type="hidden" id="BOOKPAGESID" value="0">
+                        <input type="hidden" id="BOOKPAGESID" value="@Model.IlgiiSayfaSayisi">
 
                         <div class="mb-3">
                             <h5>İlgili Sayfayı Yazınız</h5>
@@ -403,8 +403,9 @@
                          base64Images.forEach((img, i) => {
                             let file = base64ToFile(img, "image_" + i + ".png");
                              formData.append(`BookPagesModel.PageFotoList[${i}]`, img);
-                            pageFotoNames.push(fileName);
+                            pageFotoNames.push("image_" + i + ".png");
                             formData.append("dosyalar", file);
+                            formData.append("BookPagesModel.PageFotoDosyalar", file);
                         });
                         let pageFotos = pageFotoNames.join("||");
                         formData.append("BookPagesModel.PageFoto", pageFotos);
@@ -480,7 +481,7 @@
     function sayfaKaydet(formData) {
         var kitapId = $("#BOOKSID").val();
         var sayfaYazi = $("#sayfaYazi").val();
-    
+        var sayfaId = $("#BOOKPAGESID").val();
          formData.append('BookModel.ID',  kitapId); 
          formData.append('isWordPDF', false);
          formData.append('isTamalama', false);
@@ -494,8 +495,9 @@
              base64Images.forEach((img, i) => {
                 let file = base64ToFile(img, "image_" + i + ".png");
                  formData.append(`BookPagesModel.PageFotoList[${i}]`, img);
-                pageFotoNames.push(fileName);
-                formData.append("dosyalar", file);
+                pageFotoNames.push("image_" + i + ".png");
+                 formData.append("dosyalar", file);
+                formData.append("BookPagesModel.PageFotoDosyalar", file);
             });
             let pageFotos = pageFotoNames.join("||");
             formData.append("BookPagesModel.PageFoto", pageFotos);
@@ -616,8 +618,9 @@
              base64Images.forEach((img, i) => {
                 let file = base64ToFile(img, "image_" + i + ".png");          
                  formData.append(`BookPagesModel.PageFotoList[${i}]`, img); 
-                pageFotoNames.push(fileName);
+                pageFotoNames.push("image_" + i + ".png");
                 formData.append("dosyalar", file);
+                formData.append("BookPagesModel.PageFotoDosyalar", file);
             });
             let pageFotos = pageFotoNames.join("||");
             formData.append("BookPagesModel.PageFoto", pageFotos);
@@ -667,34 +670,6 @@
      }
 
 
-    function extractBase64Images(html) {
-        const imgRegex = /<img[^>]+src="([^">]+)"/g;
-        let match;
-        let images = [];
-
-        while ((match = imgRegex.exec(html)) !== null) {
-            const src = match[1];
-            if (src.startsWith("data:image")) {
-                images.push(src);
-            }
-        }
-
-        return images;
-    }
-    //Base64 → File (Blob) dönüştür
-    function base64ToFile(base64, filename) {
-        const arr = base64.split(',');
-        const mime = arr[0].match(/:(.*?);/)[1];
-        const bstr = atob(arr[1]);
-        let n = bstr.length;
-        const u8arr = new Uint8Array(n);
-
-        while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-
-        return new File([u8arr], filename, { type: mime });
-    }
 
 
 </script>

@@ -13,6 +13,7 @@ using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -564,6 +565,27 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return updaterBook;
 
         }
+        public static string ReplaceImagesWithKeys( string html)
+        {
+            var imgRegex = new Regex(
+                "<img[^>]*src=[\"']data:image/(?<type>.*?);base64,(?<data>.*?)['\"][^>]*>",
+                RegexOptions.IgnoreCase
+            );
+
+            string cleanedHtml = imgRegex.Replace(html, match =>
+            {
+                string base64 = match.Groups["data"].Value;
+                string type = match.Groups["type"].Value;
+
+                // GUID key üret
+                string imageKey = $"img_BooksPage";//{Guid.NewGuid()}
+
+                
+                return $"||{imageKey}||";
+            });
+
+            return cleanedHtml;
+        }
 
         /// <summary>
         /// Kitap ve kitaba ait sayfalar bu metot ile eklenir.
@@ -589,31 +611,33 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 {
                     isWordPDF = input.isWordPDF ?? false,
                     BookId = input.BookModel.ID ?? 0,
-                    PageWrite = input.BookPagesModel?.PageWrite ?? "",
+                    PageWrite = ReplaceImagesWithKeys(input.BookPagesModel?.PageWrite ),
                     // ID = input.BookPagesModel?.ID + 1  ?? 0,
-                    PageFoto = input.BookPagesModel?.PageFoto ,
-                    PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? ""
+                    PageFoto = input.BookPagesModel?.PageFoto ?? "PageFoto",
+                    PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? "PageWriteBase64",
+                    PageFotoDosyalar = input.BookPagesModel?.PageFotoDosyalar,
+                    PageFotoList = input.BookPagesModel?.PageFotoList,
 
                 };
                 var bookPages = new BooksPagesService().PostSaveBooksPages(bookPapers);
-                if (bookPages.Result != null)
+                if (bookPages.Result != null && bookPages.Result.State == MessageResultState.SUCCESS)
                 {
                     sayfaCount = new BooksPagesService().GetPagesByBooks(input.BookModel.ID ?? 0)!.Count();
-                    sayfaId = (int)bookPages.Result.ID;
+                    sayfaId = (int)bookPages.Result.Result.ID;
 
                     result.State = MessageResultState.SUCCESS;
 
                 }
                 else
                 {
-                    new BooksService().DeleteBook(_book);
+                  //  new BooksService().DeleteBook(_book);
                     result.State = MessageResultState.ERROR;
-                    result.Message = result.Message;
+                    result.Message = bookPages?.Result?.Message;
                 }
 
                 vmKitap.BookID = input.BookModel.ID ?? 0;
                 vmKitap.BooksPageCount = sayfaCount + 1;
-                vmKitap.BooksPageID = sayfaId;
+                vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId;
                 input.IlgiiSayfaSayisi = sayfaCount + 1;
 
             }
@@ -642,17 +666,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         {
                             isWordPDF = input.isWordPDF ?? false,
                             BookId = book.Result.ID,
-                            PageWrite = input.BookPagesModel?.PageWrite,
+                            PageWrite = ReplaceImagesWithKeys(input.BookPagesModel?.PageWrite),
                             PageFoto = input.BookPagesModel?.PageFoto ,
-                            PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? ""
+                            PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? "",
+                            PageFotoDosyalar = input.BookPagesModel?.PageFotoDosyalar,
+                            PageFotoList = input.BookPagesModel?.PageFotoList,
 
                         };
                         var bookPages = new BooksPagesService().PostSaveBooksPages(bookPapers);
-
-                        if (bookPages.Result != null && bookPages.Result.ID != 0)
+                        var bookPagesId = bookPages.Result != null ? bookPages.Result.Result.ID : 0;
+                        if (bookPages.Result != null && bookPagesId != 0)
                         {
-                            input.BookPagesModel.ID = bookPages.Result.ID;
-                            sayfaId = (int)bookPages.Result.ID;
+                            input.BookPagesModel.ID = bookPagesId;
+                            sayfaId = (int)bookPagesId;
                             sayfaCount =
                             //(int)bookPages.Result.ID + 1;
                             new BooksPagesService().GetPagesByBooks(book.Result.ID)!.Where(p => p.BookId == book.Result.ID).Count();
@@ -661,14 +687,14 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         }
                         else
                         {
-                            new BooksService().DeleteBook(book.Result);
+                            //new BooksService().DeleteBook(book.Result);
 
                             result.State = MessageResultState.ERROR;
-                            result.Message = bookPages.Message;
+                            result.Message = bookPages.Result.Message;
                         }
 
                         vmKitap.BookID = book.Result!.ID;
-                        vmKitap.BooksPageID = sayfaId;
+                        vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId ;
                         vmKitap.BooksPageCount = sayfaCount + 1;
                         input.IlgiiSayfaSayisi = sayfaCount + 1;
                     }

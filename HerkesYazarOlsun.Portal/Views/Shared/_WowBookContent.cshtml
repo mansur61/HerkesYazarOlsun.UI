@@ -6,7 +6,7 @@
     string tip = "ilgilisayfaguncelle";
 }
 <input type="hidden" id="tip" value="@tip" />
- 
+
 <div id="container">
     <nav>
         <ul>
@@ -30,9 +30,9 @@
     </nav>
     <input type="hidden" id="guncellenecekSayfaId" />
     <div id="main">
-        
+
         <div id='features'>
-            
+
             <div>
                 <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)" alt="Sayfa resmi" width="100%" height="100%" />
             </div>
@@ -46,9 +46,16 @@
                 <p style="font-size:20px;">@Html.Raw(Model.BookModel.ONSOZ)</p>
             </h1>
 
-            @foreach (var item in @Model.BookModel.BooksPageList)
+            @foreach (var item in Model.BookModel.BooksPageList)
             {
                 var temizHtml = Regex.Replace(item.PageWrite, "<img[^>]*>", "", RegexOptions.IgnoreCase);
+
+                // img placeholder → gerçek görüntü
+                temizHtml = Regex.Replace(temizHtml,
+                @"\|\|img_BooksPage\|\|",
+                "", RegexOptions.IgnoreCase
+                );
+
                 <div style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
                     @if (Model.IsWowBookEdit)
                     {
@@ -58,11 +65,45 @@
                     }
 
                     <div class='feature pagefx hardpage' style="width:350px">
-                        <p style="font-size:12px;">@Html.Raw(temizHtml) </p>
-                        @* @item.PageWrite *@
+                        <p style="font-size:12px;">@Html.Raw(temizHtml)</p>
+
+                        @if (Model.IsWowBookEdit)
+                            @* Eğer sayfada img placeholder varsa text altına resim ekle *@
+                            @if (item.PageWrite.Contains("||img_BooksPage||"))
+                            {
+                                <div class="resimWrapper" style="position:relative; margin-top:10px; display:inline-block;">
+
+                                    <img src="https://herkesyazarolsun.com.tr/Belgeler/@item.PageFoto"
+                                         style="width:100%; height:auto; border-radius:4px;" />
+
+                                    <!-- Sil ikonu -->
+                                    <button type="button"
+                                            class="resimSilBtn"
+                                            onclick="resmiSil(this,item)"
+                                            style="
+                                                        position:absolute;
+                                                        top:5px;
+                                                        right:5px;
+                                                        background-color:#e74c3c;
+                                                        color:white;
+                                                        border:none;
+                                                        border-radius:50%;
+                                                        width:28px;
+                                                        height:28px;
+                                                        font-weight:bold;
+                                                        cursor:pointer;
+                                                        box-shadow:0 2px 4px rgba(0,0,0,0.3);
+                                                    ">
+                                        ✖
+                                    </button>
+
+                                </div>
+                            }
+                        }
                     </div>
                 </div>
             }
+
 
             <div>
                 <img src="~/wowbook/images/cover_last.png" alt="Arka Kapak" width="100%" height="100%" />
@@ -90,8 +131,7 @@
     <div class="row">
         <div class="col-md-12">
             <h4>Sayfa Güncelle</h4>
-            <br />
-            @* <div id="sayfaYaiziyAl" style="height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;"></div> *@
+            <br /> 
             <div id="sayfaYaiziyAlEditor" style="height: 400px;"></div>
 
             <textarea id="sayfaYaiziyAl" name="SAYFAYAZI" hidden></textarea>
@@ -103,8 +143,8 @@
         </button>
         <button class="btn btn-info" onclick="KapatGuncelle()">Kapat</button>
     </div>
-    
-   
+
+
 </div>
 
 <!-- Progress overlay -->
@@ -128,7 +168,7 @@
     </div>
 </div>
 
-
+<script src="~/js/general.js"></script>
 
 <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -160,10 +200,6 @@
             return;
         }
         window.quill.on('text-change', () => { hiddenTextarea.value = window.quill.root.innerHTML; });
-        // Form gönderiminde içeriği textarea’ya aktar
-        /*document.querySelector('form')?.addEventListener('submit', function () {
-            document.getElementById('sayfaYaiziyAl').value = quill.root.innerHTML;
-        });*/
 
     });
 </script>
@@ -173,19 +209,37 @@
     window.bookPagesData = {};
     @foreach (var item in Model.BookModel.BooksPageList)
     {
-        <text>
-            window.bookPagesData["@item.ID"] = @Html.Raw(Json.Serialize(item.PageWrite));
-        </text>
+            <text>
+                window.bookPagesData["@item.ID"] = @Html.Raw(Json.Serialize(item));
+            </text>
     }
 </script>
 
 <script type="text/javascript">
 
-    function KitabiGuncelle(id) { 
+      function resmiSil(btn,item) {
+        let wrapper = btn.closest(".resimWrapper");
+        if (wrapper) wrapper.remove();
+        var kitapSayfaYazi = $("#sayfaYaiziyAl").val();  // Quill’in içeriği
+        kitapSayfaYazi = kitapSayfaYazi.replaceAll("||img_BooksPage||", "");
+    }
+
+    function KitabiGuncelle(id) {
         $("#guncelle").css("display", "block");
         $("#guncellenecekSayfaId").val(id);
 
-        var sayfaIcerik = window.bookPagesData[id] || "";
+        var sayfaIcerikItem = window.bookPagesData[id] || {};
+        console.log("sayfaIcerikItem ",sayfaIcerikItem);
+        let sayfaIcerik = sayfaIcerikItem.PageWrite || "";
+
+
+         // Yer tutucuyu img'ye çevir
+       /* if (sayfaIcerik.includes("||img_BooksPage||")) {
+            sayfaIcerik = sayfaIcerik.replaceAll(
+                "||img_BooksPage||",
+                `<img src="https://herkesyazarolsun.com.tr/Belgeler/${sayfaIcerikItem.PageFoto}" style="width:100%; height:auto;" />`
+            );
+        }*/
 
         // Quill editöre yükle
         if (window.quill) {
@@ -194,7 +248,7 @@
         } else {
             console.error("Quill yüklenmedi!");
         }
-     
+
         // Eğer hidden textarea’ya da ekleyeceksen
         document.getElementById('sayfaYaiziyAl').value = sayfaIcerik;
 
@@ -209,28 +263,98 @@
         document.getElementById('guncelle').style.display = 'none';
     }
 
-         function Guncelle() {
+    function Guncelle() {
            var id = $("#guncellenecekSayfaId").val();        // hidden input’tan al
            if(!id) { console.error("Sayfa ID yok!"); return; }
 
             var kitapSayfaYazi = $("#sayfaYaiziyAl").val();  // Quill’in içeriği
-
-            console.log("kitapSayfaYazi:", kitapSayfaYazi, "id:", id);
+            //kitapSayfaYazi = kitapSayfaYazi.replaceAll("||img_BooksPage||", "");
+            //console.log("kitapSayfaYazi:", kitapSayfaYazi, "id:", id);
 
             var tip = $("#tip").val();
-            console.log("tip" ,tip );
+            //console.log("tip" ,tip );
 
             // Progress overlay göster
              $("#progressOverlay").show();
                 setTimeout(function() {  }, 3000);
 
-                 $.post("@Url.Action(nameof(KitaplarController.PostBooksPageUpdate), "Kitaplar")", { 
-                     "ID": id, "PageWrite": kitapSayfaYazi,
-                      "PageWriteBase64":"PageWriteBase64",
-                      "PageFoto":"PageFoto"
-                 },
-                function (data) {
-                    $("#progressOverlay").hide(); // işlemin sonunda gizle
+                var formData = new FormData(this);   
+                 formData.append('BookPagesModel.PageWrite', kitapSayfaYazi);
+                 formData.append('BookPagesModel.PageWriteBase64', "PageWriteBase64");
+                 formData.append('BookPagesModel.ID', sayfaId);
+
+        const base64Images = extractBase64Images(sayfaYazi);
+
+        let pageFotoNames = [];
+        if (base64Images.length !== 0){
+             base64Images.forEach((img, i) => {
+                let file = base64ToFile(img, "image_" + i + ".png");
+                 formData.append(`BookPagesModel.PageFotoList[${i}]`, img);
+                pageFotoNames.push("image_" + i + ".png");
+                 formData.append("dosyalar", file);
+                formData.append("BookPagesModel.PageFotoDosyalar", file);
+            });
+            let pageFotos = pageFotoNames.join("||");
+            formData.append("BookPagesModel.PageFoto", pageFotos);
+        }
+
+        Gonder(formData);
+        
+      @*   $.post("@Url.Action(nameof(KitaplarController.PostBooksPageUpdate), "Kitaplar")", {
+                "ID": id, "PageWrite": kitapSayfaYazi,
+                "PageWriteBase64":"PageWriteBase64",
+                "PageFoto":"PageFoto"
+            },
+        function (data) {
+            $("#progressOverlay").hide(); // işlemin sonunda gizle
+
+            if (data.state == 1) {
+                $("#basarili-" + tip).css("display", "block");
+                $("#basarili-" + tip + " #mesaj").html("Güncellendi");
+
+                $("#bilgi-" + tip).css("display", "none");
+                $("#uyari-" + tip).css("display", "none");
+
+                setTimeout(function () {
+                    var link = window.location.href;
+
+                    window.location.href = link;
+                    console.log("link " + link);
+
+                    window.location.reload()
+
+                }, 3000);
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + tip).css("display", "block");
+                $("#bilgi-" + tip + " #mesaj").html("Güncellenemedi");
+
+                $("#basarili-" + tip).css("display", "none");
+                $("#uyari-" + tip).css("display", "none");
+            }
+            else {
+                $("#uyari-" + tip).css("display", "block");
+                $("#bilgi-" + tip).css("display", "none");
+                $("#basarili-" + tip).css("display", "none");
+                $("#uyari-" + tip + " #mesaj").html("Güncellenemedi");
+            }
+
+        }).fail(function(){
+                $("#progressOverlay").hide();
+                alert("Sunucu hatası! Lütfen tekrar deneyin.");
+            });
+
+        } *@
+         function Gonder(formData){
+
+           $.ajax({
+             url: 'PostBooksPageUpdate', // Formun gönderileceği adresi belirtin
+             method: 'POST',
+             data: formData, // Form verilerini FormData nesnesiyle al
+             processData: false,
+             contentType: false,
+             success: function (data) {
+                  $("#progressOverlay").hide(); // işlemin sonunda gizle
 
                     if (data.state == 1) {
                         $("#basarili-" + tip).css("display", "block");
@@ -262,12 +386,17 @@
                         $("#basarili-" + tip).css("display", "none");
                         $("#uyari-" + tip + " #mesaj").html("Güncellenemedi");
                     }
+             },
+               error: function (xhr, status, error) {
+                    $("#progressOverlay").hide();
+                        //alert("Sunucu hatası! Lütfen tekrar deneyin.");
+                        $("#uyari-" + tip).css("display", "block");
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip + " #mesaj").html("Sunucu hatası! Lütfen tekrar deneyin");
+                }
+         });
 
-                }).fail(function(){
-                        $("#progressOverlay").hide();
-                        alert("Sunucu hatası! Lütfen tekrar deneyin.");
-                    });
-   
-        }
+    }
 
 </script>
