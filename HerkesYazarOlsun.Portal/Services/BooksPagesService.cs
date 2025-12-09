@@ -28,7 +28,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
             return result;
         }
-        public async Task<ServiceResult<BooksPages>> PostUpdateBooksPages(VM_BOOKS_PAGES bookPages)
+        public async Task<ServiceResult> PostUpdateBooksPages(VM_BOOKS_PAGES bookPages)
         {
             using var client = new HttpClient
             {
@@ -75,7 +75,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var resultJson = await response.Content.ReadAsStringAsync();
 
             // Doğrudan ServiceResult<Books> deserialize et
-            var sonuc = JsonConvert.DeserializeObject<ServiceResult<BooksPages>>(resultJson);
+            var sonuc = JsonConvert.DeserializeObject<ServiceResult>(resultJson);
 
             return sonuc!;
         }
