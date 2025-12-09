@@ -6,7 +6,7 @@
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
 @* @Html.Partial("_Navbar") *@
- 
+
 
 @using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Model.ViewModel
@@ -17,7 +17,7 @@
 }
 
 @{
-    bool kitapTamamlamaDurumu = @Model.isTamalama ?? false; 
+    bool kitapTamamlamaDurumu = @Model.isTamalama ?? false;
 }
 
 <br />
@@ -27,9 +27,17 @@
     <div class="row">
 
         <div class="col-md-3">
-            <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH" alt="Portfolio 1"
-                 style="height:300px">
-            @* <img src="data:image;base64,@Model.BookModel.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">*@
+            @if (@Model.BookModel?.ARKAKAPAKFOTOPATH == "-1")
+            {
+
+                <img src="/lib/img/stack-of-books.png" alt="Portfolio 1" style="height:300px" width="200" />
+            }
+            else
+            {
+                <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH"
+                     alt="Portfolio 1" style="height:300px">
+            }
+
             @{
                 Model.BookModel.Stars.isToplam = false;
             }
@@ -49,9 +57,9 @@
             <h3>Kitap Özeti</h3>
             <p>
                 @Html.Raw(Model.BookModel.ONSOZ)
-               
+
                 <br />
-             
+
             </p>
             @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
             {
@@ -74,7 +82,7 @@
 
     </div>
 
-    <br /> 
+    <br />
     @Html.Partial("_KitapDetayMesajBolumleri", @Model)
 
     <div style="height:150px;"></div>

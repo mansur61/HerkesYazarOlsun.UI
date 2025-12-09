@@ -56,7 +56,25 @@
 }
 
 
+function showConfirm(message, callback) {
+    const overlay = document.getElementById("confirmOverlay");
+    const msg = document.getElementById("confirmMessage");
+    const okBtn = document.getElementById("confirmOkBtn");
+    const cancelBtn = document.getElementById("confirmCancelBtn");
 
+    msg.innerHTML = message;
+    overlay.style.display = "block";
+
+    okBtn.onclick = () => {
+        overlay.style.display = "none";
+        callback(true);
+    };
+
+    cancelBtn.onclick = () => {
+        overlay.style.display = "none";
+        callback(false);
+    };
+}
 function extractBase64Images(html) {
     const imgRegex = /<img[^>]+src="([^">]+)"/g;
     let match;

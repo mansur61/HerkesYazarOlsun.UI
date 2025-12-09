@@ -750,8 +750,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [Route("PostBooksPageUpdate")]
         public async Task<JsonResult> PostBooksPageUpdate(VM_BOOKS_PAGES sayfa)
         {
-            ServiceResult sonuc = await new BooksPagesService().PostUpdateBooksPages(sayfa);
-            return Json(sonuc);
+            //ServiceResult sonuc = await new BooksPagesService().PostUpdateBooksPages(sayfa);
+            return Json("ok");
         }
 
         public IActionResult KitapDetay(string kitap_id)
