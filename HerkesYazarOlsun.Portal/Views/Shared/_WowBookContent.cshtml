@@ -28,6 +28,9 @@
             </li>
         </ul>
     </nav>
+    @* <p>
+        @Html.Partial("_AlertMesaj", @tip)
+    </p>   *@  
     <input type="hidden" id="guncellenecekSayfaId" />
     <div id="main">
 
@@ -143,7 +146,7 @@
     </div>
 </div>
 <div style="height:20px"></div>
-@Html.Partial("_AlertMesaj", @tip)
+@* @Html.Partial("_AlertMesaj", @tip) *@
 
 <!-- Popup div -->
 <div id="guncelle" style="
@@ -164,12 +167,21 @@
                 <textarea id="sayfaYaiziyAl" name="SAYFAYAZI" hidden></textarea>
             </div>
         </div>
-        <div style="text-align:right; margin-top:10px;">
-            <button type="button" class="btn btn-warning" onclick="Guncelle()">
-                Güncelle
-            </button>
-            <button type="button" class="btn btn-info" onclick="KapatGuncelle()">Kapat</button>
+        <div class="row">
+            <div class="col-md-8">
+                @Html.Partial("_AlertMesaj", @tip)
+            </div>
+            <div class="col-md-4">
+                <div style="text-align:right; margin-top:10px;">
+                
+                    <button type="button" class="btn btn-warning" onclick="Guncelle()">
+                        Güncelle
+                    </button>
+                    <button type="button" class="btn btn-info" onclick="KapatGuncelle()">Kapat</button>
+                </div>
+            </div>
         </div>
+        
     </form>
 
 </div>
