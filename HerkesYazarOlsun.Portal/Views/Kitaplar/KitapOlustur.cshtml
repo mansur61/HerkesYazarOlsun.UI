@@ -314,6 +314,7 @@
 
         // İlk step’i göster
         showStep(current_step);
+
         if (nextBtn){
             nextBtn.addEventListener('click', () => {
                 if (current_step < stepCount - 1) {
@@ -322,16 +323,16 @@
                 }
             });
         }
-                if (prevBtn){
-                 prevBtn.addEventListener('click', () => {
-                        if (current_step > 0) {
-                            current_step--;
-                            showStep(current_step);
-                        }
-                    });
-            }
 
-
+        if (prevBtn){
+            prevBtn.addEventListener('click', () => {
+                if (current_step > 0) {
+                    current_step--;
+                    showStep(current_step);
+                }
+            });
+        }
+         
 
     });
 </script>

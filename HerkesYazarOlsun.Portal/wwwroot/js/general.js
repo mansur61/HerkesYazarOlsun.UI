@@ -55,7 +55,12 @@
 
 }
 
-
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function quillBase64Sil(html) {
+    return html.replace(/<img[^>]*src=["']data:image[^"']*["'][^>]*>/gi, "");
+}
 function showConfirm(message, callback) {
     const overlay = document.getElementById("confirmOverlay");
     const msg = document.getElementById("confirmMessage");
@@ -76,6 +81,7 @@ function showConfirm(message, callback) {
     };
 }
 function extractBase64Images(html) {
+    console.log("extractBase64Images");
     const imgRegex = /<img[^>]+src="([^">]+)"/g;
     let match;
     let images = [];
@@ -103,43 +109,7 @@ function base64ToFile(base64, filename) {
 
     return new File([u8arr], filename, { type: mime });
 }
-
-//"#basarili-"
-//"#bilgi-"
-//"#uyari-"
-/*function BilgiVer(state,basarili,bilgi,uyari,mesaj) {
-    if (state == 1) {
-        $(basarili  ).css("display", "block");
-        $(basarili   + " #mesaj").html(mesaj);
-
-        $(bilgi  ).css("display", "none");
-        $(uyari  ).css("display", "none");
-
-        setTimeout(function () {
-            var link = window.location.href;
-
-            window.location.href = link;
-            console.log("link " + link);
-
-            window.location.reload()
-
-        }, 3000);
-    }
-    else if (state == 3) {
-        $(bilgi  ).css("display", "block");
-        $(bilgi   + " #mesaj").html(mesaj);
-
-        $(basarili  ).css("display", "none");
-        $(uyari  ).css("display", "none");
-    }
-    else {
-        $(uyari  ).css("display", "block");
-        $(bilgi  ).css("display", "none");
-        $(basarili  ).css("display", "none");
-        $(uyari   + " #mesaj").html(mesaj);
-    }
-}*/
-
+ 
 function isAlert(metinText) {
     Swal.fire({
         title: 'Emin misiniz?',

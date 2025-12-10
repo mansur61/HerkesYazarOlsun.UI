@@ -157,7 +157,7 @@
     overflow-y: auto;   /* taşarsa scroll */
     background-color: #fff;    border: 2px solid #333;
     border-radius: 8px; padding: 20px;z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-    <form id="guncelleForm">
+    <form id="guncelleForm" action="PostBooksPageUpdate" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-12">
                 <h4>Sayfa Güncelle</h4>
@@ -424,11 +424,6 @@
     }
 
 
-    // yardımcı: regex için kaçış fonksiyonu
-    function escapeRegExp(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-
     function Guncelle() {
 
          console.log("Guncelle:");
@@ -444,48 +439,48 @@
 
              var formData = new FormData(form);
 
-               formData.append('BookPagesModel.PageWriteBase64', "PageWriteBase64");
-               formData.append('BookPagesModel.ID', id);
+               formData.append('PageWriteBase64', "PageWriteBase64");
+               formData.append('ID', id);
+                formData.append("BookId", sayfaIcerikItem.bookId);
 
             if(count == 0){ // sayfada herhangi bir foto yok
                 var quilIcerik = window.quill.root.innerHTML;
-                console.log("quilIcerik:", quilIcerik );
+               // console.log("quilIcerik:", quilIcerik );
 
-                formData.append('BookPagesModel.PageWrite', quilIcerik);
-
+                formData.append('PageWrite', quillBase64Sil(quilIcerik));
+                   formData.append("isWordPDF", false);
                 const base64Images = extractBase64Images(quilIcerik);
                  //console.log("base64Images:",base64Images);
                 let pageFotoNames = [];
                 if (base64Images.length !== 0){
                      base64Images.forEach((img, i) => {
                         let file = base64ToFile(img, "image_KitapSayfaGuncelleme_" + i + ".png");
-                         formData.append(`BookPagesModel.PageFotoList[${i}]`, img);
+                         formData.append(`PageFotoList[${i}]`, img);
                          pageFotoNames.push("image_KitapSayfaGuncelleme_" + i + ".png");
-                         formData.append("dosyalar", file);
-                        formData.append("BookPagesModel.PageFotoDosyalar", file);
+                        formData.append("PageFotoDosyalar", file);
                     });
                     let pageFotos = pageFotoNames.join("||");
-                    formData.append("BookPagesModel.PageFoto", pageFotos);
+                    formData.append("PageFoto", pageFotos);
 
                 }
             }else{
                 showConfirm("En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?", function (onay) {
                     if (!onay) return;
 
-                      formData.append("BookPagesModel.PageWrite", sayfaIcerikItem.pageWrite || "");
-                       formData.append("BookPagesModel.PageWriteBase64", "PageWriteBase64");
-                       formData.append("BookPagesModel.ID", id);
-                       formData.append("BookPagesModel.PageFotoDosyalar", sayfaIcerikItem.pageFotoDosyalar);
-                       formData.append("BookPagesModel.dosyalar", sayfaIcerikItem.pageFotoDosyalar);
-                        formData.append("BookPagesModel.PageFoto", sayfaIcerikItem.pageFoto );
-                         //formData.append("BookPagesModel.PageFotoList", sayfaIcerikItem.pageFoto );
+                      formData.append("PageWrite", sayfaIcerikItem.pageWrite || "");
+                       formData.append("PageWriteBase64", "PageWriteBase64");
+                       formData.append("ID", id);
+                       formData.append("BookId", sayfaIcerikItem.bookId);
+                        formData.append("isWordPDF", false);
+                       formData.append("PageFotoDosyalar", sayfaIcerikItem.pageFotoDosyalar); 
+                        formData.append("PageFoto", sayfaIcerikItem.pageFoto );
                 });
             }
             /*var kitapSayfaYazi = $("#sayfaYaiziyAl").val();  // Quill’in içeriği
             var quilIcerik = window.quill.root.innerHTML;
              console.log("quilIcerik:", quilIcerik);
              kitapSayfaYazi = kitapSayfaYazi.replaceAll("||img_BooksPage||", "");
-           console.log("replaceAll kitapSayfaYazi:", kitapSayfaYazi, "id:", id);*/
+          // console.log("replaceAll kitapSayfaYazi:", kitapSayfaYazi, "id:", id);*/
 
             // Progress overlay göster
             $("#progressOverlay").show();
@@ -497,10 +492,12 @@
 
     function Gonder(formData){
         var tip = $("#tip").val();
-            //console.log("tip" ,tip );
-
+          console.log("tip" ,tip );
+              /*for (let pair of formData.entries()) {
+                    console.log(pair[0] + ": ", pair[1]);
+                }*/
            $.ajax({
-             url: 'PostBooksPageUpdate', // Formun gönderileceği adresi belirtin
+             url: '/Kitaplar/PostBooksPageUpdate', // Formun gönderileceği adresi belirtin
              method: 'POST',
              data: formData, // Form verilerini FormData nesnesiyle al
              processData: false,
