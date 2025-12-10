@@ -354,17 +354,17 @@
 
 
      function resmiSil(btn, item) {
-         console.log("resmiSil",item);
+        // console.log("resmiSil",item);
 
         item.pageWrite = item.pageWrite.replaceAll(`||img_BooksPage||`, "");
 
-        console.log("resmiSil2 ",item);
+       // console.log("resmiSil2 ",item);
         window.bookPagesData[item.id] = item;
         $("#sayfaYaiziyAl").val( item.pageWrite);
         window.quill.root.innerHTML =  item.pageWrite;
 
-        //let wrapper = btn.closest(".resimWrapper");
-        // if (wrapper) wrapper.remove();
+         let wrapper = btn.closest(".resimWrapper");
+        if (wrapper) wrapper.remove();
     }
 
 
@@ -373,7 +373,7 @@
         $("#guncellenecekSayfaId").val(id);
 
         var sayfaIcerikItem = window.bookPagesData[id] || {};
-        console.log("sayfaIcerikItem ",sayfaIcerikItem);
+        //console.log("sayfaIcerikItem ",sayfaIcerikItem);
         let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
         let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
         let count = matches ? matches.length : 0;
@@ -425,14 +425,13 @@
 
 
     function Guncelle() {
-
-         console.log("Guncelle:");
+        
          var form = document.getElementById("guncelleForm");
            var id = $("#guncellenecekSayfaId").val();        // hidden input’tan al
            if(!id) { console.error("Sayfa ID yok!"); return; }
 
            var sayfaIcerikItem = window.bookPagesData[id] || {};
-            console.log("sayfaIcerikItem:", sayfaIcerikItem );
+            //console.log("sayfaIcerikItem:", sayfaIcerikItem );
              let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
             let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
             let count = matches ? matches.length : 0;
@@ -444,10 +443,10 @@
                 formData.append("BookId", sayfaIcerikItem.bookId);
 
             if(count == 0){ // sayfada herhangi bir foto yok
+               // console.log("sayfada herhangi bir foto yok");
                 var quilIcerik = window.quill.root.innerHTML;
                // console.log("quilIcerik:", quilIcerik );
-
-                formData.append('PageWrite', quillBase64Sil(quilIcerik));
+              
                    formData.append("isWordPDF", false);
                 const base64Images = extractBase64Images(quilIcerik);
                  //console.log("base64Images:",base64Images);
@@ -463,9 +462,19 @@
                     formData.append("PageFoto", pageFotos);
 
                 }
+                 quilIcerik = quilIcerik.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/g, "||img_BooksPage||");
+              // console.log("quilIcerik:", quilIcerik );
+                formData.append('PageWrite', quilIcerik);
+
+                 $("#progressOverlay").show();
+            setTimeout(function() {  }, 3000);
+
+            Gonder(formData);
             }else{
-                showConfirm("En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?", function (onay) {
+                showConfirm("En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?",
+                function (onay) {
                     if (!onay) return;
+                     
 
                       formData.append("PageWrite", sayfaIcerikItem.pageWrite || "");
                        formData.append("PageWriteBase64", "PageWriteBase64");
@@ -474,25 +483,25 @@
                         formData.append("isWordPDF", false);
                        formData.append("PageFotoDosyalar", sayfaIcerikItem.pageFotoDosyalar); 
                         formData.append("PageFoto", sayfaIcerikItem.pageFoto );
+
+                        var quilIcerik = window.quill.root.innerHTML;                           
+                          quilIcerik = quilIcerik.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/g, "");
+                          window.quill.root.innerHTML = quilIcerik;
+                          //console.log("quilIcerik:", quilIcerik );
+                            
+                          $("#progressOverlay").show();
+                        setTimeout(function() {  }, 3000);
+                        
+
+                         Gonder(formData);
                 });
             }
-            /*var kitapSayfaYazi = $("#sayfaYaiziyAl").val();  // Quill’in içeriği
-            var quilIcerik = window.quill.root.innerHTML;
-             console.log("quilIcerik:", quilIcerik);
-             kitapSayfaYazi = kitapSayfaYazi.replaceAll("||img_BooksPage||", "");
-          // console.log("replaceAll kitapSayfaYazi:", kitapSayfaYazi, "id:", id);*/
-
-            // Progress overlay göster
-            $("#progressOverlay").show();
-            setTimeout(function() {  }, 3000);
-
-             Gonder(formData);
-           //console.log("formData:", formData);
+          
     }
 
     function Gonder(formData){
         var tip = $("#tip").val();
-          console.log("tip" ,tip );
+          //console.log("tip" ,tip );
               /*for (let pair of formData.entries()) {
                     console.log(pair[0] + ": ", pair[1]);
                 }*/
@@ -516,7 +525,7 @@
                             var link = window.location.href;
 
                             window.location.href = link;
-                            console.log("link " + link);
+                            //console.log("link " + link);
 
                             window.location.reload()
 
