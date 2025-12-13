@@ -621,27 +621,32 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return updaterBook;
 
         }
-        public static string ReplaceImagesWithKeys( string html)
+        public static string ReplaceImagesWithKeys(string html)
         {
+            const string imageKey = "||img_BooksPage||";
+
             var imgRegex = new Regex(
-                "<img[^>]*src=[\"']data:image/(?<type>.*?);base64,(?<data>.*?)['\"][^>]*>",
-                RegexOptions.IgnoreCase
+                "<img[^>]*src=[\"']data:image/.*?;base64,.*?['\"][^>]*>",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline
             );
 
-            string cleanedHtml = imgRegex.Replace(html, match =>
+            bool hasImage = imgRegex.IsMatch(html);
+
+            //   Base64 img varsa → onları key ile değiştir
+            if (hasImage)
             {
-                string base64 = match.Groups["data"].Value;
-                string type = match.Groups["type"].Value;
+                html = imgRegex.Replace(html, imageKey);
+            }
 
-                // GUID key üret
-                string imageKey = $"img_BooksPage";//{Guid.NewGuid()}
+            //   HER HALÜKARDA key yoksa ekle
+            if (!html.Contains(imageKey))
+            {
+                html = html.TrimEnd() + Environment.NewLine + imageKey;
+            }
 
-                
-                return $"||{imageKey}||";
-            });
-
-            return cleanedHtml;
+            return html;
         }
+
 
         /// <summary>
         /// Kitap ve kitaba ait sayfalar bu metot ile eklenir.
