@@ -117,7 +117,7 @@ namespace HerkesYazarOlsun.Portal.Services
 
             using var form = new MultipartFormDataContent();
 
-            // VM_BOOKS içindeki normal alanları ekle
+            // VM_BOOKS_PAGES içindeki normal alanları ekle
             foreach (var prop in typeof(VM_BOOKS_PAGES).GetProperties())
             {
                 try

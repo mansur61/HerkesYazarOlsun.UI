@@ -164,3 +164,27 @@ function UyariVer(state, basarili, bilgi, uyari, mesaj) {
         $(uyari   + " #mesaj").html(mesaj);
     }
 }
+
+function BilgiVer(state, basarili, bilgi, uyari, mesaj) {
+    if (state == 1) {
+        $(basarili + tip).css("display", "block");
+        $(basarili + tip + " #mesaj").html(mesaj);
+
+        $(bilgi + tip).css("display", "none");
+        $(uyari + tip).css("display", "none");
+
+    }
+    else if (state == 3) {
+        $(bilgi + tip).css("display", "block");
+        $(bilgi + tip + " #mesaj").html(mesaj);
+
+        $(basarili + tip).css("display", "none");
+        $(uyari + tip).css("display", "none");
+    }
+    else {
+        $(uyari + tip).css("display", "block");
+        $(bilgi + tip).css("display", "none");
+        $(basarili + tip).css("display", "none");
+        $(uyari + tip + " #mesaj").html(mesaj);
+    }
+}

@@ -430,10 +430,14 @@
          var kitapKatdetmeUyariDurumu = $("#kitapKatdetmeUyariDurumu").val();
          // console.log("kitapKaydet UyariDurumu : " + kitapKatdetmeUyariDurumu);
 
-        if(dataValue == 2){
+        if(dataValue == 1){
             var kategoriBilgiId = $("#kitapKategori").val();
             // console.log("kitapKategori : " + kategoriBilgiId);
             var selectlement = document.getElementById('selecData-' + kategoriBilgiId);
+            if(!selectlement){
+                 BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "Kategori Seçilmelidir." );
+                 return;
+            }
             // data özelliğinden değeri al
             var kategoriAdi = selectlement.getAttribute('data-name');
             // console.log("kategoriAdi : " + kategoriAdi);
@@ -508,10 +512,72 @@
         Gonder(formData);    
     }
 
+     // ilk kitap ve sayfa kaydı diğerleri  farkliVeriGonder() burdan ekle
+     function kitapVeIlkSayfasiKaydet(formData) {
+
+         var kitapId = $("#BOOKSID").val();
+         //console.log("kitapId:" + kitapId);
+         var sayfaId = $("#BOOKPAGESID").val();
+         //console.log("sayfaId:" + sayfaId);
+         var kitapAdi = $("#kitapAdi").val();
+         var onsoz = $("#onsoz").val();
+         var arkaKapakYazi = $("#arkaKapakYazi").val();
+         var kategori = $("#kitapKategori").val();
+         var sayfaYazi = $("#sayfaYazi").val(); 
+         var bb = $("#ONKAPAKFOTO").val();
+
+        const base64Images = extractBase64Images(sayfaYazi);
+        //console.log("base64Images count:" + base64Images.length+ " bb ", bb);
+
+        if(base64Images.length > 1){
+             BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "En fazla 1 resim sayfada olabilir." );
+             return;
+        }
+       if( $("#ONKAPAKFOTO").val() == ""){
+           BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "Lütfen ön kapak fotoğrafını seçin!" );
+             return;
+       }
+       if( $("#ARKAKAPAKFOTO").val() == ""){
+           BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "Lütfen arka kapak fotoğrafını seçin!" );
+             return;
+       }
+
+        let pageFotoNames = [];
+        if (base64Images.length !== 0){
+             base64Images.forEach((img, i) => {
+                let file = base64ToFile(img, "image_" + i + ".png");          
+                 formData.append(`BookPagesModel.PageFotoList[${i}]`, img); 
+                pageFotoNames.push("image_" + i + ".png");
+                formData.append("dosyalar", file);
+                formData.append("BookPagesModel.PageFotoDosyalar", file);
+            });
+            let pageFotos = pageFotoNames.join("||");
+            formData.append("BookPagesModel.PageFoto", pageFotos);
+        }
+
+         formData.append('BookModel.ID',  kitapId == -1 ? 0 :kitapId);
+         formData.append('BookModel.Name', kitapAdi);
+         formData.append('BookModel.onsoz', onsoz);
+         formData.append('BookModel.ARKAKAPAKYAZISI', arkaKapakYazi);
+         formData.append('BookModel.CategoriId', kategori);
+         formData.append('isWordPDF', false);
+         formData.append('BookPagesModel.PageWrite', sayfaYazi);
+
+         formData.append('BookModel.ONKAPAKFOTO', $("#ONKAPAKFOTO").val());
+         formData.append('BookModel.ARKAKAPAKFOTO', $("#ARKAKAPAKFOTO").val());
+         formData.append('BookModel.ARKAKAPAKFOTOPATH', "ARKAKAPAKFOTOPATH");
+         formData.append('BookModel.ONKAPAKFOTOPATH', "ONKAPAKFOTOPATH");
+
+         formData.append('BookPagesModel.ID', sayfaId);
+         showSpinner();
+         Gonder(formData);      
+     }
+
+
     function Gonder(formData){ 
 
            $.ajax({
-             url: 'KitapEkle', // Formun gönderileceği adresi belirtin
+             url: '/Kitaplar/KitapEkle', // Formun gönderileceği adresi belirtin
              method: 'POST',
              data: formData, // Form verilerini FormData nesnesiyle al
              processData: false,
@@ -600,78 +666,7 @@
 
     }
 
-     // ilk kitap ve sayfa kaydı diğerleri  farkliVeriGonder() burdan ekle
-     function kitapVeIlkSayfasiKaydet(formData) {
-
-         var kitapId = $("#BOOKSID").val();
-         //console.log("kitapId:" + kitapId);
-         var sayfaId = $("#BOOKPAGESID").val();
-         //console.log("sayfaId:" + sayfaId);
-         var kitapAdi = $("#kitapAdi").val();
-         var onsoz = $("#onsoz").val();
-         var arkaKapakYazi = $("#arkaKapakYazi").val();
-         var kategori = $("#kitapKategori").val();
-         var sayfaYazi = $("#sayfaYazi").val();
-
-        const base64Images = extractBase64Images(sayfaYazi);
-        let pageFotoNames = [];
-        if (base64Images.length !== 0){
-             base64Images.forEach((img, i) => {
-                let file = base64ToFile(img, "image_" + i + ".png");          
-                 formData.append(`BookPagesModel.PageFotoList[${i}]`, img); 
-                pageFotoNames.push("image_" + i + ".png");
-                formData.append("dosyalar", file);
-                formData.append("BookPagesModel.PageFotoDosyalar", file);
-            });
-            let pageFotos = pageFotoNames.join("||");
-            formData.append("BookPagesModel.PageFoto", pageFotos);
-        }
-
-         formData.append('BookModel.ID',  kitapId == -1 ? 0 :kitapId);
-         formData.append('BookModel.Name', kitapAdi);
-         formData.append('BookModel.onsoz', onsoz);
-         formData.append('BookModel.ARKAKAPAKYAZISI', arkaKapakYazi);
-         formData.append('BookModel.CategoriId', kategori);
-         formData.append('isWordPDF', false);
-         formData.append('BookPagesModel.PageWrite', sayfaYazi);
-
-         formData.append('BookModel.ONKAPAKFOTO', $("#ONKAPAKFOTO").val());
-         formData.append('BookModel.ARKAKAPAKFOTO', $("#ARKAKAPAKFOTO").val());
-         formData.append('BookModel.ARKAKAPAKFOTOPATH', "ARKAKAPAKFOTOPATH");
-         formData.append('BookModel.ONKAPAKFOTOPATH', "ONKAPAKFOTOPATH");
-
-         formData.append('BookPagesModel.ID', sayfaId);
-         showSpinner();
-
-          Gonder(formData);      
-     }
-
-     function BilgiVer(state, basarili, bilgi, uyari, mesaj) {
-         if (state == 1) {
-             $(basarili + tip).css("display", "block");
-             $(basarili + tip + " #mesaj").html(mesaj);
-
-             $(bilgi + tip).css("display", "none");
-             $(uyari + tip).css("display", "none");
-
-         }
-         else if (state == 3) {
-             $(bilgi + tip).css("display", "block");
-             $(bilgi + tip + " #mesaj").html(mesaj);
-
-             $(basarili + tip).css("display", "none");
-             $(uyari + tip).css("display", "none");
-         }
-         else {
-             $(uyari + tip).css("display", "block");
-             $(bilgi + tip).css("display", "none");
-             $(basarili + tip).css("display", "none");
-             $(uyari + tip + " #mesaj").html(mesaj);
-         }
-     }
-
-
-
+     
 
 </script>
 

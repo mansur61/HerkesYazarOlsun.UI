@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.VariantTypes;
 using DocumentFormat.OpenXml.Wordprocessing;
 using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
@@ -648,7 +649,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 vM_BOOKS.YazarId = (int)Lid;
                 vM_BOOKS.TAMAMLANDIMI = input.isPdfVeyaWordTamalama ?? false;
                 //vM_BOOKS.BookModel = kitap;
-
+                //input.BookPagesModel = new VM_BOOKS_PAGES();
+                 
                 var book = await new BooksService().PostSaveBook(input);
 
                 if (book.Result == null)
@@ -667,8 +669,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
                             isWordPDF = input.isWordPDF ?? false,
                             BookId = book.Result.ID,
                             PageWrite = ReplaceImagesWithKeys(input.BookPagesModel?.PageWrite),
-                            PageFoto = input.BookPagesModel?.PageFoto ,
-                            PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? "",
+                            PageFoto = input.BookPagesModel?.PageFoto ?? "PageFoto",
+                            PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? "PageWriteBase64",
                             PageFotoDosyalar = input.BookPagesModel?.PageFotoDosyalar,
                             PageFotoList = input.BookPagesModel?.PageFotoList,
 

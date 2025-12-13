@@ -170,14 +170,35 @@ namespace HerkesYazarOlsun.Portal.Services
                     {
                         //form.Add(new StringContent(value.ToString()!), prop.Name);
                         form.Add(new StringContent(value.ToString()!), $"BookModel.{prop.Name}");
-                    }
+                    } 
                 }
                 catch(Exception e)
                 {
                     var _ = e.Message;
                 }
             }
-             
+
+            // VM_BOOKS_PAGES içindeki normal alanları ekle
+            //if (VMbook.BookPagesModel != null)
+            //{
+            //    foreach (var prop in typeof(VM_BOOKS_PAGES).GetProperties())
+            //    {
+            //        // Dosya listelerini burada atla
+            //        if (prop.PropertyType == typeof(List<IFormFile>) ||
+            //            prop.PropertyType == typeof(List<string>))
+            //            continue;
+
+            //        var value = prop.GetValue(VMbook.BookPagesModel);
+            //        if (value != null)
+            //        {
+            //            form.Add(
+            //                new StringContent(value.ToString()!),
+            //                $"BookPagesModel.{prop.Name}"
+            //            );
+            //        }
+            //    }
+            //}
+
 
             // Dosyaları ekle
             if (VMbook.dosyalar != null)
@@ -189,6 +210,17 @@ namespace HerkesYazarOlsun.Portal.Services
                     form.Add(streamContent, "dosyalar", file.FileName);
                 }
             }
+
+            //if (VMbook.BookPagesModel?.PageFotoDosyalar != null)
+            //{
+            //    foreach (var file in VMbook.BookPagesModel.PageFotoDosyalar)
+            //    {
+            //        var streamContent = new StreamContent(file.OpenReadStream());
+            //        streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            //        form.Add(streamContent, "BookPagesModel.PageFotoDosyalar", file.FileName);
+
+            //    }
+            //}
 
             // API'ye gönder
             var response = await client.PostAsync("api/Books/PostSaveBook", form);
