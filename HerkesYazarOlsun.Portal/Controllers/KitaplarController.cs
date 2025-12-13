@@ -134,6 +134,36 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     // Access the document body
                     var body = mainPart.Document.Body;
 
+                    //WORD İÇİ RESİM TESPİT
+                    var firstImagePart = mainPart.ImageParts.FirstOrDefault();
+                    if (firstImagePart != null)
+                    {
+                        byte[] imageBytes;
+
+                        await using (var imgStream = firstImagePart.GetStream())
+                        await using (var ms = new MemoryStream())
+                        {
+                            await imgStream.CopyToAsync(ms);
+                            imageBytes = ms.ToArray(); // KOPYA ALINDI
+                        }
+
+                        //  Bundan sonrası thread-safe
+                        var formFile = imageBytes.ToImageFormFile(
+                            fileName: "word_img_1",
+                            contentType: firstImagePart.ContentType
+                        );
+
+                        if (formFile != null)
+                        {
+                            vM_BOOKS.BookPagesModel ??= new VM_BOOKS_PAGES();
+
+                            // Her çağrıda YENİ liste → concurrency safe
+                            vM_BOOKS.BookPagesModel.PageFotoDosyalar =
+                                new List<IFormFile> { formFile };
+                        }
+                    }
+
+
                     var pageBreakCount = mainPart.Document.Descendants<LastRenderedPageBreak>().Count();
 
                     // Word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bir fazlası veriyor
@@ -221,11 +251,37 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         var sayfaText = PdfTextExtractor.GetTextFromPage(pdfDoc.GetPage(page), new SimpleTextExtractionStrategy());
                         Console.WriteLine($"sayfaYaz: {page} -- {sayfaText}\n");
 
+                        // RESİMLERİ YAKALA
+                        var imageListener = new PdfImageListener();
+                        var processor = new PdfCanvasProcessor(imageListener);
+                        processor.ProcessPageContent(pdfDoc.GetPage(page));
+
                         // VM_BOOKS güncelle
                         vM_BOOKS_det.BookModel.ID = (int)eklemeDurumu.Result.BookID;
                         vM_BOOKS_det.BookPagesModel = new VM_BOOKS_PAGES();
                         vM_BOOKS_det.BookPagesModel.PageWrite = sayfaText.Trim();
                         vM_BOOKS_det.BookPagesModel.PageWriteBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(sayfaText));
+
+                        var firstImage = imageListener.Images?.FirstOrDefault();
+
+                        var formFile = firstImage?.ToImageFormFile(
+                            fileName: $"page_{page}_img_1"
+                        );
+
+                        if (formFile != null)
+                        {
+                            vM_BOOKS_det.BookPagesModel.PageFotoDosyalar =  new List<IFormFile> { formFile };
+                        }
+
+                        //vM_BOOKS_det.BookPagesModel.PageFotoDosyalar = 
+                        //    vM_BOOKS_det.BookPagesModel.PageFotoDosyalar =
+                        //    imageListener.Images
+                        //        .Select((img, index) =>
+                        //            img.ToFormFile(
+                        //                fileName: $"page_{page}_img_{index + 1}.png",
+                        //                contentType: "image/png"
+                        //            )
+                        //        ) .ToList();
 
                         // Her sayfa için kaydet
                         _ = await KitapEkle(vM_BOOKS_det);
