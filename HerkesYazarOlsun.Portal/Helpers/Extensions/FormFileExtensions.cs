@@ -1,5 +1,4 @@
-﻿ 
-namespace HerkesYazarOlsun.Portal.Helpers.Extensions
+﻿namespace HerkesYazarOlsun.Portal.Helpers.Extensions
 {
     public static class FormFileExtensions
     {
