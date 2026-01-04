@@ -115,7 +115,7 @@
 <script>
 
     document.getElementById('redirectButton').addEventListener('click', function () { 
-            window.location.href = "/Account/Login"; 
+            window.location.href = "/Account/Giris";
         });
 
     let timerOn = true;
@@ -188,7 +188,7 @@
                         $("#otpmesaj").css("display", "block");
                         $("#otpmesaj").html("Kodu başarılı şekilde doğrulandı. Logine Yönlendiriliyorsunuz.");
                         setTimeout(function () {
-                            window.location.href = "/Account/Login";
+                            window.location.href = "/Account/Giris";
                         }, 5000);
                     });
                     

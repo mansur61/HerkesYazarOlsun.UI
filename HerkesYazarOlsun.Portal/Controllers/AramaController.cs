@@ -1,6 +1,4 @@
-﻿
-using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Model.ViewModel;
+﻿using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;

@@ -1,80 +1,201 @@
-using HerkesYazarOlsun.Model.ViewModel;
+﻿using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuration ayarları
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
 
-AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
+AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings")["ApiPath"];
+
+builder.Services.Configure<HelperSettings>(
+    builder.Configuration.GetSection("HelperSettings"));
 
 
-// Session deste�ini ekle
-builder.Services.AddDistributedMemoryCache(); // Session i�in gerekli
+/*** Cookie ayarları 
+ * SameSite=Strict → Cookie hiçbir cross-site istekte gönderilmez (en katı). Kullanıcı başka siteden geldiğinde oturum cookie gönderilmez.
+ * 
+ * SameSite=Lax → Güvenli GET navigasyonlarında cookie gönderilebilir (ör. linke tıklama). 
+ * POST gibi cross-site state‑değiştiren isteklerde gönderilmez.
+ * 
+ * SameSite=None; Secure → Cookie cross-site isteklerde de gönderilir (üçüncü taraf), ama Secure olmalı (HTTPS).
+ * 
+ * ***/
+
+// Session desteği
+builder.Services.AddDistributedMemoryCache();
+// Session (örnek)
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // 30 dakika boyunca session aktif
-    options.Cookie.HttpOnly = true; // G�venlik i�in sadece HTTP �zerinden eri�ilebilir yapar
-    options.Cookie.IsEssential = true; // Session �erezini zorunlu yapar
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;            // JS ile okunamaz
+    options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict; // veya CSRF’ye karş
 });
 
-// Add services to the container.
+// --- Cookie  yapılandırma ---
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict; // veya Lax
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
+    // Varsayılan cookie auth davranışı (login path vb)
+    options.Cookie.Name = "login";
+    options.LoginPath = "/Account/Giris";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.SlidingExpiration = true;
+});
+// --- Antiforgery (CSRF) --- CSRF için ek güvenlkik
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN"; // AJAX istekleri için header üzerinden gönder
+});
+
+// MVC ve Razor Pages
+builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddMvc();
+
+// DI ayarları
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
-
 builder.Services.Configure<VM_Mail_Settings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddHttpClient();
 
-builder.Services.AddAuthentication(x =>
+// Authentication
+builder.Services.AddAuthentication(options =>
 {
-    x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-}).AddCookie(x =>
-{
-    x.Cookie.Name = "login";
-    x.LoginPath = "/Account/Login";
-    x.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-});
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+      .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+      {
+          // Yukarıdaki ConfigureApplicationCookie zaten bu cookie'yi yapılandırdı ama
+          // burada tekrar ayar yapmak istersen ekleyebilirsin.
+          options.Cookie.Name = "login";
+          options.LoginPath = "/Account/Giris";
+          options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+          options.SlidingExpiration = true;
+      });
 
 var app = builder.Build();
-  
-// Configure the HTTP request pipeline.
+
+// Production ayarları
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
- 
-app.UseStaticFiles();
+// Güvenli header'lar (CSP, X-Frame-Options, nosniff, vs.)
+/**** 
+ * default-src 'self':
+Tüm kaynaklar (resim, CSS, JS vb.) sadece kendi domain’inden (aynı origin) yüklenebilir.
+Yani başka bir siteden script, iframe, resim çekemezsin.
 
-// Middleware'leri ekleyin
-app.UseSession(); // Session'� etkinle�tir
+* script-src 'self':
+JavaScript dosyaları sadece kendi domain’inden yüklenebilir.
+CDN veya üçüncü parti script (ör. Google Analytics, Bootstrap CDN) engellenir.
 
-app.UseRouting();
-app.UseAuthentication();
-app.UseCookiePolicy();
-//app.UseSession();
-app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
+*object-src 'none':
+<object>, <embed>, <applet> gibi eski HTML etiketlerinden hiçbirine izin verilmez.
+Bunlar genelde zararlı içerik yüklemek için kullanılır.
+ * 
+ * 
+ * ***/
+// CSP ve diğer güvenlik header'ları
+app.Use(async (context, next) => //Use bir middleware bunlar için ayrı bir dosyadan yönet
 {
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-}); 
+    var env = app.Environment;
+    var configuration = app.Configuration;
+
+    // Ortama göre CSP seç
+    // Ortama göre CSP listesini al
+    var cspList = env.IsDevelopment()
+        ? configuration.GetSection("CSP:Development").Get<string[]>()
+        : configuration.GetSection("CSP:Prod").Get<string[]>();
+
+    // Dizi varsa string'e birleştir
+    string cspPolicy = cspList != null ? string.Join("; ", cspList) + ";" : null;
+
+    // CSP header’ı ekle
+    if (!string.IsNullOrEmpty(cspPolicy))
+    {
+        context.Response.Headers["Content-Security-Policy"] = cspPolicy;
+    }
+
+    // Diğer güvenlik header'ları
+    context.Response.Headers["X-Frame-Options"] = "DENY"; //Clickjacking’e karşı
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    await next();
+});
+
+app.UseHttpsRedirection();
+
+// ---------- Static Files Ayarı ----------
+
+// MIME tipleri için provider
+var provider = new FileExtensionContentTypeProvider();
+if (!provider.Mappings.ContainsKey(".mp3"))
+    provider.Mappings[".mp3"] = "audio/mpeg";
+if (!provider.Mappings.ContainsKey(".ogg"))
+    provider.Mappings[".ogg"] = "audio/ogg";
+if (!provider.Mappings.ContainsKey(".wav"))
+    provider.Mappings[".wav"] = "audio/wav";
+
+// wwwroot içindeki dosyalar (CSS, JS, resim, mp3, ogg vs)
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider
+});
+
+// Belgeler klasörü (production için özel)
+if (!app.Environment.IsDevelopment())
+{
+    var belgelerPath = Path.Combine(builder.Environment.ContentRootPath, "Belgeler");
+    if (Directory.Exists(belgelerPath))
+    {
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(belgelerPath),
+            RequestPath = "/Belgeler",
+            ContentTypeProvider = provider,
+            ServeUnknownFileTypes = true // PDF, DOCX vs için
+        });
+    }
+    else
+    {
+        Console.WriteLine($" Belgeler klasörü bulunamadı: {belgelerPath}");
+    }
+}
+
+// ---------- Middleware Sırası ----------
+app.UseRouting();
+app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseCookiePolicy();
+
+// ---------- Routing ----------
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Tanitim}/{id?}");
+
 
 app.MapRazorPages();
-app.MapControllers();
 app.Run();

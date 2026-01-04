@@ -5,10 +5,7 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
 @using HerkesYazarOlsun.Portal.Controllers;
-@section Styles {
-
-    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
-}
+ 
 
 <input type="hidden" id="registericin" value="register" />
 
@@ -16,79 +13,101 @@
     string alertmesajgostermedurumu = "register";
 }
 
-<section class="login_box_area section-margin">
+
+
+@section Styles {
+    <link href="~/lib/css/giris_kayit_dogrulama.css" rel="stylesheet" />
+}
+
+
+<section>
     <div class="container">
         <div class="row">
-            <div class="col-lg-6">
-                <div class="login_box_img">
-                    <div class="hover">
-                        <h4>Herkes Yazar Olsun' da Kaydın Var Mı? </h4>
-                        <p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyaoruz.</p>
-                        <a class="button button-account" href="/Home/Login">Giriş Yap</a>
-                        <a class="button button-account" href="/Home/Dogrulama">Kaydınızı Doğrulayınız </a>
-                    </div>
+            <!-- Sol Kısım -->
+            <div class="col-lg-6 mb-4">
+                <div id="title-container" style="
+                    background: #00C9A7;
+                    padding: 40px;
+                    border-radius: 12px;
+                    color: white;
+                    text-align: center;
+                    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+                ">
+                    <h4 style="font-weight:600;">Herkes Yazar Olsun' da Kaydın Var Mı?</h4>
+                    <p style="opacity:0.9; font-size:15px;">
+                        Giriş ve Kayıt işlemlerinizi gerçekleştiriniz.
+                        Sizinle danışmaktan mutluluk duyuyoruz.
+                    </p>
+
+                    <a class="auth-primary-btn" href="/Account/Giris">Giriş Yap</a>
+                    <a class="auth-primary-btn" href="/Home/Dogrulama">Kaydınızı Doğrulayınız</a>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="login_form_inner register_form_inner">
-                    <h3>Kayıt Olunuz</h3>
 
+            <!-- Sağ Kısım -->
+            <div class="col-lg-6">
+                <div class="login_form_inner register_form_inner"
+                     style="padding: 35px; border-radius: 12px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.10);">
+
+                    <h3 style="margin-bottom: 25px; font-weight:600;">Kayıt Olunuz</h3>
 
                     <div id="register_form" class="row login_form">
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="username" name="USERNAME" placeholder="Kullanici Adi" asp-for="USERNAME"
-                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Kullanici Adi'">
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="number" class="form-control" id="telno" name="TELNO" placeholder="Tel No" asp-for="TELNO"
-                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Tel No'">
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="email" name="EMAIL" placeholder="Email Adres" asp-for="EMAIL"
-                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Adres'">
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <input type="text" class="form-control" id="password" name="PASSWORD" placeholder="Şifre" asp-for="PASSWORD"
-                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre'">
-                        </div>
-                        @*<div class="col-md-12 form-group">
-                        <input type="text" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Şifre Tekrar" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Şifre Tekrar'">
-                        </div>*@
 
                         <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="username" name="USERNAME"
+                                   placeholder="Kullanıcı Adı" asp-for="USERNAME">
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" id="telno" name="TELNO"
+                                   placeholder="Telefon Numarası" asp-for="TELNO">
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="reg_email" name="EMAIL"
+                                   placeholder="Email Adresi" asp-for="EMAIL">
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="password" name="PASSWORD"
+                                   placeholder="Şifre" asp-for="PASSWORD">
+                        </div>
+
+                        <div class="col-md-12 form-group" style="margin-top:10px;">
                             <input type="checkbox" id="termsCheckbox">
                             <label for="termsCheckbox">
-                                <a href="/Home/Sozlesme" target="_blank">Kullanıcı Sözleşmesini</a> okudum ve kabul ediyorum.
+                                <a href="/Home/Sozlesme" target="_blank" style="text-decoration:underline; color:#00C9A7;">
+                                    Kullanıcı Sözleşmesini
+                                </a> okudum ve kabul ediyorum.
                             </label>
                         </div>
 
-
                         <div class="col-md-12 form-group">
-                            <button type="submit" class="button button-register w-100" onclick="KayitOl()">Kayıt Ol</button>
+                            <button type="submit" class="button button-register w-100"
+                                    style="background-color:#00C9A7; border-radius:8px; padding:10px; font-weight:600;"
+                                    onclick="KayitOl()">
+                                Kayıt Ol
+                            </button>
                         </div>
-                        <div id="loading" style="display: none; text-align: center;">
-                            <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+
+                        <div id="loading" style="display:none; text-align:center;">
+                            <img src="https://i.gifer.com/ZZ5H.gif" style="width:50px; height:50px;">
                         </div>
                     </div>
-                    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
 
+                    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
                 </div>
             </div>
         </div>
     </div>
 </section>
-@*
-@section scripts{
 
-    <script src="~/lib/bootstrap/dist/js/main_aroma_template.js"></script>
-}
-*@
-
+ 
 <script>
     function KayitOl() {
 
         var uername = $("#username").val();
-        var email = $("#email").val();
+        var email = $("#reg_email").val();
         var password = $("#password").val();
         var telno = $("#telno").val();
 
@@ -121,9 +140,9 @@
                 $("#bilgi-" + register).css("display", "none");
                 $("#uyari-" + register).css("display", "none");
 
-                // setTimeout(function () {
-                //     window.location.href = "/Home/Index";
-                // }, 3000);
+                setTimeout(function () {
+                    window.location.href = "/Home/Index";
+                }, 3000);
             }
             else if (data.state == 3) {
                 $("#bilgi-" + register).css("display", "block");

@@ -1,13 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Kitap Arama";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.FooterGoster = false;
 }
 
 @using HerkesYazarOlsun.Portal.Controllers;
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
 
-<input type="hidden" id="loginId" value="@Model.LoginUserId" />
+<input type="hidden" id="loginId" value="@Model.BookModel.LoginUserId" />
 
 <input type="hidden" id="kitapaktarmaicin" value="pdfveyawordaktar" />
 
@@ -18,19 +19,30 @@
 <input type="hidden" id="tip" value="@tip" />
 
 @section Styles{
+    <!-- richt text için-->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-    <link href="~/lib/bootstrap/dist/css/kitapekle.css" rel="stylesheet" />
-    @*<link href="~/dropzone/dropzone.min.css" rel="stylesheet" />*@
+    <style>
+        body {
+            background: #f7f9ff;
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1.4;
+            color: #555;
+        }
+    </style>
+    <link href="~/lib/css/kitap_olustur.css" rel="stylesheet" />
+    <link href="~/lib/css/kitap_on_bilgiler.css" rel="stylesheet" />
 }
-
 
 <div class="container light-style flex-grow-1 container-p-y" style="margin-top:50px">
 
     <div class="font-weight-bold py-3 mb-4">
-        <div id="title-container">
+        <div id="title-container" style=" background-color: #00C9A7;">
             <h2>Herkes Yazar Olsun</h2>
             <br />
-            <p style="font-size:20px;padding:15px">
+            <p >
                 Siz değerli yazarımız.
                 İçeriğinizi tüm paydaşlarımızla paylaşacağınızdan ötürü mutluluk içirisindeyiz.
                 Bu yolda başarılarınızı temenni ederiz.
@@ -71,16 +83,16 @@
 
                         </div>
 
-                        <div class="tab-pane p-20" id="account-dosyaAktarim" role="tabpanel">
+                        <div class="tab-pane " id="account-dosyaAktarim" role="tabpanel">
                             <div class="row">
                                 <h5>Pdf veya Word ? *</h5>
-                                <select class="form-select" style="width:500px;height:30px" id="pdfVeyaWord">
+                                <select class ="form-control"  id="pdfVeyaWord">
                                     <option value="1">Word</option>
                                     <option value="2">Pdf</option>
                                 </select>
 
                                 <h5>Yüklediğiniz Kitap Tamamlanmış Kitap Mıdır? *</h5>
-                                <select class="form-select" style="width:500px;height:30px" id="isPdfVeyaWordTamalama">
+                                <select class="form-control" id="isPdfVeyaWordTamalama">
                                     <option value="1">Evet</option>
                                     <option value="2">Hayır</option>
                                 </select>
@@ -88,12 +100,14 @@
                                 <div class="card-body">
 
                                     <h5>Yükleyeceğiniz Dosyayı Aktarınız *</h5>
-                                    <input name="file" type="file" id="dekontAktar" onchange="dosyaSecim('dosyaAktarmaDisVeri')" />
+                                    <input class="form-control"  type="file" id="dosyaAktarmaDis" onchange="dosyaSecim('dosyaAktarmaDisVeri')" /> 
                                     <input type="hidden" id="aktarilacakDosya">
                                 </div>
                                 <br />
                                 <div class="progress">
-                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%"></div>
+                                    <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" 
+                                    class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
+                                         role="progressbar" style="width: 0%;background-color: #00C9A7;"></div>
                                 </div>
 
                             </div>
@@ -102,7 +116,11 @@
 
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Kaydet</button>
+                <button type="submit" class="btn btn-primary btn-block"
+                        style="background-color: #00C9A7; border-color: #00C9A7; color: #fff; font-size: 16px; padding: 10px 20px;">
+                    Kaydet
+                </button>
+
             </form>
         </div>
 
@@ -118,19 +136,62 @@
 <script src="~/js/general.js"></script>
 
 @section Scripts{
-    <!-- SweetAlert2 JS dosyası ve Bootstrap JS dosyası -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+
+    <!-- richt text için-->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!-- SweetAlert2 JS dosyası ve Bootstrap JS dosyası -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 }
+
+<script>
+    // Arka Kapak Editörü
+    var arkaKapakQuill = new Quill('#arkaKapakYaziEditor', {
+      theme: 'snow',
+      placeholder: 'Kapak yazınızı buraya yazın...',
+      modules: {
+        toolbar: [
+          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          ['link', 'image'],
+          [{ 'align': [] }],
+          ['clean']
+        ]
+      }
+    });
+
+    // Önsöz Editörü
+    var onSozQuill = new Quill('#onSozEditor', {
+      theme: 'snow',
+      placeholder: 'Önsözünüzü buraya yazın...',
+      modules: {
+        toolbar: [
+          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          ['link', 'image'],
+          [{ 'align': [] }],
+          ['clean']
+        ]
+      }
+    });
+
+    // Form gönderiminde içerikleri textarea'lara aktar
+    document.querySelector('form')?.addEventListener('submit', function () {
+      document.getElementById('arkaKapakYazi').value = arkaKapakQuill.root.innerHTML;
+      document.getElementById('onsoz').value = onSozQuill.root.innerHTML;
+    });
+</script>
 
 <script>
 
     var progressBar = document.getElementsByClassName('progress-bar')[0];
-    console.log(progressBar);
+    //console.log(progressBar);
 
     //const progress = (value) => { progressBar.style.width = `${value}%`;}
 
@@ -149,8 +210,9 @@
         var kitapAdi = $("#kitapAdi").val();
         var onsoz = $("#onsoz").val();
         var arkaKapakYazi = $("#arkaKapakYazi").val();
-        var kategori = $("#kitapKetogri").val();
+        var kategori = $("#kitapKategori").val();
         var pdfOrWord = $("#pdfVeyaWord").val();
+        console.log({ kitapId, kitapAdi, onsoz, arkaKapakYazi, kategori, pdfOrWord });
 
         var durum = false;
         var yuklenilenKitapTamamMi = $("#isPdfVeyaWordTamalama").val();
@@ -161,20 +223,29 @@
             durum = true;
         }
 
-
-        formData.append('ID', kitapId);
-        formData.append('isWordPDF', true);
-        formData.append('Name', kitapAdi);
-        formData.append('onsoz', onsoz);
-        formData.append('AktarilanDosya', aktarilacakDosya);
-        formData.append('ARKAKAPAKYAZISI', arkaKapakYazi);
-        formData.append('CategoriId', kategori);
+         
+         formData.append('FDileName', aktarilacakDosya);
+        formData.append('AktarilanDosya', aktarilacakDosya); 
         formData.append('ARKAKAPAKYAZISI', arkaKapakYazi);
         formData.append('pdfVeyaWord', parseInt(pdfOrWord));
         formData.append('isPdfVeyaWordTamalama', durum);
         formData.append('isTamalama', durum);
 
+         formData.append('BookModel.ID',  kitapId == -1 ? 0 :kitapId);
+        formData.append('BookModel.Name', kitapAdi);
+        formData.append('BookModel.onsoz', onsoz);
+        formData.append('BookModel.ARKAKAPAKYAZISI', arkaKapakYazi);
+        formData.append('BookModel.CategoriId', kategori);
+        formData.append('isWordPDF', true);
+        // formData.append('BookPagesModel.PageWrite', sayfaYazi);
+        // formData.append('BookPagesModel.ID', sayfaId);
 
+        formData.append('BookModel.ONKAPAKFOTO', $("#ONKAPAKFOTO").val());
+        formData.append('BookModel.ARKAKAPAKFOTO', $("#ARKAKAPAKFOTO").val());
+        formData.append('BookModel.ARKAKAPAKFOTOPATH', "ARKAKAPAKFOTOPATH");
+        formData.append('BookModel.ONKAPAKFOTOPATH', "ONKAPAKFOTOPATH");
+
+        
 
         var dosyaInputs = form.querySelectorAll('input[type="file"]');
         console.log(dosyaInputs.length);
@@ -228,11 +299,21 @@
                             clearInterval(interval);
                             progressBar.style.width = '100%';
 
-                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. İlgili kitaba yönlendiriliyorsunuz..");
+                            var mesaj = "";
+                            if (response && response.result){
+                                mesaj = "İlgili kitaba yönlendiriliyorsunuz..";
+                            }
+                            
+                            BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitabınız Eklendi. " +mesaj);
                             setTimeout(function () {
                                 var link = window.location.href;
+                                    if (response && response.result) {
+                                    window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + response.result.toString();
+                                }else{
+                                    window.location.href = link;
+                                }
                                 //console.log("link " + link);
-                                window.location.href = "/Kitaplar/KitapDetay?kitapId=" + kitapId.toString();
+                               // window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + response.result.toString();
 
                             }, 3000);
                         }

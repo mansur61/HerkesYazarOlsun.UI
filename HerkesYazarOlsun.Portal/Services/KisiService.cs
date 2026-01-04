@@ -48,7 +48,7 @@ namespace HerkesYazarOlsun.Portal.Services
 
         public ServiceResult<Users> GetKisiByMail(string mail)
         {
-            Task<string> jsonContent = GetData("api/Users/GetKisiByMail?" + "mail=" + mail);
+            Task<string> jsonContent = GetData("api/Users/GetKisiByMail?" + "mail=" + mail,eposta:mail);
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<ServiceResult<Users>>(jsonContent.Result);
@@ -82,13 +82,13 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
             return result;
         }
-        public FAVORI_YAZARLAR PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav_yazar)
+        public ServiceResult PostFavoriSaveWriter(VM_FAVORI_YAZARLAR fav_yazar)
         {
             string stringData = JsonConvert.SerializeObject(fav_yazar);
             Task<string> jsonContent = PostData("api/Users/PostFavoriSaveWriter", stringData);
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<FAVORI_YAZARLAR > (jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<ServiceResult> (jsonContent.Result);
             return result;
         }
 

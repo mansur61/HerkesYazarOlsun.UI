@@ -4,6 +4,7 @@ using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -37,8 +38,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
 
-        [HttpPost]
-        public ServiceResult Gonder(string kime)
+        [HttpPost] 
+        public async Task<ServiceResult> Gonder(string kime)
         {
             ServiceResult result = new ServiceResult();
 
@@ -58,19 +59,20 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 username = _mailSettings.Username,
                 password = _mailSettings.Password,
                 Host = _mailSettings.Host,
-
+                Port = _mailSettings.Port,
+                EnableSSL = _mailSettings.EnableSSL,
                 sifre = kod,
                 kime = kime,
                 konu = _mailSettings.Subject,
                 gondericii_mail = _mailSettings.FromEmail
             };
              
-            string sonuc = _emailService.EmailGonder(icerik); 
+            string sonuc = await _emailService.EmailGonder(icerik); 
 
             if (sonuc == "-1")
             {
                 result.State = MessageResultState.ERROR;
-                result.Message = sonuc;
+                result.Message = "Mail Doğrulama Başarısız";
             }
             else
             {
@@ -98,7 +100,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
-        public ServiceResult MailBilgilendirme(string kime,string konu, string mesaj,int? tip = 0)
+        public async Task<ServiceResult> MailBilgilendirme(string kime,string konu, string mesaj,int? tip = 0)
         {
             ServiceResult result = new ServiceResult();
 
@@ -127,7 +129,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 gondericii_mail = _mailSettings.FromEmail
             };
 
-            string sonuc = _emailService.EmailGonder(mail_icerik);
+            string sonuc = await  _emailService.EmailGonder(mail_icerik);
 
             if (sonuc == "-1")
             {

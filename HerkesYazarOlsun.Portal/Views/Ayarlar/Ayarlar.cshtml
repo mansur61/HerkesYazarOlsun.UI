@@ -39,13 +39,33 @@ else
     string tip = "ayarlar";
 }
 <input type="hidden" id="tip" value="@tip" />
-<input type="hidden" id="resss" value="@Model?.Profile?.ProfilResimBase64" />
 
+<style>
+    .profile-card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+    }
 
+        .profile-card img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+</style>
 
 <div class="container light-style flex-grow-1 container-p-y" style="margin-top:50px">
     <form method="post" enctype="multipart/form-data" class="needs-validation" id="form-ayarlar">
-        @*action="SaveOrUpdateAyarlar"*@
+         
         <h1 class="font-weight-bold py-3 mb-4">
             Ayarlar
         </h1>
@@ -81,13 +101,7 @@ else
                                 <span class="hidden-xs-down font-weight-bold">Detay Bilgiler </span>
                             </a>
                         </li>
-                        @*<li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#account-change-password" role="tab" aria-selected="false">
-                        <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                        <span class="hidden-xs-down font-weight-bold">Şifre Değiştir.</span>
-                        </a>
-                        </li>*@
-
+                        
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#account-notifications" role="tab" aria-selected="false">
                                 <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
@@ -113,7 +127,7 @@ else
                                     }
                                     else
                                     {
-                                        <input type="password" class="form-control" id="username">
+                                        <input type="text" class="form-control" id="username">
                                     }
 
                                 </div>
@@ -125,7 +139,7 @@ else
                                     }
                                     else
                                     {
-                                        <input type="password" class="form-control" id="name">
+                                        <input type="text" class="form-control" id="name">
                                     }
 
                                 </div>
@@ -133,11 +147,11 @@ else
                                     <label class="form-label">E-mail</label>
                                     @if (@Model.User != null)
                                     {
-                                        <input type="text" class="form-control" id="email" value="@Model.User.EMAIL">
+                                        <input type="text" class="form-control" id="email" value="@Model.User.EMAIL" autocomplete="new-email">
                                     }
                                     else
                                     {
-                                        <input type="password" class="form-control" id="email">
+                                        <input type="text" class="form-control" id="email" autocomplete="new-email">
                                     }
 
                                     <div class="alert alert-warning mt-3">
@@ -179,26 +193,16 @@ else
                             </div>
                             <div class="card-body pb-2">
 
-                                @* <div class="form-group">
-                                <label class="form-label">Mevcur şifre</label>
-                                @if (@Model.User != null)
-                                {
-                                <input type="password" class="form-control" id="mevcutSifre" value="@Model.User.PASSWORD">
-                                }
-                                else
-                                {
-                                <input type="password" class="form-control" id="mevcutSifre">
-                                }
-                                </div> *@
+                              
 
                                 <div class="form-group">
                                     <label class="form-label">Yeni şifre</label>
-                                    <input type="password" class="form-control" id="yeniSifre">
+                                    <input type="password" class="form-control" id="yeniSifre" autocomplete="new-password">
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label">Yeni şifreyi tekrar gir</label>
-                                    <input type="password" class="form-control" id="yeniSifreTekrar">
+                                    <input type="password" class="form-control" id="yeniSifreTekrar" autocomplete="new-password">
                                 </div>
 
                             </div>
@@ -329,31 +333,21 @@ else
                         <div class="tab-pane p-20" id="account-profil" role="tabpanel">
 
                             <div class="card-body media align-items-center">
-
-
-                                @* @{
-                                var backgroundImage = !string.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64) ?
-                                $"data:image;base64,{Html.Raw(Model.Profile.ProfilResimBase64)}" :
-                                "https://bootdey.com/img/Content/avatar/avatar1.png";
-                                }*@
-
-
-                                @if (!String.IsNullOrEmpty(Model?.Profile?.ProfilResimBase64))
-                                {
-                                    <img src="data:image;base64,@Model?.Profile?.ProfilResimBase64" alt="Book Image" style="height:300px;width:215px">
-                                }
-                                else
-                                {
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="d-block ui-w-80">
-                                }
-
-
+                                <div class="profile-card">
+                                <img src="@(!string.IsNullOrEmpty(Model?.Profile?.ProfilResimURl)
+                                                              ? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
+                                                              : Url.Content("~/lib/img/user.png"))"
+                                     alt="Profil Resmi"
+                                     class="img-fluid img-thumbnail mt-4 mb-2"
+                                     style="width: 150px;" />
+                                    @Model.User.USERNAME  
+                            </div>
                                 <div class="media-body ml-4">
                                     <label class="btn btn-outline-primary">
                                         Fotoğraf Yükle
                                         <input type="file" class="account-settings-fileinput" id="proFotoSec" onchange="dosyaSecim('profilFoto')">
                                     </label> &nbsp;
-                                    <button type="button" class="btn btn-info md-btn-flat">Sil</button>
+                                    @* <button type="button" class="btn btn-info md-btn-flat">Sil</button> *@
                                     <input type="hidden" id="profilFotoName" name="@Model.Profile?.ProfilResimName">
                                     @*<div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>*@
                                 </div>
@@ -389,16 +383,16 @@ else
                                 <div class="form-group">
 
                                     <label class="switcher">
-                                        <input type="checkbox"  checked id="yorumchk" value="yorum">
-                                       
+                                        <input type="checkbox" checked id="yorumchk" value="yorum">
+
                                         <span class="switcher-label">Birinin kitabına yorum yapıldığında kitabı yazana e-posta ile bilgi gitsin</span>
                                         @* <span class="switcher-label">Birisi kitabıma yorum yaptığında bana e-posta gönder</span> *@
                                     </label>
                                 </div>
                                 <div class="form-group">
                                     <label class="switcher">
-                                        <input type="checkbox"   id="takipchk" value="takip">
-                                 
+                                        <input type="checkbox" id="takipchk" value="takip">
+
                                         <span class="switcher-label">Birini takip ettiğinde ilgili kişiye e-posta gönder</span>
                                     </label>
                                 </div>
@@ -426,11 +420,13 @@ else
         @Html.Partial("_AlertMesaj", @tip)
 
         <br />
-        <div class="text-right mt-3">
-            @*<button type="button" class="btn btn-primary" onclick="Guncelle()">Değişiklikleri Kaydet</button>*@
+        <div class="text-right mt-3"> 
             <button class="btn btn-primary" type="submit">Kaydet</button>
             &nbsp;
             <button type="button" class="btn btn-info" onclick="Kaydetme()">Kaydetme</button>
+        </div>
+        <div id="loading-full" style="display: none; text-align: center;">
+            <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
         </div>
 
     </form>
@@ -443,27 +439,33 @@ else
 
 <script>
 
-    var hakkinda = $("#hakkinda").val();
-    var dTarih = $("#dTarih").val();
-    var twt = $("#twt").val();
-    var fcb = $("#fcb").val();
-    var lkn = $("#lkn").val();
-    var inst = $("#inst").val();
-    var tel = $("#tel").val();
-    var website = $("#website").val();
-    var yeniSifreTekrar = $("#yeniSifreTekrar").val();
-    var yeniSifre = $("#yeniSifre").val();
-    var mevcutSifre = $("#mevcutSifre").val();
-    var username = $("#username").val();
-    var name = $("#name").val();
-    var email = $("#email").val();
+       $(document).ready(function() {
+        var seciliRenkKodu = "@Model.Profile?.ProfilArkaplanRenkKodu";
+       // console.log("seciliRenkKodu ",seciliRenkKodu);
+        if(seciliRenkKodu) {
+            // butonun içini güncelle
+            var seciliRenk = $(".renkler[id='" + seciliRenkKodu + "']").attr("name");
+            $("#seciim").text(seciliRenk);
+        }
 
-    var loginId = $("#loginId").val();
-    var UserDetailId = $("#UserDetailId").val();
-    var ProfileId = $("#ProfileId").val();
-    var BildirimId = $("#BildirimId").val();
+         $('.nav-tabs .nav-link').on('click', function (e) {
+            e.preventDefault(); // URL’de # değişmesini engeller
 
-    var profilarkaplanirengi = "";
+            // Tüm tab linklerinden aktif sınıfı kaldır
+            $('.nav-tabs .nav-link').removeClass('active');
+
+            // Tüm tab pane’lerden aktif ve show sınıflarını kaldır
+            $('.tab-pane').removeClass('active show');
+
+            // Tıklanan tab’a active sınıfını ekle
+            $(this).addClass('active');
+
+            // Hedef tab-pane’i aktif yap
+            var target = $(this).attr('href');
+            $(target).addClass('active show');
+        });
+    });
+        var profilarkaplanirengi = "";
     var profilarkaplanrenkkodu = "";
 
     var isTakip = false;
@@ -473,18 +475,18 @@ else
     var ayar = $("#tip").val();
 
     $('#takipchk').change(function () {
-          isTakip = $(this).is(':checked');  
-        console.log("isTakip:", isTakip);  
+          isTakip = $(this).is(':checked');
+        console.log("isTakip:", isTakip);
     });
 
      $('#yorumchk').change(function () {
-          IsKitapYorum = $(this).is(':checked');  
-        console.log("IsKitapYorum:", IsKitapYorum);  
+          IsKitapYorum = $(this).is(':checked');
+        console.log("IsKitapYorum:", IsKitapYorum);
     });
 
      $('#yayinchk').change(function () {
-        IsKitapYayin = $(this).is(':checked');  
-        console.log("IsKitapYayin:", IsKitapYayin);  
+        IsKitapYayin = $(this).is(':checked');
+        console.log("IsKitapYayin:", IsKitapYayin);
     });
 
     var ayarEklerForm = document.getElementById('form-ayarlar');
@@ -492,7 +494,31 @@ else
     ayarEklerForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
+        $("#loading-full").css("display", "block"); 
         var formData = new FormData(this);
+
+         var hakkinda = $("#hakkinda").val();
+        var dTarih = $("#dTarih").val();
+        var twt = $("#twt").val();
+        var fcb = $("#fcb").val();
+        var lkn = $("#lkn").val();
+        var inst = $("#inst").val();
+        var tel = $("#tel").val();
+        var website = $("#website").val();
+        var yeniSifreTekrar = $("#yeniSifreTekrar").val();
+        var yeniSifre = $("#yeniSifre").val();
+        var mevcutSifre = $("#mevcutSifre").val();
+        var username = $("#username").val();
+        var name = $("#name").val();
+        var email = $("#email").val();
+
+        var loginId = $("#loginId").val();
+        var UserDetailId = $("#UserDetailId").val();
+        var ProfileId = $("#ProfileId").val();
+        var BildirimId = $("#BildirimId").val();
+
+
+
 
         var dosyaInputs = ayarEklerForm.querySelectorAll('input[type="file"]');
         console.log(dosyaInputs.length);
@@ -511,14 +537,14 @@ else
             "InstagramLink": inst,
             "LoginUserId": loginId
         };
-
+       // console.log("userDetail",userDetail);
         var profil = {
             "LoginUserId": loginId,
             "ProfilArkaplanResmi": profilarkaplanirengi,
             "ProfilArkaplanRenkKodu": profilarkaplanrenkkodu,
             "ProfilResimName": $("#profilFotoName").val()
         };
-
+       // console.log("profil",profil);
 
         var usr = {
             "NAME": name,
@@ -526,22 +552,26 @@ else
             "EMAIL": email,
             "PASSWORD": yeniSifre
         };
+        //console.log("usr",usr);
+
         var bldirim = {
             "IsTakip": isTakip,
             "IsKitapYayin": IsKitapYayin,
             "IsKitapYorum": IsKitapYorum,
             "LoginUserId": loginId
         };
-
+        // console.log("bldirim",bldirim);
         formData.append('LoginUserId', loginId);
         formData.append('UserDetailId', UserDetailId);
         formData.append('ProfileId', ProfileId);
-        formData.append('BildirimId', BildirimId);
+        formData.append('BildirimId', BildirimId); 
+
         formData.append('UserDetail', JSON.stringify(userDetail));
         formData.append('Profile', JSON.stringify(profil));
         formData.append('User', JSON.stringify(usr));
         formData.append('Bildirim', JSON.stringify(bldirim));
 
+        
         $.ajax({
             url: 'SaveOrUpdateAyarlar', // Formun gönderileceği adresi belirtin
             method: 'POST',
@@ -549,18 +579,36 @@ else
             processData: false,
             contentType: false,
             success: function (response) {
-                console.log('Başarılı dönüş: response', response);
-                console.log('Başarılı dönüş: response result ', response.result);
+                 
+                console.log('  response', response);
+                console.log('  response result ', response.result);
                 // Başarılı dönüş sonucunu işleme kodları buraya gelebilir.
                 if (response.state == 1) {
                     BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);
+                    history.replaceState(null, null, ' ');
+                    window.location.reload();
+
                 } else {
                     BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);
                 }
 
             },
-            error: function (xhr, status, error) {
-                console.error('Hata:', error);
+            error: function(xhr, status, error) {
+                
+                 BilgiVer(2, "#basarili-", "#bilgi-", "#uyari-", xhr.responseText);
+                // Konsola detaylı hata
+                console.error('AJAX Hata:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+
+                // Kullanıcıya göster
+                console.log('Hata oluştu: ' + (xhr.responseText || error));
+            },
+            complete: function () {
+                // Spinner gizle ve butonu tekrar aktif et
+                $("#loading-full").css("display", "none");
+                // $btn.prop("disabled", false);
+                // $btn.text(originalText);
             }
         });
 
@@ -613,92 +661,7 @@ else
     countChecked();
 
     $("input[type=checkbox]").on("click", countChecked);
-
-    function Guncelle() {
-        var hakkinda = $("#hakkinda").val();
-        var dTarih = $("#dTarih").val();
-        var twt = $("#twt").val();
-        var fcb = $("#fcb").val();
-        var lkn = $("#lkn").val();
-        var inst = $("#inst").val();
-        var tel = $("#tel").val();
-        var website = $("#website").val();
-        var yeniSifreTekrar = $("#yeniSifreTekrar").val();
-        var yeniSifre = $("#yeniSifre").val();
-        var mevcutSifre = $("#mevcutSifre").val();
-        var username = $("#username").val();
-        var name = $("#name").val();
-        var email = $("#email").val();
-
-        var loginId = $("#loginId").val();
-        var UserDetailId = $("#UserDetailId").val();
-        var ProfileId = $("#ProfileId").val();
-        var BildirimId = $("#BildirimId").val();
-
-
-
-        //burdan devm edersin
-        $.post("@Url.Action(nameof(AyarlarController.SaveOrUpdateAyarlar), "Ayarlar")", {
-            "LoginUserId": loginId,
-            "UserDetailId": UserDetailId,
-            "ProfileId": ProfileId,
-            "BildirimId": BildirimId,
-            "UserDetail": {
-                "HAKKINDA": hakkinda,
-                "DogumTarihi": dTarih,
-                "TEL": tel,
-                "WebSite": website,
-                "TwitterLink": twt,
-                "FacebookLink": fcb,
-                "LinkedinLink": lkn,
-                "InstagramLink": inst,
-                "LoginUserId": loginId
-            },
-            "Profile": {
-                "LoginUserId": loginId,
-                "ProfilArkaplanResmi": profilarkaplanirengi,
-                "ProfilArkaplanRenkKodu": profilarkaplanrenkkodu
-            },
-            "User": {
-                "NAME": name,
-                "USERNAME": username,
-                "EMAIL": email,
-                "PASSWORD": yeniSifre
-            },
-            "Bildirim": {
-                "IsTakip": isTakip,
-                "IsKitapYayin": IsKitapYayin,
-                "IsKitapYorum": IsKitapYorum,
-                "LoginUserId": loginId
-            }
-
-        }, function (data) {
-            if (data.state == 1) {
-                $("#basarili-" + ayar).css("display", "block");
-                $("#basarili-" + ayar + " #mesaj").html(data.message);
-
-                $("#bilgi-" + ayar).css("display", "none");
-                $("#uyari-" + ayar).css("display", "none");
-
-            }
-            else if (data.state == 3) {
-                $("#bilgi-" + ayar).css("display", "block");
-                $("#bilgi-" + ayar + " #mesaj").html(data.message);
-
-                $("#basarili-" + ayar).css("display", "none");
-                $("#uyari-" + ayar).css("display", "none");
-            }
-            else {
-                $("#uyari-" + ayar).css("display", "block");
-                $("#bilgi-" + ayar).css("display", "none");
-                $("#basarili-" + ayar).css("display", "none");
-                $("#uyari-" + ayar + " #mesaj").html(data.message);
-            }
-
-        });
-
-    }
-
+ 
     function Kaydetme() {
         location.reload();
         // window.location.href = "/Home/Index";
@@ -707,13 +670,13 @@ else
     $("#emailKod").css("display", "none");
 
 
-    function EpostaDogrula() {
-        $("#emailKod").css("display", "block");
+    function EpostaDogrula() {       
         var email = $("#email").val();
         $.post("@Url.Action(nameof(EmailController.Gonder), "Email")", { "kime": email },
             function (data) {
-                //console.log(data.message);
-                $("#maileGidenKod").val(data.message); 
+                console.log(data.message);
+                 $("#emailKod").css("display", "block");
+                $("#maileGidenKod").val(data.message);
             });
     }
 
@@ -750,14 +713,14 @@ else
         $("#loading").css("display", "block");
 
         $("#emailKod").css("display", "block");
-        
+
         var maileGidenKod = $("#maileGidenKod").val();
 
         if (girilenKod == maileGidenKod) {
 
             $.post("@Url.Action(nameof(EmailController.PostEmailDogrula), "Email")", { "email": email },
                 function (data) {
-                    $("#loading").css("display", "none"); 
+                    $("#loading").css("display", "none");
                     if (data.state == 1) {
                         $("#basarili-" + ayar).css("display", "block");
                         $("#basarili-" + ayar + " #mesaj").html("Kod Doğrulama Başarılı");

@@ -1,4 +1,9 @@
-﻿<div class="about-section">
+﻿@{
+    ViewData["Title"] = " ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ 
+<div class="about-section">
     <div class="container">
         <div class="content-box text-dark py-5">
             <h2 class="title text-center">📖 Hakkımızda</h2>
@@ -34,63 +39,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    /* Genel stil ve gri arka plan */
-    .about-section {
-        background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
-        padding: 60px 15px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Başlık stili */
-    .title {
-        font-size: 2.5rem;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    /* Açıklama metni */
-    .description {
-        font-size: 1.3rem;
-        margin-top: 10px;
-    }
-
-    /* Öne çıkan kutular */
-    .info-box {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        margin-top: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-        /* Liste stilleri */
-        .info-box ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-            .info-box ul li::before {
-                content: "✅";
-                margin-right: 8px;
-            }
-
-    /* Çağrı butonu */
-    .cta-box {
-        margin-top: 30px;
-    }
-
-    .cta-text {
-        font-size: 1.4rem;
-        font-weight: bold;
-    }
-
-    .btn-lg {
-        font-size: 1.3rem;
-        padding: 12px 24px;
-        border-radius: 30px;
-        font-weight: bold;
-    }
-</style>

@@ -38,6 +38,11 @@ namespace HerkesYazarOlsun.Portal.Helpers.Extensions
             var email = user.Claims.Where(x => x.Type == "email").FirstOrDefault();
             return email != null ? email.Value : "";
         }
+        public static string GetUserName(this ClaimsPrincipal user)
+        {
+            var usrName = user.Claims.Where(x => x.Type == "username").FirstOrDefault();
+            return usrName != null ? usrName.Value : "";
+        }
 
         public static long GetLoginUserId(this ClaimsPrincipal user)
         {

@@ -20,7 +20,7 @@ namespace HerkesYazarOlsun.Portal.Services
                 //HttpContextHelper.Current;
         }
 
-        protected async Task<string> GetData(string url, long? tckimlikno = null)
+        protected async Task<string> GetData(string url, long? tckimlikno = null,string? eposta=null)
         {
             var client = new GetHttpClientCustom().GetHttpClient();
             tckimlikno ??= _httpContextAccessor?.User.GetTcKimlikNo();
@@ -32,7 +32,11 @@ namespace HerkesYazarOlsun.Portal.Services
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
             client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
-            client.DefaultRequestHeaders.Add("email", mail?.ToString());
+            
+            if (string.IsNullOrEmpty(mail))
+            {
+                mail = eposta;
+            }
 
             var ip = _httpContextAccessor?.User.GetIpAddress();
             client.DefaultRequestHeaders.Add("ip", ip);

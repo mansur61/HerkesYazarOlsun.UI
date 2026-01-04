@@ -1,30 +1,27 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Model.Utils;
 @using HerkesYazarOlsun.Model.ViewModel;
 @using HerkesYazarOlsun.Portal.Controllers;
+@using System.Text.Json
+@using HerkesYazarOlsun.Portal.Services
 
-@{
-    //Model.kitapSliderYometimAdi = "index";
-    //int sliderSayisi = 0;
-
-    int sliderdaGosterilecekKayit = 5;
+@{ 
+    int sliderdaGosterilecekKayit = Model.sliderdaGosterilecekKayit.Value;
     Model.End = sliderdaGosterilecekKayit;
     int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
     int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
 
     int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-    int start = 0;
-    // int end = 5;
-
-
+    int start = 0; 
+     
     Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
     Model.Start = @start;
+
+ 
 }
-
-@*@Html.Partial("_KitapSliderItemYonetimleri",@Model)*@
-
+ 
 <div id="my-pics-@Model.Tip" class="carousel slide" data-ride="carousel"
-     style="width:1050px;margin:5px auto;background-color:aliceblue;height:430px">
+     style="width:100%;max-width:1200px;margin:5px auto;background-color:aliceblue;height:430px">
    @*  <p>@Model.isAnaSayfa</p> *@
 
     <ol class="carousel-indicators">
@@ -40,37 +37,24 @@
             }
         }
     </ol>
-
+    @{ 
+        int perSlide = (int)Math.Ceiling(Model.VMBooksList.Count / (double)sliderSayisi);
+    }
     <!-- Content -->
     <div class="carousel-inner" role="listbox" style="width:100%">
-
-        @*@Html.Partial("Kitaplar",@Model)*@
-        @*@Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)*@
-
-        @for (int i = 0; i < @sliderSayisi; i++)
+        @for (int i = 0; i < sliderSayisi; i++)
         {
-
-            @if (i == 0)
+            var slideModel = new VM_BOOKS_DETAIL
             {
+                VMBooksList = Model.VMBooksList.Skip(i * perSlide).Take(perSlide).ToList(),
+                Tip = Model.Tip,
+                isAnaSayfa = Model.isAnaSayfa
+            };
 
-                <div class="item active">
-
-                    @Html.Partial("_KitaplarItem", @Model)
-
-                </div>
-            }
-            else
-            {
-                <div class="item">
-
-                    @Html.Partial("_KitaplarItem", @Model)
-
-                </div>
-            }
-
+            <div class="item @(i == 0 ? "active" : "")">
+                @Html.Partial("_KitaplarItem", slideModel)
+            </div>
         }
-
-
     </div>
 
     <!-- Previous/Next controls -->

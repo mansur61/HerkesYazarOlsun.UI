@@ -57,8 +57,7 @@ ScaffoldingReadMe.txt
 # JetBrains Rider
 .idea/
 
-# Node.js dependencies
-node_modules/
+# Node.js dependencies 
 
 # VS Code settings
 .vscode/

@@ -1,0 +1,560 @@
+﻿@using HerkesYazarOlsun.Portal.Controllers
+@using System.Text.RegularExpressions
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
+
+@{
+    string tip = "ilgilisayfaguncelle";
+}
+<input type="hidden" id="tip" value="@tip" />
+
+<div id="container">
+    <nav>
+        <ul>
+            <li><a id='first' href="#">First page</a></li>
+            <li><a id='back' href="#">Back</a></li>
+            <li><a id='next' href="#">Next</a></li>
+            <li><a id='last' href="#">Last page</a></li>
+            <li><a id='zoomin' href="#">Zoom In</a></li>
+            <li><a id='zoomout' href="#">Zoom Out</a></li>
+            <li><a id='slideshow' href="#">Slide Show</a></li>
+            <li><a id='flipsound' href="#">Flip sound</a></li>
+            <li><a id='fullscreen' href="#">Fullscreen</a></li>
+            <li><a id='thumbs' href="#">Thumbs</a></li>
+            <li>
+                <img src="@Url.Content("~/wowbook/images/switch.png")"
+                     alt="Çıkış"
+                     style="width:45px; height:45px; cursor:pointer;"
+                     onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=@ViewBag.KITAPENC';" />
+            </li>
+        </ul>
+    </nav>
+    @* <p>
+        @Html.Partial("_AlertMesaj", @tip)
+    </p>   *@  
+    <input type="hidden" id="guncellenecekSayfaId" />
+    <div id="main">
+
+        <div id='features'>
+
+            <div>
+                @if (@ViewBag.VM_KITAP.ONKAPAKFOTOPATH == "-1")
+                {
+
+                    <img src="/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
+                }
+                else
+                {
+                    <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)"
+                         alt="Sayfa resmi" width="100%" height="100%" />
+
+                }
+
+            </div>
+
+            <!-- Gizli audio -->
+            <audio id="flipSound" style="display:none">
+                <source src="@Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
+            </audio>
+            <h1>
+                <p style="font-size:40px;text-align:center;color:white">Önsöz</p>
+                <p style="font-size:20px;">@Html.Raw(Model.BookModel.ONSOZ)</p>
+            </h1>
+
+            @foreach (var item in Model.BookModel.BooksPageList)
+            {
+                var temizHtml = Regex.Replace(item.PageWrite, "<img[^>]*>", "", RegexOptions.IgnoreCase);
+
+                // img placeholder → gerçek görüntü
+                temizHtml = Regex.Replace(temizHtml, @"\|\|img_BooksPage\|\|", "", RegexOptions.IgnoreCase);
+
+                <div style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
+                    @if (Model.IsWowBookEdit)
+                    {
+                        <button class="btn btn-warning" onclick="KitabiGuncelle('@item.ID')">
+                            Sayfayı Güncelle
+                        </button>
+                    }
+
+                    <div class='feature pagefx hardpage' style="width:350px">
+                        <p style="font-size:12px;">@Html.Raw(temizHtml)</p>
+
+
+                        @if (item.PageWrite.Contains("||img_BooksPage||"))
+                        {
+                            @if (!string.IsNullOrEmpty(@item.PageFoto))
+                            {
+                                <div class="resimWrapper" style="position:relative; margin-top:10px; display:inline-block;">
+
+                                    <img src="https://herkesyazarolsun.com.tr/Belgeler/@item.PageFoto"
+                                         style="width:100%; height:auto; border-radius:4px;" />
+                                    @if (Model.IsWowBookEdit)
+                                    {
+
+                                        <!-- Sil ikonu -->
+                                        <button type="button"
+                                                class="resimSilBtn"
+                                                onclick='resmiSil(this, @Html.Raw(Json.Serialize(item)))'
+                                                style="
+                                                    position:absolute;
+                                                    top:5px;
+                                                    right:5px;
+                                                    background-color:#e74c3c;
+                                                    color:white;
+                                                    border:none;
+                                                    border-radius:50%;
+                                                    width:28px;
+                                                    height:28px;
+                                                    font-weight:bold;
+                                                    cursor:pointer;
+                                                    box-shadow:0 2px 4px rgba(0,0,0,0.3);
+                                                ">
+                                            ✖
+                                        </button>
+                                    }
+                                </div> 
+                            }
+
+                        }
+
+                    </div>
+                </div>
+            }
+
+
+            <div>
+                <img src="~/wowbook/images/cover_last.png" alt="Arka Kapak" width="100%" height="100%" />
+            </div>
+
+            <div class='feature hardpage'>
+
+
+                @if (@ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH == "-1")
+                {
+
+                    <img src="/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
+                }
+                else
+                {
+                    <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH)"
+                         alt="Arka Kapak" width="100%" height="100%" />
+                }
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div style="height:20px"></div>
+@* @Html.Partial("_AlertMesaj", @tip) *@
+
+<!-- Popup div -->
+<div id="guncelle" style="
+    display:none; position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);
+    width: 600px;       /* popup genişliği */
+    max-width: 90%;     /* responsive */
+    max-height: 80vh;   /* ekranın %80'i kadar yükseklik */
+    overflow-y: auto;   /* taşarsa scroll */
+    background-color: #fff;    border: 2px solid #333;
+    border-radius: 8px; padding: 20px;z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+    <form id="guncelleForm" action="PostBooksPageUpdate" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Sayfa Güncelle</h4>
+                <br />
+                <div id="sayfaYaiziyAlEditor" style="height: 400px;"></div>
+
+                <textarea id="sayfaYaiziyAl" name="SAYFAYAZI" hidden></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                @Html.Partial("_AlertMesaj", @tip)
+            </div>
+            <div class="col-md-4">
+                <div style="text-align:right; margin-top:10px;">
+                
+                    <button type="button" class="btn btn-warning" onclick="Guncelle()">
+                        Güncelle
+                    </button>
+                    <button type="button" class="btn btn-info" onclick="KapatGuncelle()">Kapat</button>
+                </div>
+            </div>
+        </div>
+        
+    </form>
+
+</div>
+
+<!-- Progress overlay -->
+<div id="progressOverlay" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 99999;
+    text-align:center;
+">
+    <div style="
+        position:absolute;
+        top:50%; left:50%;
+        transform:translate(-50%, -50%);
+        color:white;
+        font-size:18px;
+    ">
+        Güncelleniyor... Lütfen bekleyin
+    </div>
+</div>
+
+<script src="~/js/general.js"></script>
+
+<div id="alertOverlay" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    z-index:99999;
+    backdrop-filter:blur(2px);
+">
+    <div id="alertBox" style="
+        width:360px;
+        margin:15% auto;
+        background:white;
+        border-radius:12px;
+        padding:20px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.25);
+        text-align:center;
+        font-family:Arial;
+    ">
+        <div id="alertMessage" style="font-size:16px; margin-bottom:20px;"></div>
+
+        <button id="alertOkBtn" style="
+            padding:10px 30px;
+            background:#3498db;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:15px;
+        ">
+            Tamam
+        </button>
+    </div>
+</div>
+
+<div id="confirmOverlay" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+    z-index:99999;
+    backdrop-filter:blur(2px);
+">
+    <div id="confirmBox" style="
+        width:360px;
+        margin:15% auto;
+        background:white;
+        border-radius:12px;
+        padding:20px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.25);
+        text-align:center;
+        font-family:Arial;
+    ">
+        <div id="confirmMessage" style="font-size:16px; margin-bottom:20px;"></div>
+
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button id="confirmOkBtn" style="
+                padding:10px 25px;
+                background:#3498db;
+                color:white;
+                border:none;
+                border-radius:6px;
+                cursor:pointer;
+                font-size:15px;
+                min-width:90px;
+            ">
+                Tamam
+            </button>
+
+            <button id="confirmCancelBtn" style="
+                padding:10px 25px;
+                background:#aaa;
+                color:white;
+                border:none;
+                border-radius:6px;
+                cursor:pointer;
+                font-size:15px;
+                min-width:90px;
+            ">
+                İptal
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            if (typeof Quill === 'undefined') {
+            console.error('Quill yüklü değil! CDN/Script include kontrol et.');
+            return;
+            }
+
+            window.quill = window.quill || new Quill('#sayfaYaiziyAlEditor', {
+            theme: 'snow',
+            placeholder: 'Sayfanızı buraya yazın...',
+            modules: {
+                toolbar: [
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                ['image'],//'link',
+                [{ 'align': [] }],
+                ['clean']
+                ]
+            }
+            });
+
+
+        const hiddenTextarea = document.getElementById('sayfaYaiziyAl');
+
+        if (!hiddenTextarea) {
+            console.error('Textarea #sayfaYaiziyAl bulunamadı!');
+            return;
+        }
+        window.quill.on('text-change', () => { hiddenTextarea.value = window.quill.root.innerHTML; });
+
+    });
+
+    window.bookPagesData = {};
+    @foreach (var item in Model.BookModel.BooksPageList)
+    {
+                    <text>
+                        window.bookPagesData["@item.ID"] = @Html.Raw(Json.Serialize(item));
+                    </text>
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    function showAlert(message) {
+        const overlay = document.getElementById("alertOverlay");
+        const msg = document.getElementById("alertMessage");
+        const okBtn = document.getElementById("alertOkBtn");
+
+        msg.innerHTML = message;
+        overlay.style.display = "block";
+
+        okBtn.onclick = () => {
+            overlay.style.display = "none";
+        };
+    }
+
+
+     function resmiSil(btn, item) {
+        // console.log("resmiSil",item);
+
+        item.pageWrite = item.pageWrite.replaceAll(`||img_BooksPage||`, "");
+
+       // console.log("resmiSil2 ",item);
+        window.bookPagesData[item.id] = item;
+        $("#sayfaYaiziyAl").val( item.pageWrite);
+        window.quill.root.innerHTML =  item.pageWrite;
+
+         let wrapper = btn.closest(".resimWrapper");
+        if (wrapper) wrapper.remove();
+    }
+
+
+    function KitabiGuncelle(id) {
+        $("#guncelle").css("display", "block");
+        $("#guncellenecekSayfaId").val(id);
+
+        var sayfaIcerikItem = window.bookPagesData[id] || {};
+        //console.log("sayfaIcerikItem ",sayfaIcerikItem);
+        let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
+        let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
+        let count = matches ? matches.length : 0;
+
+        if(count != 0){
+          showAlert("Güncelleme işleminde resmi güncellemek isterseniz önce resmi X ikonundan siliniz.  Sonra  tekrardan  istediğiniz resmi yükleyebilirsiniz. Her sayfa 1 resim içermelidir");
+
+        }
+
+        if(count != 0 ){
+            if (sayfaIcerikItem.pageFoto) {
+                let imgPath = `https://herkesyazarolsun.com.tr/Belgeler/${sayfaIcerikItem.pageFoto}`;
+
+                let imageWrapperHtml = `  <img
+                            src="${imgPath}"
+                            style="width:100%; height:auto; border-radius:4px; " />
+                `;
+
+                sayfaIcerik = sayfaIcerik.replaceAll("||img_BooksPage||", imageWrapperHtml);
+            }else{
+                sayfaIcerik = sayfaIcerik.replaceAll("||img_BooksPage||", "");
+            }
+        }
+
+
+        let sayfaIcerikCleaned = sayfaIcerik ;
+
+        // Quill editöre yükle
+        if (window.quill) {
+           // window.quill.root.innerHTML = sayfaIcerikCleaned;
+            window.quill.clipboard.dangerouslyPasteHTML(sayfaIcerikCleaned);
+            //document.getElementById('sayfaYaiziyAl').value = sayfaIcerikCleaned;
+        } else {
+            console.error("Quill yüklenmedi!");
+        }
+
+        // Eğer hidden textarea’ya da ekleyeceksen
+        document.getElementById('sayfaYaiziyAl').value = sayfaIcerikCleaned;
+
+    }
+
+    function AcGuncelle() {
+        document.getElementById('guncelle').style.display = 'block';
+    }
+
+    function KapatGuncelle() {
+        document.getElementById('guncelle').style.display = 'none';
+    }
+
+
+    function Guncelle() {
+        
+         var form = document.getElementById("guncelleForm");
+           var id = $("#guncellenecekSayfaId").val();        // hidden input’tan al
+           if(!id) { console.error("Sayfa ID yok!"); return; }
+
+           var sayfaIcerikItem = window.bookPagesData[id] || {};
+            //console.log("sayfaIcerikItem:", sayfaIcerikItem );
+             let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
+            let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
+            let count = matches ? matches.length : 0;
+
+             var formData = new FormData(form);
+
+               formData.append('PageWriteBase64', "PageWriteBase64");
+               formData.append('ID', id);
+                formData.append("BookId", sayfaIcerikItem.bookId);
+
+            if(count == 0){ // sayfada herhangi bir foto yok
+               // console.log("sayfada herhangi bir foto yok");
+                var quilIcerik = window.quill.root.innerHTML;
+               // console.log("quilIcerik:", quilIcerik );
+              
+                   formData.append("isWordPDF", false);
+                const base64Images = extractBase64Images(quilIcerik);
+                 //console.log("base64Images:",base64Images);
+                let pageFotoNames = [];
+                if (base64Images.length !== 0){
+                     base64Images.forEach((img, i) => {
+                        let file = base64ToFile(img, "image_KitapSayfaGuncelleme_" + i + ".png");
+                         formData.append(`PageFotoList[${i}]`, img);
+                         pageFotoNames.push("image_KitapSayfaGuncelleme_" + i + ".png");
+                        formData.append("PageFotoDosyalar", file);
+                    });
+                    let pageFotos = pageFotoNames.join("||");
+                    formData.append("PageFoto", pageFotos);
+
+                }
+                 quilIcerik = quilIcerik.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/g, "||img_BooksPage||");
+              // console.log("quilIcerik:", quilIcerik );
+                formData.append('PageWrite', quilIcerik);
+
+                 $("#progressOverlay").show();
+            setTimeout(function() {  }, 3000);
+
+            Gonder(formData);
+            }else{
+                showConfirm("En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?",
+                function (onay) {
+                    if (!onay) return;
+                     
+
+                      formData.append("PageWrite", sayfaIcerikItem.pageWrite || "");
+                       formData.append("PageWriteBase64", "PageWriteBase64");
+                       formData.append("ID", id);
+                       formData.append("BookId", sayfaIcerikItem.bookId);
+                        formData.append("isWordPDF", false);
+                       formData.append("PageFotoDosyalar", sayfaIcerikItem.pageFotoDosyalar); 
+                        formData.append("PageFoto", sayfaIcerikItem.pageFoto );
+
+                        var quilIcerik = window.quill.root.innerHTML;                           
+                          quilIcerik = quilIcerik.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/g, "");
+                          window.quill.root.innerHTML = quilIcerik;
+                          //console.log("quilIcerik:", quilIcerik );
+                            
+                          $("#progressOverlay").show();
+                        setTimeout(function() {  }, 3000);
+                        
+
+                         Gonder(formData);
+                });
+            }
+          
+    }
+
+    function Gonder(formData){
+        var tip = $("#tip").val();
+          //console.log("tip" ,tip );
+              /*for (let pair of formData.entries()) {
+                    console.log(pair[0] + ": ", pair[1]);
+                }*/
+           $.ajax({
+             url: '/Kitaplar/PostBooksPageUpdate', // Formun gönderileceği adresi belirtin
+             method: 'POST',
+             data: formData, // Form verilerini FormData nesnesiyle al
+             processData: false,
+             contentType: false,
+             success: function (data) {
+                  $("#progressOverlay").hide(); // işlemin sonunda gizle
+
+                    if (data.state == 1) {
+                        $("#basarili-" + tip).css("display", "block");
+                        $("#basarili-" + tip + " #mesaj").html("Güncellendi");
+
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#uyari-" + tip).css("display", "none");
+
+                        setTimeout(function () {
+                            var link = window.location.href;
+
+                            window.location.href = link;
+                            //console.log("link " + link);
+
+                            window.location.reload()
+
+                        }, 3000);
+                    }
+                    else if (data.state == 3) {
+                        $("#bilgi-" + tip).css("display", "block");
+                        $("#bilgi-" + tip + " #mesaj").html("Güncellenemedi");
+
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip).css("display", "none");
+                    }
+                    else {
+                        $("#uyari-" + tip).css("display", "block");
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip + " #mesaj").html("Güncellenemedi");
+                    }
+             },
+               error: function (xhr, status, error) {
+                    $("#progressOverlay").hide();
+                        //alert("Sunucu hatası! Lütfen tekrar deneyin.");
+                        $("#uyari-" + tip).css("display", "block");
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip + " #mesaj").html("Sunucu hatası! Lütfen tekrar deneyin");
+                }
+         });
+
+    }
+
+</script>

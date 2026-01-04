@@ -1,7 +1,5 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using HerkesYazarOlsun.Model.Entity;
+﻿using HerkesYazarOlsun.Model.Entity;
 using HerkesYazarOlsun.Model.Utils;
-using HerkesYazarOlsun.Model.ViewModel;
 using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
@@ -9,7 +7,7 @@ namespace HerkesYazarOlsun.Portal.Services
     public class TaleplerService : BaseService
     {
 
-        public ServiceResult TalepKaydet(TALEPLER talepler)
+        public ServiceResult TalepKaydet(Talepler talepler)
         {
             string stringData = JsonConvert.SerializeObject(talepler);
             Task<string> jsonContent = PostData("api/Talepler/TalepKaydet", stringData);
