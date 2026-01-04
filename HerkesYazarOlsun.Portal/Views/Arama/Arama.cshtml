@@ -3,9 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section scripts{
+@* @section scripts{
     <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-}
+} *@
 @section Styles{
     <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
@@ -16,26 +16,7 @@
 
 @{
     Model.kitapSliderYometimAdi = "arama";
-    //int sidebardaGosterilecekKayit = 3;
-
-    //int sidebarKalan = (@Model.VMBooksList.Count() % sidebardaGosterilecekKayit);
-    //int sidebarBolum = (@Model.VMBooksList.Count() / sidebardaGosterilecekKayit);
-    //int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
-
-    //int sliderdaGosterilecekKayit = 6;
-
-    //int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
-    //int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
-
-    //int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-
-    //Model.kalan = @kalan;
-    //Model.bolum = @bolum;
-    //Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-    //Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
-    //Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
-    //Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "arama";
-    //Model.Tip = "arama";
+     
 }
 @Html.Partial("_KitapSliderItemYonetimleri",@Model)
 

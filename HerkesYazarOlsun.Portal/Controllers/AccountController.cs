@@ -122,6 +122,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     claims.Add(new Claim("ip", ip));
                     claims.Add(new Claim("adi", sonuc.Result.NAME ?? ""));
                     claims.Add(new Claim("soyadi", sonuc.Result.SURNAME ?? ""));
+                    claims.Add(new Claim("username", sonuc.Result.USERNAME ?? ""));
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var principal = new ClaimsPrincipal(identity);

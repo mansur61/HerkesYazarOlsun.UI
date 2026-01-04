@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
@@ -14,49 +15,59 @@
 }
 <br />
 
-@section scripts{
+@* @section scripts{
     <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-}
+} *@
 @section Styles{
     <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
 }
-
-
+ 
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
+
 <div class="container">
 
     <div class="row">
         <div class="col-md-3">
             <br />
             <ul class="list-group list-group-horizontal">
+
                 <li class="list-group-item">
-                    <i class="bi bi-book"><span style="width:5px;"></span></i> <a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a>
+                    <span class="me-2">📚</span>
+                    <a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a>
                 </li>
+
                 <li class="list-group-item">
-                    <i class="bi bi-person-lines-fill"><span style="width:5px;"></span></i> <a href="/Kisi/TumYazarlar">Tüm Yazarlar</a>
+                    <span class="me-2">👤</span>
+                    <a href="/Kisi/TumYazarlar">Tüm Yazarlar</a>
                 </li>
+
                 <li class="list-group-item">
-                    <i class="bi bi-building"><span style="width:5px;"></span></i> <a href="">Yayın Evini Kazanan Kitaplar</a>
+                    <span class="me-2">🏢</span>
+                    <a href="/Kitaplar/YayinEviKitaplar?YayinlananKitaplar=true">Yayın Evini Kazanan Kitaplar</a>
                 </li>
+
                 @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                 {
                     <li class="list-group-item">
-                        <i class="bi bi-pencil-square"><span style="width:5px;"></span></i> <strong>
+                        <span class="me-2" style="font-size:20px;">✏️</span>
+                        <strong>
                             <a style="font-size:20px" href="/Kitaplar/KitapOlustur?isYazmayaDevamEt=false">KİTAP YAZ</a>
-                             
                         </strong>
                     </li>
+
                     <li class="list-group-item">
-                        <i class="bi bi-file-earmark-arrow-up"><span style="width:5px;"></span></i>
+                        <span class="me-2" style="font-size:20px;">⬆️📄</span>
                         <strong>
                             <a href="/Kitaplar/KitapEkleWordOrPdf">
-                                <span style="font-size:20px">WORD</span> veya <span style="font-size:20px">PDF</span>'ten Aktarım
+                                <span style="font-size:20px">WORD</span> veya
+                                <span style="font-size:20px">PDF</span>'ten Aktarım
                             </a>
                         </strong>
                     </li>
                 }
             </ul>
+
         </div>
 
         <div class="col-md-9">
@@ -78,14 +89,40 @@
     </div>
 </div>
 
+@functions {
+    private string GetDominantStar(VM_Stars stars)
+    {
+        var values = new Dictionary<string, int>
+        {
+            { "yildiz1", stars.BirStarToplam },
+            { "yildiz2", stars.IkiStarToplam },
+            { "yildiz3", stars.UcStarToplam },
+            { "yildiz4", stars.DortStarToplam },
+            { "yildiz5", stars.BesStarToplam }
+        };
+        if (values.All(v => v.Value == 0))
+            return "yildiz0";
+
+        int maxValue = values.Max(v => v.Value);
+        var maxItems = values.Where(v => v.Value == maxValue).ToList();
+
+        if (maxItems.Count > 1)
+            return "yildiz5";
+
+        return maxItems.First().Key;
+    }
+}
+
 @{
-    tipsec = "yildizalan";
-    // tipsec = "yayin";
+    tipsec = "yildizalan"; 
     Model.Tip = @tipsec;    
-    tempYildizBookList = temp.Where(p => p.Stars.HangiStar == "yildiz5").ToList();
+    tempYildizBookList = temp
+         .Where(p => GetDominantStar(p.Stars) == "yildiz5")
+         .ToList();
     Model.VMBooksList = tempYildizBookList;
 }
-@* <p>5 yildizalan kitap sayısı: @(tempYildizBookList?.Count ?? 0)</p> *@
+ 
+
 @Html.Partial("_KitapSliderGosterimleri", @Model)
 
 <div style="height:50px;"></div>
@@ -98,7 +135,7 @@
     </div>
 </div> 
 @{
-    // tipsec = "begenilen";
+    
     tipsec = "yorumalan";
     Model.Tip = @tipsec;
     // Yorum sayısına göre sıralanmış en çok yorum alan 10 kitabı seç
@@ -108,8 +145,8 @@
      //.Take(10)
      .ToList();
     Model.VMBooksList = tempYorumBookList;
-}
-@* <p>Yorum alan kitap sayısı: @(tempYorumBookList?.Count ?? 0)</p> *@
+} 
+
 @Html.Partial("_KitapSliderGosterimleri",@Model)
 
 <div style="height:50px;"></div>
@@ -124,18 +161,17 @@
 </div>
 
 @{
-    tipsec = "digerkitaplar";
-    // tipsec = "okunan";
+    tipsec = "digerkitaplar"; 
     Model.Tip = @tipsec;
     Model.VMBooksList = temp;
     // İlk 10 yorum alan ve 5 yıldızlı kitapları hariç tut
-    tempDigerBookList = temp
-                        .Where(p => p.BooksComments.Count <= tempDigerBookList.OrderByDescending(b => b.BooksComments.Count).Skip(10).Select(b => b.BooksComments.Count).FirstOrDefault())
-                        .Where(p => p.Stars.HangiStar != "yildiz5")
-                        .ToList();
+    tempDigerBookList = temp 
+         .Where(p => !p.BooksComments.Any()) // hiç yorum almayanlar
+            .Where(p => p.Stars.HangiStar != "yildiz5")       // 5 yıldızlı olmayanlar
+    .ToList();
     Model.VMBooksList = tempDigerBookList;
-}
-@* <p>digerkitaplar kitap sayısı: @(tempDigerBookList?.Count ?? 0)</p> *@
+} 
+
 @Html.Partial("_KitapSliderGosterimleri",@Model)
 
 

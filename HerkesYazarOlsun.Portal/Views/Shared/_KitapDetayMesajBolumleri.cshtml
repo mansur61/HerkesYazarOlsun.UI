@@ -3,101 +3,14 @@
 @using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Controllers;
+ 
 
-<style>
-    .product_description_area .tab-content .total_rate .box_total {
-        background: #f1f6f7;
-        text-align: center;
-        padding-top: 20px;
-        padding-bottom: 20px
-    }
-
-        .product_description_area .tab-content .total_rate .box_total h4 {
-            font-size: 48px;
-            font-weight: bold;
-            color: #384aeb
-        }
-
-        .product_description_area .tab-content .total_rate .box_total h5 {
-            color: #333333;
-            margin-bottom: 0px;
-            font-size: 24px
-        }
-
-        .product_description_area .tab-content .total_rate .box_total h6 {
-            font-family: "Roboto",sans-serif;
-            margin-bottom: 0px;
-            font-size: 14px;
-            color: #555555;
-            font-weight: normal
-        }
-         
-
-</style>
-
-<style>
-    .oranlar-container {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-        .oranlar-container h3 {
-            text-align: center;
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-    .oranlar-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-        .oranlar-table th, .oranlar-table td {
-            padding: 12px;
-            text-align: left;
-            font-size: 16px;
-        }
-
-        .oranlar-table th {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .oranlar-table tr:nth-child(even) {
-            background-color: #f1f1f1;
-        }
-
-        .oranlar-table td {
-            background-color: #ecf0f1;
-        }
-
-    .oran-value {
-        font-weight: bold;
-        color: #16a085;
-    }
-
-    .oranlar-table td .oran-value {
-        font-size: 18px;
-    }
-</style>
-<style>
-    #istatistikChart {
-        max-width: 300px;
-        max-height: 300px;
-        margin: auto;
-        display: block;
-    }
-</style>
+<link href="~/lib/css/kitap_detay_mesaj_bolumler.css" rel="stylesheet" />
 
 <input type="hidden" id="kitapId" name="kitapId" value="@Model.BookModel.ID" />
 <input type="hidden" id="degerlendirmemesaicin" value="degerlendirme" />
 <input type="hidden" id="yorummesajiicin" value="yorumicin" />
-
+ 
 
 @{
     string alertmesajgostermedurumu = ""; 
@@ -194,8 +107,48 @@
                     </table>
                 </div>
             </div>
+           
             <div class="tab-pane fade" id="yorumlar" role="tabpanel" aria-labelledby="yorumlar-tab">
-                <div class="row">
+                <div class="row">                   
+                    <div class="col-lg-6">
+                        @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
+                        {
+                            <div class="review_box">
+                                <h4>Yorum Yaz</h4>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Adınızı giriniz">
+                                    </div>
+                                </div>
+                                @* <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="email" name="email" placeholder="Mail adresiniz">
+                                    </div>
+                                </div> *@
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" type="text" id="message" name="message" rows="10" placeholder="Mesajınız"></textarea>
+                                    </div>
+                                </div>
+                                @{
+                                    alertmesajgostermedurumu = "yorumicin";
+                                }
+                                @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
+
+                                <div class="col-md-12 text-right">
+                                    <button onclick="YorumYap()" class="btn primary-btn">Gönder</button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="review_box">
+                                <h4>Gözlemci Modunda Yorum Yapamazsınız.</h4>
+                            </div>
+                        }
+                    </div>
+
                     <div class="col-lg-6">
                         <div style="height:30px">
                             <h3><strong>Yorumlar</strong></h3>
@@ -226,111 +179,13 @@
                         }
 
                     </div>
-                    <div class="col-lg-6">
-                        @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
-                        {
-                            <div class="review_box">
-                                <h4>Yorum Yaz</h4>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Adınızı giriniz">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="email" name="email" placeholder="Mail adresiniz">
-                                    </div>
-                                </div>
 
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control" type="text" id="message" name="message" rows="10" placeholder="Mesajınız"></textarea>
-                                    </div>
-                                </div>
-                                @{
-                                    alertmesajgostermedurumu = "yorumicin";
-                                }
-                                @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
-
-                                <div class="col-md-12 text-right">
-                                    <button onclick="YorumYap()" class="btn primary-btn">Gönder</button>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="review_box">
-                                <h4>Gözlemci Modunda Yorum Yapamazsınız.</h4>
-                            </div>
-                        }
-                    </div>
                 </div>
             </div>
+           
             <div class="tab-pane fade " id="degerlendirme" role="tabpanel" aria-labelledby="degerlendirme-tab">
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="row total_rate">
-                            <div class="col-6">
-                                <div class="box_total">
-                                    <h5>En fazla Yıldız</h5>
-
-                                    @{
-                                        Model.BookModel.Stars.isToplam = false;
-                                    }
-
-                                    <h4>@Html.Partial("_YildizGoster", @Model.BookModel.Stars)</h4>
-
-
-                                    <h6><strong>(@Model.BookModel.Stars.EnFazlaSitar)</strong></h6>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="rating_list">
-                                    <h3>Kitaba ait yıldızlar</h3>
-                                    @{
-                                        Model.BookModel.Stars.isToplam = true;
-                                    }
-
-                                    <div class="col-sm-7">
-                                        @Html.Partial("_YildizGoster", @Model.BookModel.Stars)
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="height:30px">
-                            <h3><strong>Değerlendimeler</strong></h3>
-                        </div>
-                        @foreach (var item in @Model.BookModel.BooksDegerlendirme)
-                        {
-
-                            <div class="review_list" style="border: 1px solid #ccc;border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #f9f9f9;">
-                                <div class="review_item" style="padding: 10px 0;">
-                                    <div class="media" style="align-items: flex-start;">
-                                        <div class="d-flex" style="margin-right: 15px;">
-                                            @*<img src="~/vendors/img/product/review-1.png" alt="">*@
-                                        </div>
-                                        <div class="media-body">
-                                            <h4>@item.NAME</h4>
-
-                                            @for (int i = 0; i < @item.StarPuani; i++)
-                                            {
-                                                <i class="price-text-color fa fa-star"> </i>
-                                            }
-
-
-                                        </div>
-                                    </div>
-                                    <p>
-                                        @item.ACIKLAMA
-                                    </p>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
+                   
                     <div class="col-lg-6">
                         @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                         {
@@ -357,11 +212,10 @@
                                     <div style="height:50px;"></div>
                                     <div class="form-group">
                                         <input class="form-control" id="ad" type="text" placeholder="Adınız" required>
-
                                     </div>
-                                    <div class="form-group">
+                                    @* <div class="form-group">
                                         <input class="form-control" id="mail" type="text" placeholder="Mail adresiniz" required>
-                                    </div>
+                                    </div> *@
                                     <div class="form-group">
                                         <input class="form-control" id="konu" type="text" placeholder="Konu giriniz">
                                     </div>
@@ -387,11 +241,75 @@
                             <h4>Kitabı Değerlendirmek için Gözlemci Mod ile giriş yapmayınız</h4>
                         }
                     </div>
+
+                    <div class="col-lg-6">
+                        <h3><strong>Değerlendimeler</strong></h3>
+
+                        @foreach (var item in @Model.BookModel.BooksDegerlendirme)
+                        {
+
+                            <div class="review_list" style="border: 1px solid #ccc;border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #f9f9f9;">
+                                <div class="review_item" style="padding: 10px 0;">
+                                    <div class="media" style="align-items: flex-start;">
+                                        <div class="d-flex" style="margin-right: 15px;">
+                                            @*<img src="~/vendors/img/product/review-1.png" alt="">*@
+                                        </div>
+                                        <div class="media-body">
+                                            <h4>@item.NAME</h4>
+
+                                            @for (int i = 0; i < @item.StarPuani; i++)
+                                            {
+                                                <i class="price-text-color fa fa-star"> </i>
+                                            }
+
+
+                                        </div>
+                                    </div> 
+                                    <p>
+                                        @item.ACIKLAMA
+                                    </p>
+
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
                 </div>
             </div>
 
             <div class="tab-pane fade show active" id="istatistik" role="tabpanel" aria-labelledby="istatistik-tab">
- 
+                <div class="row total_rate">
+                    <div class="col-6">
+                        <div class="box_total">
+                            <h5>En fazla Yıldız</h5>
+
+                            @{
+                                Model.BookModel.Stars.isToplam = false;
+                            }
+
+                            <h4>@Html.Partial("_YildizGoster", @Model.BookModel.Stars)</h4>
+
+
+                            <h6><strong>(@Model.BookModel.Stars.EnFazlaSitar)</strong></h6>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="rating_list">
+                            <h3>Kitaba ait yıldızlar</h3>
+                            @{
+                                Model.BookModel.Stars.isToplam = true;
+                            }
+
+                            <div class="col-sm-7">
+                                @Html.Partial("_YildizGoster", @Model.BookModel.Stars)
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="oranlar-container">
                     <h3>Yayına Göndermeniz İçin Yapmanız Gereken Oranlar</h3>
                     <table class="oranlar-table">
@@ -439,9 +357,11 @@
                         </tbody>
                     </table>
                 </div>
+                <br />
                 <canvas id="istatistikChart"></canvas>
 
             </div>
+            
             <div id="noDataMessage" style="display: none; text-align: center; font-size: 20px; color: #555;">
                 Henüz değerlendirme yapılmamış.
             </div>
@@ -449,6 +369,7 @@
     </div>
 </section>
 
+ 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     $(document).ready(function () {
@@ -567,17 +488,18 @@
     function YorumYap() {
 
         var kural = $('#kural').text().trim();
-        console.log("kural:" + kural);
+        //console.log("kural:" + kural);
 
         var name = $("#name").val();
-        var email = $("#email").val();
+         var email = "@(Model.BookModel.User.EMAIL ?? "")";
+        //var email = $("#email").val();
         var message = $("#message").val();
         var kitapId = $("#kitapId").val();
         var yorumicin = $("#yorummesajiicin").val();
 
-        console.log("ad:" + name + " email:" + email + " aciklama:" + message);
-
-        if (ad == "" || email == "" || message == "") {
+       // console.log("ad:" + name + " email:" + email + " aciklama:" + message);
+         //email == "" ||
+        if (ad == "" || message == "") {
             $("#uyari-" + yorumicin).css("display", "block");
             $("#bilgi-" + yorumicin).css("display", "none");
             $("#basarili-" + yorumicin).css("display", "none");
@@ -627,9 +549,11 @@
     }
 
     function Degerlendir() {
-        console.log("geldi.");
+       // console.log("geldi.");
         var ad = $("#ad").val();
-        var email = $("#mail").val();
+        var email = "@(Model.BookModel.User.EMAIL ?? "")";
+          
+    // $("#mail").val();
         var konu = $("#konu").val();
         var aciklama = $("#aciklamagir").val();
         var kitapId = $("#kitapId").val();
@@ -644,8 +568,8 @@
             $("#uyari-" + degerlendirme + " #mesaj").html("Yıldız veriniz.");
             return;
         }
-
-        if (ad == "" || email == "" || konu == "" || aciklama == "") {
+            //ad == "" || email == "" ||
+        if ( ad == "" ||  konu == "" || aciklama == "") {
             $("#uyari-" + degerlendirme).css("display", "block");
             $("#bilgi-" + degerlendirme).css("display", "none");
             $("#basarili-" + degerlendirme).css("display", "none");
@@ -723,3 +647,5 @@
 
 
 </script>
+<script src="~/js/kitap_detay_mesaj_bolumler.js"></script>
+ 

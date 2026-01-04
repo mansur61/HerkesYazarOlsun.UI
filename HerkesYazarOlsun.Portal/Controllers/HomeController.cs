@@ -1,9 +1,11 @@
 ﻿using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -11,16 +13,23 @@ namespace HerkesYazarOlsun.Portal.Controllers
     public class HomeController : Controller
     {
         private IHttpContextAccessor _httpContextAccessor;
-
+        private int SliderdaGosterilecekKayit = 0;
+        private int DefaultSliderdaGosterilecekKayit = 0;
         private IWebHostEnvironment _environment;
         private IConfiguration _configuration;
         private long Lid;
-        public HomeController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor, IConfiguration configuratioN)
+        public HomeController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor,
+            IConfiguration configuratioN, IOptions<HelperSettings> helperSettings)
         {
             _httpContextAccessor = httpContextAccessor;
             _environment = environment;
             Lid = (long)(_httpContextAccessor?.HttpContext?.User.GetLoginUserId());
             _configuration = configuratioN;
+            SliderdaGosterilecekKayit = helperSettings.Value.SliderdaGosterilecekKayit;
+            DefaultSliderdaGosterilecekKayit = helperSettings.Value.DefaultSliderdaGosterilecekKayit;
+
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
         }
 
         public string SignInUrl { get { return $"/Account/Giris"; } }
@@ -31,7 +40,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             VM_BOOKS_DETAIL vM_BOOKS = new BooksService().GetBooksList();
             vM_BOOKS.isAnaSayfa = true;
             vM_BOOKS.Start = 0;
-            vM_BOOKS.sliderdaGosterilecekKayit = 5;
+            vM_BOOKS.sliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
 
             string isGozlemciMod = User.GetGozlemciMod(); 
             if (!string.IsNullOrEmpty(isGozlemciMod) && isGozlemciMod == "1") // gözlemci mod ile gelinmiş
@@ -48,7 +57,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
                 ViewBag.Duyurular = list;
                 List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
-                ViewBag.Sponsorlar = spnlist;
+                ViewBag.Sponsorlar = spnlist.Where(p => p.IS_DELETED != 1).ToList();
                  
                 ViewBag.LOGIN_USER_ID = Lid;
                 ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();

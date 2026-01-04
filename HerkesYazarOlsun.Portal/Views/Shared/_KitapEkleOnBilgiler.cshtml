@@ -1,105 +1,67 @@
 ﻿@using HerkesYazarOlsun.Portal.Controllers;
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
-<div class="card-body">
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
 
-    <h1><strong>Kitabınızı Yazmaya Başlayınız </strong> </h1>
-    <h4>Kitabınız İçin Önbilgileri Formlardan Doldurunuz ... </h4>
-    <br />
-    <div class="conrainer">
-        <input type="hidden" id="ONKAPAKFOTO" name="ONKAPAKFOTO">
-        <input type="hidden" id="ARKAKAPAKFOTO" name="ARKAKAPAKFOTO">
+            <div class="card-body"  >
+
+                <h1 class="mb-3"><strong>Kitabınızı Yazmaya Başlayınız</strong></h1>
+                <h4 class="mb-4">Kitabınız İçin Önbilgileri Formlardan Doldurunuz ...</h4>
+
+                <input type="hidden" id="ONKAPAKFOTO" name="ONKAPAKFOTO">
+                <input type="hidden" id="ARKAKAPAKFOTO" name="ARKAKAPAKFOTO">
+
+                <div class="mb-3">
+                    <label for="kitapAdi" class="form-label">Kitabınızın Adını Belirleyiniz *</label>
+                    <input class="form-control" type="text" id="kitapAdi" name="Name" placeholder="Kitap Adı">
+                </div>
+
+                <div class="mb-3">
+                    <label for="dosyaOnKapakFoto" class="form-label">Kitabınızın Ön Kapağını Seçiniz *</label>
+                    <input class="form-control" type="file" id="dosyaOnKapakFoto" onchange="dosyaSecim('onKapakFoto')" multiple>
+                </div>
+
+                <div class="mb-3">
+                    <label for="dosyaArkaKapakFoto" class="form-label">Kitabınızın Arka Kapağını Seçiniz *</label>
+                    <input class="form-control" type="file" id="dosyaArkaKapakFoto" onchange="dosyaSecim('arkaKapakFoto')" multiple>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Kitabınızın Önsöz'ünü giriniz *</label>
+                    <div id="onSozEditor" style="height: 200px;"></div>
+                    <textarea id="onsoz" name="ONSOZ" hidden></textarea>
+                    <div class="form-text text-info">500 karakteri geçmeyiniz.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Kitabınızın Arkakapak yazısını giriniz *</label>
+                    <div id="arkaKapakYaziEditor" style="height: 200px;"></div>
+                    <textarea id="arkaKapakYazi" name="ARKAKAPAKYAZISI" hidden></textarea>
+                    <div class="form-text text-info">200 karakteri geçmeyiniz.</div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-12 col-sm-8 col-md-6">
+                        <label for="kitapKategori" class="form-label">Kitabın Kategorisini seçiniz *</label>
+                        <br />
+                        <select class="form-control w-100" id="kitapKategori" name="CategoriId">
+                            <option value="" disabled selected>Bir kategori seçiniz</option>
+                            @foreach (var category in Model.Katergoriler)
+                            {
+                                <option value="@category.ID" data-name="@category.Name" id="selecData-@category.ID">
+                                    @category.Name
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
 
 
-        <div class="mb-3">
-            <h5>Kitabınızın Adını Belirleyiniz *</h5>
-            <input class="form-control" type="text" id="kitapAdi" multiple name="Name">
+
+            </div>
 
         </div>
-
-        <div class="mb-3">
-            <h5>Kitabınızın Ön Kapağını Seçiniz *</h5>
-            <input class="form-control" type="file" id="dosyaOnKapakFoto" onchange="dosyaSecim('onKapakFoto')" multiple>
-
-        </div>
-        <div class="mb-3">
-            <h5>Kitabınızın Arka Kapağını Seçiniz *</h5>
-            <input class="form-control" type="file" id="dosyaArkaKapakFoto" onchange="dosyaSecim('arkaKapakFoto')" multiple>
-        </div>
-        <div class="mb-3">
-            <h5>Kitabınızın Önsöz'ünü giriniz *</h5>
-            @* <textarea class="form-control" id="onsoz" rows="5" cols="50" name="ONSOZ"></textarea> *@
-            <div id="onSozEditor" style="height: 200px;"></div>
-
-            <textarea id="onsoz" name="ONSOZ" hidden></textarea>
-            <div id="help" class="form-text" style="color:cadetblue">500 karakteri geçmeyiniz.</div>
-        </div>
-
-        <div class="mb-3">
-            <h5>Kitabınızın Arkakapak yazısını giriniz *</h5>
-            @* <textarea class="form-control" id="arkaKapakYazi" rows="5" cols="50" name="ARKAKAPAKYAZISI"></textarea> *@
-            <div id="arkaKapakYaziEditor" style="height: 200px;"></div>
-
-            <textarea id="arkaKapakYazi" name="ARKAKAPAKYAZISI" hidden></textarea>
-
-            <div id="help" class="form-text" style="color:cadetblue">200 karakteri geçmeyiniz.</div>
-        </div>
-        <h5>Kitabın Kategorisini seçiniz *</h5>
-        <div class="row-cols-3">
-        </div>
-
-
-        <select class="form-select" style="width:500px;height:30px" id="kitapKategori" name="CategoriId">
-            @foreach (var category in Model.Katergoriler)
-            {
-                <option value="@category.ID" data="@category.Name" id="selecData-@category.ID">
-                    @category.Name
-                </option>
-            }
-        </select>
-
-
-
-
     </div>
-
 </div>
-
-<script>
-    // Quill başlat
-    var quill = new Quill('#arkaKapakYaziEditor', {
-      theme: 'snow',
-      placeholder: 'Kapak yazınızı buraya yazın...',
-      modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline', 'strike'],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          ['link', 'image'],
-          [{ 'align': [] }],
-          ['clean']
-        ]
-      }
-    });
-
-    // Form gönderiminde içeriği textarea’ya aktar
-    document.querySelector('form')?.addEventListener('submit', function () {
-      document.getElementById('arkaKapakYazi').value = quill.root.innerHTML;
-      document.getElementById('onsoz').value = quill.root.innerHTML;
-    });
-
-    var quill = new Quill('#onSozEditor', {
-      theme: 'snow',
-      placeholder: 'Önsözünüzü buraya yazın...',
-      modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline', 'strike'],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          ['link', 'image'],
-          [{ 'align': [] }],
-          ['clean']
-        ]
-      }
-    });
-
-
-</script>

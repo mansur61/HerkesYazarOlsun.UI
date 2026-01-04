@@ -10,20 +10,18 @@
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    
     <meta name="description" content="">
     <meta name="author" content="">
 
     <title>Herkes Yazar Olsun</title>
-
-    <script>(function (H) { H.className = H.className.replace(/\bno-js\b/, 'js') })(document.documentElement)</script>
+     
 
     <!-- font-awesome -->
     <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
 
-    <!-- Bootstrap core CSS -->
-
-    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
+    <!-- Bootstrap core CSS tema için öenmli--->
+     <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />  
 
     <link href="~/lib/bootstrap/dist/css/themify-icons.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/lineericaon_style.css" rel="stylesheet" />
@@ -34,24 +32,15 @@
     
     @RenderSection("Styles",false)
 
-    <!-- custom CSS -->
-    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" />
-
-
-  @*   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"> *@
+    <!-- custom CSS tema için öenmli-->
+    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" /> 
 
     <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/herkesyazarolsun-bootstrap.js"></script>
-    <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
-
-    @*Aşğıdaki kodlar her yerde çalışmadığında yorum satırına alındı. Kullanım alanları olabilir.*@
-    @* <script src="~/lib/bootstrap/dist/js/herkesyazarolsun.js"></script>*@
-   
-
-    <script src="~/lib/bootstrap/dist/js/skrollr.min.js"></script>
      
-    <link href="~/node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+     
+    <script src="~/lib/bootstrap/dist/js/skrollr.min.js"></script> 
     
     @RenderSection("scripts",false)
 
@@ -148,16 +137,51 @@
             margin-right: 10px;
         }
 
+
+        /* ============================
+           ALERT MESAJ KUTULARI
+        ============================ */
+        .alert-success,
+        #basarili-register,
+        #basarili-logingiris {
+            background: #e8fff7 !important;
+            border-left: 6px solid #00C9A7;
+            padding: 15px;
+        }
+
+        .alert-warning,
+        #bilgi-register,
+        #bilgi-logingiris {
+            background: #fff8e6 !important;
+            border-left: 6px solid #ffcc00;
+        }
+
+        .alert-danger,
+        #uyari-register,
+        #uyari-logingiris {
+            background: #ffe8e8 !important;
+            border-left: 6px solid #e63946;
+        }
+
     </style>
+    <link rel="icon" type="image/png" href="@Url.Content("~/lib/img/stack-of-books.png")" />
+     
+     
 </head>
 <body>
-    @Html.Partial("_Navbar")
+    @if (ViewBag.NavbarGoster != false)
+    {
+        @Html.Partial("_Navbar")
+    }
     <br />
     <div class="container">
         @RenderBody()
 
     </div>
-
-    @Html.Partial("_Footer")
+    @if (ViewBag.FooterGoster != false)
+    {
+        @Html.Partial("_Footer")
+    }
+   
 </body>
 </html>

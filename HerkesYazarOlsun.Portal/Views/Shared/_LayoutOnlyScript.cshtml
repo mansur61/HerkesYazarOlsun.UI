@@ -45,8 +45,36 @@
 
     <script src="~/lib/bootstrap/dist/js/skrollr.min.js"></script>
     
-    
+    <link rel="icon" type="image/png" href="@Url.Content("~/lib/img/stack-of-books.png")" />
     @RenderSection("scripts",false)
+
+    <style>
+
+        /* ============================
+           ALERT MESAJ KUTULARI
+        ============================ */
+        .alert-success,
+        #basarili-register,
+        #basarili-logingiris {
+            background: #e8fff7 !important;
+            border-left: 6px solid #00C9A7;
+            padding: 15px;
+        }
+
+        .alert-warning,
+        #bilgi-register,
+        #bilgi-logingiris {
+            background: #fff8e6 !important;
+            border-left: 6px solid #ffcc00;
+        }
+
+        .alert-danger,
+        #uyari-register,
+        #uyari-logingiris {
+            background: #ffe8e8 !important;
+            border-left: 6px solid #e63946;
+        }
+    </style>
  
 </head>
 <body>

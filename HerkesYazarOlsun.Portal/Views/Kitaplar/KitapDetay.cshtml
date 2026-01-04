@@ -5,12 +5,11 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
-@Html.Partial("_Navbar")
+@* @Html.Partial("_Navbar") *@
 
-<br />
-<br />
 
 @using HerkesYazarOlsun.Model.Utils
+@using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
@@ -28,9 +27,17 @@
     <div class="row">
 
         <div class="col-md-3">
-            <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH" alt="Portfolio 1"
-                 style="height:300px">
-            @* <img src="data:image;base64,@Model.BookModel.ONKAPAKFOTO" alt="Book Image" style="height:300px;width:215px">*@
+            @if (@Model.BookModel?.ARKAKAPAKFOTOPATH == "-1")
+            {
+
+                <img src="/lib/img/stack-of-books.png" alt="Portfolio 1" style="height:300px" width="200" />
+            }
+            else
+            {
+                <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH"
+                     alt="Portfolio 1" style="height:300px">
+            }
+
             @{
                 Model.BookModel.Stars.isToplam = false;
             }
@@ -50,15 +57,9 @@
             <h3>Kitap Özeti</h3>
             <p>
                 @Html.Raw(Model.BookModel.ONSOZ)
-               
+
                 <br />
-                <!--<p>
-                Lorem Ipsum, dizgi ve baskı endüstrisinde kullanılan mıgır metinlerdir.
-                Lorem Ipsum, adı bilinmeyen bir matbaacının bir hurufat numune kitabı oluşturmak üzere bir yazı galerisini alarak karıştırdığı
-                1500'lerden beri endüstri standardı sahte metinler olarak kullanılmıştır. Beşyüz yıl boyunca varlığını sürdürmekle kalmamış,
-                aynı zamanda pek değişmeden elektronik dizgiye de sıçramıştır. 1960'larda Lorem Ipsum pasajları da içeren Letraset yapraklarının
-                yayınlanması ile ve yakın zamanda Aldus PageMaker gibi Lorem Ipsum sürümleri içeren masaüstü yayıncılık yazılımları ile popüler olmuştur.
-                </p>-->
+
             </p>
             @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
             {

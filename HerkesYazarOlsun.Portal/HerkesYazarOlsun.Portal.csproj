@@ -8,17 +8,7 @@
     <!-- Razor Views klasörünün publish edilmesi için eklenen ayarlar -->
     <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-  </PropertyGroup>
-
-  <Target Name="CopyBootstrapIcons" AfterTargets="Build">
-    <ItemGroup>
-      <BootstrapIcons Include="node_modules\bootstrap-icons\**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(BootstrapIcons)"
-          DestinationFolder="$(ProjectDir)wwwroot\lib\bootstrap-icons\%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
-  </Target>
-
+  </PropertyGroup> 
 
   <ItemGroup>
     <Compile Remove="Models\**" />

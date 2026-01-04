@@ -2,31 +2,26 @@
     ViewData["Title"] = "Email Doğrulama";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@*
-@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;*@
+ 
 @using HerkesYazarOlsun.Portal.Controllers;
 
-@section Styles {
-
-    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
-
-}
+ 
 
 @{
     string tip = "email";
 }
 <input type="hidden" id="tip" value="@tip" />
 
+@section Styles {
+    <link href="~/lib/css/giris_kayit_dogrulama.css" rel="stylesheet" />
+}
 
-<section class="login_box_area section-margin">
+<section >
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="login_box_img">
-                    <div class="hover">
-
-                        <h4>Herkes Yazar Olsun' da </h4> <h4>Email Doğrulama İşlemi </h4>
-                    </div>
+        <div class="row"> 
+            <div class="col-lg-6 mb-4">
+                <div id="title-container">
+                    <h4>Herkes Yazar Olsun' da,  Email Doğrulama İşlemi</h4>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -41,7 +36,7 @@
                         </div>
 
                         <div class="col-md-12 form-group">
-                            <button type="submit" class="button button-register w-100" onclick="EmailGonder()">Email Gönder</button>
+                            <button type="submit" class="auth-primary-btn flex-fill text-center" onclick="EmailGonder()">Email Gönder</button>
                         </div>
                         <div id="loading" style="display: none; text-align: center;">
                             <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
@@ -56,6 +51,8 @@
 </section>
 
 <div id="otp"></div>
+
+<div style="height:150px"></div>
 
 <script>
 

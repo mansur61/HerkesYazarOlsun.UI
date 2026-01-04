@@ -3,9 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section scripts{
+@* @section scripts{
     <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-}
+} *@
 @section Styles{
     <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
@@ -94,12 +94,7 @@ else
                 $("#arabutonfiltre").html(data);
                 $("#arabutonfiltre").css("display", "block");
                 $("#tumkitaplar").css("display", "none");
-
-                //const nodeList = document.querySelectorAll("#gozukecekMiFooter");
-                //for (let i = 0; i < nodeList.length; i++) {
-                //    nodeList[i].style.display = "none";
-                //}
-
+                 
 
             } else {
                  

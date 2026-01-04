@@ -1,6 +1,7 @@
 ﻿
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_USERS_DETAIL;
+@using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
 
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
@@ -8,91 +9,210 @@
 @{
     string isGozlemciMod = User.GetGozlemciMod();
 }
-<div class="container" style="margin: 50px auto;width:auto">
-    <div class="row">
 
-        <div class="col-lg-12">
+@* @section scripts {
+    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+} *@
 
-            @{
-                int gosterilecekKayit = Model.sliderdaGosterilecekKayit;
+<style>
+    /* PROFILE CARD */
+    .profile-card {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        height: 140px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+        .profile-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+    .profile-info {
+        margin-left: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .profile-info h2 {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+            color: #333;
+            word-break: break-word;
+        }
+
+    .hover-icons {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+
+        .hover-icons li {
+            list-style: none;
+        }
+
+            .hover-icons li a {
+                display: inline-block;
+                padding: 2px 6px;
+                background-color: rgba(0,0,0,0.05);
+                border-radius: 4px;
+                transition: background 0.3s;
             }
-            @for (int i = 0; i < @Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
-            {
-                <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName">
 
+                .hover-icons li a:hover {
+                    background-color: rgba(0,0,0,0.15);
+                }
 
-                    @foreach (var item in @Model.VMUsersList.Take(range: new Range(Model.Start, @gosterilecekKayit)))
-                    {
+    .follow-stats {
+        margin-top: 4px;
+    }
 
-                        <div class="col-lg-4 col-md-6 col-sm-6" style="border: 1px dotted blue;height:auto;width:200px;margin:5px 5px;padding:5px">
-                            <div class="product__item" style="overflow:hidden;height:340px">
-                                <div class="product__item__pic set-bg"
-                                     data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.Profile?.ProfilResimURl">
-                   
-                                    <ul class="product__item__pic__hover">
-                                        @if (isGozlemciMod == "0")
-                                        {
-                                            <li><a onclick='YazariFavorilereEkle(@item.ID,@item.ID,"@Model.Tip")'><i class="fa fa-heart"></i></a></li>
+        .follow-stats .stat i {
+            font-size: 14px;
+        }
+</style>
 
-                                        }
-                                        <li><a href="/Kisi/Profil?id=@item.ID" ><i class="fa fa-user"></i></a></li>
+<div class="container" style="margin-top:50px;">
+    <div class="row g-3">
+        @foreach (var item in Model.VMUsersList.Skip(Model.Start).Take(Model.sliderdaGosterilecekKayit))
+        {
+            <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="profile-card">
 
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="/Kitaplar/KitapDetay?kitapId=@item.ID">@item.USERNAME </a></h6>
-                                    <div class="row">
-                                        <div class="rating hidden-sm col-sm-7">
+                    <!-- Resim alanı -->
+                    <img src="@(!string.IsNullOrEmpty(item?.Profile?.ProfilResimURl)
+                                                                  ? $"https://herkesyazarolsun.com.tr/Belgeler/{item.Profile.ProfilResimURl}"
+                                                                  : Url.Content("~/lib/img/user.png"))"
+                     alt="@item.USERNAME" />
 
-                                            @for (int m = 0; m < @item.Stars?.EnFazlaSitar; m++)
-                                            {
-                                                <i class="price-text-color fa fa-star"></i>
-                                            }
+                    <!-- Bilgi alanı -->
+                    <div class="profile-info">
+                        <!-- Hover ikonları ismin üstüne -->
+                        <ul class="hover-icons">
+                        @if (isGozlemciMod == "0")
+                            {
+                                <li>
+                                    <a id="favBtn_@item.ID" onclick='YazariFavorilereEkle(@item.ID,@item.ID,"@Model.Tip")'>
+                                        <i class="fa fa-heart text-danger"></i>
+                                    </a>
+                                </li>
+                            }
+                            <li>
+                                <a href="/Kisi/Profil?pId=@StringCipher.Encrypt(@item.ID.ToString())">
+                                    <i class="fa fa-user text-dark"></i>
+                                </a>
+                            </li>
+                        </ul>
 
+                        <h2>
+                            <span style="text-decoration:none; color:#333;">@item.USERNAME</span>
+                        </h2>
 
-                                        </div>
+                        <div class="follow-stats">
+                            <div class="stat"> 
+                                @if (item.Stars != null)
+                                {
+                                    item.Stars.isToplam = false;
+                                    <div class="mb-3 mt-1 text-center">
+                                        @Html.Partial("_YildizGoster", @item.Stars)
                                     </div>
-
-                                </div>
+                                }
 
                             </div>
                         </div>
-                    }
-                    @{
-                        Model.Start = Model.sliderdaGosterilecekKayit;
-                        gosterilecekKayit = Model.End +  Model.sliderdaGosterilecekKayit;
-                        Model.sliderdaGosterilecekKayit = gosterilecekKayit;
-                    }
+                    </div>
+
                 </div>
-
-            }
-
-
-            
-           
-        </div>
-
+            </div>
+        }
     </div>
-
 </div>
- 
-@* @Html.Partial("_AlertMesaj", @Model.Tip)   *@
 
-<script> 
-  
-    function YazariFavorilereEkle(yazarId, tck,tip) {
-          
-        $.post("@Url.Action(nameof(KisiController.YazariFavorilereEkle), "Kisi")", { "id": yazarId, "tck": tck }, function (data) {
-            if (data) {
-                console.log("data ",data); 
-                UyariVer(data.state, "#basarili-"+ tip, "#bilgi-"+ tip, "#uyari-"+ tip, data.message);
-               
-            } else { 
-               UyariVer(data.state, "#basarili-"+ tip, "#bilgi-"+ tip, "#uyari-"+ tip, data.message);
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<script>
+
+    function YazariFavorilereEkle(yazarId, tck, tip) {
+
+        const btn = document.getElementById("favBtn_" + yazarId);
+        const originalIcon = btn.innerHTML; // eski hali sakla
+
+        Swal.fire({
+            title: 'Emin misiniz?',
+            text: "Favorilere eklemek istiyor musunuz?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger'
             }
+        }).then((result) => {
 
+            if (result.isConfirmed) {
+
+                // Kullanıcı evet dedi → spinner başlasın
+                btn.innerHTML = '<i class="fa fa-spinner fa-spin text-primary"></i>';
+
+                $.post("@Url.Action(nameof(KisiController.YazariFavorilereEkle), "Kisi")",
+                    { id: yazarId, tck: tck },
+                    function (data) {
+
+                        // AJAX tamamlandıktan sonra ikonu geri döndür
+                        btn.innerHTML = originalIcon;
+
+                        if (data) {
+                            UyariVer(
+                                data.state,
+                                "#basarili-" + tip,
+                                "#bilgi-" + tip,
+                                "#uyari-" + tip,
+                                data.message
+                            );
+                        }
+                        else {
+                            UyariVer(
+                                "warning",
+                                "#basarili-" + tip,
+                                "#bilgi-" + tip,
+                                "#uyari-" + tip,
+                                "Beklenmeyen bir hata oluştu"
+                            );
+                        }
+                    }
+                )
+                .fail(function() {
+                    btn.innerHTML = originalIcon;
+                    UyariVer("error", "#basarili-" + tip, "#bilgi-" + tip, "#uyari-" + tip, "Sunucu hatası.");
+                });
+
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+
+                Swal.fire(
+                    'İşlem İptal',
+                    'Favori ekleme işlemi iptal edildi.',
+                    'info'
+                );
+            }
 
         });
-    }
 
+    }
 </script>

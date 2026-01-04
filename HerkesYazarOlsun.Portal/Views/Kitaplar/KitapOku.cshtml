@@ -1,8 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Kitap Oku";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.NavbarGoster = false;
 }
-
+ 
 @section Styles {
     <style>
         .js #features {
@@ -10,7 +11,7 @@
             width: 100%;
         }
 
-        #gozukecekMiNavbar,
+        /*#gozukecekMiNavbar,*/
         #gozukecekMiFooter,
         #gozukecekMiFooterCrypt {
             display: none;
@@ -32,6 +33,8 @@
     <link href="~/wowbook/css/preview.css" rel="stylesheet" />
     <link href="~/wowbook/css/handheld.css" rel="stylesheet" />
     <link href="~/wowbook/css/handheld.css?v=2" rel="stylesheet" />
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 }
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
@@ -85,4 +88,5 @@
 
     <script src="~/wowbook/js/plugins.js"></script>
     <script src="~/wowbook/js/script.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 }
