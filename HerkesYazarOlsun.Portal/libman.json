@@ -3,8 +3,63 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/lib/bootstrap",
+      "files": [
+        "css/bootstrap.min.css",
+        "js/bootstrap.bundle.min.js"
+      ]
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/lib/jquery",
+      "files": [
+        "jquery.min.js"
+      ]
+    },
+    {
+      "library": "font-awesome@7.0.1",
+      "destination": "wwwroot/lib/fontawesome",
+      "files": [
+        "css/all.min.css",
+        "webfonts/fa-brands-400.woff2",
+        "webfonts/fa-regular-400.woff2",
+        "webfonts/fa-solid-900.woff2"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "owl.carousel@2.3.4",
+      "destination": "wwwroot/lib/owlcarousel",
+      "files": [
+        "dist/assets/owl.carousel.min.css",
+        "dist/owl.carousel.min.js"
+      ]
+    },
+    {
+      "library": "jquery-nice-select@1.1.0",
+      "destination": "wwwroot/lib/nice-select",
+      "files": [
+        "css/nice-select.css",
+        "js/jquery.nice-select.min.js"
+      ]
+    },
+   {
+  "library": "noUiSlider@15.7.2",
+  "destination": "wwwroot/lib/nouislider",
+  "files": [
+    "nouislider.min.css",
+    "nouislider.min.js"
+  ]
+}
+,
+    {
       "library": "dropzone@5.9.3",
-      "destination": "wwwroot/dropzone/"
+      "destination": "wwwroot/lib/dropzone",
+      "files": [
+        "min/dropzone.min.css",
+        "min/dropzone.min.js"
+      ]
     }
   ]
 }

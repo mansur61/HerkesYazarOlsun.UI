@@ -11,7 +11,7 @@
 }
 
 @* @section scripts {
-    <script src= "../../wwwroot/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+    <script src= "~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
 } *@
 
 <style>
@@ -96,7 +96,7 @@
                     <!-- Resim alanı -->
                     <img src="@(!string.IsNullOrEmpty(item?.Profile?.ProfilResimURl)
                                                                   ? $"https://herkesyazarolsun.com.tr/Belgeler/{item.Profile.ProfilResimURl}"
-                                                                  : Url.Content( "../../wwwroot/lib/img/user.png"))"
+                                                                  : Url.Content( "~/lib/img/user.png"))"
                      alt="@item.USERNAME" />
 
                     <!-- Bilgi alanı -->

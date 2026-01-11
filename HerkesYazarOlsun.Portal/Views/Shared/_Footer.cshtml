@@ -7,92 +7,42 @@
     string alertmesajgostermedurumu = "footer";
 }
 
-<style>
-    .footer-title {
-        color: #ffffff;
-        font-weight: bold;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        font-size: 16px;
-    }
-
-    .footer-links li a {
-        color: #b0b0b0;
-        display: block;
-        padding: 5px 0;
-        transition: color 0.2s;
-    }
-
-        .footer-links li a:hover {
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-    @@media (max-width: 767px) {
-        .footer-title
-
-    {
-        font-size: 14px;
-    }
-
-    .footer-links li a {
-        font-size: 13px;
-    }
-
-    }
-</style>
+  <link href="~/lib/css/footer.css" rel="stylesheet" />
 
 <footer id="gozukecekMiFooter">
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-4 mb-4">
                 <a class="footer-brand" href="Index">Herkes Yazar Olsun</a>
                 <p>
                     Kitap yazarları bir arada topladığımız platformumuzda aynı zamanda, yazarlarımıza anlaşmalı yayın evi sponsorlarıız ile
                     daha uygun maliyetli kitaplarını yayınlayabilecek köprü kuruyoruz. Haydi sizde bu köprüden geçiniz.
                 </p>
-                <ul class="list-inline list-unstyled social-networks">
-
-                    <li>
-                        <a href="https://x.com/kayamansur61">
-                            <div class="icon-social icon-social-twitter normal">
-                                <i class="fa fa-twitter"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-twitter"></i>
-                            </div>
+                <ul class="list-inline d-flex justify-content-center gap-3 social-networks mb-3">
+                    <li class="list-inline-item">
+                        <a href="https://x.com/kayamansur61" target="_blank" rel="noopener">
+                            <span class="icon-social icon-social-twitter">
+                                <i class="fab fa-twitter fa-2x"></i>
+                            </span>
                         </a>
                     </li>
-
-
-
-                    <li>
-                        @* target="_blank" *@
-                        <a href="https://www.youtube.com/%40eminyazilim">
-                            <div class="icon-social icon-social-youtube normal">
-                                <i class="fa fa-youtube-play"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-youtube-play"></i>
-                            </div>
+                    <li class="list-inline-item">
+                        <a href="https://www.youtube.com/eminyazilim" target="_blank" rel="noopener">
+                            <span class="icon-social icon-social-youtube">
+                                <i class="fab fa-youtube fa-2x"></i>
+                            </span>
                         </a>
                     </li>
-
-                    <li>
-                        <a href="https://www.linkedin.com/in/mansur-emin-kaya-b61100141/">
-                            <div class="icon-social icon-social-linkedin normal">
-                                <i class="fa fa-linkedin"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-linkedin"></i>
-                            </div>
+                    <li class="list-inline-item">
+                        <a href="https://www.linkedin.com/in/mansur-emin-kaya-b61100141/" target="_blank" rel="noopener">
+                            <span class="icon-social icon-social-linkedin">
+                                <i class="fab fa-linkedin fa-2x"></i>
+                            </span>
                         </a>
                     </li>
-
-
                 </ul>
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-4 mb-4">
                 <h3>İLETİŞİM</h3>
                 <address>
                     <i class="fa fa-envelope"></i> info@herkesyazarolsun.com.tr
@@ -102,7 +52,7 @@
                 string isGozlemciMod = User.GetGozlemciMod();
             }
 
-            <div class="col-lg-3 col-md-4">
+            <div class="col-lg-4 col-md-4 mb-4">
                 <h5 class="footer-title">Hızlı Erişim</h5>
                 <ul class="footer-links list-unstyled">
                     <li><a href="/Home/Index">Anasayfa</a></li>
@@ -124,16 +74,20 @@
 
 
 
-        </div><!-- /.row -->
+        </div>
         @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
     </div><!-- /.container -->
 </footer>
 
 <div class="footer-after" id="gozukecekMiFooterCrypt">
     <div class="container">
-        <div class="row">
-            <p class="col-md-10">©2025 Tüm hakları saklıdır. <a href="https://www.instagram.com/eminyazilim/">Emin Yazılım</a> tarafından tasarlanmıştır.</p>
-            <p class="col-md-2 legal"><a href="#" rel="nofollow">Yasal Uyarı</a></p>
-        </div><!-- /.row -->
+        <div class="row align-items-center">
+            <div class="col-lg-10 col-md-10 col-12">
+                <p class="mb-0">©2025 Tüm hakları saklıdır. <a href="https://www.instagram.com/eminyazilim/">Emin Yazılım</a> tarafından tasarlanmıştır.</p>
+            </div>
+            <div class="col-lg-2 col-md-2 col-12 legal text-end">
+                <a href="#" rel="nofollow">Yasal Uyarı</a>
+            </div>
+        </div>
     </div>
 </div>

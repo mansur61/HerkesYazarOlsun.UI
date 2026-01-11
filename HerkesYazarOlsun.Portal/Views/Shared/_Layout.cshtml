@@ -17,29 +17,34 @@
     <title>Herkes Yazar Olsun</title>
      
 
-    <!-- font-awesome -->
-    <link href="../../wwwroot/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
-
-    <!-- Bootstrap core CSS tema için öenmli--->
-     <link href="../../wwwroot/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />  
-    <link href="../../wwwroot/lib/bootstrap/dist/css/themify-icons.css" rel="stylesheet" />
-    <link href="../../wwwroot/lib/bootstrap/dist/css/lineericaon_style.css" rel="stylesheet" />
-    <link href="../../wwwroot/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="../../wwwroot/lib/bootstrap/dist/css/nice-select.css" rel="stylesheet" />
-    <link href="../../wwwroot/lib/bootstrap/dist/css/nouislider.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="~/lib/fontawesome/css/all.min.css" rel="stylesheet" />
+    <!-- Bootstrap core CSS -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Owl Carousel CSS -->
+    <link href="~/lib/owlcarousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
+    <!-- Nice Select CSS -->
+    <link href="~/lib/nice-select/css/nice-select.css" rel="stylesheet" />
+    <!-- noUiSlider CSS -->
+    <link href="~/lib/nouislider/nouislider.min.css" rel="stylesheet" />
     
     
-    @RenderSection("Styles",false)
-
-    <!-- custom CSS tema için öenmli-->
-    <link href="../../wwwroot/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" /> 
-
-    <script src= "../../wwwroot/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+    @RenderSection("Styles",false) 
+    <!-- Custom CSS (if any) 
+    <link href="~/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
+    <link href="~/css/herkesyazarolsun_style.css" rel="stylesheet" />
+-->
+    <!-- jQuery -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script>
+    <!-- Nice Select JS -->
+    <script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script>
+    <!-- noUiSlider JS -->
+    <script src="~/lib/nouislider/nouislider.min.js"></script>
      
-    <script src= "../../wwwroot/lib/bootstrap/dist/js/plugins.js"></script>
-    <script src= "../../wwwroot/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-     
-    <script src= "../../wwwroot/lib/bootstrap/dist/js/skrollr.min.js"></script> 
     
     @RenderSection("scripts",false)
 
@@ -163,7 +168,7 @@
         }
 
     </style>
-    <link rel="icon" type="image/png" href="@Url.Content( "../../wwwroot/lib/img/stack-of-books.png")" />
+    <link rel="icon" type="image/png" href="@Url.Content( "~/img/stack-of-books.png")" />
      
      
 </head>
