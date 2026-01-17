@@ -57,7 +57,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 input.Katergoriler = kategoriler!;
             }
 
-            if (input.isYazmayaDevamEt.HasValue &&  input.isYazmayaDevamEt.Value && input.IlgiiSayfaSayisi.HasValue)
+            if (input.isYazmayaDevamEt.HasValue &&  input.isYazmayaDevamEt.Value )//
+            {
+                input.IlgiiSayfaSayisi = (int)(bookID + 1);
+            }
+            else if(input.IlgiiSayfaSayisi.HasValue )
             {
                 input.IlgiiSayfaSayisi = input.IlgiiSayfaSayisi.Value;
             }
