@@ -1,0 +1,14 @@
+{
+	"servers": {
+        "github-mcp": {
+            "type": "http",
+            "url": "https://api.githubcopilot.com/mcp"
+        },
+        "mssql-mcp": {
+            "type": "stdio",
+            "command": "/Users/filizkaya/Desktop/mcpClients/.venv/bin/python",
+            "args": ["/Users/filizkaya/Desktop/mcpClients/mssql-mcp/app/test_mssql.py"]
+        }
+	},
+	"inputs": []
+}

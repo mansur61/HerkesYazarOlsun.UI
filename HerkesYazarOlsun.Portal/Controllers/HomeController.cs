@@ -43,6 +43,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
             vM_BOOKS.sliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
 
             string isGozlemciMod = User.GetGozlemciMod(); 
+            // Kategorileri ViewBag'e ekle
+            var kategoriler = new BooksService().GetCategories();
+            ViewBag.Kategoriler = kategoriler;
+
             if (!string.IsNullOrEmpty(isGozlemciMod) && isGozlemciMod == "1") // gözlemci mod ile gelinmiş
             { 
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
