@@ -1,0 +1,36 @@
+dotnet publish -c Release -o ./publish // .exe oluşturmaz
+
+dotnet publish -c Release \
+-r win-x64 \
+--self-contained true \
+-p:PublishSingleFile=true \
+-o ./publish 
+
+ÖNEMLİ: “exe + dll + pdb + json ayrı ayrı gelsin”
+isteği PublishSingleFile=true ile çelişiyor.
+
+✔ .exe oluşur
+✔ .NET runtime gömülür
+
+pdb, exe, dll, json ayrı olarak al içinde, Aşağıdaki yeterli 
+
+dotnet publish -c Release \
+-r win-x64 \
+--self-contained true \
+-p:DebugType=portable \
+-p:DebugSymbols=true \
+-p:UseAppHost=true \
+-o ./publish
+
+ --self-contained false parametresi ise 
+ .staticwebassets.endpoints.json bu dosyaları vermiyor ama gerekte yokmuş
+
+
+CoreCLR path / 500.31 görürsün. Bu durumda aşağıdakini çalıştır 
+dotnet publish -c Release \
+-r win-x64 \
+--self-contained true \
+-p:DebugType=portable \
+-p:DebugSymbols=true \
+-p:UseAppHost=true \
+-o ./publish
