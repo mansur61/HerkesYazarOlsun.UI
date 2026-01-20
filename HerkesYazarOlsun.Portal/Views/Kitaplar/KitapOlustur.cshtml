@@ -518,7 +518,7 @@
          var kitapId = $("#BOOKSID").val();
          //console.log("kitapId:" + kitapId);
          var sayfaId = $("#BOOKPAGESID").val();
-         //console.log("sayfaId:" + sayfaId);
+         //console.log("sayfaId:" + sayfaId); 
          var kitapAdi = $("#kitapAdi").val();
          var onsoz = $("#onsoz").val();
          var arkaKapakYazi = $("#arkaKapakYazi").val();
@@ -597,13 +597,14 @@
 
                      $("#BOOKSID").val(response.result.bookID);
                      $("#BOOKPAGESID").val(response.result.booksPageID);
+                     //alert(" Gonder BOOKPAGESID:" + response.result.booksPageCount);
                      //console.log("veriGonder BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
 
                      var intSayi = parseInt(dataValue);
-                     $("#sayfaSayisi").html( response.result.booksPageCount);
+                     $("#sayfaSayisi").html( response.result.booksPageCount -1);
 
                      $("#kitapKatdetmeUyariDurumu").val("1");
-                     spanElement.setAttribute('data-value', intSayi + 1);
+                     spanElement.setAttribute('data-value', intSayi );
                      var safeId = response.result.bookIdENC;
 
                       setTimeout(function () {

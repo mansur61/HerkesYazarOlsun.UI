@@ -54,22 +54,20 @@ namespace HerkesYazarOlsun.Portal.Controllers
             if (input.isYazmayaDevamEt.HasValue && !input.isYazmayaDevamEt.Value) //isYazmayaDevamEt = false ise
             {
                 var kategoriler = new BooksService().GetCategories();
-                input.Katergoriler = kategoriler!;
+                input.Katergoriler = kategoriler!; 
+                input.IlgiiSayfaSayisi =  1;
             }
-
+           
             if (input.isYazmayaDevamEt.HasValue &&  input.isYazmayaDevamEt.Value )//
             {
-                input.IlgiiSayfaSayisi = (int)(bookID + 1);
+                if(input.IlgiiSayfaSayisi.HasValue   && input.IlgiiSayfaSayisi.Value == 0)
+                {
+                    input.IlgiiSayfaSayisi =  2;
+                } 
+                  
             }
-            else if(input.IlgiiSayfaSayisi.HasValue )
-            {
-                input.IlgiiSayfaSayisi = input.IlgiiSayfaSayisi.Value;
-            }
-            else
-            {
-                input.IlgiiSayfaSayisi = 1;
-                 
-            }
+             
+            
 
 
             return View(input);
