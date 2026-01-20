@@ -431,7 +431,8 @@
            if(!id) { console.error("Sayfa ID yok!"); return; }
 
            var sayfaIcerikItem = window.bookPagesData[id] || {};
-            //console.log("sayfaIcerikItem:", sayfaIcerikItem );
+           
+             console.log("sayfaIcerikItem:", sayfaIcerikItem );
              let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
             let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
             let count = matches ? matches.length : 0;
@@ -445,7 +446,7 @@
             if(count == 0){ // sayfada herhangi bir foto yok
                // console.log("sayfada herhangi bir foto yok");
                 var quilIcerik = window.quill.root.innerHTML;
-               // console.log("quilIcerik:", quilIcerik );
+               //console.log("quilIcerik:", quilIcerik );
               
                    formData.append("isWordPDF", false);
                 const base64Images = extractBase64Images(quilIcerik);
@@ -463,20 +464,19 @@
 
                 }
                  quilIcerik = quilIcerik.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/g, "||img_BooksPage||");
-              // console.log("quilIcerik:", quilIcerik );
+              console.log("quilIcerik:", quilIcerik );
                 formData.append('PageWrite', quilIcerik);
-
-                 $("#progressOverlay").show();
+ 
+                  $("#progressOverlay").show();
             setTimeout(function() {  }, 3000);
 
-            Gonder(formData);
+            Gonder(formData); 
             }else{
                 showConfirm("En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?",
                 function (onay) {
-                    if (!onay) return;
-                     
-
-                      formData.append("PageWrite", sayfaIcerikItem.pageWrite || "");
+                    if (!onay) return; 
+                    
+                    //  formData.append("PageWrite", sayfaIcerikItem.pageWrite || "");
                        formData.append("PageWriteBase64", "PageWriteBase64");
                        formData.append("ID", id);
                        formData.append("BookId", sayfaIcerikItem.bookId);
@@ -487,13 +487,14 @@
                         var quilIcerik = window.quill.root.innerHTML;                           
                           quilIcerik = quilIcerik.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/g, "");
                           window.quill.root.innerHTML = quilIcerik;
-                          //console.log("quilIcerik:", quilIcerik );
-                            
-                          $("#progressOverlay").show();
+                          formData.append("PageWrite", quilIcerik || "");
+                          // console.log("quilIcerik:", quilIcerik );
+                          //  alert("quilIcerik:"+quilIcerik);
+                           $("#progressOverlay").show();
                         setTimeout(function() {  }, 3000);
                         
 
-                         Gonder(formData);
+                         Gonder(formData); 
                 });
             }
           
