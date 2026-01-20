@@ -16,7 +16,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult Ayarlar()
         {
-            long loginId = LOGIN_USER_ID; 
+            long loginId = LOGIN_USER_ID;
             VM_AYARLAR vmAyr = new VM_AYARLAR();
 
             vmAyr.LoginUserId = loginId;
@@ -60,9 +60,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 //ayr = await ModelIlgiliDosyalariDoldur(ayr, files);
                 ayr.dosyalar = files;
             }
-             
-            var sonuc = await  new AyarlarService().SaveOrUpdateAyarlar(ayr);
-             
+
+            var sonuc = await new AyarlarService().SaveOrUpdateAyarlar(ayr);
+
             return Json(sonuc);
         }
 

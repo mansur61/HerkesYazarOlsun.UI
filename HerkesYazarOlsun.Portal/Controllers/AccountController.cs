@@ -146,7 +146,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 return StatusCode(500, "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
-        
+
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
         public JsonResult SaveOrUpdateAyarlar(VM_AYARLAR ayr)

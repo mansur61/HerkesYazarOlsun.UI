@@ -16,7 +16,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
             return result;
         }
-         
+
 
     }
 }

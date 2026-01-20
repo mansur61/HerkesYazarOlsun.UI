@@ -13,6 +13,6 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ServiceResult result = new TaleplerService().TalepKaydet(talepler);
             return result;
         }
- 
+
     }
 }

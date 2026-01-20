@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
-    
+
     public class BooksPagesService : BaseService
     {
         public BooksPages? GetBooksPages(long id)
@@ -97,7 +97,7 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-       
+
         public ServiceResult<BooksPages> PostSaveBooksPages2(VM_BOOKS_PAGES bookPages)
         {
             string stringData = JsonConvert.SerializeObject(bookPages);
@@ -122,12 +122,12 @@ namespace HerkesYazarOlsun.Portal.Services
             {
                 try
                 {
-                    if (prop.Name == "PageFotoDosyalar" )
+                    if (prop.Name == "PageFotoDosyalar")
                         continue; // dosyaları ayrıca ekleyeceğiz
 
                     var value = prop.GetValue(bookPages);
                     if (value != null)
-                    { 
+                    {
                         form.Add(new StringContent(value.ToString()!), $"{prop.Name}");
                     }
                 }
@@ -144,9 +144,9 @@ namespace HerkesYazarOlsun.Portal.Services
                 foreach (var file in bookPages.PageFotoDosyalar)
                 {
                     var streamContent = new StreamContent(file.OpenReadStream());
-                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType); 
+                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
                     form.Add(streamContent, "PageFotoDosyalar", file.FileName);
-                    
+
                 }
             }
 

@@ -36,6 +36,18 @@
                 "${workspaceFolder}/HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.sln"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "format-razor",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "format",
+                "${workspaceFolder}/HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.sln",
+                "--include",
+                "**/*.cshtml"
+            ],
+            "problemMatcher": []
         }
     ]
 }

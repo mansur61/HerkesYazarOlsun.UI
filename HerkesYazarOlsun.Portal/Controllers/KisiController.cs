@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
-    public class KisiController : Controller 
+    public class KisiController : Controller
     {
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
@@ -21,7 +21,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public KisiController(IHttpContextAccessor contextAccessor, IOptions<HelperSettings> helperSettings)
         {
             _contextAccessor = contextAccessor;
-             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
+            Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
 
             SliderdaGosterilecekKayit = helperSettings.Value.SliderdaGosterilecekKayit;
             DefaultSliderdaGosterilecekKayit = helperSettings.Value.DefaultSliderdaGosterilecekKayit;
@@ -60,17 +60,17 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
             ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
 
-            return View(vmUsers); 
+            return View(vmUsers);
         }
 
 
         [HttpPost]
         [Route("YazariFavorilereEkle")]
-        public JsonResult YazariFavorilereEkle(int id,long tck)
+        public JsonResult YazariFavorilereEkle(int id, long tck)
         {
-            
+
             VM_FAVORI_YAZARLAR fav_yazar = new VM_FAVORI_YAZARLAR()
-            {                
+            {
                 LoginUserId = Convert.ToInt32(Lid),
                 YazarId = id,
                 tck = tck
@@ -89,7 +89,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 LoginUserId = Convert.ToInt32(Lid),
                 YazarId = id,
                 isFollow = follow
-                
+
             };
             var getFavori_yazar = new KisiService().PostWriterFollow(fovllow_yazar);
 
@@ -131,11 +131,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
             long id = Lid;
 
             if (!string.IsNullOrEmpty(pId))
-            { 
+            {
                 id = Convert.ToInt64(StringCipher.Decrypt(pId.ToString()));
-            } 
-             
-             Users kisi = new KisiService().GetKisiById(id); 
+            }
+
+            Users kisi = new KisiService().GetKisiById(id);
             //var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
             var vm_profil = ObjectMapper.Map(kisi.Profil, new VM_PROFILE());
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
@@ -155,12 +155,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
             else
             {
-               ViewBag.IsTakip = vm_kisi.WriterFollowLoginList?.Where(p => p.LoginUserId == id
-                && p.isFollow == (int)Takip.TakipEt ).Any() ?? false;//&& p.YazarId != Lid
+                ViewBag.IsTakip = vm_kisi.WriterFollowLoginList?.Where(p => p.LoginUserId == id
+                 && p.isFollow == (int)Takip.TakipEt).Any() ?? false;//&& p.YazarId != Lid
             }
 
 
-                Users lgn_kisi = new KisiService().GetKisiById(Lid);
+            Users lgn_kisi = new KisiService().GetKisiById(Lid);
 
             ViewBag.LOGIN_USER_ID = Lid;
             ViewBag.LGN_USER = lgn_kisi;
@@ -171,9 +171,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ViewBag.isBildirimTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder 
 
             return View(vm_kisi);
-            
+
         }
-        
+
 
     }
 }

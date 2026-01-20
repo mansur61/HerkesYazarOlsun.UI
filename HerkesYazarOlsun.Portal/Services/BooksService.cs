@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
-    
+
     public class BooksService : BaseService
     {
         public VM_BOOKS? GetBooks(long id)
@@ -17,7 +17,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<VM_BOOKS>(jsonContent.Result);
             return result;
         }
-         
+
         public VM_BOOK_ISTATISTIKLER GetISTATISTIKLERBooksById(long id)
         {
             Task<string> jsonContent = GetData("api/Books/GetISTATISTIKLERBooksById?" + "id=" + id);
@@ -107,7 +107,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<ServiceResult<FavoriBooks>>(jsonContent.Result);
             return result;
         }
-        
+
         public ServiceResult<BooksStars> PostBooksStars(BooksStars star)
         {
             string stringData = JsonConvert.SerializeObject(star);
@@ -170,9 +170,9 @@ namespace HerkesYazarOlsun.Portal.Services
                     {
                         //form.Add(new StringContent(value.ToString()!), prop.Name);
                         form.Add(new StringContent(value.ToString()!), $"BookModel.{prop.Name}");
-                    } 
+                    }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     var _ = e.Message;
                 }
@@ -232,7 +232,7 @@ namespace HerkesYazarOlsun.Portal.Services
             return sonuc!;
         }
 
-         
+
         public ServiceResult<Books> PostSaveBook2(VM_BOOKS VMbook)
         {
             string stringData = JsonConvert.SerializeObject(VMbook);

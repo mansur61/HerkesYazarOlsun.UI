@@ -5,10 +5,10 @@ using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
-    
+
     public class AramaService : BaseService
     {
-        
+
 
         public VM_ARAMA_SONUC TumAramalar(VM_ARAMA_INPUT arama)
         {

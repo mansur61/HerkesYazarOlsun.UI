@@ -38,7 +38,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
 
-        [HttpPost] 
+        [HttpPost]
         public async Task<ServiceResult> Gonder(string kime)
         {
             ServiceResult result = new ServiceResult();
@@ -66,8 +66,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 konu = _mailSettings.Subject,
                 gondericii_mail = _mailSettings.FromEmail
             };
-             
-            string sonuc = await _emailService.EmailGonder(icerik); 
+
+            string sonuc = await _emailService.EmailGonder(icerik);
 
             if (sonuc == "-1")
             {
@@ -77,7 +77,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             else
             {
                 result.State = MessageResultState.SUCCESS;
-                result.Message = kod; 
+                result.Message = kod;
             }
 
 
@@ -92,7 +92,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             ServiceResult result = new KisiService().PostKisiUpdate(vM_USERS);
             if (result.State != MessageResultState.SUCCESS)
-            { 
+            {
                 return result;
             }
             return result;
@@ -100,14 +100,14 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
-        public async Task<ServiceResult> MailBilgilendirme(string kime,string konu, string mesaj,int? tip = 0)
+        public async Task<ServiceResult> MailBilgilendirme(string kime, string konu, string mesaj, int? tip = 0)
         {
             ServiceResult result = new ServiceResult();
 
             VM_USERS vM_USERS = new VM_USERS();
             vM_USERS.EMAIL = kime;
-             
-            if(tip == 0) // mesaj atan kişi bilgilendirmesi
+
+            if (tip == 0) // mesaj atan kişi bilgilendirmesi
             {
 
             }
@@ -123,13 +123,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 password = _mailSettings.Password,
                 Host = _mailSettings.Host,
 
-                icerik = mesaj, 
+                icerik = mesaj,
                 kime = kime,
                 konu = konu,
                 gondericii_mail = _mailSettings.FromEmail
             };
 
-            string sonuc = await  _emailService.EmailGonder(mail_icerik);
+            string sonuc = await _emailService.EmailGonder(mail_icerik);
 
             if (sonuc == "-1")
             {

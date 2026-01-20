@@ -6,10 +6,10 @@ using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
-    
+
     public class OdemeService : BaseService
     {
-        
+
 
         public ServiceResult PostOdeme(VM_KARTLAR kart)
         {

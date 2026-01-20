@@ -16,11 +16,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private readonly HelperSettings helperSettings;
         private EmailService emailService;
 
-       
+
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
-        public OdemeSayfasiController(IHttpContextAccessor contextAccessor, 
-            IOptions<VM_Mail_Settings> mailSettings, 
+        public OdemeSayfasiController(IHttpContextAccessor contextAccessor,
+            IOptions<VM_Mail_Settings> mailSettings,
             IOptions<HelperSettings> _helperSettings)
         {
             _contextAccessor = contextAccessor;
@@ -67,7 +67,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View(vM_SPONSORLAR);
 
         }
-     
+
         [HttpPost]
         public async Task<JsonResult> SaveSponsorlukBildirAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
         {
@@ -84,9 +84,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             //odemeSponsorlar.Mail = "kayamansur61@gmail.com"; //test
 
             if (result.State == MessageResultState.SUCCESS)
-            { 
-                 //alinan mail, formdan herkes yazar olsuna mail gelecek
-                 var icerik = new VM_MAIL_ICERIK()
+            {
+                //alinan mail, formdan herkes yazar olsuna mail gelecek
+                var icerik = new VM_MAIL_ICERIK()
                 {
                     username = _mailSettings.Username,
                     password = _mailSettings.Password,
@@ -120,14 +120,14 @@ namespace HerkesYazarOlsun.Portal.Controllers
                                     
                                 </body>
                             </html>",
-                     
+
                     // mail kimden geliyor
                     gondericii_mail = _mailSettings.FromEmail, //odemeSponsorlar.Mail,
                     // mail kime gidiyor
                     kime = _mailSettings.FromEmail,
                     //dosyaYolu = tempFilePath,
-                    dosyalar = odemeSponsorlar.dosyalar != null &&  odemeSponsorlar.dosyalar.Any() ? odemeSponsorlar.dosyalar : null
-                 };
+                    dosyalar = odemeSponsorlar.dosyalar != null && odemeSponsorlar.dosyalar.Any() ? odemeSponsorlar.dosyalar : null
+                };
 
                 string sonuc = await emailService.EmailGonder(icerik);
 
@@ -155,7 +155,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                                     <h2 style='color: #2c3e50;'>Sayın {odemeSponsorlar.NameSurname}  ,</h2>
                                     <p>
                                         Sponsor seçiminiz başarılı şekilde yapılmıştır.
-                                        Paylaştığınız mail {(odemeSponsorlar.Mail) } veya SMS bilgileri ile sizlere en kısa sürede iletişim sağlanacaktır.
+                                        Paylaştığınız mail {(odemeSponsorlar.Mail)} veya SMS bilgileri ile sizlere en kısa sürede iletişim sağlanacaktır.
                                     </p>
                                     <p>
                                         {odemeSponsorlar.Mesaj}
@@ -179,7 +179,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         kime = odemeSponsorlar.Mail,
                     };
 
-                     sonuc = await emailService.EmailGonder(replyMail);
+                    sonuc = await emailService.EmailGonder(replyMail);
 
 
                     //if (sonuc == "-1")
@@ -192,7 +192,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     //    result.State = MessageResultState.SUCCESS;
                     //    result.Message = mesaj;
                     //}
-                    
+
                 }
             }
 

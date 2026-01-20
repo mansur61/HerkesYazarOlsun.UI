@@ -9,7 +9,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
     public class AramaController : Controller
     {
         private IHttpContextAccessor _contextAccessor;
-        private long Lid; 
+        private long Lid;
         public AramaController(IHttpContextAccessor contextAccessor)
         {
             _contextAccessor = contextAccessor;
@@ -23,7 +23,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
             ViewBag.LOGIN_USER_ID = Lid;
             return View(aramaSonuc.vmBook);
-           
+
         }
 
         [HttpGet]

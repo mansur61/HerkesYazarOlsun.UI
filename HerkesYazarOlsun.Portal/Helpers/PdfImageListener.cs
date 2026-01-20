@@ -1,6 +1,6 @@
 ﻿using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
-using iText.Kernel.Pdf.Canvas.Parser; 
+using iText.Kernel.Pdf.Canvas.Parser;
 
 namespace HerkesYazarOlsun.Portal.Helpers
 {

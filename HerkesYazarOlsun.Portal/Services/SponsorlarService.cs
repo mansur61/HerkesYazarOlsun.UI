@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
-    
+
     public class SponsorlarService : BaseService
     {
 
