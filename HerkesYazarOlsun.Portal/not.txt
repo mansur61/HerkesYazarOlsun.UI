@@ -34,3 +34,14 @@ dotnet publish -c Release \
 -p:DebugSymbols=true \
 -p:UseAppHost=true \
 -o ./publish
+
+bundan aldık publish 21.01.2026
+
+dotnet publish HerkesYazarOlsun.Portal.csproj \
+-c Release \
+-r win-x64 \
+--self-contained true \
+-p:PublishSingleFile=false \
+-p:IncludeNativeLibrariesForSelfExtract=false \
+-p:UseAppHost=true \
+-o publish 
