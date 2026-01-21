@@ -1,83 +1,69 @@
-﻿@{
-    ViewData["Title"] = "Ana Sayfa";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
+    ViewData["Title"] = "Ana Sayfa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
     string isGozlemciMod = User.GetGozlemciMod();
-    var temp = Model.VMBooksList?.ToList(); // ✅ Kopya liste oluştur
+
+     var temp = Model.VMBooksList?.ToList(); //   Kopya liste oluştur
     var tempDigerBookList = temp?.ToList();
     var tempYorumBookList = temp?.ToList();
     var tempYildizBookList = temp?.ToList();
 }
-<br />
-
-@* @section scripts{
-    <script src= "~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-} *@
-@section Styles{
-    <link href="~/lib/owlcarousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/css/kitap_arama_style.css" rel="stylesheet" />
-}
  
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
-<div class="container">
+@section Styles {
+    <link href="~/lib/owlcarousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
+    <style>
+        .sidebar-sticky {
+            position: sticky;
+            top: 20px;
+        }
+    </style>
+}
 
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-3">
-            <br />
-            <ul class="list-group list-group-horizontal">
 
+        <!-- 🔹 SIDEBAR -->
+        <aside class="col-md-3 sidebar-sticky">
+            <ul class="list-group">
                 <li class="list-group-item">
-                    <span class="me-2">📚</span>
-                    <a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a>
+                    📚 <a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a>
                 </li>
-
                 <li class="list-group-item">
-                    <span class="me-2">👤</span>
-                    <a href="/Kisi/TumYazarlar">Tüm Yazarlar</a>
+                    👤 <a href="/Kisi/TumYazarlar">Tüm Yazarlar</a>
                 </li>
-
                 <li class="list-group-item">
-                    <span class="me-2">🏢</span>
-                    <a href="/Kitaplar/YayinEviKitaplar?YayinlananKitaplar=true">Yayın Evini Kazanan Kitaplar</a>
+                    🏢 <a href="/Kitaplar/YayinEviKitaplar?YayinlananKitaplar=true">
+                        Yayın Evini Kazanan Kitaplar
+                    </a>
                 </li>
 
                 @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                 {
-                    <li class="list-group-item">
-                        <span class="me-2" style="font-size:20px;">✏️</span>
-                        <strong>
-                            <a style="font-size:20px" href="/Kitaplar/KitapOlustur?isYazmayaDevamEt=false">KİTAP YAZ</a>
-                        </strong>
+                    <li class="list-group-item fw-bold">
+                        ✏️ <a href="/Kitaplar/KitapOlustur?isYazmayaDevamEt=false">KİTAP YAZ</a>
                     </li>
-
-                    <li class="list-group-item">
-                        <span class="me-2" style="font-size:20px;">⬆️📄</span>
-                        <strong>
-                            <a href="/Kitaplar/KitapEkleWordOrPdf">
-                                <span style="font-size:20px">WORD</span> veya
-                                <span style="font-size:20px">PDF</span>'ten Aktarım
-                            </a>
-                        </strong>
+                    <li class="list-group-item fw-bold">
+                        ⬆️📄 <a href="/Kitaplar/KitapEkleWordOrPdf">WORD / PDF Aktar</a>
                     </li>
                 }
             </ul>
+        </aside>
 
-        </div>
-
-        <div class="col-md-9">
+        <!-- 🔹 SLIDER ALANI -->
+        <main class="col-md-6 offset-md-1">
+            mansur
             @Html.Partial("_Carousel")
 
-        </div>
+        </main>
     </div>
 </div>
 
-<br />
 @{
     string tipsec = "";    
 }
@@ -186,3 +172,22 @@
 <script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script>
 <script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script>
 <script src="~/js/kitap-arama.js"></script>
+
+@section Scripts { 
+
+    <script>
+        $(function () {
+            $('#owl-@Model.Tip').owlCarousel({
+                loop: false,
+                margin: 15,
+                nav: true,     // ← ileri geri
+                dots: true,    // ← senin <ol><li> yerine
+                responsive: {
+                    0: { items: 1 },
+                    768: { items: 4 },
+                    1200: { items: 5 } // ← 5 kitap = 1 sayfa
+                }
+            });
+        });
+    </script>
+}
