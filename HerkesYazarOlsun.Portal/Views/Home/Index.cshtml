@@ -22,6 +22,75 @@
             position: sticky;
             top: 20px;
         }
+        /* NAV CONTAINER */
+.owl-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+/* BUTTONS */
+.owl-nav button {
+    pointer-events: all;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6) !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 22px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .25s ease;
+}
+
+/* HOVER */
+.owl-nav button:hover {
+    background: #0d6efd !important;
+    transform: scale(1.1);
+}
+
+/* LEFT / RIGHT POSITION */
+.owl-prev {
+    margin-left: -22px;
+}
+
+.owl-next {
+    margin-right: -22px;
+}
+
+/* DISABLED */
+.owl-nav button.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* MOBILE */
+@@media (max-width: 768px) {
+    .owl-nav button {
+        width: 36px;
+        height: 36px;
+        font-size: 18px !important;
+    }
+    .owl-nav button span {
+    display: none;
+}
+
+.owl-prev::before {
+    content: "❮";
+}
+
+.owl-next::before {
+    content: "❯";
+}
+
+}
+
     </style>
 }
 
@@ -67,13 +136,6 @@
 @{
     string tipsec = "";    
 }
-<div class="row">
-    <div class="col-md-9">
-        <h3>
-            5 Yıldız Alan Kitaplar
-        </h3>
-    </div>
-</div>
 
 @functions {
     private string GetDominantStar(VM_Stars stars)
@@ -99,19 +161,28 @@
     }
 }
 
+
+<div class="row">
+    <div class="col-md-9">
+        <h3>
+            5 Yıldız Alan Kitaplar
+        </h3>
+    </div>
+</div>
+
+
 @{
-    tipsec = "yildizalan"; 
-    Model.Tip = @tipsec;    
-    tempYildizBookList = temp
-         .Where(p => GetDominantStar(p.Stars) == "yildiz5")
-         .ToList();
-    Model.VMBooksList = tempYildizBookList;
+    var yildizModel = new VM_BOOKS_DETAIL
+    {
+        Tip = "yildizalan",
+        VMBooksList = temp
+            .Where(p => GetDominantStar(p.Stars) == "yildiz5")
+            .ToList(),
+        isAnaSayfa = true
+    };
 }
- 
 
-@Html.Partial("_KitapSliderGosterimleri", @Model)
-
-<div style="height:50px;"></div>
+@Html.Partial("_KitapSliderGosterimleri", yildizModel)
 
 <div class="row">
     <div class="col-md-9">
@@ -120,23 +191,33 @@
         </h3>
     </div>
 </div> 
+ 
 @{
-    
-    tipsec = "yorumalan";
-    Model.Tip = @tipsec;
-    // Yorum sayısına göre sıralanmış en çok yorum alan 10 kitabı seç
-    Model.VMBooksList = temp;
-    tempYorumBookList = temp.Where(p => p.Stars.HangiStar != "yildiz5" && p.BooksComments?.Count > 0)
-                     .OrderByDescending(b => b.BooksComments?.Count) 
-     //.Take(10)
-     .ToList();
-    Model.VMBooksList = tempYorumBookList;
-} 
+    var yorumModel = new VM_BOOKS_DETAIL
+    {
+        Tip = "yorumalan",
+        VMBooksList = temp
+            .Where(p => p.Stars.HangiStar != "yildiz5" && p.BooksComments?.Count > 0)
+            .OrderByDescending(p => p.BooksComments.Count)
+            .ToList(),
+        isAnaSayfa = true
+    };
+}
 
-@Html.Partial("_KitapSliderGosterimleri",@Model)
+@Html.Partial("_KitapSliderGosterimleri", yorumModel)
 
-<div style="height:50px;"></div>
-
+ 
+@{
+    var digerModel = new VM_BOOKS_DETAIL
+    {
+        Tip = "digerkitaplar",
+        VMBooksList = temp
+            .Where(p => !p.BooksComments.Any())
+            .Where(p => p.Stars.HangiStar != "yildiz5")
+            .ToList(),
+        isAnaSayfa = true
+    };
+}
 
 <div class="row">
     <div class="col-md-9">
@@ -146,23 +227,9 @@
     </div>
 </div>
 
-@{
-    tipsec = "digerkitaplar"; 
-    Model.Tip = @tipsec;
-    Model.VMBooksList = temp;
-    // İlk 10 yorum alan ve 5 yıldızlı kitapları hariç tut
-    tempDigerBookList = temp 
-         .Where(p => !p.BooksComments.Any()) // hiç yorum almayanlar
-            .Where(p => p.Stars.HangiStar != "yildiz5")       // 5 yıldızlı olmayanlar
-    .ToList();
-    Model.VMBooksList = tempDigerBookList;
-} 
+@Html.Partial("_KitapSliderGosterimleri", digerModel)
 
-@Html.Partial("_KitapSliderGosterimleri",@Model)
-
-
-<div style="height:100px;"></div>
-
+ 
 
 @Html.Partial("_Sponsorlar")
 <br />
@@ -173,21 +240,26 @@
 <script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script>
 <script src="~/js/kitap-arama.js"></script>
 
-@section Scripts { 
 
-    <script>
-        $(function () {
-            $('#owl-@Model.Tip').owlCarousel({
+@section Scripts {
+<script>
+    $(function () {
+        $('.kitap-slider').each(function () {
+            $(this).owlCarousel({
                 loop: false,
                 margin: 15,
-                nav: true,     // ← ileri geri
-                dots: true,    // ← senin <ol><li> yerine
+                nav: true,
+                dots: true,
                 responsive: {
                     0: { items: 1 },
-                    768: { items: 4 },
-                    1200: { items: 5 } // ← 5 kitap = 1 sayfa
+                    576: { items: 2 },
+                    768: { items: 3 },
+                    992: { items: 4 },
+                    1200: { items: 5 }
                 }
             });
         });
-    </script>
+    });
+</script>
 }
+

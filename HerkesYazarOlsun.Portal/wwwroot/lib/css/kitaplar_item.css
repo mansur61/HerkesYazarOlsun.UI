@@ -1,0 +1,32 @@
+.trash-icon {
+    display: inline-block;
+    font-size: 18px;
+    padding: 6px 8px;
+    background-color: #fff; /* Beyaz arka plan */
+    border: 1px solid #ccc; /* Hafif gri border */
+    border-radius: 6px; /* Yuvarlatılmış köşeler */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+    .trash-icon:hover {
+        background-color: #f8d7da; /* Silmeye yakın kırmızı ton hover */
+        border-color: #f5c6cb;
+        color: #a71d2a; /* Icon rengi değişir */
+        transform: scale(1.1); /* Hafif büyüme efekti */
+    }
+
+.book-item {
+    flex: 0 0 50%; /* her satırda 2 adet */
+    max-width: 220px; /* senin istediğin genişlik */
+    box-sizing: border-box;
+    padding: 5px;
+    margin: 5px;
+    border: 1px dotted blue;
+}
+/*
+.books-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}*/

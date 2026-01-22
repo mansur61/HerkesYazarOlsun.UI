@@ -1,0 +1,98 @@
+ 
+    /* OWL ITEM ORTALAMA */
+#owl-BOOKS .item,
+[id^="owl-"] .item {
+    display: flex;
+    justify-content: center;
+}
+
+/* BOOK WRAPPER */
+.books-wrapper {
+    width: 100%;
+    max-width: 220px;
+}
+
+/* BOOK ITEM */
+.book-item {
+    width: 100%;
+}
+
+/* KART */
+.product__item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.product__item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+/* KAPAK */
+.product__item__pic {
+    position: relative;
+    height: 260px;
+    background-size: cover;
+    background-position: center;
+}
+
+/* HOVER ICONS */
+.product__item__pic__hover {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.product__item__pic__hover li {
+    list-style: none;
+}
+
+.product__item__pic__hover li a {
+    background: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* TEXT */
+.product__item__text {
+    padding: 10px;
+    text-align: center;
+}
+
+.product__item__text h6 {
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.product__item__text a {
+    color: #111;
+    text-decoration: none;
+}
+
+.product__item__text a:hover {
+    color: #0d6efd;
+}
+
+/* BADGE */
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #28a745;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+}
+ 

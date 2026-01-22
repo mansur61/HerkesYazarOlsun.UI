@@ -7,60 +7,13 @@
     string isGozlemciMod = User.GetGozlemciMod();
 }
 
-<div class="owl-carousel owl-theme" id="owl-@Model.Tip">
+    <link href="~/lib/css/kitap_slider_gosterimleri.css"  rel="stylesheet" /> 
 
-@foreach (var item in Model.VMBooksList)
-{
-    <div class="item">
-        <div class="books-wrapper">
 
-            <input type="hidden" value="@item.ID" name="kId" />
+<div class="owl-carousel kitap-slider" id="owl-@Model.Tip">
 
-            <div class="book-item">
+@Html.Partial("_KitaplarItem", Model)
 
-                <div class="product__item">
-
-                    <div class="product__item__pic set-bg"
-                         data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.ONKAPAKFOTOPATH">
-
-                        @if (!string.IsNullOrEmpty(item.Categori?.Name))
-                        {
-                            <div class="discount-badge">
-                                @item.Categori.Name
-                            </div>
-                        }
-
-                        <ul class="product__item__pic__hover">
-                            @if (isGozlemciMod == "0")
-                            {
-                                <li>
-                                    <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip")'>
-                                        <i class="fa fa-heart"></i>
-                                    </a>
-                                </li>
-                            }
-
-                            <li>
-                                <a href="/Kisi/Profil?pId=@StringCipher.Encrypt(item.YazarId.ToString())">
-                                    <i class="fa fa-user"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="product__item__text">
-                        <h6>
-                            <a href="/Kitaplar/KitapDetay?kitap_id=@StringCipher.Encrypt(item.ID.ToString())">
-                                @item.Name
-                            </a>
-                        </h6>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-}
 
 </div>
 
