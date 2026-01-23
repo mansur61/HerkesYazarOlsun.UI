@@ -93,19 +93,15 @@
 
     </style>
 }
-
-<div class="container-fluid">
+<br />
+<div class="container-fluid mt-3">
     <div class="row">
 
         <!-- 🔹 SIDEBAR -->
         <aside class="col-md-3 sidebar-sticky">
             <ul class="list-group">
-                <li class="list-group-item">
-                    📚 <a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a>
-                </li>
-                <li class="list-group-item">
-                    👤 <a href="/Kisi/TumYazarlar">Tüm Yazarlar</a>
-                </li>
+                <li class="list-group-item">📚 <a href="/Kitaplar/TumKitaplar">Tüm Kitaplar</a></li>
+                <li class="list-group-item">👤 <a href="/Kisi/TumYazarlar">Tüm Yazarlar</a></li>
                 <li class="list-group-item">
                     🏢 <a href="/Kitaplar/YayinEviKitaplar?YayinlananKitaplar=true">
                         Yayın Evini Kazanan Kitaplar
@@ -114,24 +110,20 @@
 
                 @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                 {
-                    <li class="list-group-item fw-bold">
-                        ✏️ <a href="/Kitaplar/KitapOlustur?isYazmayaDevamEt=false">KİTAP YAZ</a>
-                    </li>
-                    <li class="list-group-item fw-bold">
-                        ⬆️📄 <a href="/Kitaplar/KitapEkleWordOrPdf">WORD / PDF Aktar</a>
-                    </li>
+                    <li class="list-group-item fw-bold">✏️ <a href="/Kitaplar/KitapOlustur">KİTAP YAZ</a></li>
+                    <li class="list-group-item fw-bold">⬆️📄 <a href="/Kitaplar/KitapEkleWordOrPdf">WORD / PDF Aktar</a></li>
                 }
             </ul>
         </aside>
 
-        <!-- 🔹 SLIDER ALANI -->
-        <main class="col-md-6 offset-md-1">
-            mansur
+        <!-- 🔹 CAROUSEL -->
+        <main class="col-md-9">
             @Html.Partial("_Carousel")
-
         </main>
+
     </div>
 </div>
+
 
 @{
     string tipsec = "";    
