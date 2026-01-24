@@ -3,18 +3,12 @@
     ViewData["Title"] = "Tüm Yazarlar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-@* @section scripts{
-    <script src= "~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-} *@
-@section Styles{
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
-}
+ 
 
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_USERS_DETAIL;
 @using HerkesYazarOlsun.Portal.Controllers;
+@using HerkesYazarOlsun.Model.ViewModel;
 
  
 @if (ViewBag.FavoriYazarlar != null && ViewBag.FavoriYazarlar)
@@ -25,11 +19,7 @@ else
 {
     <h3 style="margin: 50px auto;">Tüm Yazarlar</h3>
 }
-<h6><span>@Model.VMUsersList.Count()</span> Kayıt Var </h6>
-<hr />
-
  
-
 @{
     string tip = "tumyazarlar";
     Model.Tip =  tip;
@@ -37,31 +27,60 @@ else
 <input type="hidden" id="tip" value="@tip" />
 
 
-  @Html.Partial("_AlertMesaj", @tip) 
+@Html.Partial("_AlertMesaj", @tip) 
 
 @Html.Partial("_YazarFiltreleme")
   
+<br/>
 
 <div id="tumyazarlar">
+     
+     <h6>
+
+     </h6>
+        <span>@(Model.VMUsersList?.Count ?? 0)</span> Kayıt Var
+    </h6>
+
+<hr />
     @{
-        Model.yazarSliderYometimAdi = "tumyazarlar";        
+        int perSlide = Model.sliderdaGosterilecekKayit != 0
+            ? Model.sliderdaGosterilecekKayit
+            : Convert.ToInt32(ViewBag.SliderdaGosterilecekKayit);
+
+
+        int total = Model.VMUsersList.Count;
+        int sliderSayisi = (int)Math.Ceiling((double)total / perSlide);
+        var butons = new  VM_PAGINATION_BUTTON{
+                sliderSayisi = sliderSayisi,
+                sliderSayiDivTagName = "tumyazarlar"
+                
+        };
+        Model.vM_PAGINATION_BUTTONS = butons;
     }
 
-    @Html.Partial("_YazarSliderItemYonetimleri",@Model)
-
-    @Html.Partial("Yazarlar",@Model)
+    @Html.Partial("Yazarlar",@Model) 
     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)
 
 </div>
 
 
 <div id="arabutonfiltre"></div>
+
 <script src= "~/js/general.js"></script>
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script> 
+
 
 <script>
 
     $("#arabutonfiltre").css("display", "none"); 
 
+    function Temizle(){ 
+        location.reload();
+                 
+    }
     function Ara() {
         
        //UyariVer(1, "#basarili-", "#bilgi-", "#uyari-", "Kitap Tamamlandı. İlgili kitaba yönlendiriliyorsunuz..");
@@ -78,7 +97,7 @@ else
         }
 
         var yazar_ara = $("#yazar_ara").val();
-         alert(yazar_ara);
+         //alert(yazar_ara);
       
         $.post("@Url.Action(nameof(KisiController.AraButonFiltrelemeYazarlar), "Kisi")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
@@ -89,11 +108,10 @@ else
                 $("#arabutonfiltre").html(data);
                 $("#arabutonfiltre").css("display", "block");
                
-                $("#tumyazarlar").css("display", "none");
-                 
+                $("#tumyazarlar").css("display", "none"); 
 
             } else {
-                alert("olumsuz");
+                //alert("olumsuz");
                 $("#tumyazarlar").css("display", "block");
                 $("#arabutonfiltre").css("display", "block");
             }
@@ -103,11 +121,3 @@ else
      
 </script>
 
-<script src= "~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
-<script src= "~/lib/bootstrap/dist/js/mixitup.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/kitap-arama.js"></script>

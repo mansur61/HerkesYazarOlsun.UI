@@ -51,7 +51,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
 
             ViewBag.FavoriYazarlar = arama.FavoriYazarlar;
-
+            ViewBag.Tip = "tumyazarlar";
             vmUsers.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
             List<VM_USERS> usersList = new KisiService().GetKisiler(arama).ToList();
@@ -121,6 +121,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             List<VM_USERS> usersList = new KisiService().GetKisiler(arama).ToList();
             vmUsers.VMUsersList = usersList;
+
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
 
             return View(vmUsers);
         }

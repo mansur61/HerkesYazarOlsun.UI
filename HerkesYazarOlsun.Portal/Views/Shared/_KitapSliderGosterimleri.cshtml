@@ -12,8 +12,12 @@
 
 <div class="owl-carousel kitap-slider" id="owl-@Model.Tip">
 
-@Html.Partial("_KitaplarItem", Model)
-
+@foreach (var kitap in Model.VMBooksList)
+{
+   <div class="item">
+        @Html.Partial("_KitaplarItem", kitap)
+    </div>
+}
 
 </div>
 

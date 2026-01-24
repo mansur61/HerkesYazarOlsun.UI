@@ -1,0 +1,71 @@
+ 
+    /* PROFILE CARD */
+    .profile-card {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        height: 140px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+        .profile-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+    .profile-info {
+        margin-left: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .profile-info h2 {
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+            color: #333;
+            word-break: break-word;
+        }
+
+    .hover-icons {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+
+        .hover-icons li {
+            list-style: none;
+        }
+
+            .hover-icons li a {
+                display: inline-block;
+                padding: 2px 6px;
+                background-color: rgba(0,0,0,0.05);
+                border-radius: 4px;
+                transition: background 0.3s;
+            }
+
+                .hover-icons li a:hover {
+                    background-color: rgba(0,0,0,0.15);
+                }
+
+    .follow-stats {
+        margin-top: 4px;
+    }
+
+        .follow-stats .stat i {
+            font-size: 14px;
+        }
+ 

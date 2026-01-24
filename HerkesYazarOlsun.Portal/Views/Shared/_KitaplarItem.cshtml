@@ -1,69 +1,64 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
 
-@using HerkesYazarOlsun.Model.Entity
-@using HerkesYazarOlsun.Model.Utils
+@using HerkesYazarOlsun.Model.Utils;
+@using HerkesYazarOlsun.Portal.Helpers.Extensions;
 @using HerkesYazarOlsun.Portal.Controllers;
-@using HerkesYazarOlsun.Portal.Helpers.Extensions
- 
 
 @{
     string isGozlemciMod = User.GetGozlemciMod();
 }
 
-<link href="~/lib/css/kitaplar_item.css"  rel="stylesheet" />
+<link href="~/lib/css/kitaplar_item.css" rel="stylesheet" />
 
-@foreach (var item in Model.VMBooksList)
-{
-    <div class="item">
-        <div class="books-wrapper">
+ 
+    <div class="books-wrapper">
 
-            <input type="hidden" value="@item.ID" name="kId" />
+        <input type="hidden" value="@Model.ID" name="kId" />
 
-            <div class="book-item">
+        <div class="book-item">
+            <div class="product__item">
 
-                <div class="product__item">
+                <div class="product__item__pic set-bg"
+                     data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@Model.ONKAPAKFOTOPATH">
 
-                    <div class="product__item__pic set-bg"
-                         data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.ONKAPAKFOTOPATH">
+                    @if (!string.IsNullOrEmpty(@Model.Categori?.Name))
+                    {
+                        <div class="discount-badge">
+                            @Model.Categori.Name
+                        </div>
+                    }
 
-                        @if (!string.IsNullOrEmpty(item.Categori?.Name))
+                    <ul class="product__item__pic__hover">
+                        @if (isGozlemciMod == "0")
                         {
-                            <div class="discount-badge">
-                                @item.Categori.Name
-                            </div>
-                        }
-
-                        <ul class="product__item__pic__hover">
-                            @if (isGozlemciMod == "0")
-                            {
-                                <li>
-                                    <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip")'>
-                                        <i class="fa fa-heart"></i>
-                                    </a>
-                                </li>
-                            }
-
                             <li>
-                                <a href="/Kisi/Profil?pId=@StringCipher.Encrypt(item.YazarId.ToString())">
-                                    <i class="fa fa-user"></i>
+                                <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(@Model.ID.ToString())","@ViewBag.Tip")'>
+                                    <i class="fa fa-heart"></i>
                                 </a>
                             </li>
-                        </ul>
-                    </div>
+                        }
 
-                    <div class="product__item__text">
-                        <h6>
-                            <a href="/Kitaplar/KitapDetay?kitap_id=@StringCipher.Encrypt(item.ID.ToString())">
-                                @item.Name
+                        <li>
+                            <a href="/Kisi/Profil?pId=@StringCipher.Encrypt(@Model.YazarId.ToString())">
+                                <i class="fa fa-user"></i>
                             </a>
-                        </h6>
-                    </div>
-
+                        </li>
+                    </ul>
                 </div>
+
+                <div class="product__item__text">
+                    <h6>
+                        <a href="/Kitaplar/KitapDetay?kitap_id=@StringCipher.Encrypt(@Model.ID.ToString())">
+                            @Model.Name
+                        </a>
+                    </h6>
+                </div>
+
             </div>
         </div>
     </div>
-}
+ 
+
 <script>
 
     function KitabiFavorilereEkle(btn, kitapId, tip) {

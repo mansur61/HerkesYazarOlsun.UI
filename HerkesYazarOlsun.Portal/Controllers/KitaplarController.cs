@@ -886,7 +886,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ViewBag.FavoriKitaplar = arama.FavoriKitaplar;
             ViewBag.YayinlananKitaplar = arama.YayinlananKitaplar;
             ViewBag.BitenKitaplar = arama.BitenKitaplar;
-
+            ViewBag.Tip = "tumkitaplar";
             ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
             ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
 

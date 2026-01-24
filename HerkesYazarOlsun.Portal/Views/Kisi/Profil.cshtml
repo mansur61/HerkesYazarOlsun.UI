@@ -53,9 +53,8 @@
 }
 
 
-@section Styles {
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
+@section Styles {    
+    <link href="~/lib/owlcarousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
 
     <style>
         /* PROFİL KARTI */
@@ -185,12 +184,8 @@
         }
     </style>
 
-
 }
-
-@* @section scripts {
-    <script src= "~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-} *@
+ 
 
 <input type="hidden" id="profilicin" value="profil" />
 <input type="hidden" id="yazar_id" value="@Model.ID" />
@@ -202,8 +197,8 @@
     <div class="profile-card">
         <div class="col-md-2 d-flex flex-column align-items-center">
             <img src="@(!string.IsNullOrEmpty(Model?.Profile?.ProfilResimURl)
-                                                                                     ? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
-                                                                                     : Url.Content( "~/lib/img/user.png"))"
+                                ? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
+                                : Url.Content( "~/lib/img/user.png"))"
                  alt="Profil Resmi"
                  class="img-fluid img-thumbnail mt-4 mb-2"
                  style="width: 150px;" />
