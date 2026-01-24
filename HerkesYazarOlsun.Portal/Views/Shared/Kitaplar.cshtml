@@ -2,35 +2,39 @@
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Controllers;
  
-
-<div class="container my-4">
-    <div class="row">
-
-        @{
-            int perSlide = Model.sliderdaGosterilecekKayit ?? ViewBag.SliderdaGosterilecekKayit;
-        }
-         
-
-        @for (int i = 0; i < Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
+    
+ @{
+          int perSlide = Model.sliderdaGosterilecekKayit  ?? ViewBag.SliderdaGosterilecekKayit;
+ }
+     
+   @for (int i = 0; i < Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
+    {
+        var slideModel = new VM_BOOKS_DETAIL
         {
-            var slideModel = new VM_BOOKS_DETAIL
-            {
-                VMBooksList = Model.VMBooksList.Skip(i * perSlide).Take(perSlide).ToList(),
-                Tip = Model.Tip,
-                isAnaSayfa = Model.isAnaSayfa
-            };
+            VMBooksList = Model.VMBooksList
+                .Skip(i * perSlide)
+                .Take(perSlide)
+                .ToList(),
+            Tip = Model.Tip,
+            isAnaSayfa = Model.isAnaSayfa
+        };
 
-            <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName"
-                 data-index="@i"
-                 style="display:none;">
-                @Html.Partial("_KitaplarItem", slideModel)
+        <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName"
+            data-index="@i"
+            style="display:@(i == 0 ? "block" : "none");">
+
+            <div class="row g-3">
+                @foreach (var kitap in slideModel.VMBooksList)
+                {
+                    <div class="col-md-4 col-sm-6">
+                        @Html.Partial("_KitaplarItem", kitap)
+                    </div>
+                }
             </div>
-        }
 
+        </div>
+    }
 
-    </div>
-
-</div>
 
 
 

@@ -29,9 +29,7 @@ else
     <h3 style="margin: 50px auto;">Tüm Kitaplar</h3>
 }
 
-<h6><span>@Model.VMBooksList.Count()</span> Kayıt Var </h6>
 
-<hr />
  
 @Html.Partial("_KitapFiltreleme")
 
@@ -41,55 +39,31 @@ else
 
 @Html.Partial("_AlertMesaj",@Model.Tip)
  
-
+<br/>
 
 <div id="tumkitaplar">
     @{
         Model.kitapSliderYometimAdi = "tumkitaplar";
     }
 
-    @Html.Partial("_KitapSliderItemYonetimleri", Model)
+    <h6><span>@Model.VMBooksList.Count()</span> Kayıt Var </h6>
 
-    @{
-        int perSlide = Model.sliderdaGosterilecekKayit  ?? ViewBag.SliderdaGosterilecekKayit;
+    <hr />
+
+   
+    @{ 
+
+         int perSlide = Model.sliderdaGosterilecekKayit  ?? ViewBag.SliderdaGosterilecekKayit;
 
         int total = Model.VMBooksList.Count;
         int sliderSayisi = (int)Math.Ceiling((double)total / perSlide);
         var butons = new  VM_PAGINATION_BUTTON{
                 sliderSayisi = sliderSayisi,
-                
+                sliderSayiDivTagName = "tumkitaplar"
         };
         Model.vM_PAGINATION_BUTTONS = butons;
     }
-    
-
-    @for (int i = 0; i < sliderSayisi; i++)
-    {
-        var slideModel = new VM_BOOKS_DETAIL
-        {
-            VMBooksList = Model.VMBooksList
-                .Skip(i * perSlide)
-                .Take(perSlide)
-                .ToList(),
-            Tip = Model.Tip,
-            isAnaSayfa = Model.isAnaSayfa
-        };
-
-        <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName"
-            data-index="@i"
-            style="display:@(i == 0 ? "block" : "none");">
-
-            <div class="row g-3">
-                @foreach (var kitap in slideModel.VMBooksList)
-                {
-                    <div class="col-md-4 col-sm-6">
-                        @Html.Partial("_KitaplarItem", kitap)
-                    </div>
-                }
-            </div>
-
-        </div>
-    }
+      @Html.Partial("Kitaplar", @Model)
 
     @Html.Partial("_PaginationButonlar", Model.vM_PAGINATION_BUTTONS)
 </div>
@@ -100,12 +74,17 @@ else
 <script src="~/lib/jquery/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script>
-<script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script>
-<script src="~/js/kitap-arama.js"></script>
+<script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script> 
 
 <script>
 
     $("#arabutonfiltre").css("display", "none");
+
+    function Temizle(){ 
+        location.reload();
+                 
+    }
+
     function Ara() {
 
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
