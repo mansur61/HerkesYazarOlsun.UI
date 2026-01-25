@@ -30,33 +30,64 @@
     <div class="container">
 
 
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+       <ul class="nav nav-tabs gap-2" id="myTab" role="tablist">
 
-            <li class="nav-item ">
-                <a class="nav-link active" id="aciklama-tab" data-toggle="tab" href="#aciklama" role="tab" aria-controls="aciklama" aria-selected="false">Açıklama</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="ozellikler-tab" data-toggle="tab" href="#ozellikler" role="tab" aria-controls="ozellikler"
-                   aria-selected="false">Kitap Özellikleri</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="yorumlar-tab" data-toggle="tab" href="#yorumlar" role="tab" aria-controls="yorumlar"
-                   aria-selected="false">Yorumlar</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link " id="degerlendirme-tab" data-toggle="tab" href="#degerlendirme" role="tab" aria-controls="degerlendirme"
-                   aria-selected="false">Değerlendirmeler</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link " id="istatistik-tab" data-toggle="tab" href="#istatistik" role="tab" aria-controls="istatistik"
-                   aria-selected="false">Kitap İstatistiği</a>
-            </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link btn btn-light active"
+           id="aciklama-tab"
+           data-bs-toggle="tab"
+           href="#aciklama"
+           role="tab">
+            Açıklama
+        </a>
+    </li>
 
-        </ul>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link btn btn-light"
+           id="ozellikler-tab"
+           data-bs-toggle="tab"
+           href="#ozellikler"
+           role="tab">
+            Kitap Özellikleri
+        </a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link btn btn-light"
+           id="yorumlar-tab"
+           data-bs-toggle="tab"
+           href="#yorumlar"
+           role="tab">
+            Yorumlar
+        </a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link btn btn-light"
+           id="degerlendirme-tab"
+           data-bs-toggle="tab"
+           href="#degerlendirme"
+           role="tab">
+            Değerlendirmeler
+        </a>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <a class="nav-link btn btn-light"
+           id="istatistik-tab"
+           data-bs-toggle="tab"
+           href="#istatistik"
+           role="tab">
+            Kitap İstatistiği
+        </a>
+    </li>
+
+</ul>
 
 
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="aciklama" role="tabpanel" aria-labelledby="aciklama-tab">
+ 
+        <div class="tab-content border border-top-0 p-4" id="myTabContent">
+            <div class="tab-pane fade show active" id="aciklama">
                 <p>
                     @Html.Raw(Model.BookModel.ARKAKAPAKYAZISI)
                     
@@ -65,7 +96,7 @@
             </div>
 
 
-            <div class="tab-pane fade" id="ozellikler" role="tabpanel" aria-labelledby="ozellikler-tab">
+            <div class="tab-pane fade" id="ozellikler">
                 <div class="table-responsive">
                     <table class="table">
                         <tbody>
@@ -108,7 +139,7 @@
                 </div>
             </div>
            
-            <div class="tab-pane fade" id="yorumlar" role="tabpanel" aria-labelledby="yorumlar-tab">
+            <div class="tab-pane fade" id="yorumlar">
                 <div class="row">                   
                     <div class="col-lg-6">
                         @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
@@ -178,7 +209,7 @@
                 </div>
             </div>
            
-            <div class="tab-pane fade " id="degerlendirme" role="tabpanel" aria-labelledby="degerlendirme-tab">
+            <div class="tab-pane fade" id="degerlendirme">
                 <div class="row">
                    
                     <div class="col-lg-6">
@@ -273,7 +304,7 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade show active" id="istatistik" role="tabpanel" aria-labelledby="istatistik-tab">
+            <div class="tab-pane fade" id="istatistik">
                 <div class="row total_rate">
                     <div class="col-6">
                         <div class="box_total">
@@ -353,7 +384,8 @@
                     </table>
                 </div>
                 <br />
-                <canvas id="istatistikChart"></canvas>
+                <canvas id="istatistikChart" style="height:300px"></canvas>
+
 
             </div>
             
@@ -365,72 +397,77 @@
 </section>
 
  
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    $(document).ready(function () {
-        var ctx = $('#istatistikChart')[0].getContext('2d');
-         
-        var istatistik = @Html.Raw(Json.Serialize(Model.BookModel.iSTATISTIK));
-        var yayinAyar = @Html.Raw(Json.Serialize(ViewBag.YayinAyar));
-        
-        // Eğer yayın ayar boşsa modelden al
+    let myChart = null;
+
+    function createChart() {
+
+        if (myChart) return; // tekrar oluşturma
+
+        const canvas = document.getElementById('istatistikChart');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+
+        const istatistik = @Html.Raw(Json.Serialize(Model.BookModel.iSTATISTIK));
+        let yayinAyar = @Html.Raw(Json.Serialize(ViewBag.YayinAyar));
+
         if (!yayinAyar || Object.keys(yayinAyar).length === 0) {
             yayinAyar = @Html.Raw(Json.Serialize(Model?.BookModel?.Categori?.CategoryYayinAyarlari));
-             console.log(" CategoryCategriAyarlari yayinAyar:", yayinAyar);
         }
 
-        console.log("istatistik:", istatistik);
-        console.log("yayinAyar:", yayinAyar);
-
-        // Oranları hesapla, tüm oranlar 0 ise 0 olarak kalır
-        function hesaplaOran(deger, toplam) { 
-             var oran = (toplam && toplam !== 0) ? (deger / toplam * 100) : 0; 
-            return isNaN(oran) ? 0 : toplam;
+        function hesaplaOran(mevcut, gerekli) {
+            if (!gerekli || gerekli === 0) return 0;
+            return Math.round((mevcut / gerekli) * 100);
         }
-        console.log("yayinAyar?.toplamYildiz  ",yayinAyar?.toplamYildiz );
 
-        var toplamYildizOran = hesaplaOran(yayinAyar?.toplamYildiz ?? 0, istatistik.toplamYildiz);
-        var toplamBegeniOran = hesaplaOran(yayinAyar?.toplamBegeni ?? 0, istatistik.toplamBegeni);
-        var toplamYorumOran = hesaplaOran(yayinAyar?.toplamYorum ?? 0, istatistik.toplamYorum);
-        var toplamDegerlendirmeOran = hesaplaOran(yayinAyar?.toplamDegerlendirme ?? 0, istatistik.toplamDegerlendirme);
+        const dataValues = [
+            hesaplaOran(istatistik.toplamYildiz, yayinAyar?.toplamYildiz),
+            hesaplaOran(istatistik.toplamBegeni, yayinAyar?.toplamBegeni),
+            hesaplaOran(istatistik.toplamYorum, yayinAyar?.toplamYorum),
+            hesaplaOran(istatistik.toplamDegerlendirme, yayinAyar?.toplamDegerlendirme)
+        ];
 
-         
-        // Eğer tüm oranlar 0 ise, yazı göster
-        if (toplamYildizOran === 0 && toplamBegeniOran === 0 && toplamYorumOran === 0 && toplamDegerlendirmeOran === 0) {
-            
-            $('#istatistikChart').hide();  // Grafik alanını gizle
-            $('#noDataMessage').show();    // Yazıyı göster
-        } else {
-            // Oranlar sıfır değilse grafiği oluştur
-            var data = {
-                labels: ['Toplam Yıldız', 'Toplam Beğeni', 'Toplam Yorum', 'Toplam Değerlendirme'],
+        if (dataValues.every(v => v === 0)) {
+            canvas.style.display = "none";
+            document.getElementById("noDataMessage").style.display = "block";
+            return;
+        }
+
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Toplam Yıldız',
+                    'Toplam Beğeni',
+                    'Toplam Yorum',
+                    'Toplam Değerlendirme'
+                ],
                 datasets: [{
-                    data: [toplamYildizOran, toplamBegeniOran, toplamYorumOran, toplamDegerlendirmeOran],
-                    backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', "#E9967A"],
-                    borderColor: ['#2980b9', '#27ae60', '#f39c12', "#E9967A"],
-                    borderWidth: 1
+                    data: dataValues,
+                    backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#fd7e14']
                 }]
-            };
-
-            var options = {
+            },
+            options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom'
-                    }
+                    legend: { position: 'bottom' }
                 }
-            };
+            }
+        });
+    }
 
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: data,
-                options: options
-            });
-        }
-    });
+    // 🔥 İstatistik tab açılınca chart oluştur
+    document
+        .getElementById('istatistik-tab')
+        .addEventListener('shown.bs.tab', createChart);
 </script>
+
+ 
 
 <script>
     var kId = '@StringCipher.Encrypt(ViewBag.KITAPENC.ToString())';
@@ -641,6 +678,5 @@
     }
 
 
-</script>
-<script src= "~/js/kitap_detay_mesaj_bolumler.js"></script>
+</script> 
  

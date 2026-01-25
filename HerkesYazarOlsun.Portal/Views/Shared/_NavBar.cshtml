@@ -6,6 +6,36 @@
 }
 
 <style>
+.navbar-nav .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+    min-width: max-content; /* İçeriğin tamamını kapsasın */
+    max-width: 90vw; /* Mobilde taşmasın */
+    white-space: nowrap; /* Satır kırılmasını engelle */
+}
+    /* Navbar rengini override et */
+.navbar.bg-dark {
+    background-color: #00C4A0 !important;
+}
+
+/* Yazılar daha net görünsün diye */
+.navbar.bg-dark .nav-link,
+.navbar.bg-dark .navbar-brand,
+.navbar.bg-dark .navbar-toggler {
+    color: #ffffff !important;
+}
+
+/* Dropdown arka planı da uyumlu olsun */
+.navbar.bg-dark .dropdown-menu {
+    background-color: #00C4A0;
+}
+
+/* Dropdown item hover efekti */
+.navbar.bg-dark .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+
     /* Sadece giriş yapmış kullanıcı dropdown menüsü scroll */
     .scroll-dropdown {
         max-height: 300px; /* mobilde biraz daha kısa olabilir */
@@ -20,6 +50,12 @@
     {
         max-height: 80vh; /* viewport’a göre sınırlı */
         overflow-y: auto; /* navbar scrollu aktif */
+
+        .navbar-nav .dropdown-menu {
+            width: 100%;
+            max-width: 100%;
+        }
+
     }
 
     /* Dropdown menü scrollu collapse içinde çalışacak */
@@ -27,6 +63,8 @@
         position: relative; /* absolute değil, parent relative */
         display: block; /* mutlaka block */
     }
+
+    
 
     }
 </style>

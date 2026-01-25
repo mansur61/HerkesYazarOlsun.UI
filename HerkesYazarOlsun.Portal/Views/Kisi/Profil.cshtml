@@ -69,31 +69,49 @@
     <!-- 🔥 TAB ALANI -->
     <section class="product_description_area mt-4">
 
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#hakkinda">
-                    Hakkında
-                </button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#devamedenkitaplar"
-                        onclick="DevamEdenKitaplar()">
-                    Devam Eden
-                </button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tamamlanankitaplar"
-                        onclick="TamamlananKitaplar()">
-                    Tamamlanan
-                </button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#yayinlanan"
-                        onclick="YayinlananKitaplar()">
-                    Yayınlanan
-                </button>
-            </li>
-        </ul>
+        <ul class="nav nav-tabs gap-2">
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link btn btn-light active"
+                data-bs-toggle="tab"
+                data-bs-target="#hakkinda"
+                type="button">
+            Hakkında
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link btn btn-light"
+                data-bs-toggle="tab"
+                data-bs-target="#devamedenkitaplar"
+                type="button"
+                onclick="DevamEdenKitaplar()">
+            Devam Eden
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link btn btn-light"
+                data-bs-toggle="tab"
+                data-bs-target="#tamamlanankitaplar"
+                type="button"
+                onclick="TamamlananKitaplar()">
+            Tamamlanan
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link btn btn-light"
+                data-bs-toggle="tab"
+                data-bs-target="#yayinlanan"
+                type="button"
+                onclick="YayinlananKitaplar()">
+            Yayınlanan
+        </button>
+    </li>
+
+</ul>
+
 
         <div class="tab-content border p-3 border-top-0">
             <div class="tab-pane fade show active" id="hakkinda">

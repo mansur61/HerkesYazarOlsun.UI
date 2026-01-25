@@ -5,92 +5,116 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
-@* @Html.Partial("_Navbar") *@
-
-
 @using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
     string isGozlemciMod = User.GetGozlemciMod();
+    bool kitapTamamlamaDurumu = Model?.isTamalama ?? false;
 }
-
-@{
-    bool kitapTamamlamaDurumu = @Model.isTamalama ?? false;
-}
-
-<br />
+<div class="container-fluid pt-5">
+<div class="container mt-4">
 
 @if (Model != null)
 {
-    <div class="row">
+    <div class="row g-4 align-items-start">
 
-        <div class="col-md-3">
-            @if (@Model.BookModel?.ARKAKAPAKFOTOPATH == "-1")
-            {
+        <!-- 📕 Kitap Kapak -->
+        <div class="col-12 col-md-4 col-lg-3 text-center">
+            <div class="card shadow-sm">
+                <div class="ratio ratio-3x4"> 
+                    @if (Model.BookModel?.ARKAKAPAKFOTOPATH == "-1")
+                    {
+                        <img src="~/lib/img/stack-of-books.png"
+                             class="img-fluid object-fit-cover"
+                             alt="Kitap Kapak">
+                    }
+                    else
+                    {
+                        <img src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH"
+                             class="img-fluid object-fit-cover"
+                             alt="Kitap Kapak">
+                    }
+                </div>
 
-                <img src="~/lib/img/stack-of-books.png" alt="Portfolio 1" style="height:300px" width="200" />
-            }
-            else
-            {
-                <img class="img-responsive" src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH"
-                     alt="Portfolio 1" style="height:300px">
-            }
+                @{
+                    Model.BookModel.Stars.isToplam = false;
+                }
 
-            @{
-                Model.BookModel.Stars.isToplam = false;
-            }
-            <div style="margin-top:10px;text-align:center">
-                @Html.Partial("_YildizGoster", @Model.BookModel.Stars)
+                <div class="card-body text-center">
+                    @Html.Partial("_YildizGoster", Model.BookModel.Stars)
+                </div>
             </div>
-
         </div>
 
-        <div class="col-md-9">
-            <h3><small>Kitabın Adı </small></h3>
-            <small>@Model.BookModel.Name</small>
-            <h3><small>Yazılma Tarihi</small></h3>
-            <small>@Model.BookModel.CREATE_AT</small>
-            <h3><small>Yazarı</small></h3>
-            <p><small>@Model.BookModel.User.USERNAME</small></p>
-            <h3>Kitap Özeti</h3>
-            <p>
-                @Html.Raw(Model.BookModel.ONSOZ)
+        <!-- 📘 Kitap Bilgileri -->
+        <div class="col-12 col-md-8 col-lg-9">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
 
-                <br />
+                    <h5 class="text-muted mb-1">Kitabın Adı</h5>
+                    <h3 class="fw-bold">@Model.BookModel.Name</h3>
 
-            </p>
-            @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
-            {
-                <div class="col-md-12 text-right">
-                    <button class="btn btn-warming"><a href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(@Model.BookModel.ID.ToString())">Kitabı Güncelle</a></button>
-                    <button class="btn btn-ligth"><a href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(@Model.BookModel.ID.ToString())">Kitabı Oku</a></button>
-                    @if (!kitapTamamlamaDurumu)
+                    <hr />
+
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <small class="text-muted">Yazılma Tarihi</small>
+                            <div>@Model.BookModel.CREATE_AT</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <small class="text-muted">Yazar</small>
+                            <div>@Model.BookModel.User.USERNAME</div>
+                        </div>
+                    </div>
+
+                    <h5 class="mt-3">Kitap Özeti</h5>
+                    <p class="text-muted">
+                        @Html.Raw(Model.BookModel.ONSOZ)
+                    </p>
+
+                    @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                     {
-                        
-                        <a class="btn btn-light"
-                           href="/Kitaplar/KitapOlustur?kitap_id=@StringCipher.Encrypt(Model.BookModel.ID.ToString())&isYazmayaDevamEt=true&IlgiiSayfaSayisi=@Model.BookModel.BooksPageList?.Count">
-                            Yazmaya Devam Et
-                        </a>
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+
+                            <a class="btn btn-warning"
+                               href="/Kitaplar/KitapGuncelleme?kitap_id=@StringCipher.Encrypt(Model.BookModel.ID.ToString())">
+                                Kitabı Güncelle
+                            </a>
+
+                            <a class="btn btn-primary"
+                               href="/Kitaplar/KitapOku?kitap_id=@StringCipher.Encrypt(Model.BookModel.ID.ToString())">
+                                Kitabı Oku
+                            </a>
+
+                            @if (!kitapTamamlamaDurumu)
+                            {
+                                <a class="btn btn-light border"
+                                   href="/Kitaplar/KitapOlustur?kitap_id=@StringCipher.Encrypt(Model.BookModel.ID.ToString())&isYazmayaDevamEt=true&IlgiiSayfaSayisi=@Model.BookModel.BooksPageList?.Count">
+                                    Yazmaya Devam Et
+                                </a>
+                            }
+                        </div>
                     }
 
-
                 </div>
-            }
-
+            </div>
         </div>
 
     </div>
 
-    <br />
-    @Html.Partial("_KitapDetayMesajBolumleri", @Model)
+    <div class="mt-5">
+        @Html.Partial("_KitapDetayMesajBolumleri", Model)
+    </div>
 
-    <div style="height:150px;"></div>
+    <div class="my-5"></div>
 }
 else
 {
-    <div>Kitap Detay yok</div>
+    <div class="alert alert-warning text-center">
+        Kitap detayı bulunamadı.
+    </div>
 }
 
-
+</div></div>

@@ -29,21 +29,52 @@
                     }
 
                     <ul class="product__item__pic__hover">
-                        @if (isGozlemciMod == "0")
-                        {
-                            <li>
-                                <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(@Model.ID.ToString())","@ViewBag.Tip")'>
-                                    <i class="fa fa-heart"></i>
-                                </a>
-                            </li>
-                        }
+    @if (isGozlemciMod == "0")
+    {
+        <li>
+            <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(@Model.ID.ToString())","@ViewBag.Tip")'
+               style="
+                   display:inline-flex;
+                   align-items:center;
+                   justify-content:center;
+                   width:45px;
+                   height:45px;
+                   border-radius:50%;
+                   background:#fff;
+                   transition:all .3s ease;
+               "
+               onmouseover="this.style.transform='scale(1.3)'; this.style.background='#ff4d4d'; this.querySelector('i').style.color='#fff';"
+               onmouseout="this.style.transform='scale(1)'; this.style.background='#fff'; this.querySelector('i').style.color='#ff4d4d';"
+            >
+                <i class="fa fa-heart"
+                   style="font-size:18px;color:#ff4d4d;transition:color .3s ease;">
+                </i>
+            </a>
+        </li>
+    }
 
-                        <li>
-                            <a href="/Kisi/Profil?pId=@StringCipher.Encrypt(@Model.YazarId.ToString())">
-                                <i class="fa fa-user"></i>
-                            </a>
-                        </li>
-                    </ul>
+    <li>
+        <a href="/Kisi/Profil?pId=@StringCipher.Encrypt(@Model.YazarId.ToString())"
+           style="
+               display:inline-flex;
+               align-items:center;
+               justify-content:center;
+               width:45px;
+               height:45px;
+               border-radius:50%;
+               background:#fff;
+               transition:all .3s ease;
+           "
+           onmouseover="this.style.transform='scale(1.3)'; this.style.background='#0d6efd'; this.querySelector('i').style.color='#fff';"
+           onmouseout="this.style.transform='scale(1)'; this.style.background='#fff'; this.querySelector('i').style.color='#0d6efd';"
+        >
+            <i class="fa fa-user"
+               style="font-size:18px;color:#0d6efd;transition:color .3s ease;">
+            </i>
+        </a>
+    </li>
+</ul>
+
                 </div>
 
                 <div class="product__item__text">
