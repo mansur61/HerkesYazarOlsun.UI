@@ -1,0 +1,142 @@
+
+#globalSpinner i {
+    color: transparent !important;
+    background: linear-gradient(45deg, #ff0000, #ffea00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-size: 60px !important; /* daha büyük görünür */
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+}
+
+#globalSpinner {
+    /* Arka plan hafif mavi overlay */
+    background: rgba(0, 60, 255, 0.15);
+    padding: 20px 25px;
+    border-radius: 15px;
+}
+ 
+    /* PROFİL KARTI */
+    .profile-card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+    }
+
+        .profile-card img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+    .profile-info h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .follow-stats {
+        display: flex;
+        justify-content: flex-start;
+        gap: 30px;
+        margin-top: 10px;
+    }
+
+        .follow-stats .stat p {
+            margin: 0;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+        }
+
+    .btn-group-custom {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    .yildizver {
+        font-size: 22px;
+        cursor: pointer;
+        color: black;
+    }
+
+    .product_description_area {
+        margin-top: 40px;
+    }
+
+    /* 🔥 PROFİL MOBILE RESPONSIVE TASARIM */
+    @media (max-width: 768px) {
+        /* Profil kartı: dikey hizaya geçsin */
+        .profile-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+            /* Resim alanı ortalansın */
+            .profile-card .col-md-2 {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .profile-card img {
+                width: 120px !important;
+                height: 120px !important;
+                margin: 0 auto 10px auto;
+            }
+            /* Yıldızlar ortalansın */
+            .profile-card .mb-3 {
+                text-align: center !important;
+                width: 100%;
+            }
+        /* Bilgi alanı tam genişlik */
+        .profile-info {
+            width: 100%;
+            text-align: center;
+        }
+
+            .profile-info h2 {
+                font-size: 22px;
+                margin-top: 10px;
+            }
+        /* Takip – takipçi sayıları dikey hizalansın */
+        .follow-stats {
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+            .follow-stats .stat p {
+                font-size: 15px;
+            }
+        /* Buton grubu alt alta gelsin */
+        .btn-group-custom {
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+        }
+
+            .btn-group-custom button {
+                width: 100%;
+            }
+        /* Yıldız verme butonları ortalansın */
+        .yildizver {
+            font-size: 28px;
+        }
+        /* Tab yapısı tam mobil uyumlu */
+        .nav-tabs .nav-link {
+            font-size: 14px;
+            padding: 10px 8px;
+            text-align: center;
+        }
+    } 
