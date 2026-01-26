@@ -1,6 +1,5 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
-@using HerkesYazarOlsun.Portal.Helpers.Extensions;
- 
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
+@using HerkesYazarOlsun.Portal.Helpers.Extensions; 
 @using HerkesYazarOlsun.Model.Utils;
 
 @{
@@ -15,7 +14,15 @@
 @foreach (var kitap in Model.VMBooksList)
 {
    <div class="item">
-        @Html.Partial("_KitaplarItem", kitap)
+       @Html.Partial("_KitaplarItem",
+        new HerkesYazarOlsun.Model.ViewModel.VM_KitapItem {
+            Book = kitap,
+            Tip = Model.Tip,
+            isAnaSayfa = Model.isAnaSayfa,
+            LoginUserId = (int)ViewBag.LOGIN_USER_ID, 
+            IsGozlemci = isGozlemciMod
+        })
+
     </div>
 }
 
