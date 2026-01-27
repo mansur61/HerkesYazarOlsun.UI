@@ -7,6 +7,7 @@
 @{
     string isGozlemciMod = User.GetGozlemciMod();
     var item = Model.Book;
+    var isAnaSayfa = @Model.isAnaSayfa ?? false;
 }
 
 @Html.AntiForgeryToken()
@@ -16,36 +17,36 @@
 @section Styles{
     <style>>
         .icon-btn {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .3s ease;
-}
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s ease;
+        }
 
-.icon-btn i {
-    font-size: 18px;
-    transition: color .3s ease;
-}
+        .icon-btn i {
+            font-size: 18px;
+            transition: color .3s ease;
+        }
 
-.fav-btn i { color: #ff4d4d; }
-.fav-btn:hover { background: #ff4d4d; transform: scale(1.2); }
-.fav-btn:hover i { color: #fff; }
+        .fav-btn i { color: #ff4d4d; }
+        .fav-btn:hover { background: #ff4d4d; transform: scale(1.2); }
+        .fav-btn:hover i { color: #fff; }
 
-.publish-btn i { color: #198754; }
-.publish-btn:hover { background: #198754; transform: scale(1.2); }
-.publish-btn:hover i { color: #fff; }
+        .publish-btn i { color: #198754; }
+        .publish-btn:hover { background: #198754; transform: scale(1.2); }
+        .publish-btn:hover i { color: #fff; }
 
-.delete-btn i { color: #dc3545; }
-.delete-btn:hover { background: #dc3545; transform: scale(1.2); }
-.delete-btn:hover i { color: #fff; }
+        .delete-btn i { color: #dc3545; }
+        .delete-btn:hover { background: #dc3545; transform: scale(1.2); }
+        .delete-btn:hover i { color: #fff; }
 
-.user-btn i { color: #0d6efd; }
-.user-btn:hover { background: #0d6efd; transform: scale(1.2); }
-.user-btn:hover i { color: #fff; }
+        .user-btn i { color: #0d6efd; }
+        .user-btn:hover { background: #0d6efd; transform: scale(1.2); }
+        .user-btn:hover i { color: #fff; }
 
     </style>
 }
@@ -62,7 +63,7 @@
 
                 @if (!string.IsNullOrEmpty(item.Categori?.Name))
                 {
-                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                    <span class="badge bg-success position-absolute top-0 start-0 m-2">
                         @item.Categori.Name
                     </span>
                 }
@@ -103,16 +104,18 @@
                                 </li>
                             }
                         }
-
-                        <!-- SIL -->
-                        <li>
-                            <a href="javascript:void(0)"
-                               id="delBtn_@item.ID"
-                               class="icon-btn delete-btn"
-                               onclick='KitabiSil("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip","@item.ID")'>
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </li>
+                        @if(!@isAnaSayfa && item.YazarId == (int?)ViewBag.LOGIN_USER_ID){
+                            <!-- SIL -->
+                            <li>
+                                <a href="javascript:void(0)"
+                                id="delBtn_@item.ID"
+                                class="icon-btn delete-btn"
+                                onclick='KitabiSil("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip","@item.ID")'>
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </li>
+                        }
+                        
                     }
 
                     <!-- PROFIL -->

@@ -1,6 +1,6 @@
 
+@model HerkesYazarOlsun.Model.ViewModel.VM_YazarItem;
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
 @using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
 
@@ -8,15 +8,12 @@
 
 @{
     string isGozlemciMod = User.GetGozlemciMod();
+    var item = Model.Users;
 }
     
     
 <link href="~/lib/css/yazarlar_item.css" rel="stylesheet" />
-
  
- @{
-    var item = @Model;
- } 
             <div class="col-6 col-sm-6 col-md-4 col-lg-3 mt-15">
                 <div class="profile-card">
 
@@ -33,7 +30,7 @@
                         @if (isGozlemciMod == "0")
                             {
                                 <li>
-                                    <a id="favBtn_@item.ID" onclick='YazariFavorilereEkle(@item.ID,@item.ID,"@ViewBag.Tip")'>
+                                    <a id="favBtn_@item.ID" onclick='YazariFavorilereEkle(@item.ID,@item.ID,"@Model.Tip")'>
                                         <i class="fa fa-heart text-danger"></i>
                                     </a>
                                 </li>

@@ -4,7 +4,7 @@
  
     
  @{
-          int perSlide = Model.sliderdaGosterilecekKayit  ?? ViewBag.SliderdaGosterilecekKayit;
+   int perSlide = Model.sliderdaGosterilecekKayit  ?? ViewBag.SliderdaGosterilecekKayit;
  }
      
    @for (int i = 0; i < Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
@@ -27,7 +27,14 @@
                 @foreach (var kitap in slideModel.VMBooksList)
                 {
                     <div class="col-md-4 col-sm-6">
-                        @Html.Partial("_KitaplarItem", kitap)
+                        @*@Html.Partial("_KitaplarItem", kitap)*@
+                        @Html.Partial("_KitaplarItem",
+                            new HerkesYazarOlsun.Model.ViewModel.VM_KitapItem {
+                                Book = kitap,
+                                Tip = Model.Tip,
+                                isAnaSayfa = Model.isAnaSayfa,
+                                LoginUserId = (int)ViewBag.LOGIN_USER_ID,
+                            })
                     </div>
                 }
             </div>
