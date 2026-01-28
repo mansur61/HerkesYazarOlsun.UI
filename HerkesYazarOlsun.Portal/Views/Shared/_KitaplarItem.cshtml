@@ -80,13 +80,8 @@
                                 <i class="fa fa-heart"></i>
                             </a>
                         </li>
-<li>
-                                    <a href="javascript:void(0)"
-                                       class="icon-btn publish-btn"
-                                       onclick='KitabiYayinaGonder("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip")'>
-                                        <i class="fa fa-share"></i>
-                                    </a>
-                                </li>
+
+
                         <!-- YAYINA GÖNDER -->
                         @if (!(Model.isAnaSayfa ?? false) && item.YazarId == (int?)ViewBag.LOGIN_USER_ID && item.TAMAMLANDIMI)
                         {
