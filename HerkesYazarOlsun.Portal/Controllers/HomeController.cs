@@ -106,6 +106,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveRegister(VM_USERS user)
         {
             ServiceResult result = new ServiceResult();

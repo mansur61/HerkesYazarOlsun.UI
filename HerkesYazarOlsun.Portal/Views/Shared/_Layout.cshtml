@@ -1,12 +1,15 @@
 ﻿@{
     Layout = null;
 }
-
+ @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+    @{
+        var tokens = Antiforgery.GetAndStoreTokens(Context);
+    }
 <!DOCTYPE html>
 <html lang="en">
-@*class="no-js"*@
-
+     
 <head>
+     <meta name="csrf-token" content="@tokens.RequestToken" />
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -170,6 +173,9 @@
     </style>
     <link rel="icon" type="image/png" href="@Url.Content( "~/img/stack-of-books.png")" />
      
+
+   
+   
      
 </head>
 <body>
@@ -186,6 +192,46 @@
     {
         @Html.Partial("_Footer")
     }
-   
+    
+   @Html.AntiForgeryToken()
+
+    <script>
+    $(function() {
+        // Öncelikli olarak formdaki __RequestVerificationToken input'unu kontrol et
+        let tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+        
+        let csrfToken = null;
+
+        if (tokenInput && tokenInput.value) {
+            csrfToken = tokenInput.value;
+             //console.log("Token formdan alındı:", csrfToken);
+        } else {
+            // Formda yoksa layout'tan alın
+            csrfToken = '@tokens.RequestToken';
+            //console.log("Token layout'tan alındı: Form a ekle otomatik", csrfToken);
+
+            // Formlarda eksikse, hidden input olarak ekle
+            $('form').each(function() {
+                if ($(this).find('input[name="__RequestVerificationToken"]').length === 0) {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: '__RequestVerificationToken',
+                        value: csrfToken
+                    }).appendTo(this);
+                }
+            });
+        }
+
+        // Tüm AJAX çağrılarına token ekle
+        $.ajaxSetup({
+            headers: { 'RequestVerificationToken': csrfToken }
+        });
+
+        // Test
+        console.log("AJAX ve form token hazır:", csrfToken);
+    });
+</script>
+
+
 </body>
 </html>

@@ -3,48 +3,62 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section Styles{
-
-	<link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+ @section Styles { 
+    <link href="~/lib/css/giris_kayit_dogrulama.css" rel="stylesheet" /> 
 }
-<section class="login_box_area section-margin">
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-6">
-				<div class="login_box_img">
-					<div class="hover">
-						<h4>Herkes Yazar Olsun' a Hoşgeldiniz !</h4>
-						<p>Şifrenizi Yenileyiniz..</p>
-						@*<a class="button button-account" href="/Account/Register">Kayıt Olunuz</a>*@
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-6">
-				<div class="login_form_inner">
-					<h3>Şifremi Unuttum</h3>
-					<form class="row login_form" action="#/" id="contactForm">
-						<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="mail" name="mail" placeholder="Mailinizi Giriniz" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mailinizi Giriniz'">
-						</div>
-						<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="ySifre" name="ySifre" placeholder="Yeni Şifre" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Yeni Şifre'">
-						</div>
-						@*<div class="col-md-12 form-group">
-							<input type="text" class="form-control" id="ySifreTekrar" name="ySifreTekrar" placeholder="Yeni Şifre Tekrar" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Yeni Şifre Tekrar'">
-						</div>*@
-						
-						<div class="col-md-12 form-group">
-							<button type="submit" value="submit" class="button button-login w-100">Şifre Yenile</button>
-							
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-0">
+            <!-- Sol taraf: görsel ve mesaj -->
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="login_box_img h-100">
+                    <div class="hover h-100 d-flex flex-column justify-content-center align-items-center text-center p-4">
+                        <h4>Herkes Yazar Olsun' a Hoşgeldiniz!</h4>
+                        <p>Şifrenizi Yenileyiniz..</p>
+                        @*<a class="btn btn-primary mt-3" href="/Account/Register">Kayıt Olunuz</a>*@
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sağ taraf: form -->
+            <div class="col-lg-6">
+                <div class="login_form_inner p-4">
+                    <h3 class="mb-4">Şifremi Unuttum</h3>
+                    <form class="row g-3 needs-validation" id="contactForm" novalidate>
+                        <div class="col-12">
+                            <input type="email" class="form-control" id="mail" name="mail" placeholder="Mailinizi Giriniz" required>
+                        </div>
+                        <div class="col-12">
+                            <input type="password" class="form-control" id="ySifre" name="ySifre" placeholder="Yeni Şifre" required>
+                        </div>
+                        @*<div class="col-12">
+                            <input type="password" class="form-control" id="ySifreTekrar" name="ySifreTekrar" placeholder="Yeni Şifre Tekrar" required>
+                        </div>*@
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success w-100">Şifre Yenile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
-@*@section scripts{
-
-	<script src= "~/lib/bootstrap/dist/js/main_aroma_template.js"></script>
-}*@
+<script>
+    // Bootstrap 5 validation örneği (opsiyonel)
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>

@@ -39,6 +39,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ServiceResult> Gonder(string kime)
         {
             ServiceResult result = new ServiceResult();
@@ -85,6 +86,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ServiceResult PostEmailDogrula(string email)
         {
             VM_USERS vM_USERS = new VM_USERS();
@@ -100,6 +102,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ServiceResult> MailBilgilendirme(string kime, string konu, string mesaj, int? tip = 0)
         {
             ServiceResult result = new ServiceResult();

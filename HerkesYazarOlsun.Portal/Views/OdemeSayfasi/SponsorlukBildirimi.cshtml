@@ -6,134 +6,136 @@
 @model HerkesYazarOlsun.Model.ViewModel.VM_SPONSORLAR;
 @using HerkesYazarOlsun.Portal.Controllers;
 
-
-<input type="hidden" id="odemesponsoricin" value="odemesponsor" />
-<input type="hidden" id="loginId" value="@ViewBag.LoginUserId.ToString()" />
-<input type="hidden" id="kitapId" value="@ViewBag.KitapId.ToString()" />
+ 
 
 @{
     string alertmesajgostermedurumu = "odemesponsor";
 }
 
-@section Styles {
+@section Styles{
+    <style>
+    .btn-custom {
+        background-color: #00C4A0;
+        border-color: #00C4A0;
+        color: #fff;
+    }
 
-    <link href="~/lib/bootstrap/dist/css/kitapekle.css" rel="stylesheet" />
+    /* Hover ve aktif durumları */
+    .btn-custom:hover {
+        background-color: #00b08f; /* biraz koyu ton hover için */
+        border-color: #00b08f;
+        color: #fff;
+    }
+
+    .btn-custom:focus, .btn-custom:active {
+        background-color: #00997f;
+        border-color: #00997f;
+        color: #fff;
+        box-shadow: 0 0 0 0.25rem rgba(0,196,160,0.5);
+    }
+</style>
 }
 
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                <i class="fa fa-check" style="font-size:200px;color:green"></i>
+                <h3 class="mt-3"><strong>Ödemeniz Başarılı şekilde alınmıştır.</strong></h3>
+            </div>
 
-<div class="container">
+            <p>
+                Aşağıda bulunan form ile bizlere yayınlamak istediğiniz 
+                <span class="text-success"><strong>sponsor</strong></span>'u seçerek bilgi veriniz.
+            </p>
+            <p>
+                Bize ulaşan bilgiler doğrultusunda kitabınızın incelenip 
+                <span class="text-decoration-underline">yayına uygun olması halinde</span> sponsor kodunuz
+                3 iş günü içerisinde formda belirttiğiniz mail ile size iletilecektir. 
+                <span class="text-decoration-underline"> Lütfen geçerli ve aktif mail adresi giriniz </span>
+            </p>
+            <div class="mb-3">
+                <span class="text-danger fw-bold">NOT</span>  
+                <span class="text-decoration-underline"> Yayına alınmama durumunda </span> ise size düzeltmeniz gereken durumlar belirtilir:
+                <ul>
+                    <li>Kitabınızın içeriği ile alakalı olabilmektedir (Argo kelimeler, cinsellik vb.)</li>
+                    <li>Yayın evinin düzeltmesini istediği format bazlı durumlar olabilmektedir</li>
+                </ul>
+            </div>
+            <div class="mb-3">
+                <span class="text-danger fw-bold">ÖNEMLİ </span>  
+                <span class="text-decoration-underline">
+                    3 iş günü içinde size sponsor kodunuz iletilmesi halinde
+                </span> 
+                <span class="text-decoration-underline text-danger">
+                    PARANIZ İADE EDİLMEYECEKTİR !!!
+                </span>
+            </div>
 
-    <div class="row">
+            <form action="" method="post" enctype="multipart/form-data" class="needs-validation" id="form-bilgi-gonder" novalidate>
+                <div class="mb-3">
+                    <label for="ad" class="form-label">Ad-Soyad</label>
+                    <input type="text" id="ad" class="form-control" name="cardOnName" placeholder="Adınız" required>
+                    <div class="invalid-feedback">Adınızı giriniz.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Mail Adresiniz</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Mail Adresiniz" required>
+                    <div class="invalid-feedback">Geçerli bir mail giriniz.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="tel" class="form-label">Telefon Numaranız</label>
+                    <input type="tel" name="tel" class="form-control" id="tel" placeholder="Telefon Numaranız: 0535xxxxxxx" required>
+                    <div class="invalid-feedback">Telefon numaranızı giriniz.</div>
+                </div>
 
-        <p style="text-align:center"><i class="fa fa-check" style="font-size:200px;color:green"></i></p>
-        <center><h3><strong>Ödemeniz Başarılı şekilde alınmıştır.</strong></h3></center>
-
-        <br /><br />
-
-        <p>
-            Aşağıda bulunan form ile bizlere yayınlamak istediğiniz <span style="color:green"> <strong> sponsor </strong></span> 'u  seçerek bilgi veriniz.
-        </p>
-        <p>
-            Bize ulaşan bilgiler doğrultusunda kitabınızın incelenip <span style="text-decoration:underline">yayına uygun olması halinde</span> sponsor koudunuzu
-            3 iş günü içerisinde formda belirttiğiniz mail ile size iletilecektir. <span style="text-decoration:underline"> Lütfen geçerli ve aktif mail adresi giriniz </span>
-        </p>
-        <div>
-            <span style="color:red"><strong>NOT</strong></span>  <span style="text-decoration:underline"> Yayına alınmama durumunda </span> ise size düzeltmeniz gereken durumlar olursa belirtilecektir.
-            Bu durumlar;
-            <p></p>
-            <p> * Kitabınızın içeriği ile alakalı olabilmektedir. (Argo kelimeler, cinsellik durumları vs.) </p>
-            <p> * Yayın evinin düzeltmesini istediği format bazlı durumlar olabilmektedir </p>
-
-        </div>
-        <div>
-            <span style="color:red"><strong>ÖNEMLİ </strong></span>  <span style="text-decoration:underline">
-                3 iş günü içinde size  sponsor koudunuz iletilmesi halinde
-            </span> <span style="text-decoration:underline;color:red">
-                PARANIZ İADE EDİLMEYECEKTİR !!!
-            </span>
-            <p></p>
-
-        </div>
-        <br /><br />
-        <div class="col-sm-8">
-            <form action="" method="post" enctype="multipart/form-data" class="needs-validation" id="form-bilgi-gonder">
-                <div class="row">
-
-                    <div class="form-group ">
-                        <label for="name">Ad-Soyad </label>
-                        <input type="text" id="ad" class="form-control" name="cardOnName" placeholder="Adınız" />
-
-
-                    </div>
-                    <div class="form-group ">
-                        <label for="email">Mail Adresiniz</label>
-                        <input type="text" id="email" name="email" class="form-control" placeholder="Mail Adresiniz">
-                    </div>
-
-                    <div class="form-group ">
-                        <label for="tel">Telefon Numaranız</label>
-                        <input type="number" name="tel" class="form-control" id="tel" placeholder="Telefon Numaranız: 0535xxxxxxx" />
-                    </div>
-
-                    <div class="dropdown" style="padding:10px">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <span id="seciim">Sponsor Seçiniz</span>  <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" id="sponsorMenu">
-
-                            @foreach (var item in @Model.SponsorlarList)
+                <!-- Bootstrap 5 Dropdown -->
+                <div class="mb-3">
+                    <label class="form-label">Sponsor Seçiniz</label>
+                    <div class="dropdown">
+                        <button class="btn btn-custom dropdown-toggle w-100 text-start" 
+        type="button" 
+        id="dropdownSponsorButton" 
+        data-bs-toggle="dropdown" 
+        aria-expanded="false">
+    <span id="seciim">Sponsor Seçiniz</span>
+</button>
+                        <ul class="dropdown-menu w-100" aria-labelledby="dropdownSponsorButton" id="sponsorMenu">
+                            @foreach (var item in Model.SponsorlarList)
                             {
-                                <li><a class="spns" value="@item.ID" name="@item.SponsorAdi" onclick="SponsorSec(this)">@item.SponsorAdi</a></li>
-
+                                <li><a class="dropdown-item spns" href="#" data-id="@item.ID" data-name="@item.SponsorAdi" onclick="SponsorSec(this)">@item.SponsorAdi</a></li>
                             }
                         </ul>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <h5>Ödemeyi yaptığınız dekontu bize bildiriniz*</h5>
-                        <input name="file" type="file" id="dekontAktar" onchange="dosyaSecim('dosyaAktarmaDekont')" />
-                        <input type="hidden" id="aktarilacakDekont">
-                    </div>
-
-                    <br />
-                    <div class="progress">
-                        <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50"
-                             class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%"></div>
-                    </div>
-
-                    <div style="height:30px"></div>
-
-                    <div class="clearfix"></div>
-                    <div class="form-group">
-                        <label for="mesaj">Mesajınız Var Mı?</label>
-                        <textarea type="text" name="mesaj" class="form-control" rows="6" id="mesaj" placeholder="Varsa Mesajınız"></textarea>
-                    </div>
-
-                    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
-                    <div class="form-group col-lg-12">
-
-                        <button type="submit" class="btn btn-primary pull-right">Sponsorunu İlet</button>
-                        @* onclick="Gonder()" *@
-                        @**@
-                        <div class="clearfix"></div>
                     </div>
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ödemeyi yaptığınız dekontu bize bildiriniz*</label>
+                    <input name="file" type="file" id="dekontAktar" class="form-control" onchange="dosyaSecim('dosyaAktarmaDekont')">
+                    <input type="hidden" id="aktarilacakDekont">
+                </div>
+
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="mesaj" class="form-label">Mesajınız Var Mı?</label>
+                    <textarea name="mesaj" class="form-control" rows="6" id="mesaj" placeholder="Varsa Mesajınız"></textarea>
+                </div>
+
+                @Html.Partial("_AlertMesaj", alertmesajgostermedurumu)
+
+                <button type="submit" class="btn btn-custom w-100">Sponsorunu İlet</button>
             </form>
         </div>
-
-
     </div>
 </div>
 
 @section Scripts {
     <!-- SweetAlert2 JS dosyası ve Bootstrap JS dosyası-->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    @* <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> *@
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
+ 
     <script src= "~/js/general.js"></script>
 }
 

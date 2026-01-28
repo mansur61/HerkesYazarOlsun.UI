@@ -9,8 +9,7 @@
     var item = Model.Book;
     var isAnaSayfa = @Model.isAnaSayfa ?? false;
 }
-
-@Html.AntiForgeryToken()
+ 
 
 <link href="~/lib/css/kitaplar_item.css" rel="stylesheet" />
 
@@ -81,7 +80,13 @@
                                 <i class="fa fa-heart"></i>
                             </a>
                         </li>
-
+<li>
+                                    <a href="javascript:void(0)"
+                                       class="icon-btn publish-btn"
+                                       onclick='KitabiYayinaGonder("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip")'>
+                                        <i class="fa fa-share"></i>
+                                    </a>
+                                </li>
                         <!-- YAYINA GÖNDER -->
                         @if (!(Model.isAnaSayfa ?? false) && item.YazarId == (int?)ViewBag.LOGIN_USER_ID && item.TAMAMLANDIMI)
                         {
@@ -158,8 +163,7 @@
 
 
 <script>
-    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
+    
     function showAlert(type, tip, message) {
         const box = type === "success" ? "#basarili-" : "#uyari-";
         $(box + tip).show().find("#mesaj").html(message);
@@ -179,7 +183,7 @@
         toggleSpinner(btn, true);
 
         $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", {
-            __RequestVerificationToken: token,
+        
             id: kitapId
         }).done(res => {
             res?.state === 1
@@ -191,8 +195,7 @@
     }
 
     function KitabiYayinaGonder(kitapId, tip) {
-        $.post("@Url.Action(nameof(KitaplarController.KitabiYayinaGonder), "Kitaplar")", {
-            __RequestVerificationToken: token,
+        $.post("@Url.Action(nameof(KitaplarController.KitabiYayinaGonder), "Kitaplar")", { 
             kitapid: kitapId
         }).done(res => {
             if (res?.state === 1) {
@@ -219,8 +222,7 @@
 
             toggleSpinner(btn, true);
 
-            $.post("@Url.Action(nameof(KitaplarController.KitabiSil), "Kitaplar")", {
-                __RequestVerificationToken: token,
+            $.post("@Url.Action(nameof(KitaplarController.KitabiSil), "Kitaplar")", { 
                 kitapid: encId
             }).done(res => {
                 res?.state === 1

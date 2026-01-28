@@ -31,6 +31,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         //[Route("SaveOrUpdateAyarlar")]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveOrUpdateAyarlar([FromForm] VM_AYARLAR ayr)
         {
             ayr.LoginUserId = LOGIN_USER_ID;//6;

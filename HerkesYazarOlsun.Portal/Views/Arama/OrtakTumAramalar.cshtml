@@ -1,40 +1,45 @@
 ﻿
-@model HerkesYazarOlsun.Model.ViewModel.VM_ARAMA_SONUC
+@model HerkesYazarOlsun.Model.ViewModel.VM_ARAMA_SONUC;
 
-@{
-    Model.kitapSliderYometimAdi = "tumaramalar";    
+@using HerkesYazarOlsun.Model.ViewModel;
+ 
+
+ @{ 
+
+    int perSlide = Model.sliderdaGosterilecekKayit == 0 ?  
+                    ViewBag.SliderdaGosterilecekKayit : 
+                    Model.sliderdaGosterilecekKayit;
+ 
+
+    int total = Model.vmBookList.Count;
+    int sliderSayisi = (int)Math.Ceiling((double)total / perSlide);
+    var butons = new  VM_PAGINATION_BUTTON{
+            sliderSayisi = sliderSayisi,
+            sliderSayiDivTagName = "arabutonfiltre"
+    };
+    Model.vM_PAGINATION_BUTTONS = butons; 
 }
-
-@* @section scripts{
-    <script src= "~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-} *@
-@section Styles{
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
-}
-
+ 
 @if (@Model.vmBookList.Count() > 0)
-{
-    @Html.Partial("_KitapSliderItemYonetimleri",@Model.vmBook)
+{  
 
-    @Html.Partial("Kitaplar",@Model.vmBook)
+        var tumAramalarModel = new VM_BOOKS_DETAIL
+        {
+            VMBooksList = Model.vmBookList.ToList(),  
+            sliderdaGosterilecekKayit = perSlide,
+            vM_PAGINATION_BUTTONS = butons,
+            Tip = "arabutonfiltre",
+            isAnaSayfa = false,
+        };
 
-   @* @Html.Partial("Kitaplar",@Model)*@
-
-<br />
+      @Html.Partial("Kitaplar", @tumAramalarModel)
+ 
+ 
     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)
+
 }else{
     <p>Aranan kritere uygun herhangi bir kayıt bulunamadı</p>
 }
 
 
 
-<script src= "~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
-<script src= "~/lib/bootstrap/dist/js/mixitup.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
-<script src= "~/lib/bootstrap/dist/js/kitap-arama.js"></script>
->

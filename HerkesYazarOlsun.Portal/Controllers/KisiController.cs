@@ -66,6 +66,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("YazariFavorilereEkle")]
+        [ValidateAntiForgeryToken]
         public JsonResult YazariFavorilereEkle(int id, long tck)
         {
 
@@ -82,6 +83,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostWriterFollow")]
+        [ValidateAntiForgeryToken]
         public JsonResult PostWriterFollow(int id, int follow)
         {
             WriterFollow fovllow_yazar = new WriterFollow()

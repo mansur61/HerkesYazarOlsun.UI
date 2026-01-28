@@ -443,6 +443,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> PostKitapEkleWordOrPdf(VM_BOOKS_DETAIL vM_BOOKS_det)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
@@ -525,6 +526,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiFavorilereEkle")]
+        [ValidateAntiForgeryToken]
         public JsonResult KitabiFavorilereEkle(string id)
         {
             var kId = StringCipher.Decrypt(id.ToString());
@@ -542,6 +544,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiYayinaGonder")]
+        [ValidateAntiForgeryToken]
         public JsonResult KitabiYayinaGonder(string kitapid)
         {
             var kId = StringCipher.Decrypt(kitapid.ToString());
@@ -553,6 +556,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiSil")]
+        [ValidateAntiForgeryToken]
         public JsonResult KitabiSil(string kitapid)
         {
             var kId = StringCipher.Decrypt(kitapid.ToString());
@@ -563,47 +567,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public string DosyaYukle(IFormFile dosya, VM_BOOKS input)
         {
             var ds = dosya;
             return "";
         }
-
-        private async Task<VM_BOOKS> ModelIlgiliDosyalariDoldur(VM_BOOKS input, List<IFormFile> files)
-        {
-            foreach (var item in files)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await item.CopyToAsync(memoryStream);
-                    byte[] fileBytes = memoryStream.ToArray();
-
-                    if (!string.IsNullOrEmpty(input.ONKAPAKFOTO) && input.ONKAPAKFOTO == item.FileName)
-                    {
-
-                        string base64String = Convert.ToBase64String(fileBytes);
-                        input.ONKAPAKFOTO = base64String;
-                        // input.ONKAPAKFOTOPATH = item.FileName;
-                    }
-                    if (!string.IsNullOrEmpty(input.ARKAKAPAKFOTO) && input.ARKAKAPAKFOTO == item.FileName)
-                    {
-
-                        string base64String = Convert.ToBase64String(fileBytes);
-                        input.ARKAKAPAKFOTO = base64String;
-                        // input.ARKAKAPAKFOTOPATH = item.FileName;
-                    }
-                    // KITAPSAYFAFOTO yayınlanacak versiyonda şuan düşümülmemiştir.
-                    //if (!string.IsNullOrEmpty(input.KITAPSAYFAFOTO) && input.KITAPSAYFAFOTO == item.FileName)
-                    //{
-
-                    //    string base64String = Convert.ToBase64String(fileBytes);
-                    //    input.KITAPSAYFAFOTO = base64String;
-                    //}
-                }
-            }
-            return input;
-        }
-
+ 
         [HttpGet]
         public IActionResult Alert(VM_ALERT alert)
         {
@@ -611,6 +581,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ServiceResult<Books> KitabiTamamla(VM_BOOKS_DETAIL input)
         {
 
@@ -656,6 +627,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ServiceResult<VM_KITAP_EKLE>> KitapEkle(VM_BOOKS_DETAIL input)
         {
             int sayfaId = 0;
@@ -812,6 +784,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         // [Route("PostBooksPageUpdate")]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> PostBooksPageUpdate(VM_BOOKS_PAGES sayfa)
         {
             ServiceResult sonuc = await new BooksPagesService().PostUpdateBooksPages(sayfa);
@@ -895,6 +868,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("AraButonFiltrelemeKitaplar")]
+        [ValidateAntiForgeryToken]
         public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
@@ -921,6 +895,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostBooksStars")]
+        [ValidateAntiForgeryToken]
         public ServiceResult<BooksStars> PostBooksStars(long kitapId, int yildizPuani)
         {
             ServiceResult<BooksStars> result = new ServiceResult<BooksStars>();
@@ -939,6 +914,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostBooksDegerlendirme")]
+        [ValidateAntiForgeryToken]
         public JsonResult PostBooksDegerlendirme(VM_BOOKS_DEGERLENDIRME degerlendirme)
         {
 
@@ -962,6 +938,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostBooksComments")]
+        [ValidateAntiForgeryToken]
         public JsonResult PostBooksComments(VM_BOOKS_COMMENT mesajlar)
         {
 

@@ -44,6 +44,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
          *  // buradan ilgili ödeme entegrasyonu sayfasına yönlendir. callback url de bu endpoinmti kullanırsın
          * */
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveOdeme(VM_KARTLAR kart)
         {
             ServiceResult result = new ServiceResult();
@@ -69,6 +70,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveSponsorlukBildirAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
         {
             ServiceResult result = new ServiceResult();

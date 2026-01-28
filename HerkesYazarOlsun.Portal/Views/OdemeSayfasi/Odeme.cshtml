@@ -3,31 +3,21 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 @using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
 
 <style>
-    .panel-title {
-        display: inline;
-        font-weight: bold;
-    }
-
-    .checkbox.pull-right {
-        margin: 0;
-    }
-
     .pl-ziro {
         padding-left: 0px;
     }
 </style>
 
-<!--Kredi kartı css ler-->
+<!-- Kredi kartı css ler -->
 <style>
-    /* Kart önizleme stil */
     .card-preview {
         position: relative;
-        width: 400px;
+        width: 100%;
+        max-width: 400px;
         height: 230px;
         margin-bottom: 20px;
         border: 1px solid #ccc;
@@ -36,92 +26,81 @@
         background-color: #333;
     }
 
-        .card-preview img {
-            width: 100%; /* Resmin tam genişlikte görünmesini sağla */
-            height: 100%; /* Resmin tam yükseklikte görünmesini sağla */
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
+    .card-preview img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 
-    /* Kart metinlerinin pozisyonları */
     #cardNumberDisplay,
     #cardNameDisplay,
-    #cardExpiryDisplay {
+    #cardExpiryDisplay,
+    #cvvDisplay {
         position: absolute;
         left: 20px;
         font-family: Arial, sans-serif;
         color: #fff;
     }
 
-    /* Kart numarası stili */
     #cardNumberDisplay {
         top: 80px;
         font-size: 20px;
     }
 
-    /* Kart üzerindeki isim stili */
     #cardNameDisplay {
         top: 130px;
         font-size: 16px;
     }
 
-    /* Son kullanma tarihi (MM/YY) stili */
     #cardExpiryDisplay {
         top: 160px;
         font-size: 16px;
     }
 
-    /* Form düzeni */
-    .form {
-        margin-top: 20px;
+    #cvvDisplay {
+        top: 80px;
+        right: 20px;
+        font-size: 16px;
+        display: none;
     }
 
-    /* Etiketler */
-    label {
+    .form label {
         display: block;
         margin-top: 10px;
         font-size: 14px;
         color: #333;
     }
 
-    /* Input alanları */
-    input {
-        width: 100%; /* Tam genişlikte input */
+    .form input {
+        width: 100%;
         padding: 8px;
         margin-top: 5px;
         font-size: 14px;
         border: 1px solid #ccc;
-        border-radius: 5px; /* Köşeleri yuvarla */
-        box-sizing: border-box; /* Padding ve border hesaplamalarını genişlik içinde dahil et */
+        border-radius: 5px;
+        box-sizing: border-box;
     }
 
-    /* Ay ve Yıl inputları için özel stil */
     .expiry-cvv-container {
         display: flex;
         gap: 10px;
     }
 
-        .expiry-cvv-container input {
-            width: 80px; /* Her input'un genişliği */
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-    /* Ayrı Ay (MM) ve Yıl (YY) ve CVV için stil */
-    input[type="number"] {
-        -moz-appearance: textfield; /* Firefox'ta sayı inputlarında spin kutularını engelle */
+    .expiry-cvv-container input {
+        width: 80px;
     }
 
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
 
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 </style>
 
 <input type="hidden" id="odemeicin" value="odeme" />
@@ -132,119 +111,80 @@
     string alertmesajgostermedurumu = "odeme";
 }
 
-
 <div style="height:75px;"></div>
 <h1>Ödeme Sayfası</h1>
-@* <div style="height:75px;"></div> *@
 
-<br />
-<div class="container" style="margin-bottom:50px;">
+<div class="container mb-5">
     <div class="row">
-        <div class="col-md-12">
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            Ödeme Detayları
-                        </h3>
-
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <div class="card-preview" style="position: relative; width: 400px; height: 230px; background-color: #333; border-radius: 10px; color: #fff;">
-                                <img id="cardImage" src= "~/lib/img/card1.png" alt="" style="width: 100%; height:100%; border-radius: 10px;" />
-                                <div id="cardNumberDisplay" style="position: absolute; top: 80px; left: 20px; font-size: 20px; font-family: Arial, sans-serif;">**** **** **** ****</div>
-                                <div id="cardNameDisplay" style="position: absolute; top: 130px; left: 20px; font-size: 16px; font-family: Arial, sans-serif;">NAME ON CARD</div>
-                                <div id="cardExpiryDisplay" style="position: absolute; top: 160px; left: 20px; font-size: 16px; font-family: Arial, sans-serif;">MM/YY</div>
-                                <div id="cvvDisplay" style="position: absolute; top: 80px; right: 20px; font-size: 16px; font-family: Arial, sans-serif; display: none;">***</div>
-                            </div>
-                            @* "https://via.placeholder.com/400x200.png?text=Credit+Card" *@
-
-                            <div class="form">
-                                <label for="cardNumber">Kart Numarası:</label>
-                                <input type="text" id="cardNumber" maxlength="19" placeholder="**** **** **** ****" />
-
-                                <label for="cardName">Kart Üzerindeki İsim:</label>
-                                <input type="text" id="cardName" placeholder="Ad Soyad" />
-
-                                <!-- MM, YY ve CVV tek satırda alınıyor -->
-                                <label for="expiryDate">Son Kullanma Tarihi ve CVV:</label>
-                                <div class="expiry-cvv-container">
-                                    <input type="number" id="expiryMonth" min="1" max="12" placeholder="MM" />
-                                    <input type="number" id="expiryYear" min="2000" placeholder="YY" />
-                                    <input type="number" id="cvv" maxlength="3" placeholder="CVV" />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Ödeme Detayları</h5>
                 </div>
-                <ul class="nav nav-pills nav-stacked">
-                    <li class="active">
-                        <a>
-                            <span class="badge pull-right">
-                                <span class="fa fa-turkish-lira" id="odemeFiyati">
-                                    @ViewBag.DefaultYayinUcreti
-                                </span>
-                                @*4200*@
+                <div class="card-body">
+                    <div class="card-preview mx-auto">
+                        <img id="cardImage" src="~/lib/img/card1.png" alt="" style="width: 100%; height:100%; border-radius: 10px;" />
+                        <div id="cardNumberDisplay">**** **** **** ****</div>
+                        <div id="cardNameDisplay">NAME ON CARD</div>
+                        <div id="cardExpiryDisplay">MM/YY</div>
+                        <div id="cvvDisplay">***</div>
+                    </div>
 
-                            </span> Toplam Ödeme
-                        </a>
-                    </li>
-                </ul>
-                <br />
-                @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
+                    <div class="form mt-3">
+                        <label for="cardNumber">Kart Numarası:</label>
+                        <input type="text" id="cardNumber" maxlength="19" placeholder="**** **** **** ****" />
 
-                <a class="btn btn-success btn-lg btn-block" role="button" onclick="OdemeAl()">ÖDEME YAP</a>
-                <div id="loading" style="display: none; text-align: center;">
-                    <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+                        <label for="cardName">Kart Üzerindeki İsim:</label>
+                        <input type="text" id="cardName" placeholder="Ad Soyad" />
+
+                        <label for="expiryDate">Son Kullanma Tarihi ve CVV:</label>
+                        <div class="expiry-cvv-container">
+                            <input type="number" id="expiryMonth" min="1" max="12" placeholder="MM" />
+                            <input type="number" id="expiryYear" min="2000" placeholder="YY" />
+                            <input type="number" id="cvv" maxlength="3" placeholder="CVV" />
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6" style="background-color:lightgrey;border-radius:20px;">
-                <div>
-                    <p style="text-align:center;font-size:30px;margin-top:10px">
-                        <i class="fa fa-bell" style="color:green"></i> <strong>TEBRİKLER</strong>
-                        <i class="fa fa-bell" style="color:green"></i>
-                    </p>
-                    <div style="font-size:14px;">
-                        <p>
-                            <strong>Herkes Yazar Olsun</strong>' da emekleriniz hiçbir zaman boşa çıkmayacaktır.
-                            Kitabınızı anlaşmalı olan tüm yayın evlerimizden birine indirimli olarak bizim aracılığımız ile yayınlama hakkı kazandınız.
-                        </p>
-                        <p>
-                            Kitabınızı yayına almak istiyorsanız öncelikle <a href="/Home/Index#sponsorlar">Sponsorlar</a> bağlantısından sponsorlarımızı görebilir,
-                            istediğiniz sponsoru inceleyerek belirleyebilirsiniz
-                        </p>
-                        <p>
-                            Belirlediğiniz sponsorlarımız ile anlaşmalı indirimlerimizden anında faydalanabilirsiniz.
-                            Bunu için yapmanız gereken <strong>Herkes Yazar Olsun</strong>'un belirlediği <span style="text-decoration:underline">sabit fiyatımızı (@ViewBag.DefaultYayinUcreti)</span> ödeme sayfasından
-                            ödemeniz gerekmektedir.
-                        </p>
 
-                        <p>
-                            Ödemeniz başarılı olması durumunda açılan ekranda belirlediğiniz sponsoru bizlere mail aracılığıyla iletmeniz gerekmektedir.
-                        </p>
-                        <p>
-                            İlettiğiniz mail doğrultusunda sizlere <span style="text-decoration:underline">kitabınızın incelenip,sponsor kodu temin edilerek</span>  bu kod ile belirlediğiniz sponsorla yayın işlemlerini başlatabileceksiniz.
+            <ul class="list-group mt-3">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Toplam Ödeme
+                    <span class="badge bg-primary rounded-pill" id="odemeFiyati">@ViewBag.DefaultYayinUcreti</span>
+                </li>
+            </ul>
 
-                        </p>
-                        <p>
-                            Sponsor kodunuz ve dataylı bilgilerinizi, bize ilettiğiniz mail adresinize 3 iş günü içinde iletilecektir.
-                        </p>
-                    </div>
+            <br />
+            @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
 
-                </div>
+            <a class="btn btn-success btn-lg w-100 mt-3" role="button" onclick="OdemeAl()">ÖDEME YAP</a>
 
-                @*  <div class="text-center" style="margin-top:10px;margin-bottom:10px">
+            <div id="loading" class="text-center mt-3" style="display: none;">
+                <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+            </div>
+        </div>
 
-                <button type="button" class="btn btn-light">  <a href="/OdemeSayfasi/Odeme">Ödeme Sayfasına Geç</a>  </button>
-                </div> *@
+        <div class="col-12 col-md-6" style="background-color:lightgrey; border-radius:20px;">
+            <div class="text-center my-3">
+                <p style="font-size:30px;">
+                    <i class="fa fa-bell text-success"></i> <strong>TEBRİKLER</strong> <i class="fa fa-bell text-success"></i>
+                </p>
+            </div>
+            <div style="font-size:14px; padding:10px;">
+                <p><strong>Herkes Yazar Olsun</strong> da emekleriniz hiçbir zaman boşa çıkmayacaktır. Kitabınızı anlaşmalı olan tüm yayın evlerimizden birine indirimli olarak yayınlama hakkı kazandınız.</p>
+                <p>Kitabınızı yayına almak istiyorsanız öncelikle <a href="/Home/Index#sponsorlar">Sponsorlar</a> bağlantısından sponsorlarımızı görebilir, istediğiniz sponsoru inceleyerek belirleyebilirsiniz.</p>
+                <p>Belirlediğiniz sponsorlarımız ile anlaşmalı indirimlerimizden anında faydalanabilirsiniz. Bunun için sabit fiyatımızı (@ViewBag.DefaultYayinUcreti) ödeme sayfasından ödemeniz gerekmektedir.</p>
+                <p>Ödemeniz başarılı olursa, açılan ekranda belirlediğiniz sponsoru bize mail aracılığıyla iletmeniz gerekmektedir.</p>
+                <p>İlettiğiniz mail doğrultusunda sizlere sponsor kodu temin edilerek yayın işlemleri başlatılacaktır.</p>
+                <p>Sponsor kodunuz ve detaylı bilgileriniz, mail adresinize 3 iş günü içinde iletilecektir.</p>
             </div>
         </div>
     </div>
 </div>
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script>
 
