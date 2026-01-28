@@ -1,39 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Kitap Arama";
+    ViewData["Title"] = "Ayarlar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_AYARLAR
 @using HerkesYazarOlsun.Portal.Controllers;
 
-
-@if (@Model.UserDetail != null)
-{
-    <input type="hidden" id="UserDetailId" value="@Model.UserDetail.ID" />
-}
-else
-{
-    <input type="hidden" id="UserDetailId" value="0" />
-}
-@if (@Model.Profile != null)
-{
-    <input type="hidden" id="ProfileId" value="@Model.Profile.ID" />
-}
-else
-{
-    <input type="hidden" id="ProfileId" value="0" />
-}
-@if (@Model.Bildirim != null)
-{
-    <input type="hidden" id="BildirimId" value="@Model.Bildirim.ID" />
-}
-else
-{
-    <input type="hidden" id="BildirimId" value="0" />
-}
-
+<input type="hidden" id="UserDetailId" value="@(Model.UserDetail?.ID ?? 0)" />
+<input type="hidden" id="ProfileId" value="@(Model.Profile?.ID ?? 0)" />
+<input type="hidden" id="BildirimId" value="@(Model.Bildirim?.ID ?? 0)" />
 <input type="hidden" id="loginId" value="@Model.LoginUserId" />
-
 
 @{
     string tip = "ayarlar";
@@ -41,727 +17,191 @@ else
 <input type="hidden" id="tip" value="@tip" />
 
 <style>
+    /* TAB RENKLERİ */
+    .nav-tabs .nav-link {
+        color: #495057;
+        font-weight: 500;
+        border: none;
+        border-left: 4px solid transparent;
+        border-radius: 0;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #f8f9fa;
+        color: #6fcf97;
+        border-left-color: #6fcf97;
+        font-weight: 600;
+    }
+
+    /* BUTONLAR */
+    .btn-green {
+        background-color: #6fcf97;
+        border-color: #6fcf97;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .btn-green:hover {
+        background-color: #5bbf87;
+        border-color: #5bbf87;
+    }
+
+    .btn-gray {
+        background-color: #adb5bd;
+        border-color: #adb5bd;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .btn-gray:hover {
+        background-color: #9aa1a8;
+        border-color: #9aa1a8;
+    }
+
     .profile-card {
         display: flex;
-        flex-direction: row;
         align-items: center;
+        gap: 20px;
         padding: 20px;
-        background-color: #f8f9fa;
+        background: #f8f9fa;
         border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        margin-bottom: 25px;
     }
 
-        .profile-card img {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 20px;
-            border: 3px solid #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    .profile-card img {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
 </style>
 
-<div class="container light-style flex-grow-1 container-p-y" style="margin-top:50px">
-    <form method="post" enctype="multipart/form-data" class="needs-validation" id="form-ayarlar">
-         
-        <h1 class="font-weight-bold py-3 mb-4">
-            Ayarlar
-        </h1>
-        <br />
-        <div class="card overflow-hidden">
-            <div class="row no-gutters row-bordered row-border-light">
-                <div class="col-md-3 pt-0">
-                    <ul class="nav nav-tabs" role="tablist">
+<div class="container my-5">
+<form id="form-ayarlar" enctype="multipart/form-data">
 
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#account-general" role="tab" aria-selected="false">
-                                <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                                <span class="hidden-xs-down font-weight-bold">Genel Ayarlar</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#account-profil" role="tab" aria-selected="false">
-                                <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                                <span class="hidden-xs-down font-weight-bold">Profil Ayarları</span>
-                            </a>
-                        </li>
+<h2 class="fw-bold mb-4">Ayarlar</h2>
 
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#account-social-links" role="tab" aria-selected="false">
-                                <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                                <span class="hidden-xs-down font-weight-bold">Linkler</span>
-                            </a>
-                        </li>
+<div class="card shadow-sm border-0">
+<div class="row g-0">
 
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#account-info" role="tab" aria-selected="false">
-                                <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                                <span class="hidden-xs-down font-weight-bold">Detay Bilgiler </span>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#account-notifications" role="tab" aria-selected="false">
-                                <span class="hidden-sm-up"><i class="fa fa-book"></i></span>
-                                <span class="hidden-xs-down font-weight-bold">Bildirimler</span>
-                            </a>
-                        </li>
+<!-- SOL TAB -->
+<div class="col-md-3 border-end">
+<ul class="nav nav-tabs flex-column" role="tablist">
 
-                    </ul>
+<li class="nav-item">
+<a class="nav-link active" data-bs-toggle="tab" href="#general">Genel Ayarlar</a>
+</li>
 
-                </div>
-                <div class="col-md-9">
-                    <div class="tab-content">
+<li class="nav-item">
+<a class="nav-link" data-bs-toggle="tab" href="#profil">Profil Ayarları</a>
+</li>
 
-                        <div class="tab-pane p-20 active" id="account-general" role="tabpanel">
+<li class="nav-item">
+<a class="nav-link" data-bs-toggle="tab" href="#links">Linkler</a>
+</li>
 
+<li class="nav-item">
+<a class="nav-link" data-bs-toggle="tab" href="#info">Detay Bilgiler</a>
+</li>
 
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label class="form-label">Kullanıcı Adı</label>
-                                    @if (@Model.User != null)
-                                    {
-                                        <input type="text" class="form-control" id="username" value="@Model.User.USERNAME">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="username">
-                                    }
+<li class="nav-item">
+<a class="nav-link" data-bs-toggle="tab" href="#notifications">Bildirimler</a>
+</li>
 
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Adınız</label>
-                                    @if (@Model.User != null)
-                                    {
-                                        <input type="text" class="form-control" id="name" value="@Model.User.NAME">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="name">
-                                    }
-
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">E-mail</label>
-                                    @if (@Model.User != null)
-                                    {
-                                        <input type="text" class="form-control" id="email" value="@Model.User.EMAIL" autocomplete="new-email">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="email" autocomplete="new-email">
-                                    }
-
-                                    <div class="alert alert-warning mt-3">
-                                        @if (@Model.User != null && @Model.User.isEmail == 1)
-                                        {
-                                            <p>Doğrulandı: @Model.User.MODIFIED_AT </p>
-                                        }
-                                        else
-                                        {
-                                            <p>
-                                                E-posta adresiniz onaylanmadı.
-                                                <button type="button" onclick="EpostaDogrula()" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                    Doğrulama için kod gönder
-                                                </button>
-
-
-
-                                                <input type="hidden" class="form-control" id="maileGidenKod" value="">
-
-                                                <div style="display: flex; align-items: center; gap: 10px;" id="emailKod">
-                                                    <span> Doğrulama Kodu mail adresinize iletildi. Lütfen mail adresinizi Kontrol ediniz </span>
-                                                    <input type="number" class="form-control" id="girilenKod" maxlength="4" value="" placeholder="Doğrulama Kodunu Giriniz..">
-                                                    <button type="button" onclick="PostEpostaDogrula()" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                                        Doğrula
-                                                    </button>
-
-                                                </div>
-                                                <div id="loading" style="display: none; text-align: center;">
-                                                    <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
-                                                </div>
-
-                                            </p>
-                                        }
-
-
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="card-body pb-2">
-
-                              
-
-                                <div class="form-group">
-                                    <label class="form-label">Yeni şifre</label>
-                                    <input type="password" class="form-control" id="yeniSifre" autocomplete="new-password">
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Yeni şifreyi tekrar gir</label>
-                                    <input type="password" class="form-control" id="yeniSifreTekrar" autocomplete="new-password">
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="tab-pane p-20" id="account-info" role="tabpanel">
-                            <div class="card-body pb-2">
-
-                                <div class="form-group">
-                                    <label class="form-label">Hakkında Yazısı</label>
-                                    <textarea class="form-control" rows="5" id="hakkinda">
-                                        @if (@Model.UserDetail != null)
-                                        {
-                                            @Model.UserDetail.HAKKINDA
-                                        }
-                                </textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Doğum tarihi</label>
-                                    @if (@Model.UserDetail != null)
-                                    {
-                                        @if (@Model.UserDetail.DogumTarihi.HasValue)
-                                        {
-                                            <input type="text" class="form-control" id="dTarih"
-                                                   value="@Model.UserDetail.DogumTarihi.Value.ToShortTimeString()">
-                                        }
-                                        else
-                                        {
-                                            <input type="text" class="form-control" id="dTarih" />
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="dTarih" />
-                                    }
-
-                                </div>
-
-                            </div>
-                            <hr class="border-light m-0">
-                            <div class="card-body pb-2">
-
-                                <h6 class="mb-4">Telefonu Güncelle</h6>
-                                <div class="form-group">
-                                    <label class="form-label">Tel</label>
-                                    @if (@Model.UserDetail != null)
-                                    {
-                                        <input type="text" class="form-control" id="tel" value="@Model.UserDetail.TEL">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="tel">
-                                    }
-
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Siteniz</label>
-                                    @if (@Model.UserDetail != null)
-                                    {
-                                        <input type="text" class="form-control" id="website" value="@Model.UserDetail.WebSite">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="website">
-                                    }
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div class="tab-pane p-20" id="account-social-links" role="tabpanel">
-                            <div class="card-body pb-2">
-
-                                <div class="form-group">
-                                    <label class="form-label">Twitter</label>
-                                    @if (@Model.UserDetail != null)
-                                    {
-                                        <input type="text" class="form-control" id="twt" value="@Model.UserDetail.TwitterLink">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="twt">
-                                    }
-
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Facebook</label>
-                                    @if (@Model.UserDetail != null)
-                                    {
-                                        <input type="text" class="form-control" id="fcb" value="@Model.UserDetail.FacebookLink">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="fcb">
-                                    }
-
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">LinkedIn</label>
-                                    @if (@Model.UserDetail != null)
-                                    {
-                                        <input type="text" class="form-control" id="lkn" value="@Model.UserDetail.LinkedinLink">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="lkn">
-                                    }
-
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Instagram</label>
-                                    @if (@Model.UserDetail != null)
-                                    {
-                                        <input type="text" class="form-control" id="inst" value="@Model.UserDetail.InstagramLink">
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control" id="inst">
-                                    }
-
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="tab-pane p-20" id="account-profil" role="tabpanel">
-
-                            <div class="card-body media align-items-center">
-                                <div class="profile-card">
-                                <img src="@(!string.IsNullOrEmpty(Model?.Profile?.ProfilResimURl)
-                                                              ? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
-                                                              : Url.Content( "~/lib/img/user.png"))"
-                                     alt="Profil Resmi"
-                                     class="img-fluid img-thumbnail mt-4 mb-2"
-                                     style="width: 150px;" />
-                                    @Model.User.USERNAME  
-                            </div>
-                                <div class="media-body ml-4">
-                                    <label class="btn btn-outline-primary">
-                                        Fotoğraf Yükle
-                                        <input type="file" class="account-settings-fileinput" id="proFotoSec" onchange="dosyaSecim('profilFoto')">
-                                    </label> &nbsp;
-                                    @* <button type="button" class="btn btn-info md-btn-flat">Sil</button> *@
-                                    <input type="hidden" id="profilFotoName" name="@Model.Profile?.ProfilResimName">
-                                    @*<div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>*@
-                                </div>
-                            </div>
-
-                            <hr class="border-light m-0">
-                            <div class="card-body">
-                                <h5 class="mb-2">
-                                    Profil Arkaplan Rengini Ayarla
-                                </h5>
-                                <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                                        <span id="seciim">Seçiniz</span>
-
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="renkler" id="#AFEEEE" name="Pale Turkuaz" onclick="RenkSec(0) ">Pale Turkuaz</a></li>
-                                        <li><a class="renkler" id="#E0FFFF" name="Açık Cam Göbeği" onclick="RenkSec(1)">Açık Cam Göbeği</a></li>
-                                        <li><a class="renkler" id="# ADD8E6" name="Açık Mavi" onclick="RenkSec(2)">Açık Mavi</a></li>
-                                    </ul>
-                                </div>
-
-
-                            </div>
-
-                        </div>
-                        <div class="tab-pane p-20" id="account-notifications" role="tabpanel">
-                            <div class="card-body pb-2">
-
-                                <h6 class="mb-4">Etkileşim</h6>
-
-                                <div class="form-group">
-
-                                    <label class="switcher">
-                                        <input type="checkbox" checked id="yorumchk" value="yorum">
-
-                                        <span class="switcher-label">Birinin kitabına yorum yapıldığında kitabı yazana e-posta ile bilgi gitsin</span>
-                                        @* <span class="switcher-label">Birisi kitabıma yorum yaptığında bana e-posta gönder</span> *@
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="switcher">
-                                        <input type="checkbox" id="takipchk" value="takip">
-
-                                        <span class="switcher-label">Birini takip ettiğinde ilgili kişiye e-posta gönder</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <hr class="border-light m-0">
-                            @* <div class="card-body pb-2">
-
-                                <h6 class="mb-4">Uygulama </h6>
-                                <div class="form-group">
-                                    <label class="switcher">
-                                        <input type="checkbox"   checked="checked" id="yayinchk" value="yayin">                                       
-                                        <span class="switcher-label">Birisi kitap yayınladığında bana bildirim yolla</span>
-                                    </label>
-                                </div>
-
-
-                            </div> *@
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @Html.Partial("_AlertMesaj", @tip)
-
-        <br />
-        <div class="text-right mt-3"> 
-            <button class="btn btn-primary" type="submit">Kaydet</button>
-            &nbsp;
-            <button type="button" class="btn btn-info" onclick="Kaydetme()">Kaydetme</button>
-        </div>
-        <div id="loading-full" style="display: none; text-align: center;">
-            <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
-        </div>
-
-    </form>
-    <br />
+</ul>
 </div>
 
-<div id="mail_dogulama"></div>
-
-<script src= "~/js/general.js"></script>
-
-<script>
-
-       $(document).ready(function() {
-        var seciliRenkKodu = "@Model.Profile?.ProfilArkaplanRenkKodu";
-       // console.log("seciliRenkKodu ",seciliRenkKodu);
-        if(seciliRenkKodu) {
-            // butonun içini güncelle
-            var seciliRenk = $(".renkler[id='" + seciliRenkKodu + "']").attr("name");
-            $("#seciim").text(seciliRenk);
-        }
-
-         $('.nav-tabs .nav-link').on('click', function (e) {
-            e.preventDefault(); // URL’de # değişmesini engeller
-
-            // Tüm tab linklerinden aktif sınıfı kaldır
-            $('.nav-tabs .nav-link').removeClass('active');
-
-            // Tüm tab pane’lerden aktif ve show sınıflarını kaldır
-            $('.tab-pane').removeClass('active show');
-
-            // Tıklanan tab’a active sınıfını ekle
-            $(this).addClass('active');
-
-            // Hedef tab-pane’i aktif yap
-            var target = $(this).attr('href');
-            $(target).addClass('active show');
-        });
-    });
-        var profilarkaplanirengi = "";
-    var profilarkaplanrenkkodu = "";
-
-    var isTakip = false;
-    var IsKitapYayin = false;
-    var IsKitapYorum = false;
-
-    var ayar = $("#tip").val();
-
-    $('#takipchk').change(function () {
-          isTakip = $(this).is(':checked');
-        console.log("isTakip:", isTakip);
-    });
-
-     $('#yorumchk').change(function () {
-          IsKitapYorum = $(this).is(':checked');
-        console.log("IsKitapYorum:", IsKitapYorum);
-    });
-
-     $('#yayinchk').change(function () {
-        IsKitapYayin = $(this).is(':checked');
-        console.log("IsKitapYayin:", IsKitapYayin);
-    });
-
-    var ayarEklerForm = document.getElementById('form-ayarlar');
-
-    ayarEklerForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        $("#loading-full").css("display", "block"); 
-        var formData = new FormData(this);
-
-         var hakkinda = $("#hakkinda").val();
-        var dTarih = $("#dTarih").val();
-        var twt = $("#twt").val();
-        var fcb = $("#fcb").val();
-        var lkn = $("#lkn").val();
-        var inst = $("#inst").val();
-        var tel = $("#tel").val();
-        var website = $("#website").val();
-        var yeniSifreTekrar = $("#yeniSifreTekrar").val();
-        var yeniSifre = $("#yeniSifre").val();
-        var mevcutSifre = $("#mevcutSifre").val();
-        var username = $("#username").val();
-        var name = $("#name").val();
-        var email = $("#email").val();
-
-        var loginId = $("#loginId").val();
-        var UserDetailId = $("#UserDetailId").val();
-        var ProfileId = $("#ProfileId").val();
-        var BildirimId = $("#BildirimId").val();
-
-
-
-
-        var dosyaInputs = ayarEklerForm.querySelectorAll('input[type="file"]');
-        console.log(dosyaInputs.length);
-        for (var i = 0; i < dosyaInputs.length; i++) {
-            formData.append('dosyalar', dosyaInputs[i].files[0]);
-        }
-
-        var userDetail = {
-            "HAKKINDA": hakkinda,
-            "DogumTarihi": dTarih,
-            "TEL": tel,
-            "WebSite": website,
-            "TwitterLink": twt,
-            "FacebookLink": fcb,
-            "LinkedinLink": lkn,
-            "InstagramLink": inst,
-            "LoginUserId": loginId
-        };
-       // console.log("userDetail",userDetail);
-        var profil = {
-            "LoginUserId": loginId,
-            "ProfilArkaplanResmi": profilarkaplanirengi,
-            "ProfilArkaplanRenkKodu": profilarkaplanrenkkodu,
-            "ProfilResimName": $("#profilFotoName").val()
-        };
-       // console.log("profil",profil);
-
-        var usr = {
-            "NAME": name,
-            "USERNAME": username,
-            "EMAIL": email,
-            "PASSWORD": yeniSifre
-        };
-        //console.log("usr",usr);
-
-        var bldirim = {
-            "IsTakip": isTakip,
-            "IsKitapYayin": IsKitapYayin,
-            "IsKitapYorum": IsKitapYorum,
-            "LoginUserId": loginId
-        };
-        // console.log("bldirim",bldirim);
-        formData.append('LoginUserId', loginId);
-        formData.append('UserDetailId', UserDetailId);
-        formData.append('ProfileId', ProfileId);
-        formData.append('BildirimId', BildirimId); 
-
-        formData.append('UserDetail', JSON.stringify(userDetail));
-        formData.append('Profile', JSON.stringify(profil));
-        formData.append('User', JSON.stringify(usr));
-        formData.append('Bildirim', JSON.stringify(bldirim));
-
-        
-        $.ajax({
-            url: 'SaveOrUpdateAyarlar', // Formun gönderileceği adresi belirtin
-            method: 'POST',
-            data: formData, // Form verilerini FormData nesnesiyle al
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                 
-                console.log('  response', response);
-                console.log('  response result ', response.result);
-                // Başarılı dönüş sonucunu işleme kodları buraya gelebilir.
-                if (response.state == 1) {
-                    BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);
-                    history.replaceState(null, null, ' ');
-                    window.location.reload();
-
-                } else {
-                    BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);
-                }
-
-            },
-            error: function(xhr, status, error) {
-                
-                 BilgiVer(2, "#basarili-", "#bilgi-", "#uyari-", xhr.responseText);
-                // Konsola detaylı hata
-                console.error('AJAX Hata:', error);
-                console.error('Status:', status);
-                console.error('Response:', xhr.responseText);
-
-                // Kullanıcıya göster
-                console.log('Hata oluştu: ' + (xhr.responseText || error));
-            },
-            complete: function () {
-                // Spinner gizle ve butonu tekrar aktif et
-                $("#loading-full").css("display", "none");
-                // $btn.prop("disabled", false);
-                // $btn.text(originalText);
-            }
-        });
-
-    });
-
-    function BilgiVer(state, basarili, bilgi, uyari, mesaj) {
-        if (state == 1) {
-            $(basarili + ayar).css("display", "block");
-            $(basarili + ayar + " #mesaj").html(mesaj);
-
-            $(bilgi + ayar).css("display", "none");
-            $(uyari + ayar).css("display", "none");
-
-        }
-        else if (state == 3) {
-            $(bilgi + ayar).css("display", "block");
-            $(bilgi + ayar + " #mesaj").html(mesaj);
-
-            $(basarili + ayar).css("display", "none");
-            $(uyari + ayar).css("display", "none");
-        }
-        else {
-            $(uyari + ayar).css("display", "block");
-            $(bilgi + ayar).css("display", "none");
-            $(basarili + ayar).css("display", "none");
-            $(uyari + ayar + " #mesaj").html(mesaj);
-        }
-    }
-
-    var countChecked = function () {
-        var n = $("input:checked").length;
-        console.log(n + (n === 1 ? " is" : " are") + " checked!");
-
-        const nodeList = document.querySelectorAll("input:checked");
-        for (let i = 0; i < nodeList.length; i++) {
-            if (nodeList[i].checked) {
-                if (nodeList[i].value == "yayin") {
-                    IsKitapYayin = false;
-
-                } else if (nodeList[i].value == "takip") {
-                    isTakip = false;
-                }
-                else if (nodeList[i].value == "yorum") {
-                    IsKitapYorum = false;
-                }
-            }
-        }
-    };
-
-    countChecked();
-
-    $("input[type=checkbox]").on("click", countChecked);
- 
-    function Kaydetme() {
-        location.reload();
-        // window.location.href = "/Home/Index";
-    }
-
-    $("#emailKod").css("display", "none");
-
-
-    function EpostaDogrula() {       
-        var email = $("#email").val();
-        $.post("@Url.Action(nameof(EmailController.Gonder), "Email")", { "kime": email },
-            function (data) {
-                console.log(data.message);
-                 $("#emailKod").css("display", "block");
-                $("#maileGidenKod").val(data.message);
-            });
-    }
-
-    function PostEpostaDogrula() {
-
-        var girilenKod = $("#girilenKod").val();
-
-        if (girilenKod.length == 0) {
-            $("#uyari-" + ayar).css("display", "block");
-            $("#uyari-" + ayar + " #mesaj").html("Maile gelen kodu giriniz");
-
-            $("#basarili-" + ayar).css("display", "none");
-            $("#bilgi-" + ayar).css("display", "none");
-            return;
-        }
-        else if (girilenKod.length > 4) {
-            $("#uyari-" + ayar).css("display", "block");
-            $("#uyari-" + ayar + " #mesaj").html("Girilen kod 4 hane olmalıdır");
-
-            $("#basarili-" + ayar).css("display", "none");
-            $("#bilgi-" + ayar).css("display", "none");
-            return;
-        }
-
-        else if (girilenKod.length < 4) {
-            $("#uyari-" + ayar).css("display", "block");
-            $("#uyari-" + ayar + " #mesaj").html("Girilen kod 4 hane olmalıdır");
-
-            $("#basarili-" + ayar).css("display", "none");
-            $("#bilgi-" + ayar).css("display", "none");
-            return;
-        }
-
-        $("#loading").css("display", "block");
-
-        $("#emailKod").css("display", "block");
-
-        var maileGidenKod = $("#maileGidenKod").val();
-
-        if (girilenKod == maileGidenKod) {
-
-            $.post("@Url.Action(nameof(EmailController.PostEmailDogrula), "Email")", { "email": email },
-                function (data) {
-                    $("#loading").css("display", "none");
-                    if (data.state == 1) {
-                        $("#basarili-" + ayar).css("display", "block");
-                        $("#basarili-" + ayar + " #mesaj").html("Kod Doğrulama Başarılı");
-
-                        $("#bilgi-" + ayar).css("display", "none");
-                        $("#uyari-" + ayar).css("display", "none");
-
-                        window.location.href = "/Ayarlar/Ayarlar";
-
-                    }
-                    else {
-                        $("#uyari-" + ayar).css("display", "block");
-                        $("#uyari-" + ayar + " #mesaj").html("Kod doğrulama Başarısız");
-
-                        $("#basarili-" + ayar).css("display", "none");
-                        $("#bilgi-" + ayar).css("display", "none");
-                    }
-                    //window.location.replace("/Ayarlar/Ayarlar");
-                });
-        }
-
-    }
-
-    function RenkSec(id) {
-        var nodeNameProperty = RenkAdiGetir(id);
-        profilarkaplanirengi = nodeNameProperty;
-        $("#seciim").html(nodeNameProperty);
-
-    }
-
-    function RenkAdiGetir(id) {
-        var nodeNameProperty = "";
-        const nodeList = document.querySelectorAll(".renkler");
-        for (let i = 0; i < nodeList.length; i++) {
-            if (id == i) {
-                nodeNameProperty = nodeList[i].name;
-                profilarkaplanrenkkodu = nodeList[i].id;
-            }
-        }
-        return nodeNameProperty;
-    }
-
-
-</script>
+<!-- SAĞ İÇERİK -->
+<div class="col-md-9">
+<div class="tab-content p-4">
+
+<!-- GENEL -->
+<div class="tab-pane fade show active" id="general">
+<div class="mb-3">
+<label class="form-label">Kullanıcı Adı</label>
+<input type="text" class="form-control" id="username" value="@Model.User?.USERNAME">
+</div>
+
+<div class="mb-3">
+<label class="form-label">Adınız</label>
+<input type="text" class="form-control" id="name" value="@Model.User?.NAME">
+</div>
+
+<div class="mb-3">
+<label class="form-label">E-posta</label>
+<input type="email" class="form-control" id="email" value="@Model.User?.EMAIL">
+</div>
+
+<hr>
+
+<div class="mb-3">
+<label class="form-label">Yeni Şifre</label>
+<input type="password" class="form-control" id="yeniSifre">
+</div>
+
+<div class="mb-3">
+<label class="form-label">Yeni Şifre Tekrar</label>
+<input type="password" class="form-control" id="yeniSifreTekrar">
+</div>
+</div>
+
+<!-- PROFİL -->
+<div class="tab-pane fade" id="profil">
+<div class="profile-card mb-4">
+<img src="@(!string.IsNullOrEmpty(Model?.Profile?.ProfilResimURl)
+? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
+: Url.Content("~/lib/img/user.png"))" />
+<strong>@Model.User?.USERNAME</strong>
+</div>
+
+<input type="file" class="form-control mb-3" id="proFotoSec">
+</div>
+
+<!-- LINKLER -->
+<div class="tab-pane fade" id="links">
+<input class="form-control mb-3" placeholder="Twitter" id="twt" value="@Model.UserDetail?.TwitterLink">
+<input class="form-control mb-3" placeholder="Facebook" id="fcb" value="@Model.UserDetail?.FacebookLink">
+<input class="form-control mb-3" placeholder="LinkedIn" id="lkn" value="@Model.UserDetail?.LinkedinLink">
+<input class="form-control mb-3" placeholder="Instagram" id="inst" value="@Model.UserDetail?.InstagramLink">
+</div>
+
+<!-- DETAY -->
+<div class="tab-pane fade" id="info">
+<textarea class="form-control mb-3" rows="4" id="hakkinda">@Model.UserDetail?.HAKKINDA</textarea>
+<input class="form-control mb-3" placeholder="Telefon" id="tel" value="@Model.UserDetail?.TEL">
+<input class="form-control mb-3" placeholder="Web Site" id="website" value="@Model.UserDetail?.WebSite">
+</div>
+
+<!-- BİLDİRİMLER -->
+<div class="tab-pane fade" id="notifications">
+<div class="form-check mb-2">
+<input class="form-check-input" type="checkbox" id="yorumchk" checked>
+<label class="form-check-label">Yorum bildirimleri</label>
+</div>
+
+<div class="form-check">
+<input class="form-check-input" type="checkbox" id="takipchk">
+<label class="form-check-label">Takip bildirimleri</label>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+
+@Html.Partial("_AlertMesaj", tip)
+
+<div class="d-flex justify-content-end gap-2 mt-4">
+<button type="submit" class="btn btn-green px-4">Kaydet</button>
+<button type="button" class="btn btn-gray px-4" onclick="Kaydetme()">Kaydetme</button>
+</div>
+
+<div id="loading-full" class="text-center mt-3" style="display:none;">
+<img src="https://i.gifer.com/ZZ5H.gif" width="40">
+</div>
+
+</form>
+</div>
+
+<script src="~/js/general.js"></script>

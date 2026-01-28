@@ -60,7 +60,7 @@
             <div class="product__item__pic set-bg"
                  data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.ONKAPAKFOTOPATH">
 
-                @if (!string.IsNullOrEmpty(item.Categori?.Name))
+                @if (!string.IsNullOrEmpty(@item.Categori?.Name))
                 {
                     <span class="badge bg-success position-absolute top-0 start-0 m-2">
                         @item.Categori.Name

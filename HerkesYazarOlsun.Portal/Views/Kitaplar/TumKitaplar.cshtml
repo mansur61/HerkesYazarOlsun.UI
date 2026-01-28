@@ -53,7 +53,9 @@ else
    
     @{ 
 
-         int perSlide = Model.sliderdaGosterilecekKayit  ?? ViewBag.SliderdaGosterilecekKayit;
+          int perSlide = Model.sliderdaGosterilecekKayit != 0
+            ? Model.sliderdaGosterilecekKayit
+            : Convert.ToInt32(ViewBag.SliderdaGosterilecekKayit);
 
         int total = Model.VMBooksList.Count;
         int sliderSayisi = (int)Math.Ceiling((double)total / perSlide);
@@ -70,12 +72,7 @@ else
 </div>
 
 
-<div id="arabutonfiltre"></div>
-
-<script src="~/lib/jquery/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script>
-<script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script> 
+<div id="arabutonfiltre"></div> 
 
 <script>
 
