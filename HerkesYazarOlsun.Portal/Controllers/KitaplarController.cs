@@ -66,10 +66,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 }
 
             }
-
-
-
-
+            
             return View(input);
         }
 
