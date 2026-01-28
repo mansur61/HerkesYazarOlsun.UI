@@ -17,6 +17,8 @@
         font-weight: 600;
     }
 
+ 
+    
 /* ============================
    FORM KUTULARI
 ============================ */
@@ -163,20 +165,24 @@
 }
 
 .auth-secondary-btn {
-    background-color: #FFC107;
-    color: white;
-    padding: 12px;
-    font-weight: 600;
-    text-align: center;
-    border-radius: 8px;
+    background-color: #324055;
+    border: 1px solid #324055;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
     display: inline-block;
-    transition: 0.3s;
+    transition: all .2s ease;
 }
 
-    .auth-secondary-btn:hover {
-        background-color: #FFC107;
-        text-decoration: none;
-    }
+/* Hover efekti */
+.auth-secondary-btn:hover {
+    background-color: #2a3747; /* biraz koyusu */
+    border-color: #2a3747;
+    color: #fff;
+    text-decoration: none;
+}
+
 
 /* ============================
    MOBILE TASARIM
