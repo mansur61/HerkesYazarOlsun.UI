@@ -44,3 +44,14 @@ dotnet publish HerkesYazarOlsun.Portal.csproj \
 -p:IncludeNativeLibrariesForSelfExtract=false \
 -p:UseAppHost=true \
 -o publish
+
+----------
+
+tar -czvf ~/Desktop/site.tar.gz . olarak destktopa al macte
+
+dotnet publish HerkesYazarOlsun.Portal.csproj \
+-c Release \
+-r win-x64 \
+--self-contained true \
+-p:UseAppHost=true \
+-o publish
