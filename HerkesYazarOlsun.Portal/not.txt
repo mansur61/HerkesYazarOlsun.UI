@@ -55,3 +55,7 @@ dotnet publish HerkesYazarOlsun.Portal.csproj \
 --self-contained true \
 -p:UseAppHost=true \
 -o publish
+
+
+bundan yaptık 
+ dotnet publish -c Release -o publish

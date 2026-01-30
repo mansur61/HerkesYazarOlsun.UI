@@ -75,6 +75,27 @@
         margin-top: 40px;
     }
 
+    /* Tabların normal hali */
+.nav-tabs .nav-link {
+    color: #00CCA4;
+    background-color: rgba(0, 204, 164, 0.12);
+    border: 1px solid #00CCA4;
+}
+
+/* Aktif tab */
+.nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #00CCA4;
+    border-color: #00CCA4;
+}
+
+/* Hover */
+.nav-tabs .nav-link:hover {
+    color: #fff;
+    background-color: #00b894; /* biraz koyu tonu */
+    border-color: #00b894;
+}
+
     /* 🔥 PROFİL MOBILE RESPONSIVE TASARIM */
     @media (max-width: 768px) {
         /* Profil kartı: dikey hizaya geçsin */
