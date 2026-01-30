@@ -273,19 +273,21 @@
         $("#guncellenecekSayfaId").val(id);
 
         var sayfaIcerikItem = window.bookPagesData[id] || {};
-        //console.log("sayfaIcerikItem ",sayfaIcerikItem);
+        console.log("sayfaIcerikItem ",sayfaIcerikItem);
         let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
         let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
         let count = matches ? matches.length : 0;
 
         if(count != 0){
-          showAlert("Güncelleme işleminde resmi güncellemek isterseniz önce resmi X ikonundan siliniz.  Sonra  tekrardan  istediğiniz resmi yükleyebilirsiniz. Her sayfa 1 resim içermelidir");
-
+            if(sayfaIcerikItem.pageFoto != "PageFoto"){
+               showAlert("Güncelleme işleminde resmi güncellemek isterseniz önce resmi X ikonundan siliniz.  Sonra  tekrardan  istediğiniz resmi yükleyebilirsiniz. Her sayfa 1 resim içermelidir");
+            }
         }
 
         if(count != 0 ){
-            if (sayfaIcerikItem.pageFoto) {
-                let imgPath = `https://herkesyazarolsun.com.tr/Belgeler/${sayfaIcerikItem.pageFoto}`;
+            if (sayfaIcerikItem.pageFoto && sayfaIcerikItem.pageFoto != "PageFoto") {
+                 
+                    let imgPath = `https://herkesyazarolsun.com.tr/Belgeler/${sayfaIcerikItem.pageFoto}`;
 
                 let imageWrapperHtml = `  <img
                             src="${imgPath}"
@@ -293,6 +295,7 @@
                 `;
 
                 sayfaIcerik = sayfaIcerik.replaceAll("||img_BooksPage||", imageWrapperHtml);
+                 
             }else{
                 sayfaIcerik = sayfaIcerik.replaceAll("||img_BooksPage||", "");
             }
@@ -333,31 +336,20 @@
            var sayfaIcerikItem = window.bookPagesData[id] || {};
            
              console.log("sayfaIcerikItem:", sayfaIcerikItem );
-            /*let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
+            
+            let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
             let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
-            let count = matches ? matches.length : 0;*/
-
-            var quilIcerik = window.quill.root.innerHTML;
-
-            // editörde ||img_BooksPage|| var mı?
-            let matches = quilIcerik.match(/\|\|img_BooksPage\|\|/g);
-            let count = matches ? matches.length : 0;
-
-            // editörde <img> var mı?
-            let imgCount = (quilIcerik.match(/<img[^>]*>/g) || []).length;
-
-            // toplam resim sayısı
-            let totalImageCount = count + imgCount;
-
-
-            console.log("count : ",totalImageCount);
+            let count = matches ? matches.length : 0; 
+            console.log("count : ",count);
+            console.log("window.quill.root.innerHTML:", window.quill.root.innerHTML );
+                  
              var formData = new FormData(form);
 
                formData.append('PageWriteBase64', "PageWriteBase64");
                formData.append('ID', id);
                 formData.append("BookId", sayfaIcerikItem.bookId);
                 
-            if(totalImageCount == 0){ // sayfada herhangi bir foto yok
+            if(count == 0){ // sayfada herhangi bir foto yok
                // console.log("sayfada herhangi bir foto yok");
                 var quilIcerik = window.quill.root.innerHTML;
                //console.log("quilIcerik:", quilIcerik );
@@ -384,7 +376,7 @@
                   $("#progressOverlay").show();
             setTimeout(function() {  }, 3000);
 
-            Gonder(formData); 
+            //Gonder(formData); 
             }else{
                 showConfirm("En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?",
                 function (onay) {
@@ -408,7 +400,7 @@
                         setTimeout(function() {  }, 3000);
                         
 
-                         Gonder(formData); 
+                         //Gonder(formData); 
                 });
             }
           

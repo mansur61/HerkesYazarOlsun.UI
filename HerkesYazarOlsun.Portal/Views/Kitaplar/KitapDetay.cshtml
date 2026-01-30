@@ -23,23 +23,28 @@
         <!-- 📕 Kitap Kapak -->
         <div class="col-12 col-md-4 col-lg-3 text-center">
             <div class="card shadow-sm">
-                <div class="ratio ratio-3x4"> 
-                    @if (Model.BookModel?.ARKAKAPAKFOTOPATH == "-1")
+                <div class="ratio ratio-3x4">
+                    @{
+                        var kapak = Model.BookModel?.ONKAPAKFOTOPATH?.Trim();
+                    }
+                     
+                    @if (kapak == "-1")
                     {
                         <img src="~/lib/img/stack-of-books.png"
-                             class="img-fluid object-fit-cover"
-                             alt="Kitap Kapak">
+                            class="img-fluid object-fit-cover"
+                            alt="Kitap Kapak">
                     }
                     else
                     {
-                        <img src="https://herkesyazarolsun.com.tr/Belgeler/@Model.BookModel.ARKAKAPAKFOTOPATH"
-                             class="img-fluid object-fit-cover"
-                             alt="Kitap Kapak">
+                        <img src="https://herkesyazarolsun.com.tr/Belgeler/@kapak"
+                            class="img-fluid object-fit-cover"
+                            alt="Kitap Kapak">
                     }
                 </div>
 
+
                 @{
-                    Model.BookModel.Stars.isToplam = false;
+                            Model.BookModel.Stars.isToplam = false;
                 }
 
                 <div class="card-body text-center">
