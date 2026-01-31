@@ -65,7 +65,7 @@ else
         };
         Model.vM_PAGINATION_BUTTONS = butons;
         Model.isAnaSayfa = false;
-    }
+    } 
       @Html.Partial("Kitaplar", @Model)
 
     @Html.Partial("_PaginationButonlar", Model.vM_PAGINATION_BUTTONS)
@@ -73,6 +73,8 @@ else
 
 
 <div id="arabutonfiltre"></div> 
+ 
+
 
 <script>
 
@@ -100,7 +102,13 @@ else
 
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
-            "KITAP_ADI": kitap_ara
+            "KITAP_ADI": kitap_ara,
+            "BitenKitaplar": @((ViewBag.BitenKitaplar ?? false).ToString().ToLower()),
+            "FavoriKitaplar": @((ViewBag.FavoriKitaplar ?? false).ToString().ToLower()),
+            "FavoriKitaplar": @((ViewBag.FavoriKitaplar ?? false).ToString().ToLower()),
+            "YayinlananKitaplar": @((ViewBag.YayinlananKitaplar ?? false).ToString().ToLower()),
+            "DevamEdenKitaplar": @((ViewBag.DevamEdenKitaplar ?? false).ToString().ToLower()), 
+            
         }, function (data) {
             if (data) {
                 $("#arabutonfiltre").html(data);

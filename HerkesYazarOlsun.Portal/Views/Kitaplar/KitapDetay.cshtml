@@ -16,42 +16,59 @@
 <div class="container-fluid pt-5">
 <div class="container mt-4">
 
+ <style>
+    .ratio {
+  position: relative;
+  width: 100%;
+}
+
+.ratio::before {
+  display: block;
+  padding-top: var(--bs-aspect-ratio);
+  content: "";
+}
+
+.ratio-3x4 {
+  --bs-aspect-ratio: 133.333333%;
+}
+
+ </style>
+
 @if (Model != null)
 {
     <div class="row g-4 align-items-start">
+<!-- 📕 Kitap Kapak -->
+<div class="col-12 col-md-4 col-lg-3 text-center">
+    <div class="card shadow-sm">
 
-        <!-- 📕 Kitap Kapak -->
-        <div class="col-12 col-md-4 col-lg-3 text-center">
-            <div class="card shadow-sm">
-                <div class="ratio ratio-3x4">
-                    @{
-                        var kapak = Model.BookModel?.ONKAPAKFOTOPATH?.Trim();
-                    }
-                     
-                    @if (kapak == "-1")
-                    {
-                        <img src="~/lib/img/stack-of-books.png"
-                            class="img-fluid object-fit-cover"
-                            alt="Kitap Kapak">
-                    }
-                    else
-                    {
-                        <img src="https://herkesyazarolsun.com.tr/Belgeler/@kapak"
-                            class="img-fluid object-fit-cover"
-                            alt="Kitap Kapak">
-                    }
-                </div>
+        @{
+            var kapak = Model.BookModel?.ONKAPAKFOTOPATH?.Trim();
+            var kapakUrl = (string.IsNullOrEmpty(kapak) || kapak == "-1")
+                ? Url.Content("~/lib/img/stack-of-books.png")
+                : $"https://herkesyazarolsun.com.tr/Belgeler/{kapak}";
+        }
 
-
-                @{
-                            Model.BookModel.Stars.isToplam = false;
-                }
-
-                <div class="card-body text-center">
-                    @Html.Partial("_YildizGoster", Model.BookModel.Stars)
-                </div>
-            </div>
+        <div style="
+             width:100%;
+             height:360px;
+             background-image:url('@kapakUrl');
+             background-size:cover;
+             background-position:center;
+             background-repeat:no-repeat;">
         </div>
+
+        @{
+            Model.BookModel.Stars.isToplam = false;
+        }
+
+        <div class="card-body text-center">
+            @Html.Partial("_YildizGoster", Model.BookModel.Stars)
+        </div>
+    </div>
+</div>
+
+
+
 
         <!-- 📘 Kitap Bilgileri -->
         <div class="col-12 col-md-8 col-lg-9">

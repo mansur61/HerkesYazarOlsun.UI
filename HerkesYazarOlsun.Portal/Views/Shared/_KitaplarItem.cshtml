@@ -14,7 +14,7 @@
 <link href="~/lib/css/kitaplar_item.css" rel="stylesheet" />
 
 @section Styles{
-    <style>>
+    <style>
         .icon-btn {
             width: 45px;
             height: 45px;
@@ -54,11 +54,10 @@
     <input type="hidden" value="@item.ID" name="kId" />
 
     <div class="book-item">
-        <div class="product__item">
-
+        <div class="product__item"> 
             <!-- KAPAK -->
             <div class="product__item__pic set-bg"
-                 data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.ONKAPAKFOTOPATH">
+                  style="background-image:url('https://herkesyazarolsun.com.tr/Belgeler/@item.ONKAPAKFOTOPATH')">
 
                 @if (!string.IsNullOrEmpty(@item.Categori?.Name))
                 {
@@ -74,7 +73,7 @@
                     {
                         <!-- FAVORI -->
                         <li>
-                            <a href="javascript:void(0)"
+                            <a 
                                class="icon-btn fav-btn"
                                onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip")'>
                                 <i class="fa fa-heart"></i>
@@ -96,7 +95,7 @@
                                 item.iSTATISTIK.ToplamDegerlendirme >= yayinAyr.ToplamDegerlendirme)
                             {
                                 <li>
-                                    <a href="javascript:void(0)"
+                                    <a 
                                        class="icon-btn publish-btn"
                                        onclick='KitabiYayinaGonder("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip")'>
                                         <i class="fa fa-share"></i>
@@ -107,7 +106,7 @@
                         @if(!@isAnaSayfa && item.YazarId == (int?)ViewBag.LOGIN_USER_ID){
                             <!-- SIL -->
                             <li>
-                                <a href="javascript:void(0)"
+                                <a 
                                 id="delBtn_@item.ID"
                                 class="icon-btn delete-btn"
                                 onclick='KitabiSil("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip","@item.ID")'>
@@ -154,10 +153,8 @@
         </div>
     </div>
 </div>
-@section scripts{
-
-
-<script>
+ 
+ <script>
     
     function showAlert(type, tip, message) {
         const box = type === "success" ? "#basarili-" : "#uyari-";
@@ -175,6 +172,7 @@
     }
 
     function KitabiFavorilereEkle(btn, kitapId, tip) {
+        alert("KitabiFavorilereEkle");
         toggleSpinner(btn, true);
 
         $.post("@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")", {
@@ -231,4 +229,4 @@
         });
     }
 </script>
-}
+ 

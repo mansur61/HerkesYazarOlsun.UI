@@ -881,9 +881,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.profilKitapTuru = arama.profilKitapTuru ?? "";
             kitapDetay.isAnaSayfa = false;
             kitapDetay.Tip = arama.profilKitapTuru + "-" + arama.Tip;
+
+            arama.yazarIId = Lid;
+
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
             ViewBag.LOGIN_USER_ID = Lid;
+             
             //ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
             kitapDetay.VMBooksList = bookList!;
 

@@ -349,7 +349,8 @@
                formData.append('ID', id);
                 formData.append("BookId", sayfaIcerikItem.bookId);
                 
-            if(count == 0){ // sayfada herhangi bir foto yok
+            if(count != 0 && sayfaIcerikItem.pageFoto && sayfaIcerikItem.pageFoto == "PageFoto" ){ 
+                // sayfada herhangi bir foto yok
                // console.log("sayfada herhangi bir foto yok");
                 var quilIcerik = window.quill.root.innerHTML;
                //console.log("quilIcerik:", quilIcerik );
