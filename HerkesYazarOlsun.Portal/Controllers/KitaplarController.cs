@@ -794,6 +794,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> PostBooksPageUpdate(VM_BOOKS_PAGES sayfa)
         {
+            if(sayfa.PageFoto == null || sayfa.PageFoto == "")
+            {
+                sayfa.PageFoto = "PageFoto";
+            }
             ServiceResult sonuc = await new BooksPagesService().PostUpdateBooksPages(sayfa);
             return Json(sonuc);
         }

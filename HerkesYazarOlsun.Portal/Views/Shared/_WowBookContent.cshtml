@@ -397,7 +397,8 @@
                        formData.append("BookId", sayfaIcerikItem.bookId);
                         formData.append("isWordPDF", false);
                        formData.append("PageFotoDosyalar", sayfaIcerikItem.pageFotoDosyalar); 
-                        formData.append("PageFoto", sayfaIcerikItem.pageFoto );
+                        formData.append("PageFoto", sayfaIcerikItem.pageFoto  );
+                        // formData.append("PageFoto", sayfaIcerikItem.pageFoto ||  "PageFoto");
 
                         var quilIcerik = window.quill.root.innerHTML;                           
                           quilIcerik = quilIcerik.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/g, "");
@@ -464,6 +465,7 @@ var tip = $("#tip").val();
              processData: false,
              contentType: false,
              success: function (data) {
+                //console.log("Gonder data:", data);
                   $("#progressOverlay").hide(); // işlemin sonunda gizle
 
                     if (data.state == 1) {
@@ -485,7 +487,7 @@ var tip = $("#tip").val();
                     }
                     else if (data.state == 3) {
                         $("#bilgi-" + tip).css("display", "block");
-                        $("#bilgi-" + tip + " #mesaj").html("Güncellenemedi");
+                        $("#bilgi-" + tip + " #mesaj").html(data.message);
 
                         $("#basarili-" + tip).css("display", "none");
                         $("#uyari-" + tip).css("display", "none");
@@ -494,7 +496,7 @@ var tip = $("#tip").val();
                         $("#uyari-" + tip).css("display", "block");
                         $("#bilgi-" + tip).css("display", "none");
                         $("#basarili-" + tip).css("display", "none");
-                        $("#uyari-" + tip + " #mesaj").html("Güncellenemedi");
+                        $("#uyari-" + tip + " #mesaj").html(data.message);
                     }
              },
                error: function (xhr, status, error) {
