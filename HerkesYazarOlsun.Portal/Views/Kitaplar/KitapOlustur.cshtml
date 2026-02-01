@@ -424,11 +424,12 @@
          //console.log("kitapOlusturForm"  );
          var kitapKatdetmeUyariDurumu = $("#kitapKatdetmeUyariDurumu").val();
          // console.log("kitapKaydet UyariDurumu : " + kitapKatdetmeUyariDurumu);
-
+            
         if(dataValue == 1){
             var kategoriBilgiId = $("#kitapKategori").val();
-            // console.log("kitapKategori : " + kategoriBilgiId);
-            var selectlement = document.getElementById('selecData-' + kategoriBilgiId);
+             console.log("kitapKategori : " + kategoriBilgiId);
+            var selectlement = document.getElementById('selectData-' + kategoriBilgiId);
+             
             if(!selectlement){
                  BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "Kategori Seçilmelidir." );
                  return;
