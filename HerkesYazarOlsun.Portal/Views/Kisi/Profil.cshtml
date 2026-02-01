@@ -27,10 +27,19 @@
 
     <!-- PROFİL KARTI -->
     <div class="profile-card">
-        <img src="@(!string.IsNullOrEmpty(Model?.Profile?.ProfilResimURl)
-            ? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
-            : Url.Content("~/lib/img/user.png"))"
-             class="img-fluid rounded-circle" width="130" />
+         
+             <img src="@(
+    !string.IsNullOrWhiteSpace(Model?.Profile?.ProfilResimURl)
+        && Model.Profile.ProfilResimURl != "-1"
+        ? Url.Content($"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}")
+        : Url.Content("~/lib/img/user.png")
+)"
+     class="img-fluid rounded-circle"
+     width="130"
+     height="130"
+     style="object-fit:cover;" />
+
+
 
         <div class="profile-info ms-4">
             <h2>@Model.USERNAME</h2>

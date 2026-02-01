@@ -35,13 +35,13 @@
         <div id='features'>
 
             <div>
-                @if (@ViewBag.VM_KITAP.ONKAPAKFOTOPATH == "-1")
+                @if (@Model.BookModel.ONKAPAKFOTOPATH == "-1")
                 {
 
                     <img src="~/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
                 }
                 else
-                {
+                { 
                     <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)"
                          alt="Sayfa resmi" width="100%" height="100%" />
 
@@ -70,6 +70,9 @@
                     {
                         <button class="btn btn-warning" onclick="KitabiGuncelle('@item.ID')">
                             Sayfayı Güncelle
+                        </button>
+                        <button class="btn btn-danger" onclick="SayfayiSil('@item.ID')">
+                            Sayfayı Sil
                         </button>
                     }
 
@@ -379,8 +382,13 @@
 
             Gonder(formData); 
             }else{
-                showConfirm("En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?",
-                function (onay) {
+                var mesaj = "";
+                if(sayfaIcerikItem.pageFoto && sayfaIcerikItem.pageFoto != "PageFoto" ){
+                    mesaj = "En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?";
+                }else{
+                    mesaj = "Güncelleme Yapılacaktır. Onaylıyor musunuz?";
+                }
+                showConfirm(mesaj, function (onay) {
                     if (!onay) return; 
                     
                     //  formData.append("PageWrite", sayfaIcerikItem.pageWrite || "");
@@ -406,13 +414,49 @@
             }
           
     }
+    
+    function SayfayiSil(sayfaId) {
+    $("#progressOverlay").show();
+var tip = $("#tip").val();
+    $.post("@Url.Action(nameof(KitaplarController.KitapSayfaSil), "Kitaplar")", { 
+            sayfaId: sayfaId
+        }).done(data => {
+             
+            if (data.state == 1) {
+                        $("#basarili-" + tip).css("display", "block");
+                        $("#basarili-" + tip + " #mesaj").html("Kittap ");
+
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#uyari-" + tip).css("display", "none");
+
+                        setTimeout(function () {
+                            var link = window.location.href;
+
+                            window.location.href = link; 
+
+                            window.location.reload()
+
+                        }, 3000);
+                    }
+                    else if (data.state == 3) {
+                        $("#bilgi-" + tip).css("display", "block");
+                        $("#bilgi-" + tip + " #mesaj").html("Güncellenemedi");
+
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip).css("display", "none");
+                    }
+                    else {
+                        $("#uyari-" + tip).css("display", "block");
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip + " #mesaj").html("Güncellenemedi");
+                    }
+        });
+}
 
     function Gonder(formData){
         var tip = $("#tip").val();
-          //console.log("tip" ,tip );
-              /*for (let pair of formData.entries()) {
-                    console.log(pair[0] + ": ", pair[1]);
-                }*/
+           
            $.ajax({
              url: '/Kitaplar/PostBooksPageUpdate', // Formun gönderileceği adresi belirtin
              method: 'POST',

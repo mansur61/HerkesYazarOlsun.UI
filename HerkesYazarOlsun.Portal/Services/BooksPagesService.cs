@@ -19,6 +19,15 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
+        public ServiceResult<bool> DeleteBookPageById(long sayfaId)
+        {
+            Task<string> jsonContent = GetData("api/BooksPages/DeleteBookPageById?" + "sayfaId=" + sayfaId);
+            Task.WaitAll(jsonContent);
+
+            var result = JsonConvert.DeserializeObject<ServiceResult<bool>>(jsonContent.Result);
+            return result;
+        }
+
         public ServiceResult PostUpdateBooksPages2(VM_BOOKS_PAGES sayfa)
         {
             string stringData = JsonConvert.SerializeObject(sayfa);

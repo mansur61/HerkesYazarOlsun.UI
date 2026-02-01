@@ -13,42 +13,6 @@
 
 <link href="~/lib/css/kitaplar_item.css" rel="stylesheet" />
 
-@section Styles{
-    <style>
-        .icon-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #fff;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all .3s ease;
-        }
-
-        .icon-btn i {
-            font-size: 18px;
-            transition: color .3s ease;
-        }
-
-        .fav-btn i { color: #ff4d4d; }
-        .fav-btn:hover { background: #ff4d4d; transform: scale(1.2); }
-        .fav-btn:hover i { color: #fff; }
-
-        .publish-btn i { color: #198754; }
-        .publish-btn:hover { background: #198754; transform: scale(1.2); }
-        .publish-btn:hover i { color: #fff; }
-
-        .delete-btn i { color: #dc3545; }
-        .delete-btn:hover { background: #dc3545; transform: scale(1.2); }
-        .delete-btn:hover i { color: #fff; }
-
-        .user-btn i { color: #0d6efd; }
-        .user-btn:hover { background: #0d6efd; transform: scale(1.2); }
-        .user-btn:hover i { color: #fff; }
-
-    </style>
-}
 
 <div class="books-wrapper">
     <input type="hidden" value="@item.ID" name="kId" />
@@ -73,7 +37,7 @@
                     {
                         <!-- FAVORI -->
                         <li>
-                            <a 
+                            <a href="javascript:void(0)"
                                class="icon-btn fav-btn"
                                onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip")'>
                                 <i class="fa fa-heart"></i>
@@ -106,7 +70,7 @@
                         @if(!@isAnaSayfa && item.YazarId == (int?)ViewBag.LOGIN_USER_ID){
                             <!-- SIL -->
                             <li>
-                                <a 
+                                <a href="javascript:void(0)"
                                 id="delBtn_@item.ID"
                                 class="icon-btn delete-btn"
                                 onclick='KitabiSil("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip","@item.ID")'>

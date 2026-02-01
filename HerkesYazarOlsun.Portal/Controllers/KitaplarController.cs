@@ -562,6 +562,16 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        [Route("KitapSayfaSil")]
+        [ValidateAntiForgeryToken]
+        public JsonResult KitapSayfaSil(long sayfaId)
+        {  
+             
+             ServiceResult<bool> result = new BooksPagesService().DeleteBookPageById(sayfaId);
+             return Json(result);
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -261,7 +261,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<ServiceResult<bool>>(jsonContent.Result);
             return result;
         }
-
+       
         public ServiceResult<Books> UpdateBook(Books book)
         {
             string stringData = JsonConvert.SerializeObject(book);
