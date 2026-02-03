@@ -655,7 +655,11 @@
             console.log("data state:" + data.state);
             if (data.state == 1) {
                 $("#basarili-" + degerlendirme).css("display", "block");
-                $("#basarili-" + degerlendirme + " #mesaj").html(data.message);
+                $("#basarili-" + degerlendirme + " #mesaj")
+                .html(data.message && data.message.trim() !== "" 
+                        ? data.message 
+                        : "Değerlendirme başarıyla tamamlandı.");
+
 
                 $("#bilgi-" + degerlendirme).css("display", "none");
                 $("#uyari-" + degerlendirme).css("display", "none");
