@@ -75,6 +75,11 @@ else
 <div id="arabutonfiltre"></div> 
  
 
+@section Scripts { 
+ 
+    <!-- SweetAlert2 JS dosyası ve Bootstrap JS dosyası -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+}
 
 <script>
 
@@ -103,12 +108,22 @@ else
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
             "KITAP_ADI": kitap_ara,
-            "BitenKitaplar": @((ViewBag.BitenKitaplar ?? false).ToString().ToLower()),
-            "FavoriKitaplar": @((ViewBag.FavoriKitaplar ?? false).ToString().ToLower()),
-            "FavoriKitaplar": @((ViewBag.FavoriKitaplar ?? false).ToString().ToLower()),
-            "YayinlananKitaplar": @((ViewBag.YayinlananKitaplar ?? false).ToString().ToLower()),
-            "DevamEdenKitaplar": @((ViewBag.DevamEdenKitaplar ?? false).ToString().ToLower()), 
-            
+            "BitenKitaplar": @(ViewBag.BitenKitaplar == null 
+                ? "null" 
+                : ViewBag.BitenKitaplar.ToString().ToLower()),
+
+            "FavoriKitaplar": @(ViewBag.FavoriKitaplar == null 
+                ? "null" 
+                : ViewBag.FavoriKitaplar.ToString().ToLower()),
+
+            "YayinlananKitaplar": @(ViewBag.YayinlananKitaplar == null 
+                ? "null" 
+                : ViewBag.YayinlananKitaplar.ToString().ToLower()),
+
+            "DevamEdenKitaplar": @(ViewBag.DevamEdenKitaplar == null 
+                ? "null" 
+                : ViewBag.DevamEdenKitaplar.ToString().ToLower())
+                    
         }, function (data) {
             if (data) {
                 $("#arabutonfiltre").html(data);
