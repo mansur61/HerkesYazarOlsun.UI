@@ -83,6 +83,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
         {
             return View();
         }
+        public ActionResult Blog()
+        {
+            return View();
+        }
+        public ActionResult YasalUyari()
+        {
+            return View();
+        }
+        public ActionResult GizlilikSozlezmesi()
+        {
+            return View();
+        }
 
         public ActionResult Iletisim()
         {
