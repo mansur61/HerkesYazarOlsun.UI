@@ -9,16 +9,41 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      - run: dotnet restore
-      - run: dotnet build --no-restore -c Release
-      - run: dotnet test --no-build
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore -c Release
+
+      - name: Test
+        run: dotnet test --no-build -c Release
+
+      # --------------------
+      # DEPLOY – TEST
+      # --------------------
+      - name: Deploy to TEST
+        if: github.ref_name == 'test'
+        run: |
+          echo "Deploying to TEST environment"
+          kubectl apply -f k8s/test.yml
+
+      # --------------------
+      # DEPLOY – PROD
+      # --------------------
+      - name: Deploy to PROD
+        if: github.ref_name == 'main'
+        run: |
+          echo "Deploying to PROD environment"
+          kubectl apply -f k8s/prod.yml
