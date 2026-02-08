@@ -6,7 +6,11 @@ on:
       - main
       - test
       - development
+
   pull_request:
+    branches:
+      - main
+      - test
 
 jobs:
   build-test-deploy:
@@ -16,14 +20,12 @@ jobs:
       # --------------------
       # Checkout
       # --------------------
-      - name: Checkout source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       # --------------------
       # .NET
       # --------------------
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
@@ -31,34 +33,40 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --no-restore -c Release
+        run: dotnet build -c Release --no-restore
 
       - name: Test
-        run: dotnet test --no-build -c Release
+        run: dotnet test -c Release --no-build
 
       # --------------------
-      # Kubernetes config
+      # Publish (sadece test & main)
       # --------------------
-      - name: Setup kubeconfig
+      - name: Publish
         if: github.ref_name == 'test' || github.ref_name == 'main'
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
+        run: dotnet publish -c Release -o publish
 
       # --------------------
       # Deploy TEST
       # --------------------
       - name: Deploy to TEST
         if: github.ref_name == 'test'
-        run: |
-          echo "🚀 Deploying to TEST"
-          kubectl apply -f k8s/tst.yml
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: publish/
+          server-dir: /test.herkesyazarolsun.com.tr/
 
       # --------------------
       # Deploy PROD
       # --------------------
       - name: Deploy to PROD
         if: github.ref_name == 'main'
-        run: |
-          echo "🚀 Deploying to PROD"
-          kubectl apply -f k8s/prod.yml
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: publish/
+          server-dir: /httpdocs/
