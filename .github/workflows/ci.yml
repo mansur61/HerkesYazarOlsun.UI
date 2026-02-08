@@ -17,38 +17,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # --------------------
-      # Checkout
-      # --------------------
       - uses: actions/checkout@v4
 
-      # --------------------
-      # .NET
-      # --------------------
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      - name: Restore
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build -c Release --no-restore
-
-      - name: Test
-        run: dotnet test -c Release --no-build
+      - run: dotnet restore
+      - run: dotnet build -c Release --no-restore
+      - run: dotnet test -c Release --no-build
 
       # --------------------
-      # Publish (sadece test & main)
+      # Publish
       # --------------------
       - name: Publish
         if: github.ref_name == 'test' || github.ref_name == 'main'
         run: dotnet publish -c Release -o publish
 
       # --------------------
-      # Deploy TEST
+      # Backup CURRENT → PREV (TEST)
       # --------------------
-      - name: Deploy to TEST
+      - name: Backup TEST
+        if: github.ref_name == 'test'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: /
+          server-dir: /test.herkesyazarolsun.com.tr/prev/
+          dangerous-clean-slate: true
+
+      # --------------------
+      # Deploy TEST → CURRENT
+      # --------------------
+      - name: Deploy TEST
         if: github.ref_name == 'test'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -56,12 +59,32 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: publish/
-          server-dir: /test.herkesyazarolsun.com.tr/
+          server-dir: /test.herkesyazarolsun.com.tr/current/
 
       # --------------------
-      # Deploy PROD
+      # Health Check TEST
       # --------------------
-      - name: Deploy to PROD
+      - name: Health Check TEST
+        if: github.ref_name == 'test'
+        run: |
+          curl -f https://test.herkesyazarolsun.com.tr/health
+
+      # ====================
+      # PROD
+      # ====================
+
+      - name: Backup PROD
+        if: github.ref_name == 'main'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: /
+          server-dir: /httpdocs/prev/
+          dangerous-clean-slate: true
+
+      - name: Deploy PROD
         if: github.ref_name == 'main'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -69,4 +92,9 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: publish/
-          server-dir: /httpdocs/
+          server-dir: /httpdocs/current/
+
+      - name: Health Check PROD
+        if: github.ref_name == 'main'
+        run: |
+          curl -f https://herkesyazarolsun.com.tr/health
