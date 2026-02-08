@@ -13,9 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      # --------------------
+      # Checkout
+      # --------------------
+      - name: Checkout source
         uses: actions/checkout@v4
 
+      # --------------------
+      # .NET
+      # --------------------
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -31,19 +37,28 @@ jobs:
         run: dotnet test --no-build -c Release
 
       # --------------------
-      # DEPLOY – TEST
+      # Kubernetes config
+      # --------------------
+      - name: Setup kubeconfig
+        if: github.ref_name == 'test' || github.ref_name == 'main'
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
+
+      # --------------------
+      # Deploy TEST
       # --------------------
       - name: Deploy to TEST
         if: github.ref_name == 'test'
         run: |
-          echo "Deploying to TEST environment"
-          kubectl apply -f k8s/test.yml
+          echo "🚀 Deploying to TEST"
+          kubectl apply -f k8s/tst.yml
 
       # --------------------
-      # DEPLOY – PROD
+      # Deploy PROD
       # --------------------
       - name: Deploy to PROD
         if: github.ref_name == 'main'
         run: |
-          echo "Deploying to PROD environment"
+          echo "🚀 Deploying to PROD"
           kubectl apply -f k8s/prod.yml
