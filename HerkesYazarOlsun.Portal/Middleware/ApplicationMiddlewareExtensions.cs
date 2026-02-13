@@ -4,13 +4,13 @@ namespace HerkesYazarOlsun.Portal.Middlewares
     {
         public static WebApplication UseApplicationPipeline(this WebApplication app)
         {
+            app.UseHttpsRedirection();
+
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
+                //app.UseExceptionHandler("/Error"); GlobalExceptionMiddleware yazıldı bu yüzden kullanımdan alındı
+                app.UseHsts(); // SSL stripping saldırılarını engeller, MITM riskini azaltır, HTTPS zorunlu hale gelir
             }
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 

@@ -48,10 +48,16 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+
+app.UseMiddleware<CorrelationIdMiddleware>();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 
 // 🔐 Security headers & CSP
 app.UseSecurityHeaders(app.Environment, app.Configuration);
+
 
 // 📦 Static files
 app.UseCustomStaticFiles(app.Environment);
@@ -59,6 +65,7 @@ app.UseCustomStaticFiles(app.Environment);
 // 🔁 Core pipeline
 app.UseApplicationPipeline();
  
+app.MapGet("/health", () => Results.Ok("OK"));
 
 // 🚦 Routing
 app.MapControllerRoute(
