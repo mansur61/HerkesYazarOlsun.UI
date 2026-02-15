@@ -2,42 +2,18 @@
     ViewData["Title"] = "Kitap Arama";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-@section scripts{
-    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-}
+ 
 @section Styles{
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
+    <link href="~/lib/owlcarousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
 }
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 @using HerkesYazarOlsun.Portal.Controllers;
-
+@using HerkesYazarOlsun.Model.ViewModel;
 @{
     Model.kitapSliderYometimAdi = "arama";
-    //int sidebardaGosterilecekKayit = 3;
-
-    //int sidebarKalan = (@Model.VMBooksList.Count() % sidebardaGosterilecekKayit);
-    //int sidebarBolum = (@Model.VMBooksList.Count() / sidebardaGosterilecekKayit);
-    //int sidebarSayisi = (@sidebarKalan == 0) ? sidebarBolum : (@sidebarBolum + 1);
-
-    //int sliderdaGosterilecekKayit = 6;
-
-    //int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
-    //int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
-
-    //int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-
-    //Model.kalan = @kalan;
-    //Model.bolum = @bolum;
-    //Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-    //Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
-    //Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
-    //Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "arama";
-    //Model.Tip = "arama";
-}
-@Html.Partial("_KitapSliderItemYonetimleri",@Model)
+     
+} 
 
 <section class="product spad">
 <div class="container" >
@@ -110,9 +86,7 @@
 
             </div>
             <div class="col-lg-8" >
-
-                @*@Html.Partial("_Filtreleme",@Model)*@
-
+ 
                 <div class="filter__item">
                     <div class="row">
                         <div class="col-lg-4 col-md-5">
@@ -128,7 +102,7 @@
                         <div class="col-lg-4 col-md-4">
                             <div style="height:15px"></div>
                             <div class="filter__found">
-                                <h6><span>@Model.BooksList.Count() </span> Ürün Bulunmaktadır.</h6>
+                                <h6><span>@Model.VMBooksList.Count() </span> Ürün Bulunmaktadır.</h6>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-3">
@@ -146,21 +120,38 @@
                     </div>
                 </div>
 
-                @*<div class="alert alert-success" id="basarili" style="display:none;">
-                    <strong>Başarılı!</strong> Favorilere Eklendi
-                    <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
-                </div>
-                <br />
-                <div class="alert alert-info" id="uyari" style="display:none;">
-                    <strong>Bilgi!</strong> Favorilere Eklenemedi
-                    <button type="button" class="btn btn-info" onclick='Kapat()'>Kapat</button>
-                </div>
-                <br />*@
-
+                
                 @Html.Partial("_AlertMesaj",@Model.Tip)
 
                 <div class="row" id="tumaramaalar">
-                    @Html.Partial("Kitaplar",@Model)
+                    @{
+                        
+                        int perSlide = Model.sliderdaGosterilecekKayit == 0 ?  
+                                        ViewBag.SliderdaGosterilecekKayit : 
+                                        Model.sliderdaGosterilecekKayit;
+ 
+
+                        int total = Model.VMBooksList.Count;
+                        int sliderSayisi = (int)Math.Ceiling((double)total / perSlide);
+                        var butons = new  VM_PAGINATION_BUTTON{
+                                sliderSayisi = sliderSayisi,
+                                sliderSayiDivTagName = "arama"
+                        };
+                        Model.vM_PAGINATION_BUTTONS = butons; 
+
+                        var tumAramalarModel = new VM_BOOKS_DETAIL
+                        {
+                            VMBooksList = Model.VMBooksList.ToList(),  
+                            sliderdaGosterilecekKayit = perSlide,
+                            vM_PAGINATION_BUTTONS = butons,
+                            Tip = "arama",
+                            isAnaSayfa = false,
+                        };
+                    }
+
+                    @Html.Partial("Kitaplar", @tumAramalarModel)
+                    
+
                     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)
                 </div>
                 <div class="row" id="arabutonfiltre"></div>
@@ -170,6 +161,11 @@
     </div>
 </section>
 
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script>
+<script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script> 
 
 
 
@@ -229,14 +225,7 @@
 
 </script>
 
-<script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
-<script src="~/lib/bootstrap/dist/js/mixitup.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/kitap-arama.js"></script>
+
 
 
 

@@ -1,0 +1,205 @@
+﻿/* ============================
+   GENEL YAPI
+============================ */
+#title-container {
+    background-color: #00C9A7;
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: left;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+    #title-container h4,
+    #title-container p {
+        margin: 0 0 10px 0;
+        font-weight: 600;
+    }
+
+ 
+    
+/* ============================
+   FORM KUTULARI
+============================ */
+.login_form_inner,
+.register_form_inner {
+    background: white;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border: 1px solid #efefef;
+}
+
+    .login_form_inner h3,
+    .register_form_inner h3 {
+        color: #444;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+/* ============================
+   FORM ALANLARI
+============================ */
+.form-control {
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    transition: 0.2s ease;
+}
+
+    .form-control:focus {
+        border-color: #00C9A7 !important;
+        box-shadow: 0 0 8px rgba(0,201,167,0.3);
+    }
+
+/* ============================
+   BUTONLAR
+============================ */
+.button,
+.btn,
+.button-login,
+.button-register,
+.button-account {
+    height: 50px;
+    border-radius: 10px !important;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.25s;
+    outline: none !important;
+}
+
+.button-login,
+.button-register,
+.btn-success {
+    background-color: #00C9A7 !important;
+    color: white !important;
+}
+
+    .button-login:hover,
+    .button-register:hover,
+    .btn-success:hover {
+        background-color: #07b091 !important;
+    }
+
+.btn-warning {
+    height: 50px;
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+/* ============================
+   TAB TASARIMI (Login ekranı)
+============================ */
+.nav-tabs .nav-link {
+    padding: 10px 20px;
+    border-radius: 0 !important;
+    border: none !important;
+    font-weight: 600;
+    color: #444;
+}
+
+    .nav-tabs .nav-link.active {
+        background-color: lightgray !important;
+        font-weight: 700;
+    }
+
+/* ============================
+   LOADING İKONU
+============================ */
+#loading img {
+    margin-top: 10px;
+}
+
+/* ============================
+   ALERT MESAJ KUTULARI
+============================ */
+.alert-success,
+#basarili-register,
+#basarili-logingiris {
+    background: #e8fff7 !important;
+    border-left: 6px solid #00C9A7;
+    padding: 15px;
+}
+
+.alert-warning,
+#bilgi-register,
+#bilgi-logingiris {
+    background: #fff8e6 !important;
+    border-left: 6px solid #ffcc00;
+}
+
+.alert-danger,
+#uyari-register,
+#uyari-logingiris {
+    background: #ffe8e8 !important;
+    border-left: 6px solid #e63946;
+}
+
+.auth-primary-btn {
+    display: inline-block;
+    background-color: #00C9A7 !important;
+    color: white !important;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: 0.25s ease;
+    border: none;
+}
+
+    .auth-primary-btn:hover {
+        background-color: #07b091 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 201, 167, 0.35);
+    }
+
+.auth-tab-wrapper {
+    margin: -30px 10%;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.auth-secondary-btn {
+    background-color: #324055;
+    border: 1px solid #324055;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all .2s ease;
+}
+
+/* Hover efekti */
+.auth-secondary-btn:hover {
+    background-color: #2a3747; /* biraz koyusu */
+    border-color: #2a3747;
+    color: #fff;
+    text-decoration: none;
+}
+
+
+/* ============================
+   MOBILE TASARIM
+============================ */
+@media (max-width: 768px) {
+
+    #title-container {
+        text-align: center;
+    }
+
+    .login_form_inner,
+    .register_form_inner {
+        margin-top: 25px;
+    }
+
+    .nav-tabs .nav-link {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

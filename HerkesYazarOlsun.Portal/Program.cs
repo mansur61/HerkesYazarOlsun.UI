@@ -1,80 +1,77 @@
-using HerkesYazarOlsun.Model.ViewModel;
+ï»¿using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
+using HerkesYazarOlsun.Portal.Middlewares;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllersWithViews();
+// Configuration ayarlarÄ±
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables();
 
-AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings").GetSection("ApiPath").Value;
+AppSettings.ApiPath = builder.Configuration.GetSection("AppSettings")["ApiPath"];
 
-
-// Session desteðini ekle
-builder.Services.AddDistributedMemoryCache(); // Session için gerekli
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // 30 dakika boyunca session aktif
-    options.Cookie.HttpOnly = true; // Güvenlik için sadece HTTP üzerinden eriþilebilir yapar
-    options.Cookie.IsEssential = true; // Session çerezini zorunlu yapar
-});
-
-// Add services to the container.
+builder.Services.Configure<HelperSettings>(
+    builder.Configuration.GetSection("HelperSettings"));
+ 
 builder.Services.AddRazorPages();
-builder.Services.AddMvc();
+
+// DI ayarlarÄ±
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
-
 builder.Services.Configure<VM_Mail_Settings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddHttpClient();
 
-builder.Services.AddAuthentication(x =>
+builder.Services.AddAuthentication(options =>
 {
-    x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-}).AddCookie(x =>
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 {
-    x.Cookie.Name = "login";
-    x.LoginPath = "/Account/Login";
-    x.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.Cookie.Name = "login";
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.HttpOnly = true;
+    
+    options.LoginPath = "/Account/Giris";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.SlidingExpiration = true;
 });
+ 
 
 var app = builder.Build();
-  
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+
+
+app.UseMiddleware<CorrelationIdMiddleware>();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
+
+// ðŸ” Security headers & CSP
+app.UseSecurityHeaders(app.Environment, app.Configuration);
+
+
+// ðŸ“¦ Static files
+app.UseCustomStaticFiles(app.Environment);
+
+// ðŸ” Core pipeline
+app.UseApplicationPipeline();
  
-app.UseStaticFiles();
+app.MapGet("/health", () => Results.Ok("OK"));
 
-// Middleware'leri ekleyin
-app.UseSession(); // Session'ý etkinleþtir
-
-app.UseRouting();
-app.UseAuthentication();
-app.UseCookiePolicy();
-//app.UseSession();
-app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-}); 
+// ðŸš¦ Routing
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Tanitim}/{id?}");
 
 app.MapRazorPages();
-app.MapControllers();
+
 app.Run();

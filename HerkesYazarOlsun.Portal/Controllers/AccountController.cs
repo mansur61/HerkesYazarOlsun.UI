@@ -4,10 +4,10 @@ using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims; 
+using System.Security.Claims;
 using HerkesYazarOlsun.Model.Utils;
 using Microsoft.AspNetCore.Authorization;
-using HerkesYazarOlsun.Model.Entity; 
+using HerkesYazarOlsun.Model.Entity;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -19,7 +19,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
         private IWebHostEnvironment _environment;
 
         public string SignInUrl { get { return $"/Home/Index"; } }
-        public string SignUpInUrl { get { return $"/Account/Register"; } }
+        public string Onboarding { get { return $"/Home/Tanitim"; } }
+        public string SignUpInUrl { get { return $"/Account/KayitOl"; } }
         public AccountController(IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -27,7 +28,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpGet]
-        public ActionResult Register()
+        public ActionResult KayitOl()
         {
             VM_USERS vmUsers = new VM_USERS();
             return View(vmUsers);
@@ -35,11 +36,11 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Giris(string returnUrl)
         {
-            if (returnUrl != null && returnUrl.Contains("Register"))
+            if (returnUrl != null && returnUrl.Contains("KayitOl"))
             {
-                return RedirectToAction("Register", "Account");
+                return RedirectToAction("KayitOl", "Account");
             }
 
             if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
@@ -48,7 +49,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 return redirectResult;
             }
 
-            return View(new VM_LOGIN() { RememberLogin = true }); 
+            return View(new VM_LOGIN() { RememberLogin = true });
 
         }
 
@@ -56,7 +57,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GozlemciModLogin(string email)
         {
-            ServiceResult result = new ServiceResult(message:"Gözlemci Modda Girişiniz Algılandı",state:MessageResultState.SUCCESS);
+            ServiceResult result = new ServiceResult(message: "Gözlemci Modda Girişiniz Algılandı", state: MessageResultState.SUCCESS);
             try
             {
                 List<Claim> claims = new List<Claim>();
@@ -79,61 +80,77 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(VM_LOGIN login)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Giris(VM_LOGIN login)
         {
-           
-            if (ModelState.IsValid)
+            // Log klasörü: hem localde hem plesk httpdocs altında çalışır
+            var logFolder = Path.Combine(_environment.WebRootPath, "herkesyazarolsun_log");
+            if (!Directory.Exists(logFolder))
+                Directory.CreateDirectory(logFolder);
+
+            try
             {
+                if (!ModelState.IsValid)
+                    return View();
+
+                // Kullanıcıyı mail ile getir
                 ServiceResult<Users> sonuc = new KisiService().GetKisiByMail(login.email ?? "");
-                List<Claim> claims = new List<Claim>();
+
+                if (sonuc == null || sonuc.Result == null)
+                {
+                    var json = new
+                    {
+                        Message = "Bir eksiklik var lütfen geliştiricinize başvurunuz veya giriş için kayıt yaptırdığınızdan emin olunuz !",
+                        State = MessageResultState.ERROR
+                    };
+                    return Json(json);
+                }
+
                 if (sonuc.State == MessageResultState.SUCCESS)
                 {
+                    List<Claim> claims = new List<Claim>();
 
-                    //login.ExpiresUtc = login.RememberLogin == true ? DateTime.UtcNow.AddDays(3) : DateTime.UtcNow;
-                    //login.AllowRefresh = login.RememberLogin != true ? false : true;
-                    //login.IsPersistent = login.RememberLogin != true ? false : true;
-                    //login.LoginUserId = sonuc.Result.ID;
+                    var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
+                             ?? HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
 
-                    //ServiceResult sonuc2 = new KisiService().SaveOrUpdateAccountLogin(login);
-                    //sonuc.State = sonuc2.State;
-
-                    var ip = (HttpContext.Request.Headers["X-Forwarded-For"].ToString() != null
-                             && HttpContext.Request.Headers["X-Forwarded-For"].ToString() != "")
-                             ? HttpContext.Request.Headers["X-Forwarded-For"].ToString()
-                             : HttpContext?.Connection?.RemoteIpAddress?.ToString();
-
-                    HttpContext!.Request.Headers["email"] = sonuc.Result.EMAIL ?? "";
-
-                    // yapı tckimlik no üzerinden değil bunun yerine tekil olan email üzerinden ilerlemektedir. Zamanla belki tckimlikno üzerinden ilerleyebilir
+                    // headers içine yazmaya gerek yok aslında ama senin kodunu bozmadım
+                    HttpContext.Request.Headers["email"] = sonuc.Result.EMAIL ?? "";
 
                     claims.Add(new Claim("telno", sonuc.Result.TELNO ?? ""));
                     claims.Add(new Claim("tckimlikno", "0"));
-                    claims.Add(new Claim("uygulama_id", "1")); //WEB
+                    claims.Add(new Claim("uygulama_id", "1")); // WEB
                     claims.Add(new Claim("email", sonuc.Result.EMAIL ?? ""));
-                    claims.Add(new Claim("ip", ip ?? ""));
+                    claims.Add(new Claim("ip", ip));
                     claims.Add(new Claim("adi", sonuc.Result.NAME ?? ""));
                     claims.Add(new Claim("soyadi", sonuc.Result.SURNAME ?? ""));
-
+                    claims.Add(new Claim("username", sonuc.Result.USERNAME ?? ""));
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var principal = new ClaimsPrincipal(identity);
-                    var b = login.RememberLogin; 
-                    var props = new AuthenticationProperties();
-                    props.IsPersistent = true; 
-                        //login.RememberLogin;
-                    props.ExpiresUtc = DateTime.UtcNow.AddDays(3);
-                    props.AllowRefresh = true;
-                    
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
 
+                    var props = new AuthenticationProperties
+                    {
+                        IsPersistent = login.RememberLogin, // modelden geleni kullan
+                        ExpiresUtc = DateTime.UtcNow.AddDays(3),
+                        AllowRefresh = true
+                    };
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
                 }
+
                 return Json(sonuc);
             }
-            return View();
+            catch (Exception ex)
+            {
+                var logFile = Path.Combine(logFolder, $"login_error_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+                await System.IO.File.WriteAllTextAsync(logFile, ex.ToString());
+                return StatusCode(500, "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.");
+            }
         }
 
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveOrUpdateAyarlar(VM_AYARLAR ayr)
         {
 
@@ -144,12 +161,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> CikisYap()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignOutAsync("Cookies");
 
-            return Redirect(SignInUrl);
+            return Redirect(Onboarding);
         }
     }
 }

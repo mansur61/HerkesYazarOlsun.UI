@@ -1,67 +1,83 @@
 ﻿@using HerkesYazarOlsun.Model.ViewModel
 
-<br />
 
-@{
-    int index = 0;
-}
-
-@if (@ViewBag.Duyurular != null && @ViewBag.Duyurular.Count > 0)
+@if (ViewBag.Duyurular != null && ViewBag.Duyurular.Count > 0)
 {
+    <div id="myCarousel"
+     class="carousel slide"
+     data-bs-ride="carousel"
+     data-bs-interval="3000"
+     style="height:450px">
 
-    <div id="myCarousel" class="carousel slide" data-ride="carousel" style="height: 450px">
+
         <!-- Indicators -->
-        <ol class="carousel-indicators">
+        <div class="carousel-indicators">
+            @{
+                int i = 0;
+            }
             @foreach (var item in ViewBag.Duyurular)
             {
-                <li data-target="#myCarousel" data-slide-to="@index" class="@(index == 0 ? "active" : "")"></li>
-                index++;
+                <button type="button"
+                        data-bs-target="#myCarousel"
+                        data-bs-slide-to="@i"
+                        class="@(i == 0 ? "active" : "")"
+                        aria-current="@(i == 0 ? "true" : "false")">
+                </button>
+                i++;
             }
-        </ol>
+        </div>
 
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
+        <!-- Slides -->
+        <div class="carousel-inner h-100">
             @{
-                index = 0;
+                int index = 0;
             }
             @foreach (var item in ViewBag.Duyurular)
             {
                 var duyuruItem = item as VM_CAROUSEL_DUYURU;
-                <div class="item @(index == 0 ? "active" : "")">
-                    <div class="fill"
-                        style="@(string.IsNullOrWhiteSpace(duyuruItem?.RENK)
-                         ? "background-image:url('/lib/img/slide/slide1.png');"
+
+                <div class="carousel-item @(index == 0 ? "active" : "") h-100">
+                    <div class="d-flex align-items-center justify-content-center h-100 text-white"
+                         style="@(string.IsNullOrWhiteSpace(duyuruItem?.RENK)
+                         ? "background-image:url('/lib/img/slide/slide1.png'); background-size:cover;"
                          : $"background-color:{duyuruItem.RENK};")">
-                    </div>
-                    <div class="carousel-caption">
                         <h2>@duyuruItem?.ICERIK</h2>
                     </div>
                 </div>
+
                 index++;
             }
         </div>
 
         <!-- Controls -->
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-            <i class="fa fa-angle-left"></i>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-            <i class="fa fa-angle-right"></i>
-        </a>
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
     </div>
 }
 else
 {
-    <div id="myCarousel" class="carousel slide" style="height:450px">
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <div class="fill" style="background-image:url('~/lib/img/slide/slide1.png');"></div>
-                <div class="carousel-caption">
-                    <h2>Henüz bir duyuru yoktur</h2>
-                </div>
-            </div>
+   <div id="myCarousel"
+     class="carousel slide"
+     data-bs-ride="carousel"
+     data-bs-interval="3000"
+     style="height:450px"> 
 
+    <div class="carousel-inner h-100">
+
+        <div class="carousel-item active h-100">
+<div class="d-flex h-100 align-items-center justify-content-center bg-light text-dark border border-success-subtle rounded">
+                <h2>Henüz bir duyuru yoktur</h2>
+            </div>
         </div>
-    </div>
+        </div>
+
+     
+</div>
+
+
 }

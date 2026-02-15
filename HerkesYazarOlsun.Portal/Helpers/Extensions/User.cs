@@ -38,13 +38,18 @@ namespace HerkesYazarOlsun.Portal.Helpers.Extensions
             var email = user.Claims.Where(x => x.Type == "email").FirstOrDefault();
             return email != null ? email.Value : "";
         }
+        public static string GetUserName(this ClaimsPrincipal user)
+        {
+            var usrName = user.Claims.Where(x => x.Type == "username").FirstOrDefault();
+            return usrName != null ? usrName.Value : "";
+        }
 
         public static long GetLoginUserId(this ClaimsPrincipal user)
         {
             var email = user.Claims.Where(x => x.Type == "email").FirstOrDefault();
             KisiService kisiService = new KisiService();
             var sonuc = kisiService.GetKisiByMail(email?.Value ?? "");
-            return sonuc != null ? sonuc.Result != null ? sonuc.Result.ID  : 0 : 0;
+            return sonuc != null ? sonuc.Result != null ? sonuc.Result.ID : 0 : 0;
         }
 
         public static string GetIpAddress(this ClaimsPrincipal user)

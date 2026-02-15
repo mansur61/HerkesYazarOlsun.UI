@@ -17,10 +17,10 @@ namespace HerkesYazarOlsun.Portal.Services
         {
             UriService = AppSettings.ApiPath;
             _httpContextAccessor = new HttpContextAccessor().HttpContext;
-                //HttpContextHelper.Current;
+            //HttpContextHelper.Current;
         }
 
-        protected async Task<string> GetData(string url, long? tckimlikno = null)
+        protected async Task<string> GetData(string url, long? tckimlikno = null, string? eposta = null)
         {
             var client = new GetHttpClientCustom().GetHttpClient();
             tckimlikno ??= _httpContextAccessor?.User.GetTcKimlikNo();
@@ -32,7 +32,11 @@ namespace HerkesYazarOlsun.Portal.Services
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
             client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
-            client.DefaultRequestHeaders.Add("email", mail?.ToString());
+
+            if (string.IsNullOrEmpty(mail))
+            {
+                mail = eposta;
+            }
 
             var ip = _httpContextAccessor?.User.GetIpAddress();
             client.DefaultRequestHeaders.Add("ip", ip);
@@ -80,8 +84,8 @@ namespace HerkesYazarOlsun.Portal.Services
             //{
             //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
             //}
-            client.DefaultRequestHeaders.Add("tckimlikno", (tckimlikno != null) ? tckimlikno.ToString() : "0" );
-            client.DefaultRequestHeaders.Add("email", (mail != null )? mail.ToString() : "");
+            client.DefaultRequestHeaders.Add("tckimlikno", (tckimlikno != null) ? tckimlikno.ToString() : "0");
+            client.DefaultRequestHeaders.Add("email", (mail != null) ? mail.ToString() : "");
 
             client.BaseAddress = new Uri(UriService);
             client.DefaultRequestHeaders.Accept.Clear();

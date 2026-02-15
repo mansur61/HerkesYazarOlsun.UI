@@ -1,0 +1,7 @@
+ 
+    /* OWL ITEM ORTALAMA */
+#owl-BOOKS .item,
+[id^="owl-"] .item {
+    display: flex;
+    justify-content: center;
+}

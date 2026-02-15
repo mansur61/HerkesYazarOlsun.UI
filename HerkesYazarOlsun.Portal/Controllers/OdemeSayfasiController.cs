@@ -1,39 +1,50 @@
-﻿
-using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Model.Utils;
+﻿using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Net.Mail;
+using System.Security.Cryptography;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
     public class OdemeSayfasiController : Controller
     {
         private readonly VM_Mail_Settings _mailSettings;
+        private readonly HelperSettings helperSettings;
         private EmailService emailService;
 
-        private string DosyaYolu = "C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/";
 
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
-        public OdemeSayfasiController(IHttpContextAccessor contextAccessor, IOptions<VM_Mail_Settings> mailSettings)
+        public OdemeSayfasiController(IHttpContextAccessor contextAccessor,
+            IOptions<VM_Mail_Settings> mailSettings,
+            IOptions<HelperSettings> _helperSettings)
         {
             _contextAccessor = contextAccessor;
             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
             this.emailService = new EmailService();
             _mailSettings = mailSettings.Value;
+            helperSettings = _helperSettings.Value;
         }
         public IActionResult Odeme(string kitapId)
         {
 
             ViewBag.LoginUserId = StringCipher.Encrypt(Lid.ToString());
             ViewBag.KitapId = kitapId;
+            ViewBag.DefaultYayinUcreti = helperSettings.DefaultYayinUcreti;
             return View();
         }
 
+
+        /**
+         * //Ödeme alt yapısına gider. (iyizico vs.) Başarılı ise Ödeme tablosuna kayıt atar. isOdeme durumu belilerlenir.
+         *  // buradan ilgili ödeme entegrasyonu sayfasına yönlendir. callback url de bu endpoinmti kullanırsın
+         * */
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveOdeme(VM_KARTLAR kart)
         {
             ServiceResult result = new ServiceResult();
@@ -46,56 +57,37 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
         public IActionResult SponsorlukBildirimi(string kitapId, string yazarId)
         {
-            var kitap_id = Convert.ToInt64(StringCipher.Decrypt(kitapId));
-            var yazar_id = Convert.ToInt64(StringCipher.Decrypt(yazarId));
-            var bb = Lid;
+            //var kitap_id = Convert.ToInt64(StringCipher.Decrypt(kitapId));
+            //var yazar_id = Convert.ToInt64(StringCipher.Decrypt(yazarId));
+            //var bb = Lid;
+            ViewBag.LoginUserId = yazarId;
+            ViewBag.KitapId = kitapId;
             //kitap ve yazarId şifrelerini çöz
             VM_SPONSORLAR vM_SPONSORLAR = new VM_SPONSORLAR();
             vM_SPONSORLAR.SponsorlarList = new SponsorlarService().GetSponsorlar();
             return View(vM_SPONSORLAR);
 
         }
-        //  test edilecek
-
-        private async Task<string> GetDosyaPathAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
-        {
-            var dosyalar = odemeSponsorlar.dosyalar;
-            string tempFilePath = "";
-            if (dosyalar != null && dosyalar.Any())
-            {
-                var dosya = odemeSponsorlar.dosyalar!.FirstOrDefault();
-                if (dosya != null)
-                {
-                    // Dosyayı geçici bir dosyaya kaydetme
-                    tempFilePath = Path.Combine(Path.GetTempPath(), dosya.FileName);
-                    using (var stream = new FileStream(tempFilePath, FileMode.Create))
-                    {
-                        await dosya.CopyToAsync(stream); // Dosyayı geçici dosyaya kaydediyoruz
-                    }
-                }
-
-            }
-            return tempFilePath;
-        }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveSponsorlukBildirAsync(VM_ODEME_SPONSORLARI odemeSponsorlar)
         {
             ServiceResult result = new ServiceResult();
             odemeSponsorlar.LoginUserId = Lid;
-            string tempFilePath = await GetDosyaPathAsync(odemeSponsorlar);
+            var kitap_id = Convert.ToInt64(StringCipher.Decrypt(odemeSponsorlar.KitapIdENC));
 
-            result = new ServiceResult(state: MessageResultState.SUCCESS, message: "Olmadi");
+            result = new ServiceResult(state: MessageResultState.SUCCESS, message: "Başarılı");
             //new OdemeService().SaveSponsorlukBildir(odemeSponsorlar);
 
             var spnsModel = new SponsorlarService().GetSponsorlarById(odemeSponsorlar.SponsorId);
-            var kisiModel = new KisiService().GetKisiById(Lid);
+            //var kisiModel = new KisiService().GetKisiById(Lid);
+
+            //odemeSponsorlar.Mail = "kayamansur61@gmail.com"; //test
 
             if (result.State == MessageResultState.SUCCESS)
             {
-                var mesaj = result.Message;
-               
-                //alinan mail
+                //alinan mail, formdan herkes yazar olsuna mail gelecek
                 var icerik = new VM_MAIL_ICERIK()
                 {
                     username = _mailSettings.Username,
@@ -108,12 +100,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
                                 <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
                                     <h2 style='color: #2c3e50;'>Sayın Herkes Yazar Olsun Ekibi,</h2>
                                     <p>
-                                        {odemeSponsorlar.KitapId.ToString()} nolu Kitap bilgisi ile Sponsor seçimi için size ulaşıyorum.
-                                        Sponsor Adı olarak  {spnsModel.SponsorAdi} seçtiğimi belirtmek istiyorum.
+                                        Merhabalar, {odemeSponsorlar.Mail.ToString()} ilgili mail adresimdir. 
                                     </p>
                                     <p>
-                                        <strong>İletişim Bilgilerim:</strong><br>
-                                        <strong>Ad Soyad:</strong> {kisiModel.NAME} {kisiModel.SURNAME}<br>
+                                        {kitap_id.ToString()} nolu Kitap bilgisi ile Sponsor seçimi için size ulaşıyorum.
+                                        Sponsor Adı olarak  '{spnsModel.SponsorAdi}' seçtiğimi belirtmek istiyorum.
+                                    </p>
+                                    <p> 
+                                        <strong>İletişim Bilgilerim:</strong><br> 
+                                        <strong>Ad Soyad:</strong> {odemeSponsorlar.NameSurname} <br>
                                         <strong>Telefon:</strong> {odemeSponsorlar.Tel}<br>
                                         <strong>Mail:</strong> {odemeSponsorlar.Mail}<br>
                                     </p>
@@ -127,15 +122,16 @@ namespace HerkesYazarOlsun.Portal.Controllers
                                     
                                 </body>
                             </html>",
-                     
+
                     // mail kimden geliyor
-                    gondericii_mail = "kayamansur61@gmail.com", //odemeSponsorlar.Mail,
+                    gondericii_mail = _mailSettings.FromEmail, //odemeSponsorlar.Mail,
                     // mail kime gidiyor
                     kime = _mailSettings.FromEmail,
-                    dosyaYolu = tempFilePath,
+                    //dosyaYolu = tempFilePath,
+                    dosyalar = odemeSponsorlar.dosyalar != null && odemeSponsorlar.dosyalar.Any() ? odemeSponsorlar.dosyalar : null
                 };
 
-                string sonuc = emailService.EmailGonder(icerik);
+                string sonuc = await emailService.EmailGonder(icerik);
 
 
                 if (sonuc == "-1")
@@ -145,8 +141,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 }
                 else
                 {
+                    // mail sana geliyse otomatik cevap ilet mail gönderen kişiye
                     //gonderilen nmail
-                    icerik = new VM_MAIL_ICERIK()
+                    var replyMail = new VM_MAIL_ICERIK()
                     {
 
                         username = _mailSettings.Username,
@@ -160,10 +157,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
                                     <h2 style='color: #2c3e50;'>Sayın {odemeSponsorlar.NameSurname}  ,</h2>
                                     <p>
                                         Sponsor seçiminiz başarılı şekilde yapılmıştır.
-                                        Paylaştığınız mail veya SMS bilgileri ile sizlere en kısa sürede iletişim sağlanacaktır.
+                                        Paylaştığınız mail {(odemeSponsorlar.Mail)} veya SMS bilgileri ile sizlere en kısa sürede iletişim sağlanacaktır.
                                     </p>
                                     <p>
-                                        {mesaj}
+                                        {odemeSponsorlar.Mesaj}
                                     </p>
                                     <p>
                                         Sponsorluk süreçleri hakkında daha fazla bilgi almak için bizimle iletişime geçebilirsiniz.
@@ -184,20 +181,20 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         kime = odemeSponsorlar.Mail,
                     };
 
-                     sonuc = emailService.EmailGonder(icerik);
+                    sonuc = await emailService.EmailGonder(replyMail);
 
 
-                    if (sonuc == "-1")
-                    {
-                        result.State = MessageResultState.ERROR;
-                        result.Message = "Sponsorluk bildirme de hata meydana geldi. Tekrar deneyiniz.";
-                    }
-                    else
-                    {
-                        result.State = MessageResultState.SUCCESS;
-                        result.Message = mesaj;
-                    }
-                    
+                    //if (sonuc == "-1")
+                    //{
+                    //    result.State = MessageResultState.ERROR;
+                    //    result.Message = "Sponsorluk bildirme de hata meydana geldi. Tekrar deneyiniz.";
+                    //}
+                    //else
+                    //{
+                    //    result.State = MessageResultState.SUCCESS;
+                    //    result.Message = mesaj;
+                    //}
+
                 }
             }
 

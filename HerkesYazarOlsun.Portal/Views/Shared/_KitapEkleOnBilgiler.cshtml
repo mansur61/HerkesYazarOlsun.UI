@@ -1,53 +1,103 @@
-﻿@using HerkesYazarOlsun.Portal.Controllers;
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+﻿@using HerkesYazarOlsun.Portal.Controllers
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 
-<div class="card-body">
+  
+            <div class="card shadow-sm">
+                <div class="card-body">
 
-    <h1><strong>Kitabınızı Yazmaya Başlayınız </strong> </h1>
-    <h4>Kitabınız İçin Önbilgileri Formlardan Doldurunuz ... </h4>
-    <br />
-    <div class="conrainer">
-        <input type="hidden" id="ONKAPAKFOTO" name="ONKAPAKFOTO"  >
-        <input type="hidden" id="ARKAKAPAKFOTO" name="ARKAKAPAKFOTO">
-       
+                    <h1 class="mb-3 fw-bold">Kitabınızı Yazmaya Başlayınız</h1>
+                    <h5 class="mb-4 text-muted">
+                        Kitabınız için ön bilgileri aşağıdaki formlardan doldurunuz
+                    </h5>
 
-        <div class="mb-3">
-            <h5>Kitabınızın Adını Belirleyiniz *</h5>
-            <input class="form-control" type="text" id="kitapAdi" multiple name="Name">
+                    <!-- Hidden Inputs -->
+                    <input type="hidden" id="ONKAPAKFOTO" name="ONKAPAKFOTO" />
+                    <input type="hidden" id="ARKAKAPAKFOTO" name="ARKAKAPAKFOTO" />
 
-        </div>
+                    <!-- Kitap Adı -->
+                    <div class="mb-3">
+                        <label for="kitapAdi" class="form-label fw-semibold">
+                            Kitabınızın Adını Belirleyiniz <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               id="kitapAdi"
+                               name="Name"
+                               placeholder="Kitap Adı" />
+                    </div>
 
-        <div class="mb-3">
-            <h5>Kitabınızın Ön Kapağını Seçiniz *</h5>
-            <input class="form-control" type="file"  id="dosyaOnKapakFoto" onchange="dosyaSecim('onKapakFoto')" multiple>
+                    <!-- Ön Kapak -->
+                    <div class="mb-3">
+                        <label for="dosyaOnKapakFoto" class="form-label fw-semibold">
+                            Kitabınızın Ön Kapağını Seçiniz <span class="text-danger">*</span>
+                        </label>
+                        <input type="file"
+                               class="form-control"
+                               id="dosyaOnKapakFoto"
+                               onchange="dosyaSecim('onKapakFoto')" />
+                    </div>
 
-        </div>
-        <div class="mb-3">
-            <h5>Kitabınızın Arka Kapağını Seçiniz *</h5>
-            <input class="form-control" type="file" id="dosyaArkaKapakFoto" onchange="dosyaSecim('arkaKapakFoto')" multiple>
-        </div>
-        <div class="mb-3">
-            <h5>Kitabınızın Önsöz'ünü giriniz *</h5>
-            <textarea class="form-control" id="onsoz" rows="5" cols="50" name="ONSOZ"></textarea>
-            <div id="help" class="form-text" style="color:cadetblue">500 karakteri geçmeyiniz.</div>
-        </div>
+                    <!-- Arka Kapak -->
+                    <div class="mb-3">
+                        <label for="dosyaArkaKapakFoto" class="form-label fw-semibold">
+                            Kitabınızın Arka Kapağını Seçiniz <span class="text-danger">*</span>
+                        </label>
+                        <input type="file"
+                               class="form-control"
+                               id="dosyaArkaKapakFoto"
+                               onchange="dosyaSecim('arkaKapakFoto')" />
+                    </div>
 
-        <div class="mb-3">
-            <h5>Kitabınızın Arkakapak yazısını giriniz *</h5>
-            <textarea class="form-control" id="arkaKapakYazi" rows="5" cols="50" name="ARKAKAPAKYAZISI"></textarea>
-            <div id="help" class="form-text" style="color:cadetblue">200 karakteri geçmeyiniz.</div>
-        </div>
-        <h5>Kitabın Kategorisini seçiniz *</h5>
-        <div class="row-cols-3">
-        </div>
+                    <!-- Ön Söz -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Kitabınızın Önsözünü Giriniz <span class="text-danger">*</span>
+                        </label>
 
-        <select class="form-select" style="width:500px;height:30px" id="kitapKetogri" name="CategoriId">
-            <option selected value="0" data="Köşe Yazarı" id="selecData-0">Köşe Yazarı</option>
-            <option value="1" data="Hikaye" id="selecData-1">Hikaye</option>
-            <option value="2" data="Masal" id="selecData-2">Masal</option>
-            <option value="3" data="Şiir" id="selecData-3">Şiir</option>
-            <option value="3" data="Roman" id="selecData-4">Roman</option>
-        </select>
-    </div>
+                        <div id="onSozEditor" class="border rounded" style="height: 200px;"></div>
+                        <textarea id="onsoz" name="ONSOZ" class="d-none"></textarea>
 
-</div>
+                        <div class="form-text text-info">
+                            500 karakteri geçmeyiniz.
+                        </div>
+                    </div>
+
+                    <!-- Arka Kapak Yazısı -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Kitabınızın Arka Kapak Yazısını Giriniz <span class="text-danger">*</span>
+                        </label>
+
+                        <div id="arkaKapakYaziEditor" class="border rounded" style="height: 200px;"></div>
+                        <textarea id="arkaKapakYazi" name="ARKAKAPAKYAZISI" class="d-none"></textarea>
+
+                        <div class="form-text text-info">
+                            200 karakteri geçmeyiniz.
+                        </div>
+                    </div>
+
+                    <!-- Kategori -->
+                    <div class="mb-4 col-sm-8 col-md-6 p-0">
+                        <label for="kitapKategori" class="form-label fw-semibold">
+                            Kitabın Kategorisini Seçiniz <span class="text-danger">*</span>
+                        </label>
+
+                        <select class="form-select"
+                                id="kitapKategori"
+                                name="CategoriId">
+                            <option value="" selected disabled>Bir kategori seçiniz</option>
+                            @foreach (var category in Model.Katergoriler)
+                            {
+                                <option value="@category.ID"
+                                        data-name="@category.Name"  
+                                        id="selectData-@category.ID">
+                                    @category.Name
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+      

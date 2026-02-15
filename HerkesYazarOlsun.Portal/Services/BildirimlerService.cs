@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
-    
+
     public class BildirimlerService : BaseService
     {
 

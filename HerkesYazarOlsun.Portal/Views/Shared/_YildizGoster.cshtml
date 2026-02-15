@@ -1,5 +1,35 @@
 ﻿@model HerkesYazarOlsun.Model.ViewModel.VM_Stars
 
+
+@functions {
+    private string GetDominantStar(HerkesYazarOlsun.Model.ViewModel.VM_Stars stars)
+    {
+        var values = new Dictionary<string, int>
+        {
+            { "yildiz1", stars.BirStarToplam },
+            { "yildiz2", stars.IkiStarToplam },
+            { "yildiz3", stars.UcStarToplam },
+            { "yildiz4", stars.DortStarToplam },
+            { "yildiz5", stars.BesStarToplam }
+        };
+        if (values.All(v => v.Value == 0))
+            return "yildiz0";
+
+        int maxValue = values.Max(v => v.Value);
+        var maxItems = values.Where(v => v.Value == maxValue).ToList();
+
+        if (maxItems.Count > 1)
+            return "yildiz5";
+
+        return maxItems.First().Key;
+    }
+}
+
+@{
+    // HangiStar otomatik hesaplanıyor
+    var dominant = GetDominantStar(Model);
+}
+
 @if (@Model.isToplam)
 {
 
@@ -37,59 +67,59 @@
 }
 else
 {
-    @if (@Model.HangiStar == "yildiz1")
+    @if (dominant == "yildiz1")
+    {
+        @* <i class="price-text-color fa fa-star"> </i> *@
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+
+    }
+    else @if (dominant == "yildiz2")
     {
         <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
 
+    }
+    else  @if (dominant == "yildiz3")
+    {
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i> 
 
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+       
+    }
+    else  @if (dominant == "yildiz4")
+    {
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="fa fa-star text-secondary"></i> 
+    }
+    else @if (dominant == "yildiz5")
+    {
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
+        <i class="price-text-color fa fa-star"> </i>
     }
     else
-@if (@Model.HangiStar == "yildiz2")
     {
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        @if (@Model.isToplam)
-        {
-            <strong>(@Model.IkiStarToplam) </strong>
-        }
-    }
-    else  @if (@Model.HangiStar == "yildiz3")
-    {
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        @if (@Model.isToplam)
-        {
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
+        <i class="fa fa-star text-secondary"></i>
 
-            <strong>(@Model.UcStarToplam) </strong>
-        }
-    }
-    else  @if (@Model.HangiStar == "yildiz4")
-    {
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-
-        @if (@Model.isToplam)
-        {
-
-            <strong>(@Model.DortStarToplam) </strong>
-        }
-    }
-    else
-    {
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-        <i class="price-text-color fa fa-star"> </i>
-
-        @if (@Model.isToplam)
-        {
-
-            <strong>(@Model.BesStarToplam) </strong>
-        }
     }
 
 }

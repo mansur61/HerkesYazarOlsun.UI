@@ -3,56 +3,84 @@
     ViewData["Title"] = "Tüm Yazarlar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-@section scripts{
-    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-}
-@section Styles{
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
-}
+ 
 
 
-@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
+@model HerkesYazarOlsun.Model.ViewModel.VM_USERS_DETAIL;
 @using HerkesYazarOlsun.Portal.Controllers;
+@using HerkesYazarOlsun.Model.ViewModel;
 
-<h3 style="margin: 50px auto;">Tüm Yazarlar</h3>
-<h6><span>@Model.VMUsersList.Count()</span> Kayıt Var </h6>
-<hr />
+ 
+@if (ViewBag.FavoriYazarlar != null && ViewBag.FavoriYazarlar)
+{
+    <h3 style="margin: 50px auto;">Favori Yazarlar</h3>
+}
+else  
+{
+    <h3 style="margin: 50px auto;">Tüm Yazarlar</h3>
+}
+ 
+@{
+    string tip = "tumyazarlar";
+    Model.Tip =  tip;
+}
+<input type="hidden" id="tip" value="@tip" />
+
+
+@Html.Partial("_AlertMesaj", @tip) 
 
 @Html.Partial("_YazarFiltreleme")
-
-@{
-    Model.Tip = "tumyazarlar";
-}
-
-@Html.Partial("_AlertMesaj",@Model.Tip)
-
+  
+<br/>
 
 <div id="tumyazarlar">
+     
+     <h6>
+        <span>@(Model.VMUsersList?.Count ?? 0)</span> Kayıt Var
+    </h6>
+
+<hr />
     @{
-        Model.yazarSliderYometimAdi = "tumyazarlar";        
+        int perSlide = Model.sliderdaGosterilecekKayit != 0
+            ? Model.sliderdaGosterilecekKayit
+            : Convert.ToInt32(ViewBag.SliderdaGosterilecekKayit);
+
+
+        int total = Model.VMUsersList.Count;
+        int sliderSayisi = (int)Math.Ceiling((double)total / perSlide);
+        var butons = new  VM_PAGINATION_BUTTON{
+                sliderSayisi = sliderSayisi,
+                sliderSayiDivTagName = "tumyazarlar"
+                
+        };
+        Model.vM_PAGINATION_BUTTONS = butons;
     }
 
-    @Html.Partial("_YazarSliderItemYonetimleri",@Model)
-
-    @Html.Partial("Yazarlar",@Model)
+    @Html.Partial("Yazarlar",@Model) 
     @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)
 
 </div>
 
 
 <div id="arabutonfiltre"></div>
-                
+
+<script src= "~/js/general.js"></script>
+
 
 <script>
 
-    $("#arabutonfiltre").css("display", "none");
-   
+    $("#arabutonfiltre").css("display", "none"); 
+
+    function Temizle(){ 
+        location.reload();
+                 
+    }
     function Ara() {
-
+        
+       //UyariVer(1, "#basarili-", "#bilgi-", "#uyari-", "Kitap Tamamlandı. İlgili kitaba yönlendiriliyorsunuz..");
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
-
+        console.log(" YazariFavorilereEkle ara "+listelenecek_kayit_sayisi);
+       
         if(listelenecek_kayit_sayisi == 0){
             return ;
         }
@@ -62,47 +90,28 @@
             listelenecek_kayit_sayisi = 10;
         }
 
-        var kitap_ara = $("#kitap_ara").val();
-
+        var yazar_ara = $("#yazar_ara").val();
+         //alert(yazar_ara);
       
         $.post("@Url.Action(nameof(KisiController.AraButonFiltrelemeYazarlar), "Kisi")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
-            "YAZAR_ADI": kitap_ara
+            "YAZAR_ADI": yazar_ara
         }, function (data) {
             if (data) {
                 
                 $("#arabutonfiltre").html(data);
                 $("#arabutonfiltre").css("display", "block");
                
-                $("#tumyazarlar").css("display", "none");
-
-                //const nodeList = document.querySelectorAll("#gozukecekMiFooter");
-                //for (let i = 0; i < nodeList.length; i++) {
-                //    nodeList[i].style.display = "none";
-                //}
-
+                $("#tumyazarlar").css("display", "none"); 
 
             } else {
-                alert("olumsuz");
+                //alert("olumsuz");
                 $("#tumyazarlar").css("display", "block");
                 $("#arabutonfiltre").css("display", "block");
             }
 
         });
     }
-
-
-    //function Kapat() {
-    //    $("#basarili").css("display", "none");
-    //    $("#uyari").css("display", "none");
-    //}
+     
 </script>
 
-<script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
-<script src="~/lib/bootstrap/dist/js/mixitup.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/kitap-arama.js"></script>

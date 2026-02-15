@@ -1,32 +1,49 @@
-﻿
-
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
+@using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Controllers;
+ 
+    
+  @{
+           int perSlide = Model.sliderdaGosterilecekKayit != 0
+            ? Model.sliderdaGosterilecekKayit
+            : Convert.ToInt32(ViewBag.SliderdaGosterilecekKayit);
+ }
+     
+   @for (int i = 0; i < Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
+    {
+        var slideModel = new VM_BOOKS_DETAIL
+        {
+            VMBooksList = Model.VMBooksList
+                .Skip(i * perSlide)
+                .Take(perSlide)
+                .ToList(),
+            Tip = Model.Tip,
+            isAnaSayfa = Model.isAnaSayfa
+        };
 
+        <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName"
+            data-index="@i"
+            style="display:@(i == 0 ? "block" : "none");">
 
+            <div class="row g-3">
+                @foreach (var kitap in slideModel.VMBooksList)
+                {
+                    <div class="col-md-4 col-sm-6">
+                        @*@Html.Partial("_KitaplarItem", kitap)*@
+                        @Html.Partial("_KitaplarItem",
+                            new HerkesYazarOlsun.Model.ViewModel.VM_KitapItem {
+                                Book = kitap,
+                                Tip = Model.Tip,
+                                isAnaSayfa = Model.isAnaSayfa,
+                                LoginUserId = (int)ViewBag.LOGIN_USER_ID,
+                            })
+                    </div>
+                }
+            </div>
 
-<div class="container" style="margin: 50px auto;width:auto;" >
-    <div class="row">
+        </div>
+    }
 
-        @*<div class="col-lg-12">*@
-
-            @for (int i = 0; i < @Model.vM_PAGINATION_BUTTONS.sliderSayisi; i++)
-            {
-                <div class="durum_@Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName" style="height:auto">
-
-                    @Html.Partial("_KitaplarItem",@Model)
-                    
-                </div>
-                <br />
-            }
-
-          
-        @*</div>*@
-
-       
-    </div>
-
-</div>
 
 
 

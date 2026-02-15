@@ -1,154 +1,140 @@
-﻿@using HerkesYazarOlsun.Portal.Controllers;
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS;
+﻿@using HerkesYazarOlsun.Model.Utils
+@using HerkesYazarOlsun.Portal.Controllers;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
 @{
     ViewData["Title"] = "Kitap Ekle";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-
-
+    ViewBag.FooterGoster = false;
 }
-@*@{
-    int sayfaId = 0;
-    @if (@Model != null)
-    {
-        sayfaId = @Model.BooksPageList.Where(p => p.BooksId == @Model.ID).Count();
-    }
-}*@
-@section Styles{
-
-    <link href="~/lib/bootstrap/dist/css/kitapekle.css" rel="stylesheet" />
-    <style>
-        body {
-            background: #f7f9ff;
-            font-family: 'Josefin Sans', sans-serif;
-            font-size: 15px;
-            font-weight: 400;
-            line-height: 1.4;
-            color: #555;
-        }
-
-        button#tamam-btn {
-            font-size: 17px;
-            font-weight: bold;
-            position: relative;
-            width: 130px;
-            height: 50px;
-            background: #DC3545;
-            margin: 0 auto;
-            margin-top: 40px;
-            overflow: hidden;
-            z-index: 1;
-            cursor: pointer;
-            transition: color .3s;
-            text-align: center;
-            color: #fff;
-            border: 0;
-            -webkit-border-bottom-right-radius: 5px;
-            -webkit-border-bottom-left-radius: 5px;
-            -moz-border-radius-bottomright: 5px;
-            -moz-border-radius-bottomleft: 5px;
-            border-bottom-right-radius: 5px;
-            border-bottom-left-radius: 5px;
-        }
-    </style>
-}
-
 <br />
 <br />
+
+<div id="globalSpinner" class="spinner text-center"
+     style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999;">
+    <i class="fa fa-spinner fa-spin fa-3x"></i>
+</div>
+
 
 @{
     string tip = "kitapekle";
 }
 <input type="hidden" id="tip" value="@tip" />
 
+@section Styles {
+    <!-- richt text için-->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-<!-- CONTAINER -->
+
+    <link href="~/lib/css/kitap_olustur.css" rel="stylesheet" />
+    <link href="~/lib/css/kitap_on_bilgiler.css" rel="stylesheet" />
+
+
+}
+<style>
+    #globalSpinner i {
+        color: transparent !important;
+        background: linear-gradient(45deg, #ff0000, #ffea00);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-size: 60px !important; /* daha büyük görünür */
+        filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+    }
+
+    #globalSpinner {
+        /* Arka plan hafif mavi overlay */
+        background: rgba(0, 60, 255, 0.15);
+        padding: 20px 25px;
+        border-radius: 15px;
+    }
+
+</style>
+
 <div class="container d-flex align-items-center min-vh-100">
-    <br />
-    <div class="row g-0 justify-content-center">
-
+    <div class="row justify-content-center w-100">
         <!-- TITLE -->
-        <div class="col-lg-4 offset-lg-1 mx-0 px-0">
+        <div class="col-12 col-lg-4 mb-4">
             <div id="title-container">
-                @*<img class="covid-image" src="./img/covid-check.png">*@
                 <h2>Herkes Yazar Olsun</h2>
-                @*<h3>Herkes Yazar Olsun Form</h3>*@
-                <br />
                 <p>
-                    Siz değerli yazarımız.
-                    İçeriğinizi tüm paydaşlarımızla paylaşacağınızdan ötürü mutluluk içirisindeyiz.
+                    Siz değerli yazarımız. İçeriğinizi tüm paydaşlarımızla paylaşacağınızdan ötürü mutluluk içirisindeyiz.
                     Bu yolda başarılarınızı temenni ederiz.
                 </p>
             </div>
-            <br />
-            @Html.Partial("_AlertMesaj",@tip)
+           
         </div>
-        <!-- FORMS -->
-        <div class="col-lg-7 mx-0 px-0">
+
+        <!-- FORM -->
+        <div class="col-12 col-lg-7">
             <div class="progress">
-                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%"></div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                     style="width: 0%;background-color: #00C9A7;"></div>
             </div>
 
-            <div id="qbox-container">
-                <form action="KitapEkle" method="post" enctype="multipart/form-data" class="needs-validation" id="form-wrapper">
+            <form action="KitapEkle" method="post" enctype="multipart/form-data" id="form-wrapper" class="needs-validation">
+                <div id="steps-container">
 
-                    <div id="steps-container">
-
+                    @if (Model.isYazmayaDevamEt.HasValue && !Model.isYazmayaDevamEt.Value)
+                    {
                         <div class="step">
-                            @Html.Partial("_KitapEkleOnBilgiler",@Model)
-
+                            @Html.Partial("_KitapEkleOnBilgiler", @Model)
                         </div>
+                    }
 
-                        <div class="step">
-                            <h1><strong>Kitabınızın Sayfalarını Oluşturunuz.</strong> </h1>
-                            <p>
-                                Kitabta Yazılan İlgili Sayfa No :
-                                @if (@Model.ID != 0)
-                                {
-                                    <span id="sayfaSayisi" data="@Model.IlgiiSayfaSayisi"> @Model.IlgiiSayfaSayisi </span>
-                                }
-                                else
-                                {
-                                    <span id="sayfaSayisi" data="@Model.IlgiiSayfaSayisi"> 1 </span>
-                                }
+                    <div class="step">
+                        <h1>Kitabınızın Sayfalarını Oluşturunuz</h1>
+                        <p>
+                            Kitapta Yazılan İlgili Sayfa No:
+                            <span id="sayfaSayisi" data-value="@Model.IlgiiSayfaSayisi"> 
+                                @Model.IlgiiSayfaSayisi
+                            </span>
+                        </p>
 
-                            </p>
+                        <input type="hidden" id="kitapKatdetmeUyariDurumu" value="0">
+                        <input type="hidden" id="BOOKSID" value="@ViewBag.BOOK_ID">
+                        <input type="hidden" id="BOOKPAGESID" value="@Model.IlgiiSayfaSayisi">
 
-                            <input class="form-control" type="hidden" id="kitapKatdetmeUyariDurumu" value="0">
-
-                            <input class="form-control" type="hidden" id="BOOKSID" value="@Model.ID">
-                            <input class="form-control" type="hidden" id="BOOKPAGESID" value="0">
-                            <input type="hidden" id="KITAPSAYFAFOTO" name="KITAPSAYFAFOTO">
-                            <br />
-                            <div class="conrainer">
-                                @*<div class="mb-3">
-                                <h5>İlgili sayfaya resim koyabilirsiniz</h5>
-                                <input type="file" id="dosyaSayfaFoto" name="dosyaSayfaFoto" onchange="dosyaSecim('sayfaFoto')" multiple class="form-control">
-                                <br />
-
-                                </div>*@
-
-                                <div class="mb-3">
-                                    <h5>İlgili Sayfayı yazınız</h5>
-                                    <div id="help" class="form-text" style="color:cadetblue" name="SAYFAYAZI">1000 karakteri geçmeyiniz.</div>
-                                    <textarea class="form-control" id="sayfaYazi" rows="30" cols="50"></textarea>
-
-                                </div>
-
+                        <div class="mb-3">
+                            <h5>İlgili Sayfayı Yazınız</h5>
+                            <div id="help" class="form-text text-info mb-2">1000 karakteri geçmeyiniz.</div>
+                            <div class="container-pg border rounded p-1">
+                                <div id="sayfaYaziEditor"></div>
                             </div>
+
+                            <textarea id="sayfaYazi" name="SAYFAYAZI" hidden></textarea>
                         </div>
-
-
                     </div>
-                    <div id="q-box__buttons">
+
+                </div>
+
+                <!-- Buttons -->
+                <div id="q-box__buttons">
+                    @if (Model.isYazmayaDevamEt.HasValue && Model.isYazmayaDevamEt.Value)
+                    {
+                        @* <button id="devamet-btn" type="button">Devam Et</button> *@
+                        <button id="submit-btn" type="submit">Kaydet</button>
+                        if (ViewBag.KitapTamamlamaSayisi >50)
+                        {
+                            <button id="tamam-btn" type="button">Tamamla</button>
+                        }
+                        
+                    }
+                    else
+                    {
                         <button id="prev-btn" type="button">Geri</button>
                         <button id="next-btn" type="button">İleri</button>
                         <button id="submit-btn" type="submit">Kaydet</button>
-                        <button id="tamam-btn" type="button">Tamamla</button>
-                    </div>
-                </form>
-            </div>
+                        @* <button id="tamam-btn" type="button">Tamamla</button> *@
+                        if (ViewBag.KitapTamamlamaSayisi > 50)
+                        {
+                            <button id="tamam-btn" type="button">Tamamla</button>
+                        }
+                    }
+                </div>
+                <div>
+                    @Html.Partial("_AlertMesaj", "kitapekle")
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -163,439 +149,521 @@
 
 <div id="alertGoster"></div>
 
-<script src="~/js/general.js"></script>
+<script src= "~/js/general.js"></script>
 
-@section Scripts{
+
+@section Scripts { 
+
+    <!-- richt text için-->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <!-- SweetAlert2 JS dosyası ve Bootstrap JS dosyası -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 }
+<!--_KitapEkleOnBilgiler rich ext ayarlamaları-->
+<script>
+    // Arka Kapak
+    const arkaKapk = $("#arkaKapakYaziEditor");
+    let arkaKapakQuill;
+
+    if (arkaKapk.length > 0) {
+        arkaKapakQuill = new Quill('#arkaKapakYaziEditor', {
+            theme: 'snow',
+            placeholder: 'Kapak yazınızı buraya yazın...',
+            modules: {
+                toolbar: [
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    //[  'link','image'],
+                    [{ 'align': [] }],
+                    ['clean']
+                ]
+            }
+        });
+    }
+
+    // Önsöz
+    const onsSz = $("#onSozEditor");
+    let onSozQuill;
+
+    if (onsSz.length > 0) {
+        onSozQuill = new Quill('#onSozEditor', {
+            theme: 'snow',
+            placeholder: 'Önsözünüzü buraya yazın...',
+            modules: {
+                toolbar: [
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                   //[  'link','image'],
+                    [{ 'align': [] }],
+                    ['clean']
+                ]
+            }
+        });
+    }
+
+    // Form Submit
+    if (onsSz.length > 0 && arkaKapk.length > 0) {
+        document.querySelector('form')?.addEventListener('submit', function () {
+            document.getElementById('arkaKapakYazi').value = arkaKapakQuill.root.innerHTML;
+            document.getElementById('onsoz').value = onSozQuill.root.innerHTML;
+        });
+    }
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let step = document.getElementsByClassName('step');
+        let prevBtn = document.getElementById('prev-btn');
+        let tamamBtn = document.getElementById('tamam-btn');
+        let nextBtn = document.getElementById('next-btn');
+        let submitBtn = document.getElementById('submit-btn');
+        let stepCount = step.length;
+        let current_step = 0;
+        let quill; // Quill değişkenini global tanımlıyoruz
+        const hiddenTextarea = document.getElementById('sayfaYazi');
+
+        function initQuill() {
+            if (!quill) {
+                quill = new Quill('#sayfaYaziEditor', {
+                    theme: 'snow',
+                    placeholder: 'Sayfanızı buraya yazın...',
+                    modules: {
+                        toolbar: [
+                          [{ 'size': ['small', false, 'large', 'huge'] }], // Font boyutu
+                          ['bold', 'italic', 'underline', 'strike'],
+                          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                          [  'image'],
+                          [{ 'align': [] }],
+                          ['clean']
+                        ]
+                      }
+                });
+
+                quill.on('text-change', () => {
+                    hiddenTextarea.value = quill.root.innerHTML;
+                });
+            } else {
+                // Step görünür olduğunda Quill yeniden boyutlandırılıyor
+                quill.resize && quill.resize();
+                quill.update && quill.update();
+            }
+        }
+
+        function showStep(index) {
+            for (let i = 0; i < stepCount; i++) {
+                step[i].style.display = (i === index) ? 'block' : 'none';
+            }
+
+            // Eğer Quill editörü bu step içindeyse initialize et
+            const editorContainer = document.getElementById('sayfaYaziEditor');
+            if (editorContainer && index === 1) { // 2. step index = 1
+                initQuill();
+            }
+             if (editorContainer && index === 0) {
+                initQuill();
+            }
+            //console.log("index ",index);
+            var isYazmayaDevamEt = @(Model.isYazmayaDevamEt.HasValue && Model.isYazmayaDevamEt.Value ? "true" : "false");
+             console.log("index ",index+ " isYazmayaDevamEt, "+isYazmayaDevamEt);
+            // Butonlar
+            if (index === 0) {
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'inline-block';
+
+                if(isYazmayaDevamEt){
+                    console.log("true");
+                    submitBtn.style.display = 'inline-block';
+                    if (tamamBtn) tamamBtn.style.display = 'inline-block';
+                }else{
+                    console.log("false");
+                    submitBtn.style.display = 'none';                    
+                    if (tamamBtn) tamamBtn.style.display = 'inline-block';
+                }
+
+                
+                
+               
+            } else if (index === stepCount - 1) {
+                prevBtn.style.display = 'inline-block';
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+                if (tamamBtn) tamamBtn.style.display = 'inline-block';
+                //tamamBtn.style.display = 'inline-block';
+            } else {
+                prevBtn.style.display = 'inline-block';
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+                tamamBtn.style.display = 'none';
+            }
+
+            // Progress bar güncelle
+            const progress = (value) => {
+                document.getElementsByClassName('progress-bar')[0].style.width = `${value}%`;
+            };
+            progress((100 / stepCount) * (index + 1));
+        }
+
+        // İlk step’i göster
+        showStep(current_step);
+
+        if (nextBtn){
+            nextBtn.addEventListener('click', () => {
+                if (current_step < stepCount - 1) {
+                    current_step++;
+                    showStep(current_step);
+                }
+            });
+        }
+
+        if (prevBtn){
+            prevBtn.addEventListener('click', () => {
+                if (current_step > 0) {
+                    current_step--;
+                    showStep(current_step);
+                }
+            });
+        }
+         
+
+    });
+</script>
 
 <script>
 
+     function showSpinner() {
+         $("#globalSpinner").show();
+     }
 
-    let step = document.getElementsByClassName('step');
-    let prevBtn = document.getElementById('prev-btn');
-    let tamamBtn = document.getElementById('tamam-btn');
-    let nextBtn = document.getElementById('next-btn');
-    let submitBtn = document.getElementById('submit-btn');
-    let form = document.getElementsByTagName('form')[0];
-    let preloader = document.getElementById('preloader-wrapper');
-    let bodyElement = document.querySelector('body');
+     function hideSpinner() {
+         $("#globalSpinner").hide();
+     }
 
-    var tip = $("#tip").val();
+     var quillDosyalari = [];
 
-    const progress = (value) => {
-        document.getElementsByClassName('progress-bar')[0].style.width = `${value}%`;
-    }
-    var spanElement = document.getElementById('sayfaSayisi');
-    // data özelliğinden değeri al
-    var dataValue = spanElement.getAttribute('data');
+     var tip = $("#tip").val();
 
-    console.log("dataValue : " + dataValue);
+     var spanElement = document.getElementById('sayfaSayisi');
+     
+     var dataValue = spanElement.getAttribute('data-value');
+     
+
+     var isYazmayaDevamEt = @(Model.isYazmayaDevamEt.HasValue && Model.isYazmayaDevamEt.Value ? "true" : "false");
+     console.log(" isYazmayaDevamEt" , isYazmayaDevamEt);
+     
+    // alert("dataValue: " + dataValue + ", isYazmayaDevamEt : "+isYazmayaDevamEt);
+      
+     var kId = '@StringCipher.Encrypt(ViewBag.BOOK_ID.ToString())';
 
 
     $("#tamam-btn").on("click", function () {
-        var kategoriBilgisi = $("#kitapKetogri").val();
-        console.log("kategoriBilgisi : " + kategoriBilgisi);
-        var kitapId = $("#BOOKSID").val();
-        var sayfaYazi = $("#sayfaYazi").val();
+         console.log("tamam-btn"  );
+         var kategoriBilgisi = $("#kitapKategori").val();
+         if(kategoriBilgisi){
+             console.log("kategoriBilgisi : " + kategoriBilgisi);
+         }
 
-        Swal.fire({
-            title: 'Emin misiniz?',
-            text: "Tamamla butonuna basmadan önce değişikliklerinizi Kaydet butonuna basarak kaydetttiğinizden emin olunuz. Yine de Tamamlansın mı?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Evet',
-            cancelButtonText: 'Hayır',
-            customClass: {
-                confirmButton: 'btn btn-primary',
-                cancelButton: 'btn btn-danger'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post("@Url.Action(nameof(KitaplarController.KitabiTamamla), "Kitaplar")",
-                    {
-                        "ID": kitapId,
-                        "isWordPDF": false,
-                        "SAYFAYAZI": sayfaYazi,
-                        "isTamalama": true
-                    },
-                    function (data) {
-                        console.log("data:" + data);
-                        if (data.state == 1) {
+         var kitapId = $("#BOOKSID").val();
+         var sayfaYazi = $("#sayfaYazi").val();
+           
 
-                            BilgiVer(data.state, "#basarili-", "#bilgi-", "#uyari-", "Kitap Tamamlandı. İlgili kitaba yönlendiriliyorsunuz..");
+         Swal.fire({
+             title: 'Emin misiniz?',
+             text: "Tamamla butonuna basmadan önce değişikliklerinizi Kaydet butonuna basarak kaydetttiğinizden emin olunuz. Yine de Tamamlansın mı?",
+             icon: 'question',
+             showCancelButton: true,
+             confirmButtonText: 'Evet',
+             cancelButtonText: 'Hayır',
+             customClass: {
+                 confirmButton: 'btn btn-primary',
+                 cancelButton: 'btn btn-danger'
+             }
+         }).then((result) => {
+             if (result.isConfirmed) {
+                    showSpinner();
 
-                            setTimeout(function () {
-                                var link = window.location.href;
-                                //console.log("link " + link);
-                                window.location.href = "/Kitaplar/KitapDetay?kitapId=" + kitapId.toString();
+                  
+                     formData.append('BookModel.ID',  kitapId); 
+                     formData.append('isWordPDF', false);
+                     formData.append('isTamalama', true);
+                     formData.append('BookPagesModel.PageWrite', sayfaYazi); 
+                     formData.append('BookPagesModel.ID', $("#BOOKPAGESID").val());
 
-                            }, 3000);
-                        } else {
-                            BilgiVer(data.state, "#basarili-", "#bilgi-", "#uyari-", "Kitap Tamamlanamadı");
-                        }
+                    const base64Images = extractBase64Images(sayfaYazi);
 
-
-                    });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire('Kitap Tamamla', 'Kitap Tamamlama İşleminde sorun oluştu. Bizim ile iletişime geçiniz', 'error');
-                $("#kitapKatdetmeUyariDurumu").val("0");
-            }
-        });
-    });
-
-    var kitapOlusturForm = document.getElementById('form-wrapper');
-    kitapOlusturForm.addEventListener('submit', function (event) {
-        event.preventDefault(); // Formun varsayılan submit işlemini engelle
-
-        var kitapKatdetmeUyariDurumu = $("#kitapKatdetmeUyariDurumu").val();
-        console.log("kitapKatdetmeUyariDurumu : " + kitapKatdetmeUyariDurumu);
-        var kategoriBilgiId = $("#kitapKetogri").val();
-        var selectlement = document.getElementById('selecData-' + kategoriBilgiId.toString());
-        // data özelliğinden değeri al
-        var kategoriAdi = selectlement.getAttribute('data');
-        console.log("kategoriAdi : " + kategoriAdi);
-        var metinText = "Seçtiğiniz Kategori (" + kategoriAdi + ") 'ye göre minimum sayfa sayısı 50 sayfad ekleme durumu vardır. Ve birkez kaydetme yaptıktan sonra ilgili kategoriyi değiştiremezsiniz. Yine de emin misiniz?";
-
-        //isAlert(metinText);
-        if (dataValue == 0 && kitapKatdetmeUyariDurumu == "0") {
-            Swal.fire({
-                title: 'Emin misiniz?',
-                text: metinText,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Evet',
-                cancelButtonText: 'Hayır',
-                customClass: {
-                    confirmButton: 'btn btn-primary',
-                    cancelButton: 'btn btn-danger'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var formData = new FormData(this); // FormData nesnesini oluştur
-                    var dosyaInputs = kitapOlusturForm.querySelectorAll('input[type="file"]');
-                    console.log(dosyaInputs.length);
-                    for (var i = 0; i < dosyaInputs.length; i++) {
-                        formData.append('dosyalar', dosyaInputs[i].files[0]);
+                    let pageFotoNames = [];
+                    if (base64Images.length !== 0){
+                         base64Images.forEach((img, i) => {
+                            let file = base64ToFile(img, "image_" + i + ".png");
+                             formData.append(`BookPagesModel.PageFotoList[${i}]`, img);
+                            pageFotoNames.push("image_" + i + ".png");
+                            formData.append("dosyalar", file);
+                            formData.append("BookPagesModel.PageFotoDosyalar", file);
+                        });
+                        let pageFotos = pageFotoNames.join("||");
+                        formData.append("BookPagesModel.PageFoto", pageFotos);
                     }
 
-                    veriGonder(formData);
+                 Tamamla(formData);
+                 
+             } else if (result.dismiss === Swal.DismissReason.cancel) {
+                 Swal.fire('Kitap Tamamla', 'Kitap Tamamlama İşleminde sorun oluştu. Bizim ile iletişime geçiniz', 'error');
+                 $("#kitapKatdetmeUyariDurumu").val("0");
+             }
+         });
 
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    // Hayır'a tıklandığında burası çalışır
-                    Swal.fire('Kitap Ekleme', 'Ekleyeceğiniz kitabın kategorsini tekrardan belirleyebilirsiniz', 'error');
-                    $("#kitapKatdetmeUyariDurumu").val("0");
-                }
-            });
-        } else {
-            farkliVeriGonder();
+     });
+      
+     var kitapOlusturForm = document.getElementById('form-wrapper');
+
+     kitapOlusturForm.addEventListener('submit', function (event) {
+         event.preventDefault(); // Formun varsayılan submit işlemini engelle
+         //console.log("kitapOlusturForm"  );
+         var kitapKatdetmeUyariDurumu = $("#kitapKatdetmeUyariDurumu").val();
+         // console.log("kitapKaydet UyariDurumu : " + kitapKatdetmeUyariDurumu);
+            
+        if(dataValue == 1){
+            var kategoriBilgiId = $("#kitapKategori").val();
+             console.log("kitapKategori : " + kategoriBilgiId);
+            var selectlement = document.getElementById('selectData-' + kategoriBilgiId);
+             
+            if(!selectlement){
+                 BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "Kategori Seçilmelidir." );
+                 return;
+            }
+            // data özelliğinden değeri al
+            var kategoriAdi = selectlement.getAttribute('data-name');
+            // console.log("kategoriAdi : " + kategoriAdi);
+            var metinText = "Seçtiğiniz Kategori (" + kategoriAdi + ") 'ye göre minimum sayfa sayısı 50 sayfa ekleme durumu vardır. Ve birkez kaydetme yaptıktan sonra ilgili kategoriyi değiştiremezsiniz. Yine de emin misiniz?";
+
         }
 
-    });
+         if (dataValue == 1 && kitapKatdetmeUyariDurumu == "0") {
+             Swal.fire({
+                 title: 'Emin misiniz?',
+                 text: metinText,
+                 icon: 'question',
+                 showCancelButton: true,
+                 confirmButtonText: 'Evet',
+                 cancelButtonText: 'Hayır',
+                 customClass: {
+                     confirmButton: 'btn btn-primary',
+                     cancelButton: 'btn btn-danger'
+                 }
+             }).then((result) => {
+                 if (result.isConfirmed) {
+                     var formData = new FormData(this); // FormData nesnesini oluştur
+                     var dosyaInputs = kitapOlusturForm.querySelectorAll('input[type="file"]');
+                     console.log(dosyaInputs.length);
+                     for (var i = 0; i < dosyaInputs.length; i++) {
+                         formData.append('dosyalar', dosyaInputs[i].files[0]);
+                     }
 
-    function farkliVeriGonder() {
+                     kitapVeIlkSayfasiKaydet(formData);
+
+                 } else if (result.dismiss === Swal.DismissReason.cancel) {
+                     // Hayır'a tıklandığında burası çalışır
+                     Swal.fire('Kitap Ekleme', 'Ekleyeceğiniz kitabın kategorsini tekrardan belirleyebilirsiniz', 'error');
+                     $("#kitapKatdetmeUyariDurumu").val("0");
+                 }
+             });
+         } else {
+              var formData = new FormData(this);
+             sayfaKaydet(formData);
+         }
+
+     });
+ 
+
+     // eklenen kitaba sayfa eklemede kullanılır
+    function sayfaKaydet(formData) {
         var kitapId = $("#BOOKSID").val();
         var sayfaYazi = $("#sayfaYazi").val();
-        $.post("@Url.Action(nameof(KitaplarController.KitapEkle), "Kitaplar")",
-            {
-                "ID": kitapId,
-                "isWordPDF": false,
-                "SAYFAYAZI": sayfaYazi,
-            },
-            function (data) {
-                console.log("data:" + data);
-                if (data.state == 1) {
-                    BilgiVer(data.state, "#basarili-", "#bilgi-", "#uyari-", (mesaj == "") ? "Kitaba Sayfa Eklenmiştir." : mesaj);
-
-                    $("#BOOKSID").val(data.result.bookID);
-                    $("#BOOKPAGESID").val(data.result.booksPageID);
-                    console.log(" farkliVeriGonder : BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
-                    $("#sayfaSayisi").html(data.result.booksPageCount + 1);
-
-                    $("#sayfaYazi").html("");
-
-
-                    $("#kitapKatdetmeUyariDurumu").val("1");
-                    var intSayi = parseInt(dataValue);
-                    spanElement.setAttribute('data', intSayi + 1);
-
-                    prevBtn.classList.add('d-none');
-                } else {
-                    BilgiVer(data.state, "#basarili-", "#bilgi-", "#uyari-", response.message); //"Kitap Eklenemedi."
-                }
-
-
-            });
-
-    }
-
-    function veriGonder(formData) {
-
-        var kitapId = $("#BOOKSID").val();
-        console.log("kitapId:" + kitapId);
         var sayfaId = $("#BOOKPAGESID").val();
-        console.log("sayfaId:" + sayfaId);
-        var kitapAdi = $("#kitapAdi").val();
-        var onsoz = $("#onsoz").val();
-        var arkaKapakYazi = $("#arkaKapakYazi").val();
-        var kategori = $("#kitapKetogri").val();
-        var sayfaYazi = $("#sayfaYazi").val();
+         formData.append('BookModel.ID',  kitapId); 
+         formData.append('isWordPDF', false);
+         formData.append('isTamalama', false);
+         formData.append('BookPagesModel.PageWrite', sayfaYazi); 
+         formData.append('BookPagesModel.ID', sayfaId);
 
-        formData.append('ID', kitapId);
-        formData.append('isWordPDF', false);
-        formData.append('Name', kitapAdi);
-        formData.append('onsoz', onsoz);
-        formData.append('ARKAKAPAKYAZISI', arkaKapakYazi);
-        formData.append('CategoriId', kategori);
-        formData.append('SAYFAYAZI', sayfaYazi);
+        const base64Images = extractBase64Images(sayfaYazi);
+
+        let pageFotoNames = [];
+        if (base64Images.length !== 0){
+             base64Images.forEach((img, i) => {
+                let file = base64ToFile(img, "image_" + i + ".png");
+                 formData.append(`BookPagesModel.PageFotoList[${i}]`, img);
+                pageFotoNames.push("image_" + i + ".png");
+                 formData.append("dosyalar", file);
+                formData.append("BookPagesModel.PageFotoDosyalar", file);
+            });
+            let pageFotos = pageFotoNames.join("||");
+            formData.append("BookPagesModel.PageFoto", pageFotos);
+        }
+         
+        showSpinner();
+        Gonder(formData);    
+    }
+
+     // ilk kitap ve sayfa kaydı diğerleri  farkliVeriGonder() burdan ekle
+     function kitapVeIlkSayfasiKaydet(formData) {
+
+         var kitapId = $("#BOOKSID").val();
+         //console.log("kitapId:" + kitapId);
+         var sayfaId = $("#BOOKPAGESID").val();
+         //console.log("sayfaId:" + sayfaId); 
+         var kitapAdi = $("#kitapAdi").val();
+         var onsoz = $("#onsoz").val();
+         var arkaKapakYazi = $("#arkaKapakYazi").val();
+         var kategori = $("#kitapKategori").val();
+         var sayfaYazi = $("#sayfaYazi").val(); 
+         var bb = $("#ONKAPAKFOTO").val();
+
+        const base64Images = extractBase64Images(sayfaYazi);
+        //console.log("base64Images count:" + base64Images.length+ " bb ", bb);
+
+        if(base64Images.length > 1){
+             BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "En fazla 1 resim sayfada olabilir." );
+             return;
+        }
+       if( $("#ONKAPAKFOTO").val() == ""){
+           BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "Lütfen ön kapak fotoğrafını seçin!" );
+             return;
+       }
+       if( $("#ARKAKAPAKFOTO").val() == ""){
+           BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", "Lütfen arka kapak fotoğrafını seçin!" );
+             return;
+       }
+
+        let pageFotoNames = [];
+        if (base64Images.length !== 0){
+             base64Images.forEach((img, i) => {
+                let file = base64ToFile(img, "image_" + i + ".png");          
+                 formData.append(`BookPagesModel.PageFotoList[${i}]`, img); 
+                pageFotoNames.push("image_" + i + ".png");
+                formData.append("dosyalar", file);
+                formData.append("BookPagesModel.PageFotoDosyalar", file);
+            });
+            let pageFotos = pageFotoNames.join("||");
+            formData.append("BookPagesModel.PageFoto", pageFotos);
+        }
+
+         formData.append('BookModel.ID',  kitapId == -1 ? 0 :kitapId);
+         formData.append('BookModel.Name', kitapAdi);
+         formData.append('BookModel.onsoz', onsoz);
+         formData.append('BookModel.ARKAKAPAKYAZISI', arkaKapakYazi);
+         formData.append('BookModel.CategoriId', kategori);
+         formData.append('isWordPDF', false);
+         formData.append('BookPagesModel.PageWrite', sayfaYazi);
+
+         formData.append('BookModel.ONKAPAKFOTO', $("#ONKAPAKFOTO").val());
+         formData.append('BookModel.ARKAKAPAKFOTO', $("#ARKAKAPAKFOTO").val());
+         formData.append('BookModel.ARKAKAPAKFOTOPATH', "ARKAKAPAKFOTOPATH");
+         formData.append('BookModel.ONKAPAKFOTOPATH', "ONKAPAKFOTOPATH");
+
+         formData.append('BookPagesModel.ID', sayfaId);
+         showSpinner();
+         Gonder(formData);      
+     }
 
 
-        $.ajax({
-            url: 'KitapEkle', // Formun gönderileceği adresi belirtin
-            method: 'POST',
-            data: formData, // Form verilerini FormData nesnesiyle al
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                console.log('Başarılı dönüş: response', response);
-                console.log('Başarılı dönüş: response result ', response.result);
-                // Başarılı dönüş sonucunu işleme kodları buraya gelebilir.
-                if (response.state == 1) {
+    function Gonder(formData){ 
 
-                    BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", "Kitap ve Sayfası Eklenmiştir.");
+           $.ajax({
+             url: '/Kitaplar/KitapEkle', // Formun gönderileceği adresi belirtin
+             method: 'POST',
+             data: formData, // Form verilerini FormData nesnesiyle al
+             processData: false,
+             contentType: false,
+             success: function (response) {
+                  hideSpinner();
 
-                    $("#BOOKSID").val(response.result.bookID);
-                    $("#BOOKPAGESID").val(response.result.booksPageID);
-                    console.log("veriGonder BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
-                    $("#sayfaSayisi").html(response.result.booksPageCount + 1);
+                 if (response.state == 1) {
+                     var mesaj = "";
+                     if(dataValue == 1){
+                         mesaj = "Kitap ve Sayfası Eklenmiştir.";
+                     }else{
+                         //mesaj = (mesaj && mesaj.trim() !== "") ? mesaj : "Kitaba Sayfa Eklenmiştir.";
+                         mesaj = "Kitaba Sayfa Eklenmiştir.";
+                     }
+                     BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", mesaj);
 
-                    $("#kitapKatdetmeUyariDurumu").val("1");
-                    var intSayi = parseInt(dataValue);
-                    spanElement.setAttribute('data', intSayi + 1);
+                     $("#BOOKSID").val(response.result.bookID);
+                     $("#BOOKPAGESID").val(response.result.booksPageID);
+                     //alert(" Gonder BOOKPAGESID:" + response.result.booksPageCount);
+                     //console.log("veriGonder BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
 
-                    prevBtn.classList.add('d-none');
+                     var intSayi = parseInt(dataValue);
+                     $("#sayfaSayisi").html( response.result.booksPageCount -1);
 
+                     $("#kitapKatdetmeUyariDurumu").val("1");
+                     spanElement.setAttribute('data-value', intSayi );
+                     var safeId = response.result.bookIdENC;
+
+                      setTimeout(function () {
+                          if(safeId) {
+                            window.location.href = "/Kitaplar/KitapOlustur?isYazmayaDevamEt=true&kitap_id=" + safeId+"&IlgiiSayfaSayisi="+response.result.booksPageCount;
+
+                          } else {}
+                      }, 3000);
+
+
+                 } else {
+                     BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message); 
+                 }
+             },
+               error: function (xhr, status, error) {
+                    hideSpinner();
+                    console.error("AJAX Hatası:", status, error);
+                    $("#kitapKatdetmeUyariDurumu").val("0");
+
+                    var uyariMesaj = "";
+                    if(dataValue == 1){
+                         uyariMesaj = "Kitap ve  sayfa kaydedilemedi, lütfen tekrar deneyin.";
+                     }else{ 
+                         uyariMesaj = "Sayfa kaydedilemedi, lütfen tekrar deneyin.";
+                     }
+                    BilgiVer(0, "#basarili-", "#bilgi-", "#uyari-", uyariMesaj );
+                }
+         });
+
+    }
+
+    function Tamamla(formData){
+
+           $.ajax({
+             url: 'KitabiTamamla', // Formun gönderileceği adresi belirtin
+             method: 'POST',
+             data: formData, // Form verilerini FormData nesnesiyle al
+             processData: false,
+             contentType: false,
+             success: function (data) {
+                  hideSpinner(); 
+                if (data.state == 1) {
+
+                    BilgiVer(data.state, "#basarili-", "#bilgi-", "#uyari-", "Kitap Tamamlandı. İlgili kitaba yönlendiriliyorsunuz..");
+
+                    setTimeout(function () {
+                    window.location.href = "/Kitaplar/KitapDetay?kitap_id=" + kId.toString();
+
+                    }, 3000);
                 } else {
-                    BilgiVer(response.state, "#basarili-", "#bilgi-", "#uyari-", response.message);//"Kitap ve Sayfası Eklenemedi."
+                    BilgiVer(data.state, "#basarili-", "#bilgi-", "#uyari-", data.message);//"Kitap Tamamlanamadı"
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error('Hata:', error);
-                $("#kitapKatdetmeUyariDurumu").val("0");
-                // Hata durumunu işleme kodları buraya gelebilir
-            }
-        });
-    }
-   
-    function BilgiVer(state, basarili, bilgi, uyari, mesaj) {
-        if (state == 1) {
-            $(basarili + tip).css("display", "block");
-            $(basarili + tip + " #mesaj").html(mesaj);
-
-            $(bilgi + tip).css("display", "none");
-            $(uyari + tip).css("display", "none");
-
-            /*setTimeout(function () {
-                var link = window.location.href;
-
-                window.location.href = link;
-                console.log("link " + link);
-
-                window.location.reload()
-
-            }, 3000);*/
-        }
-        else if (state == 3) {
-            $(bilgi + tip).css("display", "block");
-            $(bilgi + tip + " #mesaj").html(mesaj);
-
-            $(basarili + tip).css("display", "none");
-            $(uyari + tip).css("display", "none");
-        }
-        else {
-            $(uyari + tip).css("display", "block");
-            $(bilgi + tip).css("display", "none");
-            $(basarili + tip).css("display", "none");
-            $(uyari + tip + " #mesaj").html(mesaj);
-        }
-    }
-  
-    form.onsubmit = () => {
-        return false
-    }
-
-    var current_step = 0;
-    var stepCount = step.length;
-
-
-
-    if (dataValue != "0") {
-        step[current_step].classList.add('d-none');
-        step[current_step].style.display = "none";
-
-        step[current_step + 1].classList.add('d-block');
-        step[current_step + 1].style.display = "block";
-
-        current_step = current_step + 1;
-
-        nextBtn.classList.add('d-none');
-        prevBtn.classList.add('d-none');
-
-        tamamBtn.classList.add('d-inline-block');
-        submitBtn.classList.add('d-inline-block');
-        progress(100);
-    } else {
-        step[current_step].classList.add('d-block');
-        step[current_step].style.display = "block";
-    }
-
-    /* step[current_step].classList.add('d-block');
-     step[current_step].style.display = "block";*/
-
-    if (current_step == 0) {
-        prevBtn.classList.add('d-none');
-        tamamBtn.classList.add('d-none');
-        submitBtn.classList.add('d-none');
-        nextBtn.classList.add('d-inline-block');
-    }
-
-    var previous_step = 0;
-
-    nextBtn.addEventListener('click', () => {
-        current_step++;
-        console.log("nextBtn current_step:" + current_step);
-        var previous_step = current_step - 1;
-        console.log("previous_step:" + previous_step);
-
-        if ((current_step > 0) && (current_step < stepCount)) {
-
-            prevBtn.classList.remove('d-none');
-            prevBtn.classList.add('d-inline-block');
-
-
-            step[current_step].classList.remove('d-none');
-            step[current_step].style.display = "none";
-
-            step[current_step].classList.add('d-block');
-            step[current_step].style.display = "block";
-
-            step[previous_step].classList.remove('d-block');
-            step[previous_step].style.display = "block";
-
-            step[previous_step].classList.add('d-none');
-            step[previous_step].style.display = "none";
-
-            if (current_step == stepCount - 1) { // 3 tane eleman var ise 3. index olmaz son eleman 2. indextir
-
-                submitBtn.classList.remove('d-none');
-                submitBtn.classList.add('d-inline-block');
-
-                tamamBtn.classList.remove('d-none');
-                tamamBtn.classList.add('d-inline-block');
-
-                nextBtn.classList.remove('d-inline-block');
-                nextBtn.classList.add('d-none');
-            }
-
-        } else {
-
-            if (current_step > stepCount) {
-                form.onsubmit = () => {
-                    return true
+             },
+               error: function (xhr, status, error) {
+                    hideSpinner();
+                   Swal.fire('Kitap Tamamla', 'Kitap Tamamlama İşleminde sorun oluştu. Bizim ile iletişime geçiniz', 'error');
+                     $("#kitapKatdetmeUyariDurumu").val("0");
                 }
-            }
-        }
-        progress((100 / stepCount) * current_step);
-    });
+         });
 
+    }
 
-    prevBtn.addEventListener('click', () => {
-        if (current_step > 0) {
-            console.log("prevBtn current_step:" + current_step);
-            current_step--;
-            let previous_step = current_step + 1;
-
-
-            console.log("previous_step:" + previous_step);
-
-            prevBtn.classList.add('d-none');
-            prevBtn.classList.add('d-inline-block');
-
-
-            step[current_step].classList.remove('d-none');
-            step[current_step].style.display = "none";
-
-            step[current_step].classList.add('d-block')
-            step[current_step].style.display = "block";
-            if (previous_step < stepCount) {
-                step[previous_step].classList.remove('d-block');
-                step[previous_step].style.display = "block";
-
-                step[previous_step].classList.add('d-none');
-                step[previous_step].style.display = "none";
-            }
-
-
-            if (current_step < stepCount) {
-                submitBtn.classList.remove('d-inline-block');
-                submitBtn.classList.add('d-none');
-
-                tamamBtn.classList.remove('d-inline-block');
-                tamamBtn.classList.add('d-none');
-
-                nextBtn.classList.remove('d-none');
-                nextBtn.classList.add('d-inline-block');
-
-                prevBtn.classList.remove('d-none');
-                prevBtn.classList.add('d-inline-block');
-            }
-        }
-
-        if (current_step == 0) {
-            prevBtn.classList.remove('d-inline-block');
-            prevBtn.classList.add('d-none');
-        }
-        progress((100 / stepCount) * current_step);
-    });
-
-    /*
-    submitBtn.addEventListener('click', () => {
-        preloader.classList.add('d-block');
-
-        const timer = ms => new Promise(res => setTimeout(res, ms));
-
-        timer(3000)
-            .then(() => {
-                bodyElement.classList.add('loaded');
-            }).then(() => {
-
-                console.log("geldi.. submit buton:" + stepCount + " step sayısı :" + step.length);
-                if (step.length < stepCount) {
-                    step[stepCount].classList.remove('d-block');
-                    step[stepCount].style.display = "block";
-
-                    step[stepCount].classList.add('d-none');
-                    step[stepCount].style.display = "none";
-                }
-
-
-                prevBtn.classList.remove('d-inline-block');
-                //prevBtn.classList.add('d-none');
-                submitBtn.classList.remove('d-inline-block');
-                //submitBtn.classList.add('d-none');
-
-            })
-
-    });
-    */
-
-
+     
 
 </script>
 

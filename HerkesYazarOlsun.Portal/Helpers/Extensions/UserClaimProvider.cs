@@ -6,7 +6,7 @@ namespace HerkesYazarOlsun.Portal.Helpers.Extensions
     public class UserClaimProvider : IClaimsTransformation
     {
         ClaimsIdentity? identity;
-        public async  Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
+        public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
         {
             identity = principal.Identity as ClaimsIdentity;
             Claim claim = null;
@@ -16,12 +16,12 @@ namespace HerkesYazarOlsun.Portal.Helpers.Extensions
                 claim = new Claim("email", mail?.Value.ToString());
                 identity.AddClaim(claim);
             }
-           
+
 
             return principal;
         }
         public Claim? GETTransformAsync()
-        {            
+        {
             return identity?.Claims.FirstOrDefault();
         }
 

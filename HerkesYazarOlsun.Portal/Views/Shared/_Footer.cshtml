@@ -1,4 +1,5 @@
 ﻿@using HerkesYazarOlsun.Portal.Controllers
+@using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 <input type="hidden" id="footericin" value="footer" />
 
@@ -6,177 +7,93 @@
     string alertmesajgostermedurumu = "footer";
 }
 
+  <link href="~/lib/css/footer.css" rel="stylesheet" />
 
 <footer id="gozukecekMiFooter">
     <div class="container">
-
         <div class="row">
-            <div class="col-md-4">
-                <a class="footer-brand" href="index.html">Herkes Yazar Olsun</a>
+            <div class="col-lg-4 col-md-4 mb-4">
+                <a class="footer-brand" href="Index">Herkes Yazar Olsun</a>
                 <p>
                     Kitap yazarları bir arada topladığımız platformumuzda aynı zamanda, yazarlarımıza anlaşmalı yayın evi sponsorlarıız ile
                     daha uygun maliyetli kitaplarını yayınlayabilecek köprü kuruyoruz. Haydi sizde bu köprüden geçiniz.
                 </p>
-                <ul class="list-inline list-unstyled social-networks">
-                    @*  <li>
-                    <a href="#">
-                    <div class="icon-social icon-social-facebook normal">
-                    <i class="fa fa-facebook"></i>
-                    </div>
-                    <div class="icon-social hover">
-                    <i class="fa fa-facebook"></i>
-                    </div>
-                    </a>
-                    </li> *@
-
-                    <li>
-                        <a href="https://x.com/kayamansur61">
-                            <div class="icon-social icon-social-twitter normal">
-                                <i class="fa fa-twitter"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-twitter"></i>
-                            </div>
+                <ul class="list-inline d-flex justify-content-center gap-3 social-networks mb-3">
+                    <li class="list-inline-item">
+                        <a href="https://x.com/kayamansur61" target="_blank" rel="noopener">
+                            <span class="icon-social icon-social-twitter">
+                                <i class="fab fa-twitter fa-2x"></i>
+                            </span>
                         </a>
                     </li>
-
-
-
-                    <li>
-                        @* target="_blank" *@
-                        <a href="https://www.youtube.com/%40eminyazilim">
-                            <div class="icon-social icon-social-youtube normal">
-                                <i class="fa fa-youtube-play"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-youtube-play"></i>
-                            </div>
+                    <li class="list-inline-item">
+                        <a href="https://www.youtube.com/channel/UCEFPDrpvCY369hiZjx3BZag" target="_blank" rel="noopener">
+                            <span class="icon-social icon-social-youtube">
+                                <i class="fab fa-youtube fa-2x"></i>
+                            </span>
                         </a>
                     </li>
-
-                    <li>
-                        <a href="https://www.linkedin.com/in/mansur-emin-kaya-b61100141/">
-                            <div class="icon-social icon-social-linkedin normal">
-                                <i class="fa fa-linkedin"></i>
-                            </div>
-                            <div class="icon-social hover">
-                                <i class="fa fa-linkedin"></i>
-                            </div>
+                    <li class="list-inline-item">
+                        <a href="https://www.linkedin.com/in/mansur-emin-kaya-b61100141/" target="_blank" rel="noopener">
+                            <span class="icon-social icon-social-linkedin">
+                                <i class="fab fa-linkedin fa-2x"></i>
+                            </span>
                         </a>
                     </li>
-
-
                 </ul>
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-4 mb-4">
                 <h3>İLETİŞİM</h3>
                 <address>
-                    @* <i class="fa fa-map-marker"></i> 123 My Street, Banzhow City, CA 4567<br> *@
-                    <i class="fa fa-phone"></i> +90 (535) 038-1523<br>
-                    <i class="fa fa-envelope"></i> herkesyazarolsun@gmail.com
+                    <i class="fa fa-envelope"></i> info@herkesyazarolsun.com.tr
                 </address>
             </div>
+            @{
+                string isGozlemciMod = User.GetGozlemciMod();
+            }
 
-            @* <div class="col-md-4">
-            <h3>LATEST TWEETS</h3>
-            <ul class="latest-tweets">
-            <li>
-            <i class="fa fa-twitter"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing
-            </li>
-            <li>
-            <i class="fa fa-twitter"></i> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pulvinar quam sed consequat adipiscing
-            </li>
-            </ul>
-            </div> *@
+            <div class="col-lg-4 col-md-4 mb-4">
+                <h5 class="footer-title">Hızlı Erişim</h5>
+                <ul class="footer-links list-unstyled">
+                    <li><a href="/Home/Index">Anasayfa</a></li>
+                    <li><a href="/Home/Blog">Blog/İçerik Sayfası</a></li>
 
-            <div class="col-lg-3 col-md-4">
-                <h3>Haberdar Olunuz</h3>
-                <p>Mailinizi Girerek Geliştirmelerden Sizleri Anında Haberdar Edelim</p>
-                <div class="input-group">
-                    <input type="text" placeholder="Email" id="email" class="form-control">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-primary" onclick="HaberdarEt()">
-                            Haber Ver
-                        </button>
-                    </span>
-
-                </div><!-- /input-group -->
+                    <li><a href="/Home/Hakkimizda">Hakkımızda</a></li>
+                    <li><a href="/Home/Iletisim">İletişim</a></li>
+                    <li><a href="/Home/Sozlesme">Kullanıcı Sözleşmesi</a></li>
+                    <li><a href="/Home/GizlilikSozlezmesi">Gizlilik Politikası</a></li>
+                    <li><a href="/Home/YasalUyari">Yasal Uyarı</a></li>
+                    
+                    
+                    @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
+                    {
+                        <li><a href="/Kitaplar/TumKitaplar?FavoriKitaplar=true">Favori Kitaplarım</a></li>
+                        <li><a href="/Kisi/TumYazarlar?FavoriYazarlar=true">Favori Yazarlarım</a></li>
+                        <li><a href="/Kitaplar/TumKitaplar?BitenKitaplar=true">Yazdığım/Tamamlanan Kitaplar</a></li>
+                        <li><a href="/Kitaplar/TumKitaplar?DevamEdenKitaplar=true">Henüz Tamamlanmayan Kitaplarım</a></li>
+                        <li><a href="/Kitaplar/TumKitaplar?YayinlananKitaplar=true">Yayınlanan Kitaplarım</a></li>
+                        <li><a href="/Kisi/Profil">Profil</a></li>
+                        <li><a href="/Ayarlar/Ayarlar">Ayarlar</a></li>
+                    }
+                </ul>
             </div>
-        </div><!-- /.row -->
+
+
+
+        </div>
         @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
     </div><!-- /.container -->
 </footer>
 
 <div class="footer-after" id="gozukecekMiFooterCrypt">
     <div class="container">
-        <div class="row">
-            <p class="col-md-10">©2025 Tüm hakları saklıdır. <a href="https://www.instagram.com/eminyazilim/">Emin Yazılım</a> tarafından tasarlanmıştır.</p>
-            <p class="col-md-2 legal"><a href="#" rel="nofollow">Yasal Uyarı</a></p>
-        </div><!-- /.row -->
+        <div class="row align-items-center">
+            <div class="col-lg-10 col-md-10 col-12">
+                <p class="mb-0">©2025 Tüm hakları saklıdır. <a href="https://www.instagram.com/emin_yazilim/">Emin Yazılım</a> tarafından tasarlanmıştır.</p>
+            </div>
+            <!--<div class="col-lg-2 col-md-2 col-12 legal text-end">
+                <a href="#" rel="nofollow">Yasal Uyarı</a>
+            </div>-->
+        </div>
     </div>
 </div>
-
-<!--
-<div id="switcher-options">
-    <a href="#" class="switcher-btn"><i class="fa fa-cog"></i></a>
-    <small>Switch Theme Colour</small>
-    <ul class="list-unstyled list-inline">
-        <li><a href="#" class="theme-colour default" data-name="default"></a></li>
-        <li><a href="#" class="theme-colour blue" data-name="blue"></a></li>
-        <li><a href="#" class="theme-colour violet" data-name="violet"></a></li>
-        <li><a href="#" class="theme-colour red" data-name="red"></a></li>
-        <li><a href="#" class="theme-colour orange" data-name="orange"></a></li>
-    </ul>
-</div>
- /Switcher -->
-
-
-<script>
-
-    var footer = $("#footericin").val();
-
-    function HaberdarEt() { 
-         
-        var mail = $('#email').val(); 
-
-        console.log("HaberdarEt : "+mail);
-
-         if (mail == ""  ) {
-            $("#uyari-" + footer).css("display", "block");
-            $("#bilgi-" + footer).css("display", "none");
-            $("#basarili-" + footer).css("display", "none");
-            $("#uyari-" + footer + " #mesaj").html("Mail bilginiz boş bırakmayınız.. ");
-            return;
-        }
-        // $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
-        //     {
-        //         "kime": mail,
-        //         "konu": "Footerda Haberdar Olunuz Kısmından Geldim",
-        //         "mesaj": "Haber Bülteninizden beni de haberdar ediniz"
-        //     },
-
-        //     function (data) {
-        //         if (data.state == 1) {
-        //             $("#basarili-" + footer).css("display", "block");
-        //             $("#basarili-" + footer + " #mesaj").html(data.message);
-
-        //             $("#bilgi-" + footer).css("display", "none");
-        //             $("#uyari-" + footer).css("display", "none");
-
-        //         }
-        //         else if (data.state == 3) {
-        //             $("#bilgi-" + footer).css("display", "block");
-        //             $("#bilgi-" + footer + " #mesaj").html(data.message);
-
-        //             $("#basarili-" + footer).css("display", "none");
-        //             $("#uyari-" + footer).css("display", "none");
-        //         }
-        //         else {
-        //             $("#uyari-" + footer).css("display", "block");
-        //             $("#bilgi-" + footer).css("display", "none");
-        //             $("#basarili-" + footer).css("display", "none");
-        //             $("#uyari-" + footer + " #mesaj").html(data.message);
-        //         }
-        //     });
-    }
-</script>

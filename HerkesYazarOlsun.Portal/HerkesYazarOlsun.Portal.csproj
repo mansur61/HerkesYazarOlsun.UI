@@ -4,7 +4,28 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+
+    <!-- Razor Views klasörünün publish edilmesi için eklenen ayarlar -->
+    <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup> 
+
+  <ItemGroup>
+    <Compile Remove="Models\**" />
+    <Content Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+  <!-- publis için-->
+  <ItemGroup>
+    <None Update="Helpers\SablonWordBelge.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Helpers\SablonPdfBelge.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
   <ItemGroup>
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.css" />
@@ -51,8 +72,6 @@
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
     <Content Remove="C:\Users\umpg0020097\.nuget\packages\bootstrap\5.2.3\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
-    <Content Remove="Helpers\YedekDosyalar\KitapArama.cshtml" />
-    <Content Remove="Helpers\YedekDosyalar\KitapOkuYdk.cshtml" />
     <Content Remove="wwwroot\lib\img\blog\.DS_Store" />
     <Content Remove="wwwroot\lib\img\gallery\.DS_Store" />
   </ItemGroup>
@@ -156,12 +175,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Helpers\YedekDosyalar\KitapArama.cshtml" />
-    <None Include="Helpers\YedekDosyalar\KitapOkuYdk.cshtml" />
     <None Include="wwwroot\lib\img\blog\.DS_Store" />
     <None Include="wwwroot\lib\img\gallery\.DS_Store" />
     <None Include="wwwroot\lib\bootstrap\dist\js\herkesyazarolsun-bootstrap.js" />
@@ -185,19 +198,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="bootstrap" Version="5.3.3" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.1" />
-    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
+    <PackageReference Include="itext7" Version="8.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="toastr" Version="2.1.1" />
-  </ItemGroup>  
-  <ItemGroup>
-    <Reference Include="HerkesYazarOlsun.Model">
-      <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net7.0\HerkesYazarOlsun.Model.dll</HintPath>
-    </Reference>
   </ItemGroup>
+
+   <!--<ItemGroup>
+    <Reference Include="HerkesYazarOlsun.Model">
+      <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net8.0\HerkesYazarOlsun.Model.dll</HintPath>
+    </Reference>
+  </ItemGroup>-->
+
+ <ItemGroup>
+    <ProjectReference Include="..\..\HerkesYazarOlsun.Servis\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
+  </ItemGroup>
+  
   <ItemGroup>
     <Content Update="wwwroot\lib\img\logo.png">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -252,5 +271,5 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-
+ 
 </Project>

@@ -1,21 +1,35 @@
 ﻿using AutoMapper;
 using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Enums;
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
-    public class KisiController : Controller 
+    public class KisiController : Controller
     {
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
-        public KisiController(IHttpContextAccessor contextAccessor)
+        private int SliderdaGosterilecekKayit = 0;
+        private int DefaultSliderdaGosterilecekKayit = 0;
+        private int KitapTamamlamaSayisi = 0;
+        public KisiController(IHttpContextAccessor contextAccessor, IOptions<HelperSettings> helperSettings)
         {
             _contextAccessor = contextAccessor;
-             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
+            Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
+
+            SliderdaGosterilecekKayit = helperSettings.Value.SliderdaGosterilecekKayit;
+            DefaultSliderdaGosterilecekKayit = helperSettings.Value.DefaultSliderdaGosterilecekKayit;
+            KitapTamamlamaSayisi = helperSettings.Value.KitapTamamlamaSayisi;
+
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+            ViewBag.KitapTamamlamaSayisi = KitapTamamlamaSayisi;
         }
         public IActionResult Index()
         {
@@ -30,36 +44,46 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult TumYazarlar(VM_ARAMA_INPUT arama)
         {
-            VM_USERS vmUsers = new VM_USERS();
+            VM_USERS_DETAIL vmUsers = new VM_USERS_DETAIL();
+            if (arama.FavoriYazarlar.HasValue)
+            {
+                arama.yazarIId = Lid;
+            }
 
+            ViewBag.FavoriYazarlar = arama.FavoriYazarlar;
+            ViewBag.Tip = "tumyazarlar";
             vmUsers.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
             List<VM_USERS> usersList = new KisiService().GetKisiler(arama).ToList();
-            vmUsers.VMUsersList = usersList;
+            vmUsers.VMUsersList = usersList;//.Where(p=>p.ID != Lid).ToList();
 
-            return View(vmUsers); 
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+
+            return View(vmUsers);
         }
 
 
         [HttpPost]
         [Route("YazariFavorilereEkle")]
-        public JsonResult YazariFavorilereEkle(int id,long tck)
+        [ValidateAntiForgeryToken]
+        public JsonResult YazariFavorilereEkle(int id, long tck)
         {
-            
+
             VM_FAVORI_YAZARLAR fav_yazar = new VM_FAVORI_YAZARLAR()
-            {                
+            {
                 LoginUserId = Convert.ToInt32(Lid),
                 YazarId = id,
                 tck = tck
             };
-            var getFavori_yazar = new KisiService().PostFavoriSaveWriter(fav_yazar);
+            var result = new KisiService().PostFavoriSaveWriter(fav_yazar);
 
-
-            return Json(getFavori_yazar);
+            return Json(result);
         }
 
         [HttpPost]
         [Route("PostWriterFollow")]
+        [ValidateAntiForgeryToken]
         public JsonResult PostWriterFollow(int id, int follow)
         {
             WriterFollow fovllow_yazar = new WriterFollow()
@@ -67,7 +91,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 LoginUserId = Convert.ToInt32(Lid),
                 YazarId = id,
                 isFollow = follow
-                
+
             };
             var getFavori_yazar = new KisiService().PostWriterFollow(fovllow_yazar);
 
@@ -93,27 +117,53 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         public IActionResult AraButonFiltrelemeYazarlar(VM_ARAMA_INPUT arama)
         {
-            VM_USERS vmUsers = new VM_USERS();
+            VM_USERS_DETAIL vmUsers = new VM_USERS_DETAIL();
 
             vmUsers.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
 
             List<VM_USERS> usersList = new KisiService().GetKisiler(arama).ToList();
             vmUsers.VMUsersList = usersList;
 
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+
             return View(vmUsers);
         }
 
-        public IActionResult Profil(string pId)
+        // buda reviz edilecek aslında
+        public IActionResult Profil(string? pId)
         {
-            var id = Convert.ToInt64(StringCipher.Decrypt(pId));
+            long id = Lid;
+
+            if (!string.IsNullOrEmpty(pId))
+            {
+                id = Convert.ToInt64(StringCipher.Decrypt(pId.ToString()));
+            }
 
             Users kisi = new KisiService().GetKisiById(id);
-            var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
-
+            //var profile = new ProfilService().GetProfilByLoginId(kisi.ID);
+            var vm_profil = ObjectMapper.Map(kisi.Profil, new VM_PROFILE());
             var vm_kisi = ObjectMapper.Map(kisi, new VM_USERS());
-            vm_kisi.Profile = profile;
+
+            Users kisiL = new KisiService().GetKisiById(Lid);
+            var vm_kisi_L = ObjectMapper.Map(kisiL, new VM_USERS());
+
+            vm_kisi.Profile = vm_profil;
             vm_kisi.Stars = new KisiService().GetMaxStarWriterById(id);
-            vm_kisi.vMWriterFollow = new KisiService().GetWriterFollowById(id);
+            //ViewBag.vMWriterFollow = new KisiService().GetWriterFollowById(id);
+
+            if (!string.IsNullOrEmpty(pId))
+            {
+                // başkasının profilini gir tekipte misin  bak
+                ViewBag.IsTakip = vm_kisi_L.WriterFollowLoginList?.Where(p => p.LoginUserId == Lid && p.isFollow == (int)Takip.TakipEt
+                && p.YazarId == kisi.ID).Any() ?? false;
+            }
+            else
+            {
+                ViewBag.IsTakip = vm_kisi.WriterFollowLoginList?.Where(p => p.LoginUserId == id
+                 && p.isFollow == (int)Takip.TakipEt).Any() ?? false;//&& p.YazarId != Lid
+            }
+
 
             Users lgn_kisi = new KisiService().GetKisiById(Lid);
 
@@ -123,12 +173,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
 
-            ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder 
+            ViewBag.isBildirimTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder 
 
             return View(vm_kisi);
-            
+
         }
-        
+
 
     }
 }

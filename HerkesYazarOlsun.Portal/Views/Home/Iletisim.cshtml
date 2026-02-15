@@ -1,32 +1,53 @@
 ﻿@using HerkesYazarOlsun.Portal.Controllers
 @{
-    ViewData["Title"] = " ";
-    Layout = "~/Views/Shared/_Layout2.cshtml"; // header , slider kısmı yok 
+    ViewData["Title"] = "İletişim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
-
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome 6 (İkonlar için) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         .styled-title {
-            font-weight: bold;
-            font-size: 5.5rem;
-            color: #007bff; /* Mavi tonunda */
+            font-weight: 700;
+            font-size: 3.2rem;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 5px rgba(0, 123, 255, 0.3);
-            background: linear-gradient(45deg, #007bff, #00d4ff);
+            background: linear-gradient(45deg, #6fcf97, #27ae60);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
-            font-size: 2rem;
-            color: #555;
-            font-style: italic;
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+        .custom-select {
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .custom-select:focus,
+        .custom-select:hover {
+            border-color: #6fcf97;
+            box-shadow: 0 0 6px rgba(111,207,151,0.5);
+        }
+
+        .btn-green {
+            background-color: #6fcf97;
+            border-color: #6fcf97;
+            color: #fff;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-green:hover {
+            background-color: #5bbf87;
+            border-color: #5bbf87;
+            color: #fff;
         }
     </style>
 }
@@ -37,67 +58,85 @@
     string alertmesajgostermedurumu = "iletisim";
 }
 
-<div class="text-center mb-4">
-    <h1 class="styled-title">📢 İletişim Formu 📢</h1>
-    <p class="subtitle">Bizimle iletişime geçmek için aşağıdaki formu doldurun.</p>
+<!-- HERO / NAVBAR ALTI BAŞLIK -->
+<div class="container-fluid bg-light py-5 mb-4 border-bottom">
+    <div class="container text-center">
+        <h1 class="styled-title mb-3">İletişim</h1>
+        <p class="subtitle mb-0">
+            Bizimle iletişime geçmek için aşağıdaki formu doldurun.
+        </p>
+    </div>
 </div>
 
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-body p-4">
-            
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
 
-            <div class="mb-3 input-group">
-                <span class="input-group-text"><i class="fas fa-user text-info"></i></span>
-                <input type="text" class="form-control" placeholder="Ad Soyad" required id="ad">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+
+                    <!-- Ad Soyad -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Ad Soyad</label>
+                        <input type="text" class="form-control form-control-lg" id="ad" placeholder="Ad Soyad" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">E-Posta</label>
+                        <input type="email" class="form-control form-control-lg" id="email" placeholder="E-posta adresiniz" required>
+                    </div>
+
+                    <!-- Konu -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Konu</label>
+                        <select class="form-select custom-select" id="konuMenu" required>
+                            <option value="" selected disabled>Konu Seçiniz</option>
+                            <option value="1">Kitap Yayınlama</option>
+                            <option value="2">Öneri Sunma</option>
+                            <option value="3">Şikayet</option>
+                            <option value="4">Ödeme İle Alakalı</option>
+                            <option value="5">Sponsor Seçimi</option>
+                        </select>
+                    </div>
+
+                    <!-- Mesaj -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Mesajınız</label>
+                        <textarea class="form-control form-control-lg"
+                                  id="mesaj"
+                                  rows="5"
+                                  placeholder="Lütfen mesajınızı buraya yazın..."
+                                  required></textarea>
+                    </div>
+
+                    <!-- Gönder -->
+                    <button type="submit"
+                            class="btn btn-green w-100 py-3"
+                            onclick="IletisimGonder()">
+                        <i class="fas fa-paper-plane me-2"></i> Gönder
+                    </button>
+
+                </div>
             </div>
 
-            <div class="mb-3 input-group">
-                <span class="input-group-text"><i class="fas fa-envelope text-info"></i></span>
-                <input type="email" class="form-control" id="email" placeholder="E-Posta" required>
+            <div class="mt-4">
+                @Html.Partial("_AlertMesaj", alertmesajgostermedurumu)
             </div>
 
-            <div class="mb-3 input-group">
-                <span class="input-group-text"><i class="fas fa-list text-info"></i></span>
-                <select class="form-select" id="konuMenu" required>
-                    <option value="" selected disabled>Konu Seçiniz</option>
-                    <option value="1">Kitap Yayınlama</option>
-                    <option value="2">Öneri Sunma</option>
-                    <option value="3">Şikayet</option>
-                    <option value="4">Ödeme İle Alakalı</option>
-                    <option value="5">Sponsor Seçimi</option>
-                </select>
-            </div>
-
-
-            <div class="mb-3 input-group">
-                <span class="input-group-text"><i class="fas fa-comment text-info"></i></span>
-                <textarea class="form-control" placeholder="Lütfen mesajınızı buraya yazın.." rows="5" id="mesaj" required></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100" onclick="IletisimGonder()">GÖNDER</button>
         </div>
     </div>
-    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
 </div>
 
- 
-
-@section Scripts {
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-}
-
 <script>
-
     var iletisim = $("#iletisimicin").val();
 
     var konuMenuId = 0;
     var konuText = "";
+
     document.getElementById("konuMenu").addEventListener("change", function () {
         konuMenuId = this.value;
         konuText = this.options[this.selectedIndex].text;
-
     });
 
     function IletisimGonder() {
@@ -107,82 +146,51 @@
         var konuMenuId = $("#konuMenu").val();
         var mesaj = $("#mesaj").val();
 
-       // console.log(" ad: " + ad + " email: " + email + " konuText: " + konuText + " konuMenuId: " + konuMenuId + " mesaj: " + mesaj);
-
-        if (konuMenuId == 0) {
-            $("#uyari-" + iletisim).css("display", "block");
-            $("#bilgi-" + iletisim).css("display", "none");
-            $("#basarili-" + iletisim).css("display", "none");
-            $("#uyari-" + iletisim + " #mesaj").html("Sponsor bilgisi seçilmelidir. ");
-            return;
-        }
-        if (email == "" && ad == "" && mesaj == "") {
-            $("#uyari-" + iletisim).css("display", "block");
-            $("#bilgi-" + iletisim).css("display", "none");
-            $("#basarili-" + iletisim).css("display", "none");
-            $("#uyari-" + iletisim + " #mesaj").html("Ad, Mail ve Mesaj bilgilerinizi boş bırakmayınız.. ");
+        if (!konuMenuId) {
+            mesajGoster("uyari", "Konu seçilmelidir.");
             return;
         }
 
-        $.post("@Url.Action(nameof(TaleplerController.TalepKaydet), "Talepler")",
-            {
-                "EMAIL": email,
-                "ADISOYADI": ad,
-                "KONU_ID": konuMenuId,
-                "KONU": konuText,
-                "MESAJ": mesaj
-            },
+        if (ad === "" || email === "" || mesaj === "") {
+            mesajGoster("uyari", "Ad, E-posta ve Mesaj alanları boş bırakılamaz.");
+            return;
+        }
 
-            function (data) { 
-                if (data.state == 1) {
-                    $("#basarili-" + iletisim).css("display", "block");
-                    $("#basarili-" + iletisim + " #mesaj").html(data.message);
+        $.post("@Url.Action(nameof(TaleplerController.TalepKaydet), "Talepler")", {
+            EMAIL: email,
+            ADISOYADI: ad,
+            KONU_ID: konuMenuId,
+            KONU: konuText,
+            MESAJ: mesaj
+        }, function (data) {
 
-                    $("#bilgi-" + iletisim).css("display", "none");
-                    $("#uyari-" + iletisim).css("display", "none");
-
-                    Bilgilendir(email, mesaj);
-
-                }
-                else if (data.state == 3) {
-                    $("#bilgi-" + iletisim).css("display", "block");
-                    $("#bilgi-" + iletisim + " #mesaj").html(data.message);
-
-                    $("#basarili-" + iletisim).css("display", "none");
-                    $("#uyari-" + iletisim).css("display", "none");
-                }
-                else {
-                    $("#uyari-" + iletisim).css("display", "block");
-                    $("#bilgi-" + iletisim).css("display", "none");
-                    $("#basarili-" + iletisim).css("display", "none");
-                    $("#uyari-" + iletisim + " #mesaj").html(data.message);
-                }
-            });
-
+            if (data.state == 1) {
+                mesajGoster("basarili", data.message);
+                Bilgilendir(email, mesaj);
+            }
+            else if (data.state == 3) {
+                mesajGoster("bilgi", data.message);
+            }
+            else {
+                mesajGoster("uyari", data.message);
+            }
+        });
     }
 
+    function mesajGoster(tip, mesaj) {
+        $("#uyari-" + iletisim).hide();
+        $("#bilgi-" + iletisim).hide();
+        $("#basarili-" + iletisim).hide();
 
-
-    function Bilgilendir(email, mesaj) { 
-        $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
-            {
-                "kime": "kayamansur61@gmail.com",
-                "konu": "Herkes Yazar Olsun İletişim Formu",
-                "mesaj": email + " mail adresinden ilgili mesaj -> " + mesaj
-            },
-
-            function (data) { 
-                // setTimeout(function () {
-
-                //     window.location.href = "/Home/Index";
-                // }, 3000);
-
- 
-            });
+        $("#" + tip + "-" + iletisim).show();
+        $("#" + tip + "-" + iletisim + " #mesaj").html(mesaj);
     }
 
-
-
+    function Bilgilendir(email, mesaj) {
+        $.post("@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")", {
+            kime: "@ViewBag.MAIL",
+            konu: "Herkes Yazar Olsun İletişim Formu",
+            mesaj: email + " mail adresinden gelen mesaj -> " + mesaj
+        });
+    }
 </script>
-
-

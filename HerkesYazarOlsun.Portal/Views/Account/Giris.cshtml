@@ -1,0 +1,317 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using HerkesYazarOlsun.Portal.Controllers;
+@model HerkesYazarOlsun.Model.ViewModel.VM_LOGIN;
+
+
+<input type="hidden" id="loginicin" value="logingiris" />
+
+@{
+    string alertmesajgostermedurumu = "logingiris";
+}
+
+
+@section Styles { 
+    <link href="~/lib/css/giris_kayit_dogrulama.css" rel="stylesheet" /> 
+}
+
+
+<section>
+    <div class="container py-5">
+        <div class="row align-items-center">
+
+            <!-- SOL TARAF -->
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div id="title-container" class="p-4">
+                    <h4>Herkes Yazar Olsun' a Hoşgeldiniz!</h4>
+                    <p>Giriş ve Kayıt işlemlerinizi gerçekleştiriniz. Sizinle danışmaktan mutluluk duyuyoruz.</p>
+
+                    <a class="auth-primary-btn" href="/Account/KayitOl">
+                        Kayıt Olunuz
+                    </a>
+                </div>
+            </div>
+
+            <!-- SAĞ TARAF (GİRİŞ FORMU) -->
+            <div class="col-lg-6">
+                <div class="login_form_inner" style="height:auto;">
+
+                    <h3 class="text-center mb-4">Giriş Yapınız</h3>
+
+                    <!-- TAB MENÜ -->
+                    <div class="auth-tab-wrapper">
+                        <ul class="nav nav-tabs" id="loginTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="normalLoginTab" onclick="LoginTab(0)" style="cursor:pointer">Normal Giriş</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="observerLoginTab" onclick="LoginTab(1)" style="cursor:pointer">Gözlemci Modunda Giriş</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- TAB İÇERİK -->
+                    <div class="tab-content" id="loginTabContent">
+
+                        <br /><br />
+
+                        <!-- Normal Giriş -->
+                        <div id="normalLogin" role="tabpanel">
+                            <div class="row login_form">
+
+                                <div class="col-md-12 form-group">
+                                    <input type="text" class="form-control" id="email" name="email"
+                                           placeholder="Email Adresiniz">
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <input type="password" class="form-control" id="sifre" name="sifre"
+                                           placeholder="Şifre">
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <div class="creat_account d-flex align-items-center">
+                                        @if (@Model.benihatirla != null)
+                                        {
+                                            @if (@Model.benihatirla == "0")
+                                            {
+                                                <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' checked value="true">
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" id="hatirla" name="benihatirla" onclick='handleClick(this);' value="false">
+                                        }
+
+                                        <label class="ms-2" for="hatirla">Oturumumu açık tut</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <button class="button button-login w-100 auth-primary-btn mt-3"
+                                            onclick="Giris()">
+                                        Giriş Yap
+                                    </button>
+                                     <div class="mt-3">
+                                        <a style="color:#00C9A7;" href="/Home/SifremiUnuttum">Şifrenizi mi unuttunuz?</a>
+                                    </div>
+                                </div>
+
+                                <div id="loading" style="display: none; text-align: center;">
+                                    <img src="https://i.gifer.com/ZZ5H.gif" alt="loading..." style="width: 50px; height: 50px;" />
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Gözlemci Modu -->
+                        <div id="observerLogin" role="tabpanel">
+                            <div class="row login_form">
+                                <div class="col-md-12 form-group">
+                                    <button class="button button-login w-150 auth-primary-btn"
+                                            onclick="GozlemciMod()">
+                                        Gözlemci Modunda Giriş Yap
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @Html.Partial("_AlertMesaj", @alertmesajgostermedurumu)
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div style="height:50px"></div>
+
+<script>
+
+    var rememberlogin = false;
+    if ($("#hatirla").val() == "false") {
+        rememberlogin = false;
+    } else {
+        rememberlogin = true;
+    }
+
+    var login = $("#loginicin").val();
+
+    $("#normalLogin").css("display", "block");
+    $("#observerLogin").css("display", "none");
+
+    function LoginTab(index) {
+        console.log("index:" + index);
+        if (index == 0) {
+            $("#normalLogin").css("display", "block");
+            $("#observerLogin").css("display", "none");
+
+            $("#normalLoginTab").css("background-color", "lightgray");
+
+            $("#observerLoginTab").css("background-color", "white");
+            $("#observerLoginTab").css("color", "green");
+
+
+        } else {
+            $("#observerLogin").css("display", "block");
+            $("#normalLogin").css("display", "none");
+
+            $("#normalLoginTab").css("background-color", "white");
+            $("#normalLoginTab").css("color", "green");
+
+            $("#observerLoginTab").css("background-color", "lightgray");
+        }
+    }
+
+    function handleClick(cb) {
+        rememberlogin = cb.checked;
+        console.log("rememberlogin:" + rememberlogin);
+    }
+
+    function onSuccess(data) {
+
+        if (data.state == 1) {
+            $("#basarili-" + login).css("display", "block");
+            $("#basarili-" + login + " #mesaj").html(data.message);
+
+            $("#bilgi-" + login).css("display", "none");
+            $("#uyari-" + login).css("display", "none");
+
+            window.location.href = "/Home/Index";
+
+        }
+        else if (data.state == 3) {
+            $("#bilgi-" + login).css("display", "block");
+            $("#bilgi-" + login + " #mesaj").html(data.message);
+
+            $("#basarili-" + login).css("display", "none");
+            $("#uyari-" + login).css("display", "none");
+        }
+        else {
+            $("#uyari-" + login).css("display", "block");
+            $("#bilgi-" + login).css("display", "none");
+            $("#basarili-" + login).css("display", "none");
+            $("#uyari-" + login + " #mesaj").html(data.message);
+        }
+
+        //if (data.message != "") {
+
+        //    toastrError(data.message, "Hata!");
+        //}
+        //else {
+        //    window.location.replace(data.redirecturl);
+        //}
+    }
+
+    function onFailed(data) {
+        //toastrError("İşlem Gerçekleşemedi:" + data, "Hata!");
+        if (data.state == 3) {
+            $("#bilgi-" + login).css("display", "block");
+            $("#bilgi-" + login + " #mesaj").html(data.message);
+
+            $("#basarili-" + login).css("display", "none");
+            $("#uyari-" + login).css("display", "none");
+        }
+        else {
+            $("#uyari-" + login).css("display", "block");
+            $("#bilgi-" + login).css("display", "none");
+            $("#basarili-" + login).css("display", "none");
+            $("#uyari-" + login + " #mesaj").html(data.message);
+        }
+    }
+
+    function Giris() {
+
+        var email = $("#email").val();
+        var sifre = $("#sifre").val();
+
+
+       $("#loading").css("display", "block");
+
+        $.post("@Url.Action(nameof(AccountController.Giris), "Account")", {
+            "RememberLogin": rememberlogin,
+            "email": email,
+            "sifre": sifre,
+            "benihatirla": rememberlogin == false ? "0" : "1"
+
+        }, function (data) {
+             $("#loading").css("display", "none");
+            console.log("data.state:" + data.state);
+            if (data.state == 1) {
+
+                $("#basarili-" + login).css("display", "block");
+                $("#basarili-" + login + " #mesaj").html(data.message + " Giriş işlemi Başarılı Anasayfaya yönlendiriliyorsunuz.");
+
+                $("#bilgi-" + login).css("display", "none");
+                $("#uyari-" + login).css("display", "none");
+
+                setTimeout(function () {
+
+                    window.location.href = "/Home/Index";
+                }, 3000);
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + login).css("display", "block");
+                $("#bilgi-" + login + " #mesaj").html(data.message);
+
+                $("#basarili-" + login).css("display", "none");
+                $("#uyari-" + login).css("display", "none");
+            }
+            else {
+                $("#uyari-" + login).css("display", "block");
+                $("#bilgi-" + login).css("display", "none");
+                $("#basarili-" + login).css("display", "none");
+                $("#uyari-" + login + " #mesaj").html(data.message);
+            }
+
+        });
+
+    }
+
+    function GozlemciMod() {
+
+        var email = $("#email").val();
+        var sifre = $("#sifre").val();
+        console.log("GozlemciMod");
+        $.post("@Url.Action(nameof(AccountController.GozlemciModLogin), "Account")", { "email": email }, function (data) {
+            console.log("data.state:" + data.state);
+            if (data.state == 1) {
+                $("#basarili-" + login).css("display", "block");
+                $("#basarili-" + login + " #mesaj").html(data.message + " Anasayfaya yönlendiriliyorsunuz.");
+
+                $("#bilgi-" + login).css("display", "none");
+                $("#uyari-" + login).css("display", "none");
+
+                setTimeout(function () {
+                    window.location.href = "/Home/Index";
+                }, 3000);
+            }
+            else if (data.state == 3) {
+                $("#bilgi-" + login).css("display", "block");
+                $("#bilgi-" + login + " #mesaj").html(data.message);
+
+                $("#basarili-" + login).css("display", "none");
+                $("#uyari-" + login).css("display", "none");
+            }
+            else {
+                $("#uyari-" + login).css("display", "block");
+                $("#bilgi-" + login).css("display", "none");
+                $("#basarili-" + login).css("display", "none");
+                $("#uyari-" + login + " #mesaj").html(data.message);
+            }
+
+        });
+
+    }
+
+
+</script>

@@ -18,7 +18,7 @@ namespace HerkesYazarOlsun.Portal.Middleware
             }
             catch (ValidationException ex)
             {
-                
+
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 var errors = ex.Value?.ToString();// Select(e => new { e.PropertyName, e.ErrorMessage });

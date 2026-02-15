@@ -1,35 +1,32 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_USERS
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_USERS_DETAIL
+
+@using HerkesYazarOlsun.Model.ViewModel;
+
+<h6>
+    <span>@(Model.VMUsersList?.Count ?? 0)</span> Kayıt Var
+</h6>
+
+<hr />
 
 @{
-    Model.yazarSliderYometimAdi = "yazarlar";
-    //int sliderdaGosterilecekKayit = (Model.sliderdaGosterilecekKayit == 0) ? 20 : Model.sliderdaGosterilecekKayit;
-
-    //int kalan = (@Model.VMUsersList.Count() % sliderdaGosterilecekKayit);
-    //int bolum = (@Model.VMUsersList.Count() / sliderdaGosterilecekKayit);
-
-    //int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-
-    ////Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-    //Model.kalan = @kalan;
-    //Model.bolum = @bolum;
-    //Model.vM_PAGINATION_BUTTONS = new HerkesYazarOlsun.Model.ViewModel.VM_PAGINATION_BUTTON();
-    //Model.vM_PAGINATION_BUTTONS.sliderSayisi = @sliderSayisi;
-    //Model.vM_PAGINATION_BUTTONS.sliderSayiDivTagName = "yazarlar";
-}
+   int perSlide = Model.sliderdaGosterilecekKayit != 0
+            ? Model.sliderdaGosterilecekKayit
+            : Convert.ToInt32(ViewBag.SliderdaGosterilecekKayit);
 
 
-@section scripts{
-    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-}
-@section Styles{
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
+    int total = Model.VMUsersList.Count;
+    int sliderSayisi = (int)Math.Ceiling((double)total / perSlide);
+    var butons = new  VM_PAGINATION_BUTTON{
+            sliderSayisi = sliderSayisi,
+            sliderSayiDivTagName = "yazarlar"
+            
+    };
+    Model.vM_PAGINATION_BUTTONS = butons;
+    Model.Tip = "yazarlar";
 }
 
 @if (@Model.VMUsersList.Count() > 0)
 {
-
-    @Html.Partial("_YazarSliderItemYonetimleri",@Model)
 
     @Html.Partial("Yazarlar",@Model)
 
@@ -41,14 +38,4 @@ else
 {
     <p>Aranan kritere uygun herhangi bir kayıt bulunamadı</p>
 }
-
-
-
-<script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
-<script src="~/lib/bootstrap/dist/js/mixitup.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/kitap-arama.js"></script>
+ 

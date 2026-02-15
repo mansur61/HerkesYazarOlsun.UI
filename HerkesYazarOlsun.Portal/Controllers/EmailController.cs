@@ -4,6 +4,7 @@ using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -38,7 +39,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
-        public ServiceResult Gonder(string kime)
+        [ValidateAntiForgeryToken]
+        public async Task<ServiceResult> Gonder(string kime)
         {
             ServiceResult result = new ServiceResult();
 
@@ -58,24 +60,25 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 username = _mailSettings.Username,
                 password = _mailSettings.Password,
                 Host = _mailSettings.Host,
-
+                Port = _mailSettings.Port,
+                EnableSSL = _mailSettings.EnableSSL,
                 sifre = kod,
                 kime = kime,
                 konu = _mailSettings.Subject,
                 gondericii_mail = _mailSettings.FromEmail
             };
-             
-            string sonuc = _emailService.EmailGonder(icerik); 
+
+            string sonuc = await _emailService.EmailGonder(icerik);
 
             if (sonuc == "-1")
             {
                 result.State = MessageResultState.ERROR;
-                result.Message = sonuc;
+                result.Message = "Mail Doğrulama Başarısız";
             }
             else
             {
                 result.State = MessageResultState.SUCCESS;
-                result.Message = kod; 
+                result.Message = kod;
             }
 
 
@@ -83,6 +86,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ServiceResult PostEmailDogrula(string email)
         {
             VM_USERS vM_USERS = new VM_USERS();
@@ -90,7 +94,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             ServiceResult result = new KisiService().PostKisiUpdate(vM_USERS);
             if (result.State != MessageResultState.SUCCESS)
-            { 
+            {
                 return result;
             }
             return result;
@@ -98,14 +102,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
-        public ServiceResult MailBilgilendirme(string kime,string konu, string mesaj,int? tip = 0)
+        [ValidateAntiForgeryToken]
+        public async Task<ServiceResult> MailBilgilendirme(string kime, string konu, string mesaj, int? tip = 0)
         {
             ServiceResult result = new ServiceResult();
 
             VM_USERS vM_USERS = new VM_USERS();
             vM_USERS.EMAIL = kime;
-             
-            if(tip == 0) // mesaj atan kişi bilgilendirmesi
+
+            if (tip == 0) // mesaj atan kişi bilgilendirmesi
             {
 
             }
@@ -121,13 +126,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 password = _mailSettings.Password,
                 Host = _mailSettings.Host,
 
-                icerik = mesaj, 
+                icerik = mesaj,
                 kime = kime,
                 konu = konu,
                 gondericii_mail = _mailSettings.FromEmail
             };
 
-            string sonuc = _emailService.EmailGonder(mail_icerik);
+            string sonuc = await _emailService.EmailGonder(mail_icerik);
 
             if (sonuc == "-1")
             {

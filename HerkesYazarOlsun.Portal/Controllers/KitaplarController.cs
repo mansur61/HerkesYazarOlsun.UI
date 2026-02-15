@@ -1,17 +1,19 @@
-﻿using HerkesYazarOlsun.Model.Entity;
-using HerkesYazarOlsun.Model.ViewModel;
-using HerkesYazarOlsun.Portal.Services;
-using Microsoft.AspNetCore.Mvc;
-using HerkesYazarOlsun.Model.Utils;
-using HerkesYazarOlsun.Portal.Helpers.Extensions;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using HerkesYazarOlsun.Model.Entity;
+using HerkesYazarOlsun.Model.Utils;
+using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Portal.Helpers;
+using HerkesYazarOlsun.Portal.Helpers.Extensions;
+using HerkesYazarOlsun.Portal.Services;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Text;
-using iTextSharp.text.pdf.parser;
-using iTextSharp.text.pdf;
-using System.Security.Cryptography;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Text.RegularExpressions;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -20,178 +22,309 @@ namespace HerkesYazarOlsun.Portal.Controllers
     {
         private IHttpContextAccessor _contextAccessor;
         private long Lid;
-        private string DosyaYolu = "C:/Users/umpg0020097/Desktop/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal/Helpers/";
-        public KitaplarController(IHttpContextAccessor contextAccessor)
+        private int ParagrafLimiti = 0;
+        private int SliderdaGosterilecekKayit = 0;
+        private int DefaultSliderdaGosterilecekKayit = 0;
+        private int KitapTamamlamaSayisi = 0;
+        private readonly string _dosyaBaseUrl;
+        // kullanımdan alındı
+        private string DosyaYolu = "";
+        public KitaplarController(IHttpContextAccessor contextAccessor, IOptions<HelperSettings> helperSettings)
         {
             _contextAccessor = contextAccessor;
             Lid = (long)(_contextAccessor?.HttpContext?.User.GetLoginUserId());
+            _dosyaBaseUrl = helperSettings.Value.DosyaBaseUrl;
+            ParagrafLimiti = helperSettings.Value.ParagrafLimiti;
+            SliderdaGosterilecekKayit = helperSettings.Value.SliderdaGosterilecekKayit;
+            DefaultSliderdaGosterilecekKayit = helperSettings.Value.DefaultSliderdaGosterilecekKayit;
+            KitapTamamlamaSayisi = helperSettings.Value.KitapTamamlamaSayisi;
+
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+            ViewBag.KitapTamamlamaSayisi = KitapTamamlamaSayisi;
+
+            DosyaYolu = _dosyaBaseUrl;
         }
-        public IActionResult KitapOlustur(VM_BOOKS input)
+        public IActionResult KitapOlustur(VM_BOOKS_DETAIL input)
         {
-            if (input.ID != 0)
+            ViewBag.KitapTamamlamaSayisi = KitapTamamlamaSayisi;
+            long bookID = Convert.ToInt64(StringCipher.Decrypt(input.kitap_id));
+            ViewBag.BOOK_ID = bookID;
+
+            if (input.isYazmayaDevamEt.HasValue && !input.isYazmayaDevamEt.Value) //isYazmayaDevamEt = false ise
             {
-                int sayfaCount = new BooksPagesService().GetPagesByBooks(input.ID)!.Count();
-                input.IlgiiSayfaSayisi = sayfaCount;
+                var kategoriler = new BooksService().GetCategories();
+                input.Katergoriler = kategoriler!;
+                input.IlgiiSayfaSayisi = 1;
             }
 
+            if (input.isYazmayaDevamEt.HasValue && input.isYazmayaDevamEt.Value)//
+            {
+                if (input.IlgiiSayfaSayisi.HasValue && input.IlgiiSayfaSayisi.Value == 0)
+                {
+                    input.IlgiiSayfaSayisi = 2;
+                }
+
+            }
+            
             return View(input);
         }
 
         public IActionResult KitapOku(string kitap_id)
         {
+            ViewBag.KITAPENC = kitap_id;
             var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
             var getBook = new BooksService().GetBooks(kitapId);
             var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
+            ViewBag.VM_KITAP = vmBook;
             var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
             getBookPage = getBookPage ?? null;
             vmBook.BooksPageList = ObjectMapper.MapList(getBookPage!, new List<VM_BOOKS_PAGES>());
-            return View(vmBook);
+
+            VM_BOOKS_DETAIL dt = new VM_BOOKS_DETAIL();
+            dt.BookModel = vmBook;
+            return View(dt);
         }
 
         public IActionResult KitapEkleWordOrPdf()
         {
-            VM_BOOKS vM_BOOKS = new VM_BOOKS();
-            vM_BOOKS.LoginUserId = 6;
-            return View(vM_BOOKS);
+            VM_BOOKS_DETAIL vM_BOOKS_det = new VM_BOOKS_DETAIL();
+            vM_BOOKS_det.BookModel = new VM_BOOKS();
+            vM_BOOKS_det.BookModel.LoginUserId = (int)Convert.ToDecimal(Lid);
+
+            var kategoriler = new BooksService().GetCategories();
+            vM_BOOKS_det.Katergoriler = kategoriler!;
+            return View(vM_BOOKS_det);
         }
 
-        private async Task<ServiceResult> WordDosyasindaAktarma(VM_BOOKS vM_BOOKS)
-        {
-            string docxFilePath = DosyaYolu + vM_BOOKS.FDileName;
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            using (WordprocessingDocument doc = WordprocessingDocument.Open(docxFilePath, false))
-            {
-                // Access the main document part
-                var mainPart = doc.MainDocumentPart;
-
-                // Access the document body
-                var body = mainPart!.Document.Body;
-
-                var pageBreakCount = mainPart.Document.Descendants<LastRenderedPageBreak>().Count();
-
-                int pageCount = pageBreakCount + 1;// word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bir fazlası veriyor
-
-                int partCount = doc.Parts.Count(); // word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bİr eksik veriyor
-
-                // Console.WriteLine($"Total Parts: {partCount}");
-
-                int targetPageNumber = 2;
-                string pageText = GetTextFromPage(body!, targetPageNumber);
-
-                int wordCount = CountWords(pageText);
-
-                var toplamParagrafUzunlugu = body.Elements<Paragraph>().ToList().Sum(p => p.InnerText.Length);
-
-                string sayfaYazisi = "";
-
-                int paragrafLimiti = 1800, paragrafU = 0;
-
-
-
-                var toplamSayfaSayisiBelirlenenSayfaBasinaParagrafLimitiOlarak = toplamParagrafUzunlugu / paragrafLimiti;
-                var yuvarlaSayfaIndex = Math.Ceiling(Convert.ToDecimal(toplamSayfaSayisiBelirlenenSayfaBasinaParagrafLimitiOlarak));
-
-                foreach (var paragraph in body!.Elements<Paragraph>())
-                {
-                    paragrafU = paragrafU + paragraph.InnerText.Length;
-                    sayfaYazisi += paragraph.InnerText;
-
-                }
-                //paragrafLimiti, iligli uzunluk: 220-230 cümleye denk gelmektedir.
-                result = await SayfalariVeriTabaninaAktar(vM_BOOKS, sayfaYazisi, paragrafLimiti);
-
-            }
-            return result;
-
-        }
         /// <summary>
-        /// Pdf lerde sayfa sayfa veri tabanına ekleme yapıldı. 1800 limite şuan uyulmadı.
+        /// Pdf lerde sayfa sayfa veri tabanına ekleme yapıldı. {ParagrafLimiti} limiti şeklinde ekleme
         /// </summary>
         /// <param name="vM_BOOKS"></param>
-        private async Task<ServiceResult> PdfDosyasindanOkumaAsync(VM_BOOKS vM_BOOKS)
+        private async Task<ServiceResult> WordDosyasindaAktarmaAsync(VM_BOOKS_DETAIL vM_BOOKS)
         {
-            ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
-
-            string pdfFilePath = DosyaYolu + vM_BOOKS.FDileName;
-            // int paragrafLimiti = 1800;
-
-            PdfReader reader = new PdfReader(pdfFilePath);
-            string text = string.Empty;
+            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
 
             try
             {
-                var eklemeDurumu = await KitapEkle(vM_BOOKS);//ilk etap kitabı ekle
+                if (vM_BOOKS.DocMemoryStream == null)
+                {
+                    result.Message = "DocMemoryStream boş.";
+                    result.State = MessageResultState.ERROR;
+                    return result;
+                }
+
+                // Stream başa alınmalı
+                vM_BOOKS.DocMemoryStream.Position = 0;
+
+                using (WordprocessingDocument doc = WordprocessingDocument.Open(vM_BOOKS.DocMemoryStream, false))
+                {
+                    if (doc.MainDocumentPart == null || doc.MainDocumentPart.Document?.Body == null)
+                    {
+                        result.Message = "Belge yapısı geçersiz.";
+                        result.State = MessageResultState.ERROR;
+                        return result;
+                    }
+
+                    // Access the main document part
+                    var mainPart = doc.MainDocumentPart;
+
+                    // Access the document body
+                    var body = mainPart.Document.Body;
+
+                    //WORD İÇİ RESİM TESPİT
+                    var firstImagePart = mainPart.ImageParts.FirstOrDefault();
+                    if (firstImagePart != null)
+                    {
+                        byte[] imageBytes;
+
+                        await using (var imgStream = firstImagePart.GetStream())
+                        await using (var ms = new MemoryStream())
+                        {
+                            await imgStream.CopyToAsync(ms);
+                            imageBytes = ms.ToArray(); // KOPYA ALINDI
+                        }
+
+                        //  Bundan sonrası thread-safe
+                        var formFile = imageBytes.ToImageFormFile(
+                            fileName: "word_img_1",
+                            contentType: firstImagePart.ContentType
+                        );
+
+                        if (formFile != null)
+                        {
+                            vM_BOOKS.BookPagesModel ??= new VM_BOOKS_PAGES();
+
+                            // Her çağrıda YENİ liste → concurrency safe
+                            vM_BOOKS.BookPagesModel.PageFotoDosyalar =
+                                new List<IFormFile> { formFile };
+                        }
+                    }
+
+
+                    var pageBreakCount = mainPart.Document.Descendants<LastRenderedPageBreak>().Count();
+
+                    // Word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bir fazlası veriyor
+                    int pageCount = pageBreakCount + 1;
+
+                    // Word kaç sayfada oluşur bunu almaya çalıştık fakat tam istenileni vermedi. Bir eksik veriyor
+                    int partCount = doc.Parts.Count();
+
+                    int targetPageNumber = 2;
+                    string pageText = GetTextFromPage(body, targetPageNumber);
+
+                    int wordCount = CountWords(pageText);
+
+                    var paragraphs = body.Elements<Paragraph>().ToList();
+                    var toplamParagrafUzunlugu = paragraphs.Sum(p => p.InnerText.Length);
+
+                    // RAM tasarrufu için StringBuilder kullanıyoruz (özellikle büyük belgelerde fark yaratır)
+                    StringBuilder sayfaYazisiBuilder = new StringBuilder();
+
+                    int paragrafLimiti = ParagrafLimiti;
+                    int paragrafU = 0;
+
+                    var toplamSayfaSayisiBelirlenenSayfaBasinaParagrafLimitiOlarak = toplamParagrafUzunlugu / paragrafLimiti;
+                    var yuvarlaSayfaIndex = Math.Ceiling(Convert.ToDecimal(toplamSayfaSayisiBelirlenenSayfaBasinaParagrafLimitiOlarak));
+
+                    foreach (var paragraph in paragraphs)
+                    {
+                        paragrafU += paragraph.InnerText.Length;
+                        sayfaYazisiBuilder.Append(paragraph.InnerText);
+                    }
+
+                    string sayfaYazisi = sayfaYazisiBuilder.ToString();
+
+                    // paragrafLimiti, ilgili uzunluk: 220-230 cümleye denk gelmektedir.
+                    result = await SayfalariVeriTabaninaAktar(vM_BOOKS, sayfaYazisi, paragrafLimiti);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.State = MessageResultState.ERROR;
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Pdf lerde sayfa sayfa veri tabanına ekleme yapıldı. {ParagrafLimiti} limite şuan uyulmadı.
+        /// </summary>
+        /// <param name="vM_BOOKS"></param>
+
+        private async Task<ServiceResult> PdfDosyasindanOkumaAsync(VM_BOOKS_DETAIL vM_BOOKS_det)
+        {
+            ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
+            //vM_BOOKS_det.BookModel = new VM_BOOKS();
+            try
+            {
+                if (vM_BOOKS_det.PdfMemoryStream == null)
+                {
+                    sonuc.Message = "PdfMemoryStream  boş.";
+                    sonuc.State = MessageResultState.ERROR;
+                    return sonuc;
+                }
+
+                // Stream başa alınmalı
+                vM_BOOKS_det.PdfMemoryStream.Position = 0;
+
+                // İlk etapta kitabı ekle
+                var eklemeDurumu = await KitapEkle(vM_BOOKS_det);
+
+                if (eklemeDurumu.State == MessageResultState.SUCCESS && eklemeDurumu.Result != null)
+                {
+                    sonuc.Result = StringCipher.Encrypt(eklemeDurumu.Result.BookID.ToString());
+                }
 
                 if (eklemeDurumu.State == MessageResultState.SUCCESS)
                 {
-                    for (int page = 1; page <= reader.NumberOfPages; page++)
-                    {
-                        text += PdfTextExtractor.GetTextFromPage(reader, page);
-                        string sayfaYaz = PdfTextExtractor.GetTextFromPage(reader, page);
-                        Console.WriteLine("sayfaYaz: " + page + " -- " + sayfaYaz + "\n");
+                    // PdfReader ve PdfDocument iText7 ile açılır
+                    using var pdfReader = new PdfReader(vM_BOOKS_det.PdfMemoryStream);
+                    using var pdfDoc = new PdfDocument(pdfReader);
 
-                        if (eklemeDurumu.State == MessageResultState.SUCCESS)
+                    for (int page = 1; page <= pdfDoc.GetNumberOfPages(); page++)
+                    {
+                        var sayfaText = PdfTextExtractor.GetTextFromPage(pdfDoc.GetPage(page), new SimpleTextExtractionStrategy());
+                        Console.WriteLine($"sayfaYaz: {page} -- {sayfaText}\n");
+
+                        // RESİMLERİ YAKALA
+                        var imageListener = new PdfImageListener();
+                        var processor = new PdfCanvasProcessor(imageListener);
+                        processor.ProcessPageContent(pdfDoc.GetPage(page));
+
+                        // VM_BOOKS güncelle
+                        vM_BOOKS_det.BookModel.ID = (int)eklemeDurumu.Result.BookID;
+                        vM_BOOKS_det.BookPagesModel = new VM_BOOKS_PAGES();
+                        vM_BOOKS_det.BookPagesModel.PageWrite = sayfaText.Trim();
+                        vM_BOOKS_det.BookPagesModel.PageWriteBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(sayfaText));
+
+                        var firstImage = imageListener.Images?.FirstOrDefault();
+
+                        var formFile = firstImage?.ToImageFormFile(
+                            fileName: $"page_{page}_img_1"
+                        );
+
+                        if (formFile != null)
                         {
-                            vM_BOOKS.ID = eklemeDurumu.Result.BookID;
-                            vM_BOOKS.SAYFAYAZI = sayfaYaz.Trim();
-                            byte[] result = Encoding.UTF8.GetBytes(sayfaYaz);
-                            vM_BOOKS.SAYFAYAZIBASE64 = Convert.ToBase64String(result);
-                            _ = KitapEkle(vM_BOOKS);
+                            vM_BOOKS_det.BookPagesModel.PageFotoDosyalar = new List<IFormFile> { formFile };
                         }
+
+                        //vM_BOOKS_det.BookPagesModel.PageFotoDosyalar = 
+                        //    vM_BOOKS_det.BookPagesModel.PageFotoDosyalar =
+                        //    imageListener.Images
+                        //        .Select((img, index) =>
+                        //            img.ToFormFile(
+                        //                fileName: $"page_{page}_img_{index + 1}.png",
+                        //                contentType: "image/png"
+                        //            )
+                        //        ) .ToList();
+
+                        // Her sayfa için kaydet
+                        _ = await KitapEkle(vM_BOOKS_det);
                     }
-                    reader.Close();
+                }
+                else
+                {
+                    sonuc.State = MessageResultState.ERROR;
+                    sonuc.Message = eklemeDurumu.Message;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Console.WriteLine("Hata: " + ex.Message);
                 sonuc.State = MessageResultState.ERROR;
             }
 
             return sonuc;
-
         }
-        private async Task<ServiceResult> SayfalariVeriTabaninaAktar(VM_BOOKS vM_BOOKS, string sayfaYazisi, int aktarilmakIstenenLimit)
+
+        private async Task<ServiceResult> SayfalariVeriTabaninaAktar(VM_BOOKS_DETAIL vM_BOOKS_det, string sayfaYazisi, int aktarilmakIstenenLimit)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            var eklemeDurumu = await KitapEkle(vM_BOOKS);//ilk etap kitabı ekle
+            var eklemeDurumu = await KitapEkle(vM_BOOKS_det);//ilk etap kitabı ekle
+            vM_BOOKS_det.BookModel = new VM_BOOKS();
             result.State = eklemeDurumu.State;
+            result.Message = eklemeDurumu.Message;
+            if (eklemeDurumu.State == MessageResultState.SUCCESS && eklemeDurumu.Result != null)
+            {
+                result.Result = StringCipher.Encrypt(eklemeDurumu.Result.BookID.ToString());
+            }
 
             if (eklemeDurumu.State == MessageResultState.SUCCESS)
             {
-                vM_BOOKS.ID = eklemeDurumu.Result.BookID;
-                result = await BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(vM_BOOKS, sayfaYazisi, aktarilmakIstenenLimit);
+                vM_BOOKS_det.BookModel.ID = (int)eklemeDurumu.Result.BookID;
+
+                result = await BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(vM_BOOKS_det, sayfaYazisi, aktarilmakIstenenLimit);
 
             }
-            return result;
-        }
-        private async Task<ServiceResult> DosyadanKitapAktar(VM_BOOKS vM_BOOKS)
-        {
-            //string docxFilePath = DosyaYolu + vM_BOOKS.FDileName;
-            ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
-            try
-            {
-                if (vM_BOOKS.pdfVeyaWord == 1)
-                {
-                    // word
-                    result = await WordDosyasindaAktarma(vM_BOOKS);
-                }
-                else
-                {
-                    // pdf okuma işlemini getir.
-                    result = await PdfDosyasindanOkumaAsync(vM_BOOKS);
-                }
 
-            }
-            catch (Exception ex)
-            {
-                result.State = MessageResultState.ERROR;
-                Console.WriteLine($"Hata: {ex.Message}");
-            }
+            // ilgili kitabın enc hali
             return result;
         }
 
-        private async Task<ServiceResult> BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(VM_BOOKS vM_BOOKS, string input, int uzunluk)
+        private async Task<ServiceResult> BoslugaGoreAyirVeIlgiliUzunlukKadarYaziSayfayaEkle(VM_BOOKS_DETAIL vM_BOOKS_det, string input, int uzunluk)
         {
             ServiceResult sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
             int length = input.Length;
@@ -227,12 +360,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     }
 
                     Console.WriteLine($"parcalar[" + i + "]: " + parcalar[i] + " start:" + start.ToString() + "\n");
-                    vM_BOOKS.SAYFAYAZI = parcalar[i].Trim();
+                    vM_BOOKS_det.BookPagesModel = new VM_BOOKS_PAGES();
+                    vM_BOOKS_det.BookPagesModel.PageWrite = parcalar[i].Trim();
+
                     byte[] result = Encoding.UTF8.GetBytes(parcalar[i]);
                     byte[] array = Encoding.ASCII.GetBytes(parcalar[i]);
-                    vM_BOOKS.SAYFAYAZIBASE64 = Convert.ToBase64String(result);
 
-                    var kitapResult = await KitapEkle(vM_BOOKS);//kitabın sayfalarını ekle
+                    vM_BOOKS_det.BookPagesModel.PageWriteBase64 = Convert.ToBase64String(result);
+
+                    var kitapResult = await KitapEkle(vM_BOOKS_det);//kitabın sayfalarını ekle
                     sonuc.State = kitapResult.State;
                 }
             }
@@ -242,101 +378,78 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 sonuc.State = MessageResultState.ERROR;
             }
 
-            sonuc.Result = string.Join(" ", parcalar);
+            //sonuc.Result = string.Join(" ", parcalar);
             return sonuc;
         }
 
-        private byte GetByte(byte[] bytes)
+        private async Task<ServiceResult> AlinanDosyayiBellekteAktarmaAsync(VM_BOOKS_DETAIL vM_BOOKS)
         {
-            byte currentByte = 0;
-            using (MemoryStream memoryStream = new MemoryStream(bytes))
-            {
-                // BinaryReader kullanarak MemoryStream'den okuma yap
-                using (BinaryReader reader = new BinaryReader(memoryStream))
-                {
-                    // MemoryStream'in sonuna kadar byte'ları oku
-                    while (memoryStream.Position < memoryStream.Length)
-                    {
-                        // Bir byte oku
-                        currentByte = reader.ReadByte();
-
-                        // Okunan byte'ı kullan veya işle
-                        Console.Write($"{currentByte} ");
-
-
-                    }
-                }
-            }
-            return currentByte;
-        }
-        private byte[]? GetByteler()
-        {
-            byte[]? bytes;
-            var item = Request.Form.Files[0];
-            using (var ms = new MemoryStream())
-            {
-                item.CopyTo(ms);
-
-                bytes = ms.ToArray();
-                string resultString = Encoding.UTF8.GetString(bytes);
-
-                Console.Write($"{resultString} ");
-
-            }
-            return bytes;
-        }
-
-        private bool AlinanDosyayiSablonDosyayaAktarma(string hedefDosyaYolu, VM_BOOKS vM_BOOKS)
-        {
-            var file = vM_BOOKS.dosyalar?.Where(p => p.FileName == vM_BOOKS.AktarilanDosya).FirstOrDefault();
-            //Request.Form.Files;
+            var sonuc = new ServiceResult(state: MessageResultState.SUCCESS);
             try
             {
+                // Kullanıcıdan gelen dosyayı bul
+                var file = vM_BOOKS.dosyalar?.FirstOrDefault(p => p.FileName == vM_BOOKS.AktarilanDosya);
+                if (file == null)
+                {
+                    sonuc.State = MessageResultState.ERROR;
+                    sonuc.Message = "Dosya Yükleyiniz";
+                    return sonuc;
+                }
+
                 if (file != null)
                 {
-                    if (file.Length > 0)
+                    var uzanti = Path.GetExtension(file.FileName)?.ToLower();
+                    if (uzanti != ".pdf" && uzanti != ".docx" && uzanti != ".doc")
                     {
-                        using (MemoryStream memoryStream = new MemoryStream())
-                        {
-                            file.CopyTo(memoryStream);
-
-                            using (FileStream hedefDosya = new FileStream(hedefDosyaYolu, FileMode.Create))
-                            {
-                                // MemoryStream'deki veriyi hedef dosyaya kopyala
-                                memoryStream.WriteTo(hedefDosya);
-                            }
-                        }
+                        sonuc.State = MessageResultState.ERROR;
+                        sonuc.Message = "Yalnızca PDF veya Word dosyaları yükleyebilirsiniz.";
+                        return sonuc;
                     }
-                    return true;
                 }
-                else
+
+                // Kullanıcı dosyasını belleğe oku
+                using (var tempStream = new MemoryStream())
                 {
-                    return false;
+                    await file!.CopyToAsync(tempStream); // asenkron ve thread-safe
+                    tempStream.Position = 0;
+
+                    // Bellekteki veriyi vM_BOOKS.DocMemoryStream'e kopyala
+                    if (vM_BOOKS.pdfVeyaWord == 1)
+                    {
+                        vM_BOOKS.DocMemoryStream = new MemoryStream(tempStream.ToArray());
+                        vM_BOOKS.DocMemoryStream.Position = 0;
+                    }
+                    else
+                    {
+                        vM_BOOKS.PdfMemoryStream = new MemoryStream(tempStream.ToArray());
+                        vM_BOOKS.PdfMemoryStream.Position = 0;
+                    }
+
                 }
 
-
-                Console.WriteLine("Dosya aktarma işlemi tamamlandı.");
-
+                return sonuc;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Hata :" + ex.Message);
-                return false;
+                Console.WriteLine($"Hata: {ex.Message}");
+
+                sonuc.State = MessageResultState.ERROR;
+                sonuc.Message = ex.Message;
+                return sonuc;
             }
-
-
-
         }
 
         [HttpPost]
-        //[Route("PostKitapEkleWordOrPdf")]
-        public async Task<JsonResult> PostKitapEkleWordOrPdf(VM_BOOKS vM_BOOKS) // JsonResult oalrakta çalıştır
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> PostKitapEkleWordOrPdf(VM_BOOKS_DETAIL vM_BOOKS_det)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
+            //var vM_BOOKS = new VM_BOOKS();
+            //vM_BOOKS_det.BookModel = vM_BOOKS;
 
             string dosya = "";
 
-            if (vM_BOOKS.pdfVeyaWord == 1)
+            if (vM_BOOKS_det.pdfVeyaWord == 1)
             {
                 dosya = "SablonWordBelge.docx";
             }
@@ -346,30 +459,46 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
 
             string hedefDosyaYolu = DosyaYolu + dosya;
+            vM_BOOKS_det.FDileName = dosya;
 
-            vM_BOOKS.FDileName = dosya;
+            ServiceResult isAktarma = await AlinanDosyayiBellekteAktarmaAsync(vM_BOOKS_det);
 
-            bool isAktarma = AlinanDosyayiSablonDosyayaAktarma(hedefDosyaYolu, vM_BOOKS);
-            //false;
-
-            if (isAktarma)
+            if (isAktarma.State == MessageResultState.SUCCESS)
             {
-                vM_BOOKS.ID = 0;
-                vM_BOOKS.isWordPDF = true;
-                result = await DosyadanKitapAktar(vM_BOOKS);
+                vM_BOOKS_det.BookModel.ID = 0;
+                vM_BOOKS_det.isWordPDF = true;
+                // result = await DosyadanKitapAktar(vM_BOOKS_det);
+                try
+                {
+                    if (vM_BOOKS_det.pdfVeyaWord == 1)
+                    {
+                        // word
+                        result = await WordDosyasindaAktarmaAsync(vM_BOOKS_det);
+                    }
+                    else
+                    {
+                        // pdf okuma işlemini getir.
+                        result = await PdfDosyasindanOkumaAsync(vM_BOOKS_det);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    result.State = MessageResultState.ERROR;
+                    Console.WriteLine($"Hata: {ex.Message}");
+                }
                 var bak = result;
             }
             else
             {
-                result.State = MessageResultState.ERROR;
-                result.Message = "Dosya eklemede durumunda hata oluştu.";
+                //result.State = MessageResultState.ERROR;
+                // result.Message = "Dosya ekleme  durumunda hata oluştu.";
+                return Json(isAktarma);
             }
 
 
             return Json(result);
         }
-
-
 
         static string GetTextFromPage(Body body, int pageNumber)
         {
@@ -394,14 +523,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiFavorilereEkle")]
+        [ValidateAntiForgeryToken]
         public JsonResult KitabiFavorilereEkle(string id)
         {
             var kId = StringCipher.Decrypt(id.ToString());
             var KİTAPıD = Convert.ToInt64(kId);
             FavoriBooks fAVORILER = new FavoriBooks()
             {
-                BOOKS_ID = KİTAPıD,
-                USER_ID = Lid
+                BookId = KİTAPıD,
+                UserId = Lid
             };
             var getFavori = new BooksService().PostFavoriBookSave(fAVORILER);
 
@@ -411,54 +541,46 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiYayinaGonder")]
-        public JsonResult KitabiYayinaGonder(long kitapid)
+        [ValidateAntiForgeryToken]
+        public JsonResult KitabiYayinaGonder(string kitapid)
         {
-            var getBook = new BooksService().GetBooks(kitapid);
-            ServiceResult<Books> checkerBook = new BooksService().CheckBook(getBook!);
+            var kId = StringCipher.Decrypt(kitapid.ToString());
+            var KİTAPıD = Convert.ToInt64(kId);
+            ServiceResult<Books> checkerBook = new BooksService().CheckBook(KİTAPıD);
+            //checkerBook.State = MessageResultState.SUCCESS; //test
             return Json(checkerBook);
+        }
+
+        [HttpPost]
+        [Route("KitabiSil")]
+        [ValidateAntiForgeryToken]
+        public JsonResult KitabiSil(string kitapid)
+        {
+            var kId = StringCipher.Decrypt(kitapid.ToString());
+            var KİTAPıD = Convert.ToInt64(kId);
+            ServiceResult<bool> result = new BooksService().DeleteBookById(KİTAPıD);
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Route("KitapSayfaSil")]
+        [ValidateAntiForgeryToken]
+        public JsonResult KitapSayfaSil(long sayfaId)
+        {  
+             
+             ServiceResult<bool> result = new BooksPagesService().DeleteBookPageById(sayfaId);
+             return Json(result);
         }
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public string DosyaYukle(IFormFile dosya, VM_BOOKS input)
         {
             var ds = dosya;
             return "";
         }
-
-        private async Task<VM_BOOKS> ModelIlgiliDosyalariDoldur(VM_BOOKS input, List<IFormFile> files)
-        {
-            foreach (var item in files)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await item.CopyToAsync(memoryStream);
-                    byte[] fileBytes = memoryStream.ToArray();
-
-                    if (!string.IsNullOrEmpty(input.ONKAPAKFOTO) && input.ONKAPAKFOTO == item.FileName)
-                    {
-
-                        string base64String = Convert.ToBase64String(fileBytes);
-                        input.ONKAPAKFOTO = base64String;
-                    }
-                    if (!string.IsNullOrEmpty(input.ARKAKAPAKFOTO) && input.ARKAKAPAKFOTO == item.FileName)
-                    {
-
-                        string base64String = Convert.ToBase64String(fileBytes);
-                        input.ARKAKAPAKFOTO = base64String;
-                    }
-                    // KITAPSAYFAFOTO yayınlanacak versiyonda şuan düşümülmemiştir.
-                    //if (!string.IsNullOrEmpty(input.KITAPSAYFAFOTO) && input.KITAPSAYFAFOTO == item.FileName)
-                    //{
-
-                    //    string base64String = Convert.ToBase64String(fileBytes);
-                    //    input.KITAPSAYFAFOTO = base64String;
-                    //}
-                }
-            }
-            return input;
-        }
-
+ 
         [HttpGet]
         public IActionResult Alert(VM_ALERT alert)
         {
@@ -466,113 +588,156 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        public ServiceResult<Books> KitabiTamamla(VM_BOOKS input)
+        [ValidateAntiForgeryToken]
+        public ServiceResult<Books> KitabiTamamla(VM_BOOKS_DETAIL input)
         {
 
-            var getBook = new BooksService().GetBooks(input.ID);
-            ServiceResult<Books> updaterBook = new BooksService().UpdateBook(getBook!);
+            var getBook = new BooksService().GetBooks(input.BookModel?.ID ?? 0);
+            var _book = ObjectMapper.Map(getBook, new Books());
+            _book.TAMAMLANDIMI = input.isTamalama ?? false;
+
+            ServiceResult<Books> updaterBook = new BooksService().UpdateBook(_book);
 
             return updaterBook;
 
         }
+        public static string ReplaceImagesWithKeys(string html)
+        {
+            const string imageKey = "||img_BooksPage||";
+
+            var imgRegex = new Regex(
+                "<img[^>]*src=[\"']data:image/.*?;base64,.*?['\"][^>]*>",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline
+            );
+
+            bool hasImage = imgRegex.IsMatch(html);
+
+            //   Base64 img varsa → onları key ile değiştir
+            if (hasImage)
+            {
+                html = imgRegex.Replace(html, imageKey);
+            }
+
+            //   HER HALÜKARDA key yoksa ekle
+            if (!html.Contains(imageKey))
+            {
+                html = html.TrimEnd() + Environment.NewLine + imageKey;
+            }
+
+            return html;
+        }
 
 
+        /// <summary>
+        /// Kitap ve kitaba ait sayfalar bu metot ile eklenir.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [HttpPost]
-        //[Route("KitapEkle")]
-        public async Task<ServiceResult<VM_KITAP_EKLE>> KitapEkle(VM_BOOKS input)
+        [ValidateAntiForgeryToken]
+        public async Task<ServiceResult<VM_KITAP_EKLE>> KitapEkle(VM_BOOKS_DETAIL input)
         {
             int sayfaId = 0;
             int sayfaCount = 0;
-
-            // Request.Form.Files;
-            var files = input.dosyalar;
-            if (files?.Count != 0 && files != null)
-            {
-                input = await ModelIlgiliDosyalariDoldur(input, files);
-            }
+            ViewBag.KitapTamamlamaSayisi = KitapTamamlamaSayisi;
 
             ServiceResult<VM_KITAP_EKLE> result = new ServiceResult<VM_KITAP_EKLE>();
 
             VM_KITAP_EKLE vmKitap = new VM_KITAP_EKLE();
-            //var getBook = new BooksService().GetBooks(input.ID);
-            if (input.ID != 0)
-            {
-                var _book = ObjectMapper.Map(input, new Books());
-                var bookPages = new BooksPagesService().PostSaveBooksPages(new VM_BOOKS_PAGES()
-                {
-                    isWordPDF = input.isWordPDF,
-                    BooksId = input.ID,
-                    PageWrite = input.SAYFAYAZI,
-                    PageWriteBase64 = input.SAYFAYAZIBASE64 == null ? "" : input.SAYFAYAZIBASE64,
-                    PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
 
-                });
-                if (bookPages.Result != null)
+
+            if (input.BookModel?.ID != null && input.BookModel.ID != 0)
+            {
+                var _book = ObjectMapper.Map(input.BookModel, new Books());
+                var bookPapers = new VM_BOOKS_PAGES()
                 {
-                    sayfaCount = new BooksPagesService().GetPagesByBooks(input.ID)!.Count();
-                    sayfaId = (int)bookPages.Result.ID;
+                    isWordPDF = input.isWordPDF ?? false,
+                    BookId = input.BookModel.ID ?? 0,
+                    PageWrite = ReplaceImagesWithKeys(input.BookPagesModel?.PageWrite),
+                    // ID = input.BookPagesModel?.ID + 1  ?? 0,
+                    PageFoto = input.BookPagesModel?.PageFoto ?? "PageFoto",
+                    PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? "PageWriteBase64",
+                    PageFotoDosyalar = input.BookPagesModel?.PageFotoDosyalar,
+                    PageFotoList = input.BookPagesModel?.PageFotoList,
+
+                };
+                var bookPages = new BooksPagesService().PostSaveBooksPages(bookPapers);
+                if (bookPages.Result != null && bookPages.Result.State == MessageResultState.SUCCESS)
+                {
+                    sayfaCount = new BooksPagesService().GetPagesByBooks(input.BookModel.ID ?? 0)!.Count();
+                    sayfaId = (int)bookPages.Result.Result.ID;
 
                     result.State = MessageResultState.SUCCESS;
 
                 }
                 else
                 {
-                    new BooksService().DeleteBook(_book);
+                    //  new BooksService().DeleteBook(_book);
                     result.State = MessageResultState.ERROR;
-                    result.Message = result.Message;
+                    result.Message = bookPages?.Result?.Message;
                 }
 
-                vmKitap.BookID = input.ID;
+                vmKitap.BookID = input.BookModel.ID ?? 0;
                 vmKitap.BooksPageCount = sayfaCount + 1;
-                vmKitap.BooksPageID = sayfaId;
-                input.IlgiiSayfaSayisi = sayfaId;
+                vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId;
+                input.IlgiiSayfaSayisi = sayfaCount + 1;
 
             }
             else
             {
-                var book = new BooksService().PostSaveBook(new Books()
-                {
-                    ARKAKAPAKFOTO = input.ARKAKAPAKFOTO != null ? input.ARKAKAPAKFOTO : "",
-                    ONSOZ = input.ONSOZ,
-                    YazarId = Lid,
-                    ONKAPAKFOTO = input.ONKAPAKFOTO != null ? input.ONKAPAKFOTO : "",
-                    CategoriId = input.CategoriId,
-                    TAMAMLANDIMI = input.isPdfVeyaWordTamalama ?? false,
-                    Name = input.Name != null ? input.Name : "",
-                    ARKAKAPAKYAZISI = input.ARKAKAPAKYAZISI != null ? input.ARKAKAPAKYAZISI : ""
 
-                });
-                if (!input.isWordPDF)
+                VM_BOOKS vM_BOOKS = input.BookModel;
+                vM_BOOKS.YazarId = (int)Lid;
+                vM_BOOKS.TAMAMLANDIMI = input.isPdfVeyaWordTamalama ?? false;
+                //vM_BOOKS.BookModel = kitap;
+                //input.BookPagesModel = new VM_BOOKS_PAGES();
+
+                var book = await new BooksService().PostSaveBook(input);
+
+                if (book.Result == null)
+                {
+                    result.State = MessageResultState.ERROR;
+                    result.Message = "Kitap Ekleme Başarısız";
+
+                    return result;
+                }
+                if (!(input.isWordPDF ?? false))
                 {
                     if (book?.Result.ID != 0 && book?.Result != null)
                     {
-                        var bookPages = new BooksPagesService().PostSaveBooksPages(new VM_BOOKS_PAGES()
+                        var bookPapers = new VM_BOOKS_PAGES()
                         {
-                            isWordPDF = input.isWordPDF,
-                            BooksId = book.Result.ID,
-                            PageWrite = input.SAYFAYAZI,
-                            PageWriteBase64 = input.SAYFAYAZIBASE64 == null ? "" : input.SAYFAYAZIBASE64,
-                            PageFoto = input.KITAPSAYFAFOTO != null ? input.KITAPSAYFAFOTO : ""
+                            isWordPDF = input.isWordPDF ?? false,
+                            BookId = book.Result.ID,
+                            PageWrite = ReplaceImagesWithKeys(input.BookPagesModel?.PageWrite),
+                            PageFoto = input.BookPagesModel?.PageFoto ?? "PageFoto",
+                            PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? "PageWriteBase64",
+                            PageFotoDosyalar = input.BookPagesModel?.PageFotoDosyalar,
+                            PageFotoList = input.BookPagesModel?.PageFotoList,
 
-                        });
-                        if (bookPages.Result != null && bookPages.Result.ID != 0)
+                        };
+                        var bookPages = new BooksPagesService().PostSaveBooksPages(bookPapers);
+                        var bookPagesId = bookPages.Result != null ? bookPages.Result.Result.ID : 0;
+                        if (bookPages.Result != null && bookPagesId != 0)
                         {
-                            input.ID = bookPages.Result.ID;
-                            sayfaId = (int)bookPages.Result.ID;
-                            sayfaCount = new BooksPagesService().GetPagesByBooks(book.Result.ID)!.Where(p => p.BooksId == book.Result.ID).Count();
+                            input.BookPagesModel.ID = bookPagesId;
+                            sayfaId = (int)bookPagesId;
+                            sayfaCount =
+                            //(int)bookPages.Result.ID + 1;
+                            new BooksPagesService().GetPagesByBooks(book.Result.ID)!.Where(p => p.BookId == book.Result.ID).Count();
 
                             result.State = MessageResultState.SUCCESS;
                         }
                         else
                         {
-                            new BooksService().DeleteBook(book.Result);
+                            //new BooksService().DeleteBook(book.Result);
 
                             result.State = MessageResultState.ERROR;
-                            result.Message = result.Message;
+                            result.Message = bookPages.Result.Message;
                         }
 
                         vmKitap.BookID = book.Result!.ID;
-                        vmKitap.BooksPageID = sayfaId;
+                        vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId;
                         vmKitap.BooksPageCount = sayfaCount + 1;
                         input.IlgiiSayfaSayisi = sayfaCount + 1;
                     }
@@ -601,6 +766,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             }
 
+            vmKitap.BookIdENC = StringCipher.Encrypt(vmKitap.BookID.ToString());
             result.Result = vmKitap;
             //result.State = MessageResultState.SUCCESS;
             return result;
@@ -610,50 +776,46 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public IActionResult KitapGuncelleme(string kitap_id)
         {
             var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
-
+            ViewBag.KITAPENC = kitap_id;
             var getBook = new BooksService().GetBooks(kitapId);
+            ViewBag.VM_KITAP = getBook;
             var vmBook = ObjectMapper.Map(getBook, new VM_BOOKS());
             var getBookPage = new BooksPagesService().GetPagesByBooks(kitapId);
             getBookPage = getBookPage ?? null;
             vmBook.BooksPageList = ObjectMapper.MapList(getBookPage!, new List<VM_BOOKS_PAGES>());
-            return View(vmBook);
-        }
 
-        public IActionResult GetIlgiliKitapSayfasi(long kitapSayfaId, long? kitapId = 0)
-        {
-            var getBookPage = new BooksPagesService().GetBooksPages(kitapSayfaId);
-            getBookPage = getBookPage ?? null;
-            var kitapSayfa = ObjectMapper.Map(getBookPage!, new VM_BOOKS_PAGES());
-            return PartialView(kitapSayfa);
+            VM_BOOKS_DETAIL dt = new VM_BOOKS_DETAIL();
+            dt.BookModel = vmBook;
+            return View(dt);
         }
 
         [HttpPost]
-        [Route("PostBooksPageUpdate")]
-        public JsonResult PostBooksPageUpdate(VM_BOOKS_PAGES sayfa)
+        // [Route("PostBooksPageUpdate")]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> PostBooksPageUpdate(VM_BOOKS_PAGES sayfa)
         {
-            sayfa.PageFoto = "";
-            ServiceResult sonuc = new BooksPagesService().PostUpdateBooksPages(sayfa);
+            if(sayfa.PageFoto == null || sayfa.PageFoto == "")
+            {
+                sayfa.PageFoto = "PageFoto";
+            }
+            ServiceResult sonuc = await new BooksPagesService().PostUpdateBooksPages(sayfa);
             return Json(sonuc);
         }
 
         public IActionResult KitapDetay(string kitap_id)
         {
             var kitapId = Convert.ToInt64(StringCipher.Decrypt(kitap_id));
-            VM_BOOKS_DETAY kitapDetay = new VM_BOOKS_DETAY();
+            VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
 
-            var getBookDetay = new BooksService().GetBooks(kitapId);
-            var vmBook = ObjectMapper.Map(getBookDetay, new VM_BOOKS());
+            ViewBag.KITAPENC = kitapId;
+            var vmBook = new BooksService().GetBooks(kitapId);
+            ViewBag.iSTATISTIK = vmBook?.iSTATISTIK;
 
-            vmBook.iSTATISTIK = new BooksService().GetISTATISTIKLERBooksById(kitapId);
-            ViewBag.iSTATISTIK = vmBook.iSTATISTIK;
-            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
+            ViewBag.YayinAyar = new AyarlarService().GetYayinAyarlariByBookId(kitapId);
 
-            vmBook.isTamalama = getBookDetay?.TAMAMLANDIMI;
-            kitapDetay.Vm_Book = vmBook;
-            kitapDetay.Vm_Book_Degerlendirme_List = new BooksService().GetDegerlendirmelerBooksById(kitapId);
-            kitapDetay.Vm_Book_Comments = new BooksService().GetCommenstBooksById(kitapId);
+            kitapDetay.isTamalama = vmBook?.TAMAMLANDIMI;
+            kitapDetay.BookModel = vmBook;
 
-            kitapDetay.Stars = new BooksService().GetMaxStarBooksById(kitapId);
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
 
             ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder
@@ -662,44 +824,100 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             return View(kitapDetay);
         }
-
-        public IActionResult TumKitaplar(VM_ARAMA_INPUT arama)
+        public IActionResult YayinEviKitaplar(VM_ARAMA_INPUT arama)
         {
-            VM_BOOKS vM_BOOKS = new VM_BOOKS();
-            // vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
-            //vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+            VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
+            kitapDetay.BookModel = new VM_BOOKS();
+
             var getBookList = new BooksService().TumKitaplar(arama);
-            vM_BOOKS.VMBooksList = getBookList!;
-            vM_BOOKS.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+            kitapDetay.VMBooksList = getBookList!;
+
+            kitapDetay.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+
             ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
             ViewBag.LOGIN_USER_ID = Lid;
-            return View(vM_BOOKS);
+
+            ViewBag.DevamEdenKitaplar = arama.DevamEdenKitaplar;
+            ViewBag.FavoriKitaplar = arama.FavoriKitaplar;
+            ViewBag.YayinlananKitaplar = arama.YayinlananKitaplar;
+            ViewBag.BitenKitaplar = arama.BitenKitaplar;
+
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+
+            return View("TumKitaplar", kitapDetay);
         }
+        public IActionResult TumKitaplar(VM_ARAMA_INPUT arama)
+        {
+            VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
+            kitapDetay.BookModel = new VM_BOOKS();
+
+            if (arama.FavoriYazarlar != null || arama.DevamEdenKitaplar != null ||
+                arama.FavoriKitaplar != null || arama.YayinlananKitaplar != null || arama.BitenKitaplar != null)
+            {
+                arama.yazarIId = Lid;
+            }
+
+            var getBookList = new BooksService().TumKitaplar(arama);
+            kitapDetay.VMBooksList = getBookList!;
+
+            kitapDetay.sliderdaGosterilecekKayit = arama.listelenecek_kayit_sayisi;
+
+            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
+            ViewBag.LOGIN_USER_ID = Lid;
+
+            ViewBag.DevamEdenKitaplar = arama.DevamEdenKitaplar;
+            ViewBag.FavoriKitaplar = arama.FavoriKitaplar;
+            ViewBag.YayinlananKitaplar = arama.YayinlananKitaplar;
+            ViewBag.BitenKitaplar = arama.BitenKitaplar;
+            ViewBag.Tip = "tumkitaplar";
+            ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+            ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
+
+            return View(kitapDetay);
+        }
+
+        [HttpPost]
+        [Route("AraButonFiltrelemeKitaplar")]
+        [ValidateAntiForgeryToken]
         public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
         {
-            VM_BOOKS vM_BOOKS = new VM_BOOKS();
-            vM_BOOKS.sliderdaGosterilecekKayit = (arama.listelenecek_kayit_sayisi != 0 ? arama.listelenecek_kayit_sayisi : 0);
-            vM_BOOKS.profilKitapTuru = arama.profilKitapTuru ?? "";
-            vM_BOOKS.isAnaSayfa = false;
-            vM_BOOKS.Tip = arama.profilKitapTuru + "-" + arama.Tip;
+            VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
+            //kitapDetay.isAnaSayfa = true;
+            //kitapDetay.Start = 0;
+            //kitapDetay.sliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
+
+            kitapDetay.BookModel = new VM_BOOKS();
+
+            kitapDetay.sliderdaGosterilecekKayit =
+                (arama.listelenecek_kayit_sayisi != 0 ? arama.listelenecek_kayit_sayisi : SliderdaGosterilecekKayit);
+
+            kitapDetay.profilKitapTuru = arama.profilKitapTuru ?? "";
+            kitapDetay.isAnaSayfa = false;
+            kitapDetay.Tip = arama.profilKitapTuru + "-" + arama.Tip;
+
+            arama.yazarIId = Lid;
+
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
             ViewBag.LOGIN_USER_ID = Lid;
-            ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
-            vM_BOOKS.VMBooksList = bookList!;
+             
+            //ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
+            kitapDetay.VMBooksList = bookList!;
 
-            return View(vM_BOOKS);
+            return View(kitapDetay);
         }
 
         [HttpPost]
         [Route("PostBooksStars")]
+        [ValidateAntiForgeryToken]
         public ServiceResult<BooksStars> PostBooksStars(long kitapId, int yildizPuani)
         {
             ServiceResult<BooksStars> result = new ServiceResult<BooksStars>();
 
             BooksStars bookStar = new BooksStars()
             {
-                BookaId = Convert.ToInt32(kitapId),
+                BookId = Convert.ToInt32(kitapId),
                 LoginUserId = Convert.ToInt32(Lid),
                 StarPuani = yildizPuani
             };
@@ -711,6 +929,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostBooksDegerlendirme")]
+        [ValidateAntiForgeryToken]
         public JsonResult PostBooksDegerlendirme(VM_BOOKS_DEGERLENDIRME degerlendirme)
         {
 
@@ -724,7 +943,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
             else
             {
-                result.State = MessageResultState.ERROR;
+                result.State = sonuc.State;
+                result.Message = sonuc.Message;
+                result.Result = sonuc.Result;
             }
 
             return Json(result);
@@ -732,6 +953,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostBooksComments")]
+        [ValidateAntiForgeryToken]
         public JsonResult PostBooksComments(VM_BOOKS_COMMENT mesajlar)
         {
 

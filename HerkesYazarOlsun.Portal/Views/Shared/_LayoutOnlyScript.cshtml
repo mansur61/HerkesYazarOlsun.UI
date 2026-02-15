@@ -1,0 +1,96 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en"> 
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Herkes Yazar Olsun</title>
+
+    <script>(function (H) { H.className = H.className.replace(/\bno-js\b/, 'js') })(document.documentElement)</script>
+
+    <!-- Font Awesome -->
+    <link href="~/lib/fontawesome/css/all.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Owl Carousel CSS -->
+    <link href="~/lib/owlcarousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
+    <!-- Nice Select CSS -->
+    <link href="~/lib/nice-select/css/nice-select.css" rel="stylesheet" />
+    <!-- noUiSlider CSS -->
+    <link href="~/lib/nouislider/nouislider.min.css" rel="stylesheet" />
+    
+    
+    @RenderSection("Styles",false)
+
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script>
+    <!-- Nice Select JS -->
+    <script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script>
+    <!-- noUiSlider JS -->
+    <script src="~/lib/nouislider/nouislider.min.js"></script>
+ 
+    <link rel="icon" type="image/png" href="@Url.Content( "~/lib/img/stack-of-books.png")" />
+    @RenderSection("scripts",false)
+
+    <style>
+
+        /* ============================
+           ALERT MESAJ KUTULARI
+        ============================ */
+        .alert-success,
+        #basarili-register,
+        #basarili-logingiris {
+            background: #e8fff7 !important;
+            border-left: 6px solid #00C9A7;
+            padding: 15px;
+        }
+
+        .alert-warning,
+        #bilgi-register,
+        #bilgi-logingiris {
+            background: #fff8e6 !important;
+            border-left: 6px solid #ffcc00;
+        }
+
+        .alert-danger,
+        #uyari-register,
+        #uyari-logingiris {
+            background: #ffe8e8 !important;
+            border-left: 6px solid #e63946;
+        }
+    </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1543688286895371"
+     crossorigin="anonymous"></script>
+   
+      @RenderSection("Meta", required: false)
+</head>
+<body>
+<script>
+  if (window.jQuery) {
+    console.log("jQuery yüklü ✔", jQuery.fn.jquery);
+  } else {
+    console.error("jQuery YÜKLÜ DEĞİL ❌");
+  }
+</script>
+
+    @Html.Partial("_Navbar")
+    <br />
+    @RenderBody()
+
+    @Html.Partial("_Footer")
+</body>
+</html>

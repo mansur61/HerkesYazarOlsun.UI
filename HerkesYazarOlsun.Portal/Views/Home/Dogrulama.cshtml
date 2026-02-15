@@ -5,77 +5,58 @@
 
 @model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
 @using HerkesYazarOlsun.Portal.Controllers;
-@section Styles{
 
-    <link href="~/lib/bootstrap/dist/css/style_aroma_template.css" rel="stylesheet" />
+ 
+
+@section Styles {
+    <link href="~/lib/css/giris_kayit_dogrulama.css" rel="stylesheet" />
 }
-<section class="login_box_area section-margin">
+
+<section class="bg-light py-5">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6">
-                <div class="login_box_img">
-                    <div class="hover">
-                        <h4>Herkes Yazar Olsun' da </h4> <h4>Doğrulama İşlemleri ? </h4>
 
-                    </div>
+            <!-- SOL PANEL -->
+            <div class="col-lg-6 mb-4">
+                <div id="title-container">
+                    <h4>Herkes Yazar Olsun' da</h4>
+                    <h4>Doğrulama İşlemleri</h4>
+                    <p>Mail veya SMS ile doğrulama adımını tamamlayabilirsiniz.</p>
                 </div>
             </div>
+
+            <!-- SAĞ PANEL -->
             <div class="col-lg-6">
                 <div class="login_form_inner register_form_inner">
+
                     <h3>Doğrulama Yapınız</h3>
 
-
                     <div id="register_form" class="row login_form">
+                        <div class="d-flex align-items-center justify-content-center gap-3">
 
-                        <div class="col-md-12 form-group">
-                            <a class="btn btn-warning w-100" href="/Email/EmailDogrula/">Mail Doğrulama</a>
-                        </div>
-                        <p>- Veya -</p>
-                        <div class="col-md-12 form-group">
-                            <a class="btn btn-success w-100" href="/Sms/SmsDogrula/">Sms Doğrulama</a>
-                        </div>
+                            <a href="/Email/EmailDogrula/"
+                               class="auth-secondary-btn flex-fill text-center">
+                                Mail Doğrulama
+                            </a>
 
-                       @*  <p>- Test Doğrulama -</p>
-                        <div class="col-md-12 form-group">
-                            <button class="button button-register w-100" onclick="SmsGonder()">SMS GONDER</button>
-                        </div> *@
-                        @*<p>- Veya -</p>
-                        <div class="col-md-12 form-group">
-                            <button class="button button-register w-100" onclick="MailGonder()">MAIL GONDER</button>
+                            <span class="mx-2">Veya</span>
+
+                            <a href="/Sms/SmsDogrula/"
+                               class="auth-primary-btn flex-fill text-center">
+                                SMS Doğrulama
+                            </a>
+
+                            <div id="loading" class="text-center d-none">
+                                <img src="https://i.gifer.com/ZZ5H.gif"
+                                     style="width:50px; height:50px;">
+                            </div>
+
                         </div>
-*@
                     </div>
-
-                    @Html.Partial("_AlertMesaj")
 
                 </div>
             </div>
+
         </div>
     </div>
 </section>
-
-
-<script>
-
-
-    function SmsGonder() {
-        $.post("@Url.Action(nameof(SmsController.Gonder), "Sms")", {
-            "icerik": "Herkes Yazar Olsun SMS Doğrulama",
-            "telno": "05350381523"
-        }, function (data) {
-            console.log(" sms data :" + data);
-          
-        });
-    }
-    //kullanımda değil ,test işşlemleri tamamlandığı için
-    function MailGonder() {
-
-        $.post("@Url.Action(nameof(EmailController.Gonder), "Email")", {
-            "kime": "kayamansur61@gmail.com" //"filizyavuz950@gmail.com"
-        }, function (data) {
-            console.log(" mail data :" + data);
-
-
-        });
-    }
-</script>
