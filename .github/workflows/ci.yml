@@ -34,7 +34,7 @@ jobs:
         with:
           repository: mansur61/HerkesYazarOlsun.Servis
           ref: ${{ github.ref_name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.SERVIS_TOKEN }}
           path: HerkesYazarOlsun.Servis
 
       # --------------------
