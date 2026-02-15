@@ -55,19 +55,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
             {
                 var kategoriler = new BooksService().GetCategories();
                 input.Katergoriler = kategoriler!;
-            }
-
-            if (input.isYazmayaDevamEt.HasValue &&  input.isYazmayaDevamEt.Value && input.IlgiiSayfaSayisi.HasValue)
-            {
-                input.IlgiiSayfaSayisi = input.IlgiiSayfaSayisi.Value;
-            }
-            else
-            {
                 input.IlgiiSayfaSayisi = 1;
-                 
             }
 
+            if (input.isYazmayaDevamEt.HasValue && input.isYazmayaDevamEt.Value)//
+            {
+                if (input.IlgiiSayfaSayisi.HasValue && input.IlgiiSayfaSayisi.Value == 0)
+                {
+                    input.IlgiiSayfaSayisi = 2;
+                }
 
+            }
+            
             return View(input);
         }
 
@@ -269,7 +268,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
                         if (formFile != null)
                         {
-                            vM_BOOKS_det.BookPagesModel.PageFotoDosyalar =  new List<IFormFile> { formFile };
+                            vM_BOOKS_det.BookPagesModel.PageFotoDosyalar = new List<IFormFile> { formFile };
                         }
 
                         //vM_BOOKS_det.BookPagesModel.PageFotoDosyalar = 
@@ -441,6 +440,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> PostKitapEkleWordOrPdf(VM_BOOKS_DETAIL vM_BOOKS_det)
         {
             ServiceResult result = new ServiceResult(state: MessageResultState.SUCCESS);
@@ -523,6 +523,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiFavorilereEkle")]
+        [ValidateAntiForgeryToken]
         public JsonResult KitabiFavorilereEkle(string id)
         {
             var kId = StringCipher.Decrypt(id.ToString());
@@ -540,6 +541,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiYayinaGonder")]
+        [ValidateAntiForgeryToken]
         public JsonResult KitabiYayinaGonder(string kitapid)
         {
             var kId = StringCipher.Decrypt(kitapid.ToString());
@@ -551,6 +553,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("KitabiSil")]
+        [ValidateAntiForgeryToken]
         public JsonResult KitabiSil(string kitapid)
         {
             var kId = StringCipher.Decrypt(kitapid.ToString());
@@ -559,49 +562,25 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        [Route("KitapSayfaSil")]
+        [ValidateAntiForgeryToken]
+        public JsonResult KitapSayfaSil(long sayfaId)
+        {  
+             
+             ServiceResult<bool> result = new BooksPagesService().DeleteBookPageById(sayfaId);
+             return Json(result);
+        }
+
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public string DosyaYukle(IFormFile dosya, VM_BOOKS input)
         {
             var ds = dosya;
             return "";
         }
-
-        private async Task<VM_BOOKS> ModelIlgiliDosyalariDoldur(VM_BOOKS input, List<IFormFile> files)
-        {
-            foreach (var item in files)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await item.CopyToAsync(memoryStream);
-                    byte[] fileBytes = memoryStream.ToArray();
-
-                    if (!string.IsNullOrEmpty(input.ONKAPAKFOTO) && input.ONKAPAKFOTO == item.FileName)
-                    {
-
-                        string base64String = Convert.ToBase64String(fileBytes);
-                        input.ONKAPAKFOTO = base64String;
-                        // input.ONKAPAKFOTOPATH = item.FileName;
-                    }
-                    if (!string.IsNullOrEmpty(input.ARKAKAPAKFOTO) && input.ARKAKAPAKFOTO == item.FileName)
-                    {
-
-                        string base64String = Convert.ToBase64String(fileBytes);
-                        input.ARKAKAPAKFOTO = base64String;
-                        // input.ARKAKAPAKFOTOPATH = item.FileName;
-                    }
-                    // KITAPSAYFAFOTO yayınlanacak versiyonda şuan düşümülmemiştir.
-                    //if (!string.IsNullOrEmpty(input.KITAPSAYFAFOTO) && input.KITAPSAYFAFOTO == item.FileName)
-                    //{
-
-                    //    string base64String = Convert.ToBase64String(fileBytes);
-                    //    input.KITAPSAYFAFOTO = base64String;
-                    //}
-                }
-            }
-            return input;
-        }
-
+ 
         [HttpGet]
         public IActionResult Alert(VM_ALERT alert)
         {
@@ -609,6 +588,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ServiceResult<Books> KitabiTamamla(VM_BOOKS_DETAIL input)
         {
 
@@ -654,6 +634,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ServiceResult<VM_KITAP_EKLE>> KitapEkle(VM_BOOKS_DETAIL input)
         {
             int sayfaId = 0;
@@ -672,7 +653,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 {
                     isWordPDF = input.isWordPDF ?? false,
                     BookId = input.BookModel.ID ?? 0,
-                    PageWrite = ReplaceImagesWithKeys(input.BookPagesModel?.PageWrite ),
+                    PageWrite = ReplaceImagesWithKeys(input.BookPagesModel?.PageWrite),
                     // ID = input.BookPagesModel?.ID + 1  ?? 0,
                     PageFoto = input.BookPagesModel?.PageFoto ?? "PageFoto",
                     PageWriteBase64 = input.BookPagesModel?.PageWriteBase64 ?? "PageWriteBase64",
@@ -691,7 +672,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 }
                 else
                 {
-                  //  new BooksService().DeleteBook(_book);
+                    //  new BooksService().DeleteBook(_book);
                     result.State = MessageResultState.ERROR;
                     result.Message = bookPages?.Result?.Message;
                 }
@@ -710,7 +691,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 vM_BOOKS.TAMAMLANDIMI = input.isPdfVeyaWordTamalama ?? false;
                 //vM_BOOKS.BookModel = kitap;
                 //input.BookPagesModel = new VM_BOOKS_PAGES();
-                 
+
                 var book = await new BooksService().PostSaveBook(input);
 
                 if (book.Result == null)
@@ -756,7 +737,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                         }
 
                         vmKitap.BookID = book.Result!.ID;
-                        vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId ;
+                        vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId;
                         vmKitap.BooksPageCount = sayfaCount + 1;
                         input.IlgiiSayfaSayisi = sayfaCount + 1;
                     }
@@ -809,10 +790,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-       // [Route("PostBooksPageUpdate")]
+        // [Route("PostBooksPageUpdate")]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> PostBooksPageUpdate(VM_BOOKS_PAGES sayfa)
         {
-             ServiceResult sonuc = await new BooksPagesService().PostUpdateBooksPages(sayfa);
+            if(sayfa.PageFoto == null || sayfa.PageFoto == "")
+            {
+                sayfa.PageFoto = "PageFoto";
+            }
+            ServiceResult sonuc = await new BooksPagesService().PostUpdateBooksPages(sayfa);
             return Json(sonuc);
         }
 
@@ -884,7 +870,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             ViewBag.FavoriKitaplar = arama.FavoriKitaplar;
             ViewBag.YayinlananKitaplar = arama.YayinlananKitaplar;
             ViewBag.BitenKitaplar = arama.BitenKitaplar;
-
+            ViewBag.Tip = "tumkitaplar";
             ViewBag.SliderdaGosterilecekKayit = SliderdaGosterilecekKayit;
             ViewBag.DefaultSliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
 
@@ -893,6 +879,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("AraButonFiltrelemeKitaplar")]
+        [ValidateAntiForgeryToken]
         public IActionResult AraButonFiltrelemeKitaplar(VM_ARAMA_INPUT arama)
         {
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
@@ -908,9 +895,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.profilKitapTuru = arama.profilKitapTuru ?? "";
             kitapDetay.isAnaSayfa = false;
             kitapDetay.Tip = arama.profilKitapTuru + "-" + arama.Tip;
+
+            arama.yazarIId = Lid;
+
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
             ViewBag.LOGIN_USER_ID = Lid;
+             
             //ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
             kitapDetay.VMBooksList = bookList!;
 
@@ -919,6 +910,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostBooksStars")]
+        [ValidateAntiForgeryToken]
         public ServiceResult<BooksStars> PostBooksStars(long kitapId, int yildizPuani)
         {
             ServiceResult<BooksStars> result = new ServiceResult<BooksStars>();
@@ -937,6 +929,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostBooksDegerlendirme")]
+        [ValidateAntiForgeryToken]
         public JsonResult PostBooksDegerlendirme(VM_BOOKS_DEGERLENDIRME degerlendirme)
         {
 
@@ -960,6 +953,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [Route("PostBooksComments")]
+        [ValidateAntiForgeryToken]
         public JsonResult PostBooksComments(VM_BOOKS_COMMENT mesajlar)
         {
 

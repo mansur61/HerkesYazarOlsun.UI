@@ -1,4 +1,4 @@
-﻿ using HerkesYazarOlsun.Model.ViewModel;
+﻿using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Mvc;
 

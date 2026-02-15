@@ -214,7 +214,7 @@
   </ItemGroup>-->
 
  <ItemGroup>
-    <ProjectReference Include="..\..\HerkesYazarOlsun.API\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
+    <ProjectReference Include="..\..\HerkesYazarOlsun.Servis\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
   </ItemGroup>
   
   <ItemGroup>

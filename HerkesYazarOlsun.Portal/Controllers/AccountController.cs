@@ -80,6 +80,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Giris(VM_LOGIN login)
         {
             // Log klasörü: hem localde hem plesk httpdocs altında çalışır
@@ -146,9 +147,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 return StatusCode(500, "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.");
             }
         }
-        
+
         [HttpPost]
         [Route("SaveOrUpdateAyarlar")]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveOrUpdateAyarlar(VM_AYARLAR ayr)
         {
 

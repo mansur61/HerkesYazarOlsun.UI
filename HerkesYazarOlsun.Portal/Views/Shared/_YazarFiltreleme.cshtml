@@ -1,37 +1,50 @@
-﻿
-
-
-<div class="container" style="margin: 0px auto;width:auto">
+﻿<div class="container mx-auto">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-12">
             <div class="filter__item">
-                <div class="row">
-                    <div class="col-lg-4 col-md-5"> 
+                <div class="row g-3 align-items-center">
+                    
+                    <!-- Yazar Ara -->
+                    <div class="col-lg-4 col-md-5">
                         <div class="filter__sort">
-                            <input type="text" class="form-control" name="yazar_ara" id="yazar_ara" placeholder="Yazar Adı Ara" />
+                            <input type="text"
+                                   class="form-control"
+                                   name="yazar_ara"
+                                   id="yazar_ara"
+                                   placeholder="Yazar Adı Ara" />
                         </div>
                     </div>
 
+                    <!-- Kayıt Sayısı -->
                     <div class="col-lg-4 col-md-3">
-                      
-                        <select class="wide" name="kayit_sayisi" id="kayit_sayisi">
-                            @* <option value="0" selected> Seçiniz...</option> *@
-                            <option selected value="10"> İlk 10 Kayıt</option>
+                        <select class="form-select"
+                                name="kayit_sayisi"
+                                id="kayit_sayisi">
+                            <option selected value="10">İlk 10 Kayıt</option>
                             <option value="20">İlk 20 Kayıt</option>
                             <option value="30">İlk 30 Kayıt</option>
                             <option value="40">İlk 40 Kayıt</option>
                             <option value="50">İlk 50 Kayıt</option>
-
                         </select>
                     </div>
 
-                    <div class="col-lg-4 col-md-4">
-                        <button type="button" class="btn btn-danger">Temizle</button>
-                        <button type="button" onclick="Ara()" class="btn btn-primary">Ara</button>
+                    <!-- Butonlar -->
+                    <div class="col-lg-4 col-md-4 d-flex gap-2">
+                        <button type="button"
+                                onclick="Temizle()"
+                                class="btn btn-danger">
+                            Temizle
+                        </button>
+
+                        <button type="button"
+                                onclick="Ara()"
+                                class="btn btn-primary">
+                            Ara
+                        </button>
                     </div>
+
                 </div>
             </div>
- 
         </div>
     </div>
 </div>
