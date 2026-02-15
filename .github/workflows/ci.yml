@@ -69,7 +69,7 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: /
+          local-dir: publish/
           server-dir: /test.herkesyazarolsun.com.tr/prev/
           dangerous-clean-slate: true
 
@@ -97,7 +97,7 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: /
+          local-dir: publish/
           server-dir: /httpdocs/prev/
           dangerous-clean-slate: true
 
