@@ -5,6 +5,31 @@
 @{
     string tip = "ilgilisayfaguncelle";
 }
+<style>
+    @@media (max-width: 768px) {
+        #guncelle {
+            width: 95% !important;
+            max-height: 90vh !important;
+            padding: 15px !important;
+        }
+
+        #sayfaYaiziyAlEditor {
+            height: 250px !important;
+        }
+    }
+    #sayfaYaiziyAlEditor {
+        height: 400px;
+    }
+
+    .ql-container {
+        height: 100% !important;
+    }
+
+    .ql-editor {
+        min-height: 200px !important;
+    }
+</style>
+
 <input type="hidden" id="tip" value="@tip" />
 
 <div id="container">
@@ -151,19 +176,27 @@
 
 <!-- Popup div -->
 <div id="guncelle" style="
-    display:none; position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);
-    width: 600px;       /* popup genişliği */
-    max-width: 90%;     /* responsive */
-    max-height: 80vh;   /* ekranın %80'i kadar yükseklik */
-    overflow-y: auto;   /* taşarsa scroll */
-    background-color: #fff;    border: 2px solid #333;
-    border-radius: 8px; padding: 20px;z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+    display:none;
+    position: fixed;
+    inset: 5%;
+    margin: auto;
+    width: 600px;
+    max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 9999;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+
     <form id="guncelleForm" action="PostBooksPageUpdate" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-12">
                 <h4>Sayfa Güncelle</h4>
                 <br />
-                <div id="sayfaYaiziyAlEditor" style="height: 400px;"></div>
+                <div id="sayfaYaiziyAlEditor"></div>
 
                 <textarea id="sayfaYaiziyAl" name="SAYFAYAZI" hidden></textarea>
             </div>
@@ -204,29 +237,6 @@
             console.error('Quill yüklü değil! CDN/Script include kontrol et.');
             return;
             }
-
-            window.quill = window.quill || new Quill('#sayfaYaiziyAlEditor', {
-            theme: 'snow',
-            placeholder: 'Sayfanızı buraya yazın...',
-            modules: {
-                toolbar: [
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['image'],//'link',
-                [{ 'align': [] }],
-                ['clean']
-                ]
-            }
-            });
-
-
-        const hiddenTextarea = document.getElementById('sayfaYaiziyAl');
-
-        if (!hiddenTextarea) {
-            console.error('Textarea #sayfaYaiziyAl bulunamadı!');
-            return;
-        }
-        window.quill.on('text-change', () => { hiddenTextarea.value = window.quill.root.innerHTML; });
 
     });
 
@@ -273,6 +283,36 @@
 
     function KitabiGuncelle(id) {
         $("#guncelle").css("display", "block");
+        // Eğer daha önce oluşturulmadıysa oluştur
+        if (!window.quill) {
+
+            window.quill = new Quill('#sayfaYaiziyAlEditor', {
+                theme: 'snow',
+                placeholder: 'Sayfanızı buraya yazın...',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['image'],
+                        [{ 'align': [] }],
+                        ['clean']
+                    ]
+                }
+            });
+
+            window.quill.on('text-change', () => {
+                document.getElementById('sayfaYaiziyAl').value =
+                    window.quill.root.innerHTML;
+            });
+        }
+
+        // Mobil için küçük gecikme
+        setTimeout(() => {
+            window.quill.focus();
+            window.quill.update();
+        }, 150);
+
+
         $("#guncellenecekSayfaId").val(id);
 
         var sayfaIcerikItem = window.bookPagesData[id] || {};
@@ -310,6 +350,8 @@
         // Quill editöre yükle
         if (window.quill) {
            // window.quill.root.innerHTML = sayfaIcerikCleaned;
+           window.quill.setContents([]);
+
             window.quill.clipboard.dangerouslyPasteHTML(sayfaIcerikCleaned);
             //document.getElementById('sayfaYaiziyAl').value = sayfaIcerikCleaned;
         } else {
