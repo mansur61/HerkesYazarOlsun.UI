@@ -15,10 +15,31 @@ on:
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
 
+      # --------------------
+      # Checkout UI Repo
+      # --------------------
+      - name: Checkout UI
+        uses: actions/checkout@v4
+
+      # --------------------
+      # Checkout API Repo
+      # --------------------
+      - name: Checkout API Repo
+        uses: actions/checkout@v4
+        with:
+          repository: mansur61/HerkesYazarOlsun.Servis
+          ref: ${{ github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: HerkesYazarOlsun.Servis
+
+      # --------------------
+      # Setup .NET
+      # --------------------
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
