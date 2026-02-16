@@ -21,7 +21,7 @@ jobs:
     steps:
 
       # --------------------
-      # Checkout UI Repo
+      # Checkout Repo
       # --------------------
       - name: Checkout UI
         uses: actions/checkout@v4
@@ -50,10 +50,12 @@ jobs:
       # --------------------
       - run: dotnet restore HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.csproj
       - run: dotnet build HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.csproj -c Release --no-restore
-      - run: dotnet test HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.csproj -c Release --no-build
+      - name: Run Tests (only for test/main)
+        if: github.ref_name == 'test' || github.ref_name == 'main'
+        run: dotnet test HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.csproj -c Release --no-build
 
       # --------------------
-      # Publish
+      # Publish (Sadece test ve main)
       # --------------------
       - name: Publish
         if: github.ref_name == 'test' || github.ref_name == 'main'
@@ -62,17 +64,6 @@ jobs:
       # --------------------
       # TEST DEPLOY
       # --------------------
-      - name: Backup TEST
-        if: github.ref_name == 'test'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: publish/
-          server-dir: /test.herkesyazarolsun.com.tr/prev/
-          dangerous-clean-slate: true
-
       - name: Deploy TEST
         if: github.ref_name == 'test'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -81,7 +72,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: publish/
-          server-dir: /test.herkesyazarolsun.com.tr/current/
+          server-dir: /test.herkesyazarolsun.com.tr/test/
 
       - name: Health Check TEST
         if: github.ref_name == 'test'
@@ -90,17 +81,6 @@ jobs:
       # --------------------
       # PROD DEPLOY
       # --------------------
-      - name: Backup PROD
-        if: github.ref_name == 'main'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          local-dir: publish/
-          server-dir: /httpdocs/prev/
-          dangerous-clean-slate: true
-
       - name: Deploy PROD
         if: github.ref_name == 'main'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -109,7 +89,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: publish/
-          server-dir: /httpdocs/current/
+          server-dir: /httpdocs/prod/
 
       - name: Health Check PROD
         if: github.ref_name == 'main'
