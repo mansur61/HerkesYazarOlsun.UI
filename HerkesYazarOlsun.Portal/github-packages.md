@@ -8,13 +8,13 @@ aşağıdaki kod terminalde çalıtırılır github private paketin localde kull
 
 dotnet nuget add source \
   --username mansur61 \
-  --password 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 \ 
+  --password YOUR_NEW_PAT \ 
   --store-password-in-clear-text \
   --name github \
   "https://nuget.pkg.github.com/mansur61/index.json"
 
   tek satır olarak
-  dotnet nuget add source --username mansur61 --password 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 --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mansur61/index.json"
+  dotnet nuget add source --username mansur61 --password YOUR_NEW_PAT --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mansur61/index.json"
 
 YOUR_NEW_PAT = PERSONEL ACCESS TOKEN githubdan alınır Tokens (classic) bu token
  
