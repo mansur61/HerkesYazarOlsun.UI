@@ -89,7 +89,7 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: publish/
-          server-dir: /httpdocs/prod/
+          server-dir: https://herkesyazarolsun.com.tr/httpdocs/prod/
 
       - name: Health Check PROD
         if: github.ref_name == 'main'
