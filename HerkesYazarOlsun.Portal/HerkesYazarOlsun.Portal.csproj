@@ -216,9 +216,9 @@
  <!--<ItemGroup>
     <ProjectReference Include="..\..\HerkesYazarOlsun.Servis\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
   </ItemGroup>-->
-<ItemGroup>
-  <PackageReference Include="HerkesYazarOlsun.Model" Version="1.0.0" />
-</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HerkesYazarOlsun.Model" Version="1.0.0" />
+  </ItemGroup>
 
   
   <ItemGroup>
