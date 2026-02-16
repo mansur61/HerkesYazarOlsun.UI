@@ -1,0 +1,74 @@
+ /* Footer background and text colors */
+    #gozukecekMiFooter {
+        background: #3a4a5d;
+        color: #fff;
+        padding-top: 32px;
+        padding-bottom: 16px;
+    }
+    .footer-after {
+        background: #324055;
+        color: #fff;
+        padding: 12px 0;
+    }
+    .footer-title {
+        color: #ffffff;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        font-size: 16px;
+    }
+    .footer-brand {
+        color: #fff;
+        font-family: 'Pacifico', cursive, sans-serif;
+        font-size: 2rem;
+        margin-bottom: 8px;
+        display: inline-block;
+        text-decoration: none;
+    }
+    .footer-links li a {
+        color: #b0b0b0;
+        display: block;
+        padding: 5px 0;
+        transition: color 0.2s;
+    }
+    .footer-links li a:hover {
+        color: #ffffff;
+        text-decoration: none;
+    }
+    .social-networks .icon-social {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 2rem;
+        background: transparent;
+        transition: color 0.2s, transform 0.2s;
+    }
+    .social-networks .icon-social i {
+        color: #fff;
+        transition: color 0.2s;
+    }
+    .social-networks .icon-social:hover i {
+        color: #b0b0b0;
+        transform: scale(1.08);
+    }
+    .social-networks {
+        justify-content: flex-start !important;
+    }
+    .footer-after a, .footer-after .legal {
+        color: #fff;
+    }
+    .footer-after a:hover {
+        color: #b0b0b0;
+    }
+    @media (max-width: 767px) {
+        .footer-title {
+            font-size: 14px;
+        }
+        .footer-links li a {
+            font-size: 13px;
+        }
+    }

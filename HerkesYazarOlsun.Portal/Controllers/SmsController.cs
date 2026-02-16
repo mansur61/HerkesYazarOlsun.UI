@@ -58,19 +58,19 @@ namespace HerkesYazarOlsun.Portal.Controllers
             testXml += "</order>";
             testXml += "</request>";
 
-           
+
 
             string sonuc = SmsGonder("http://api.iletimerkezi.com/v1/send-sms", testXml);
-           
-            
+
+
             if (sonuc == "-1")
             {
                 result.State = MessageResultState.ERROR;
-               result.Message = sonuc;
+                result.Message = sonuc;
             }
             else
             {
-               result.State = MessageResultState.SUCCESS;
+                result.State = MessageResultState.SUCCESS;
                 result.Message = sifre;
             }
             return result;

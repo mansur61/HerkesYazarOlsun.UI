@@ -5,6 +5,31 @@
 @{
     string tip = "ilgilisayfaguncelle";
 }
+<style>
+    @@media (max-width: 768px) {
+        #guncelle {
+            width: 95% !important;
+            max-height: 90vh !important;
+            padding: 15px !important;
+        }
+
+        #sayfaYaiziyAlEditor {
+            height: 250px !important;
+        }
+    }
+    #sayfaYaiziyAlEditor {
+        height: 400px;
+    }
+
+    .ql-container {
+        height: 100% !important;
+    }
+
+    .ql-editor {
+        min-height: 200px !important;
+    }
+</style>
+
 <input type="hidden" id="tip" value="@tip" />
 
 <div id="container">
@@ -28,22 +53,20 @@
             </li>
         </ul>
     </nav>
-    @* <p>
-        @Html.Partial("_AlertMesaj", @tip)
-    </p>   *@  
+     
     <input type="hidden" id="guncellenecekSayfaId" />
     <div id="main">
 
         <div id='features'>
 
             <div>
-                @if (@ViewBag.VM_KITAP.ONKAPAKFOTOPATH == "-1")
+                @if (@Model.BookModel.ONKAPAKFOTOPATH == "-1")
                 {
 
-                    <img src="/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
+                    <img src="~/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
                 }
                 else
-                {
+                { 
                     <img src="https://herkesyazarolsun.com.tr/Belgeler/@(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)"
                          alt="Sayfa resmi" width="100%" height="100%" />
 
@@ -73,6 +96,9 @@
                         <button class="btn btn-warning" onclick="KitabiGuncelle('@item.ID')">
                             Sayfayı Güncelle
                         </button>
+                        <button class="btn btn-danger" onclick="SayfayiSil('@item.ID')">
+                            Sayfayı Sil
+                        </button>
                     }
 
                     <div class='feature pagefx hardpage' style="width:350px">
@@ -81,7 +107,7 @@
 
                         @if (item.PageWrite.Contains("||img_BooksPage||"))
                         {
-                            @if (!string.IsNullOrEmpty(@item.PageFoto))
+                            @if (!string.IsNullOrEmpty(@item.PageFoto) && @item.PageFoto != "PageFoto")
                             {
                                 <div class="resimWrapper" style="position:relative; margin-top:10px; display:inline-block;">
 
@@ -131,7 +157,7 @@
                 @if (@ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH == "-1")
                 {
 
-                    <img src="/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
+                    <img src="~/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
                 }
                 else
                 {
@@ -145,24 +171,32 @@
 
     </div>
 </div>
-<div style="height:20px"></div>
-@* @Html.Partial("_AlertMesaj", @tip) *@
+
+<div style="height:20px"></div> 
 
 <!-- Popup div -->
 <div id="guncelle" style="
-    display:none; position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);
-    width: 600px;       /* popup genişliği */
-    max-width: 90%;     /* responsive */
-    max-height: 80vh;   /* ekranın %80'i kadar yükseklik */
-    overflow-y: auto;   /* taşarsa scroll */
-    background-color: #fff;    border: 2px solid #333;
-    border-radius: 8px; padding: 20px;z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+    display:none;
+    position: fixed;
+    inset: 5%;
+    margin: auto;
+    width: 600px;
+    max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+    z-index: 9999;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+
     <form id="guncelleForm" action="PostBooksPageUpdate" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-12">
                 <h4>Sayfa Güncelle</h4>
                 <br />
-                <div id="sayfaYaiziyAlEditor" style="height: 400px;"></div>
+                <div id="sayfaYaiziyAlEditor"></div>
 
                 <textarea id="sayfaYaiziyAl" name="SAYFAYAZI" hidden></textarea>
             </div>
@@ -186,144 +220,23 @@
 
 </div>
 
-<!-- Progress overlay -->
-<div id="progressOverlay" style="
-    display:none;
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.3);
-    z-index: 99999;
-    text-align:center;
-">
-    <div style="
-        position:absolute;
-        top:50%; left:50%;
-        transform:translate(-50%, -50%);
-        color:white;
-        font-size:18px;
-    ">
-        Güncelleniyor... Lütfen bekleyin
-    </div>
-</div>
+ 
+ @Html.Partial("_ProgressOverlay")
 
-<script src="~/js/general.js"></script>
-
-<div id="alertOverlay" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.55);
-    z-index:99999;
-    backdrop-filter:blur(2px);
-">
-    <div id="alertBox" style="
-        width:360px;
-        margin:15% auto;
-        background:white;
-        border-radius:12px;
-        padding:20px;
-        box-shadow:0 6px 20px rgba(0,0,0,0.25);
-        text-align:center;
-        font-family:Arial;
-    ">
-        <div id="alertMessage" style="font-size:16px; margin-bottom:20px;"></div>
-
-        <button id="alertOkBtn" style="
-            padding:10px 30px;
-            background:#3498db;
-            color:white;
-            border:none;
-            border-radius:6px;
-            cursor:pointer;
-            font-size:15px;
-        ">
-            Tamam
-        </button>
-    </div>
-</div>
-
-<div id="confirmOverlay" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.55);
-    z-index:99999;
-    backdrop-filter:blur(2px);
-">
-    <div id="confirmBox" style="
-        width:360px;
-        margin:15% auto;
-        background:white;
-        border-radius:12px;
-        padding:20px;
-        box-shadow:0 6px 20px rgba(0,0,0,0.25);
-        text-align:center;
-        font-family:Arial;
-    ">
-        <div id="confirmMessage" style="font-size:16px; margin-bottom:20px;"></div>
-
-        <div style="display:flex; gap:10px; justify-content:center;">
-            <button id="confirmOkBtn" style="
-                padding:10px 25px;
-                background:#3498db;
-                color:white;
-                border:none;
-                border-radius:6px;
-                cursor:pointer;
-                font-size:15px;
-                min-width:90px;
-            ">
-                Tamam
-            </button>
-
-            <button id="confirmCancelBtn" style="
-                padding:10px 25px;
-                background:#aaa;
-                color:white;
-                border:none;
-                border-radius:6px;
-                cursor:pointer;
-                font-size:15px;
-                min-width:90px;
-            ">
-                İptal
-            </button>
-        </div>
-    </div>
-</div>
+ @Html.Partial("_AlertOverlay")
+ @Html.Partial("_ConfirmOverlay")
 
 
-<script>
+
+<script src= "~/js/general.js"></script>
+
+ <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
 
             if (typeof Quill === 'undefined') {
             console.error('Quill yüklü değil! CDN/Script include kontrol et.');
             return;
             }
-
-            window.quill = window.quill || new Quill('#sayfaYaiziyAlEditor', {
-            theme: 'snow',
-            placeholder: 'Sayfanızı buraya yazın...',
-            modules: {
-                toolbar: [
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['image'],//'link',
-                [{ 'align': [] }],
-                ['clean']
-                ]
-            }
-            });
-
-
-        const hiddenTextarea = document.getElementById('sayfaYaiziyAl');
-
-        if (!hiddenTextarea) {
-            console.error('Textarea #sayfaYaiziyAl bulunamadı!');
-            return;
-        }
-        window.quill.on('text-change', () => { hiddenTextarea.value = window.quill.root.innerHTML; });
 
     });
 
@@ -338,7 +251,7 @@
 
 </script>
 
-<script type="text/javascript">
+ <script type="text/javascript">
     function showAlert(message) {
         const overlay = document.getElementById("alertOverlay");
         const msg = document.getElementById("alertMessage");
@@ -370,22 +283,54 @@
 
     function KitabiGuncelle(id) {
         $("#guncelle").css("display", "block");
+        // Eğer daha önce oluşturulmadıysa oluştur
+        if (!window.quill) {
+
+            window.quill = new Quill('#sayfaYaiziyAlEditor', {
+                theme: 'snow',
+                placeholder: 'Sayfanızı buraya yazın...',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        ['image'],
+                        [{ 'align': [] }],
+                        ['clean']
+                    ]
+                }
+            });
+
+            window.quill.on('text-change', () => {
+                document.getElementById('sayfaYaiziyAl').value =
+                    window.quill.root.innerHTML;
+            });
+        }
+
+        // Mobil için küçük gecikme
+        setTimeout(() => {
+            window.quill.focus();
+            window.quill.update();
+        }, 150);
+
+
         $("#guncellenecekSayfaId").val(id);
 
         var sayfaIcerikItem = window.bookPagesData[id] || {};
-        //console.log("sayfaIcerikItem ",sayfaIcerikItem);
+        console.log("sayfaIcerikItem ",sayfaIcerikItem);
         let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
         let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
         let count = matches ? matches.length : 0;
 
         if(count != 0){
-          showAlert("Güncelleme işleminde resmi güncellemek isterseniz önce resmi X ikonundan siliniz.  Sonra  tekrardan  istediğiniz resmi yükleyebilirsiniz. Her sayfa 1 resim içermelidir");
-
+            if(sayfaIcerikItem.pageFoto != "PageFoto"){
+               showAlert("Güncelleme işleminde resmi güncellemek isterseniz önce resmi X ikonundan siliniz.  Sonra  tekrardan  istediğiniz resmi yükleyebilirsiniz. Her sayfa 1 resim içermelidir");
+            }
         }
 
         if(count != 0 ){
-            if (sayfaIcerikItem.pageFoto) {
-                let imgPath = `https://herkesyazarolsun.com.tr/Belgeler/${sayfaIcerikItem.pageFoto}`;
+            if (sayfaIcerikItem.pageFoto && sayfaIcerikItem.pageFoto != "PageFoto") {
+                 
+                    let imgPath = `https://herkesyazarolsun.com.tr/Belgeler/${sayfaIcerikItem.pageFoto}`;
 
                 let imageWrapperHtml = `  <img
                             src="${imgPath}"
@@ -393,6 +338,7 @@
                 `;
 
                 sayfaIcerik = sayfaIcerik.replaceAll("||img_BooksPage||", imageWrapperHtml);
+                 
             }else{
                 sayfaIcerik = sayfaIcerik.replaceAll("||img_BooksPage||", "");
             }
@@ -404,6 +350,8 @@
         // Quill editöre yükle
         if (window.quill) {
            // window.quill.root.innerHTML = sayfaIcerikCleaned;
+           window.quill.setContents([]);
+
             window.quill.clipboard.dangerouslyPasteHTML(sayfaIcerikCleaned);
             //document.getElementById('sayfaYaiziyAl').value = sayfaIcerikCleaned;
         } else {
@@ -433,17 +381,21 @@
            var sayfaIcerikItem = window.bookPagesData[id] || {};
            
              console.log("sayfaIcerikItem:", sayfaIcerikItem );
-             let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
+            
+            let sayfaIcerik = sayfaIcerikItem.pageWrite || "";
             let matches = sayfaIcerik.match(/\|\|img_BooksPage\|\|/g);
-            let count = matches ? matches.length : 0;
-
+            let count = matches ? matches.length : 0; 
+            console.log("count : ",count);
+            console.log("window.quill.root.innerHTML:", window.quill.root.innerHTML );
+                  
              var formData = new FormData(form);
 
                formData.append('PageWriteBase64', "PageWriteBase64");
                formData.append('ID', id);
                 formData.append("BookId", sayfaIcerikItem.bookId);
-
-            if(count == 0){ // sayfada herhangi bir foto yok
+                
+            if(count != 0 && sayfaIcerikItem.pageFoto && sayfaIcerikItem.pageFoto == "PageFoto" ){ 
+                // sayfada herhangi bir foto yok
                // console.log("sayfada herhangi bir foto yok");
                 var quilIcerik = window.quill.root.innerHTML;
                //console.log("quilIcerik:", quilIcerik );
@@ -472,8 +424,18 @@
 
             Gonder(formData); 
             }else{
+<<<<<<< HEAD
                 showConfirm("En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?",
                 function (onay) {
+=======
+                var mesaj = "";
+                if(sayfaIcerikItem.pageFoto && sayfaIcerikItem.pageFoto != "PageFoto" ){
+                    mesaj = "En fazla 1 resim sayfada olabilir. Resmi güncellemek isterseniz X ikonundan önce silmelisiniz. Güncellemek istemiyorsanız aynı resimle devam edilecektir. Onaylıyor musunuz?";
+                }else{
+                    mesaj = "Güncelleme Yapılacaktır. Onaylıyor musunuz?";
+                }
+                showConfirm(mesaj, function (onay) {
+>>>>>>> 131dbe6562952d2e730d562c19af8a0a586e3f9d
                     if (!onay) return; 
                     
                     //  formData.append("PageWrite", sayfaIcerikItem.pageWrite || "");
@@ -482,7 +444,8 @@
                        formData.append("BookId", sayfaIcerikItem.bookId);
                         formData.append("isWordPDF", false);
                        formData.append("PageFotoDosyalar", sayfaIcerikItem.pageFotoDosyalar); 
-                        formData.append("PageFoto", sayfaIcerikItem.pageFoto );
+                        formData.append("PageFoto", sayfaIcerikItem.pageFoto  );
+                        // formData.append("PageFoto", sayfaIcerikItem.pageFoto ||  "PageFoto");
 
                         var quilIcerik = window.quill.root.innerHTML;                           
                           quilIcerik = quilIcerik.replace(/<img[^>]*src="data:image[^"]*"[^>]*>/g, "");
@@ -499,13 +462,49 @@
             }
           
     }
+    
+    function SayfayiSil(sayfaId) {
+    $("#progressOverlay").show();
+var tip = $("#tip").val();
+    $.post("@Url.Action(nameof(KitaplarController.KitapSayfaSil), "Kitaplar")", { 
+            sayfaId: sayfaId
+        }).done(data => {
+             
+            if (data.state == 1) {
+                        $("#basarili-" + tip).css("display", "block");
+                        $("#basarili-" + tip + " #mesaj").html("Kittap ");
+
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#uyari-" + tip).css("display", "none");
+
+                        setTimeout(function () {
+                            var link = window.location.href;
+
+                            window.location.href = link; 
+
+                            window.location.reload()
+
+                        }, 3000);
+                    }
+                    else if (data.state == 3) {
+                        $("#bilgi-" + tip).css("display", "block");
+                        $("#bilgi-" + tip + " #mesaj").html("Güncellenemedi");
+
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip).css("display", "none");
+                    }
+                    else {
+                        $("#uyari-" + tip).css("display", "block");
+                        $("#bilgi-" + tip).css("display", "none");
+                        $("#basarili-" + tip).css("display", "none");
+                        $("#uyari-" + tip + " #mesaj").html("Güncellenemedi");
+                    }
+        });
+}
 
     function Gonder(formData){
         var tip = $("#tip").val();
-          //console.log("tip" ,tip );
-              /*for (let pair of formData.entries()) {
-                    console.log(pair[0] + ": ", pair[1]);
-                }*/
+           
            $.ajax({
              url: '/Kitaplar/PostBooksPageUpdate', // Formun gönderileceği adresi belirtin
              method: 'POST',
@@ -513,6 +512,7 @@
              processData: false,
              contentType: false,
              success: function (data) {
+                //console.log("Gonder data:", data);
                   $("#progressOverlay").hide(); // işlemin sonunda gizle
 
                     if (data.state == 1) {
@@ -534,7 +534,7 @@
                     }
                     else if (data.state == 3) {
                         $("#bilgi-" + tip).css("display", "block");
-                        $("#bilgi-" + tip + " #mesaj").html("Güncellenemedi");
+                        $("#bilgi-" + tip + " #mesaj").html(data.message);
 
                         $("#basarili-" + tip).css("display", "none");
                         $("#uyari-" + tip).css("display", "none");
@@ -543,7 +543,7 @@
                         $("#uyari-" + tip).css("display", "block");
                         $("#bilgi-" + tip).css("display", "none");
                         $("#basarili-" + tip).css("display", "none");
-                        $("#uyari-" + tip + " #mesaj").html("Güncellenemedi");
+                        $("#uyari-" + tip + " #mesaj").html(data.message);
                     }
              },
                error: function (xhr, status, error) {

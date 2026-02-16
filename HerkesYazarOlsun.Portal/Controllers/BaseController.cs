@@ -32,8 +32,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             //}
 
             var mail = _httpContextAccessor?.HttpContext?.User.Claims.FirstOrDefault(x => x.Type.Equals("email"));
-            var bak =  _httpContextAccessor?.HttpContext?.User.GetEmail();
-            var cccc = _httpContextAccessor?. HttpContext?.Request.Headers["email"].ToString();
+            var bak = _httpContextAccessor?.HttpContext?.User.GetEmail();
+            var cccc = _httpContextAccessor?.HttpContext?.Request.Headers["email"].ToString();
             if (mail != null)
             {
                 EMAIL = mail.Value.ToString();

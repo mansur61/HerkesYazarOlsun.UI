@@ -1,0 +1,208 @@
+/* ===============================
+   ICON BUTTONS
+================================ */
+
+.icon-btn {
+    display: inline-flex;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #ffffff;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.icon-btn i {
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+/* FAVORI */
+.fav-btn i { color: #ff4d4d; }
+.fav-btn:hover {
+    background: #ff4d4d;
+    transform: scale(1.2);
+}
+.fav-btn:hover i { color: #fff; }
+
+/* PUBLISH */
+.publish-btn i { color: #198754; }
+.publish-btn:hover {
+    background: #198754;
+    transform: scale(1.2);
+}
+.publish-btn:hover i { color: #fff; }
+
+/* DELETE */
+.delete-btn i { color: #dc3545; }
+.delete-btn:hover {
+    background: #dc3545;
+    transform: scale(1.2);
+}
+.delete-btn:hover i { color: #fff; }
+
+/* USER */
+.user-btn i { color: #0d6efd; }
+.user-btn:hover {
+    background: #0d6efd;
+    transform: scale(1.2);
+}
+.user-btn:hover i { color: #fff; }
+
+/* Override eden eski kuralları bastır */
+.product__item__pic__hover li a.icon-btn {
+    width: 45px;
+    height: 45px;
+}
+
+
+/* ===============================
+   BOOK GRID
+================================ */
+
+.books-wrapper {
+    width: 100%;
+    max-width: 220px;
+}
+
+.book-item {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+/* ===============================
+   CARD
+================================ */
+
+.product__item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product__item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+
+/* ===============================
+   COVER IMAGE
+================================ */
+
+.product__item__pic {
+    position: relative;
+    height: 260px;
+    background-size: cover;
+    background-position: center;
+}
+
+
+/* ===============================
+   HOVER ICON AREA
+================================ */
+
+.product__item__pic__hover {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.product__item__pic__hover li {
+    list-style: none;
+}
+
+.product__item__pic__hover li a {
+    background: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ===============================
+   TEXT AREA
+================================ */
+
+.product__item__text {
+    padding: 10px;
+    text-align: center;
+}
+
+.product__item__text h6 {
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.product__item__text a {
+    color: #111;
+    text-decoration: none;
+}
+
+.product__item__text a:hover {
+    color: #0d6efd;
+}
+
+
+/* ===============================
+   BADGE
+================================ */
+
+.discount-badge,
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #28a745;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+}
+
+
+/* ===============================
+   OPTIONAL: LOADING STATE
+================================ */
+
+.icon-btn.loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.trash-icon {
+    display: inline-block;
+    font-size: 18px;
+    padding: 6px 8px;
+    background-color: #fff; /* Beyaz arka plan */
+    border: 1px solid #ccc; /* Hafif gri border */
+    border-radius: 6px; /* Yuvarlatılmış köşeler */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+    .trash-icon:hover {
+        background-color: #f8d7da; /* Silmeye yakın kırmızı ton hover */
+        border-color: #f5c6cb;
+        color: #a71d2a; /* Icon rengi değişir */
+        transform: scale(1.1); /* Hafif büyüme efekti */
+    }

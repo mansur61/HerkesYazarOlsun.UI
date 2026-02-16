@@ -35,7 +35,10 @@ dotnet publish -c Release \
 -p:UseAppHost=true \
 -o ./publish
 
+<<<<<<< HEAD
 bundan aldık publish 21.01.2026
+=======
+>>>>>>> 131dbe6562952d2e730d562c19af8a0a586e3f9d
 
 dotnet publish HerkesYazarOlsun.Portal.csproj \
 -c Release \
@@ -44,4 +47,19 @@ dotnet publish HerkesYazarOlsun.Portal.csproj \
 -p:PublishSingleFile=false \
 -p:IncludeNativeLibrariesForSelfExtract=false \
 -p:UseAppHost=true \
--o publish 
+-o publish
+
+----------
+
+tar -czvf ~/Desktop/site.tar.gz . olarak destktopa al macte
+
+dotnet publish HerkesYazarOlsun.Portal.csproj \
+-c Release \
+-r win-x64 \
+--self-contained true \
+-p:UseAppHost=true \
+-o publish
+
+
+bundan yaptık 
+ dotnet publish -c Release -o publish

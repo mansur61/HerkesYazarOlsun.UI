@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Herkes Yazar Olsun";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="sozlesme-container py-5">
+    <h2 class="sozlesme-title">⚠️ YASAL UYARI</h2>
+
+    <div class="sozlesme-content">
+        <p>
+            <strong>Herkes Yazar Olsun</strong> platformunda yer alan tüm içerikler
+            yalnızca <strong>bilgilendirme ve paylaşım amacıyla</strong> sunulmaktadır.
+        </p>
+
+        <h3>1. İÇERİK SORUMLULUĞU</h3>
+        <p>
+            Platformda yayımlanan yazı, hikâye, yorum ve diğer içeriklerin sorumluluğu
+            tamamen içeriği paylaşan kullanıcılara aittir.
+        </p>
+        <p>
+            Platform, kullanıcılar tarafından oluşturulan içeriklerin doğruluğunu,
+            güncelliğini veya hukuka uygunluğunu garanti etmez.
+        </p>
+
+        <h3>2. TELİF HAKLARI</h3>
+        <p>
+            Platformda yer alan tüm yazılı ve görsel içerikler,
+            aksi belirtilmedikçe ilgili kullanıcıya veya içerik sahibine aittir.
+            İzinsiz kopyalanamaz, çoğaltılamaz veya dağıtılamaz.
+        </p>
+
+        <h3>3. DIŞ BAĞLANTILAR</h3>
+        <p>
+            Platformda üçüncü taraf sitelere yönlendiren bağlantılar bulunabilir.
+            Bu sitelerin içeriklerinden veya gizlilik uygulamalarından
+            <strong>Platform sorumlu değildir</strong>.
+        </p>
+
+        <h3>4. REKLAMLAR</h3>
+        <p>
+            Platformda Google ve üçüncü taraf reklam sağlayıcılar tarafından reklamlar gösterilebilir.
+            Reklam içerikleri, Platform’un kontrolü dışında olabilir.
+        </p>
+
+        <h3>5. SORUMLULUK REDDİ</h3>
+        <p>
+            Platformun kullanımı sonucunda doğabilecek doğrudan veya dolaylı
+            maddi ya da manevi zararlardan Platform sorumlu tutulamaz.
+        </p>
+
+        <h3>6. DEĞİŞİKLİK HAKKI</h3>
+        <p>
+            Platform, işbu yasal uyarı metnini önceden haber vermeksizin
+            değiştirme hakkını saklı tutar.
+        </p>
+    </div>
+</div>
+<style>
+    .sozlesme-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        max-width: 700px;
+        margin: auto;
+    }
+
+    .sozlesme-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .sozlesme-content h3 {
+        font-size: 18px;
+        margin-top: 15px;
+        color: #444;
+    }
+
+    .sozlesme-content p {
+        font-size: 14px;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    .sozlesme-content ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+        .sozlesme-content ul li::before {
+            content: "✅";
+            margin-right: 8px;
+        }
+</style>

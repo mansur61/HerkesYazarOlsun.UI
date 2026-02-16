@@ -1,391 +1,163 @@
-﻿@{
+﻿@model HerkesYazarOlsun.Model.ViewModel.VM_USERS
+@using HerkesYazarOlsun.Model.Enums
+@using HerkesYazarOlsun.Portal.Helpers.Extensions
+@using HerkesYazarOlsun.Portal.Controllers
+
+@{
     ViewData["Title"] = "Profil";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string isGozlemciMod = User.GetGozlemciMod();
 }
 
-<style>
-    #globalSpinner i {
-        color: transparent !important;
-        background: linear-gradient(45deg, #ff0000, #ffea00);
-        -webkit-background-clip: text;
-        background-clip: text;
-        font-size: 60px !important; /* daha büyük görünür */
-        filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
-    }
+<input type="hidden" id="profilicin" value="profil" />
+<input type="hidden" id="yazar_id" value="@Model.ID" />
+<p id="kural" style="display:none;">@ViewBag.isBildirimTakip</p>
 
-    #globalSpinner {
-        /* Arka plan hafif mavi overlay */
-        background: rgba(0, 60, 255, 0.15);
-        padding: 20px 25px;
-        border-radius: 15px;
-    }
+@section Styles {
+  <link href="~/lib/css/profil.css" rel="stylesheet" />
+}
 
-</style>
-
+<!-- 🔄 SPINNER -->
 <div id="globalSpinner" class="spinner text-center"
      style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:9999;">
     <i class="fa fa-spinner fa-spin fa-3x"></i>
 </div>
 
-
-@using HerkesYazarOlsun.Model.Enums
-@using HerkesYazarOlsun.Portal.Helpers.Extensions
-
-@{
-    string isGozlemciMod = User.GetGozlemciMod();
-}
-
-@using HerkesYazarOlsun.Portal.Controllers;
-@model HerkesYazarOlsun.Model.ViewModel.VM_USERS;
-
-
-<input type="hidden" id="profilicin" value="profil" />
-
-@{
-    string alertmesajgostermedurumu = "profil";
-}
-
-<p id="kural" style="display: none;">@ViewBag.isBildirimTakip</p>
-
-@{
-    ViewData["Title"] = "Profil";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-
-@section Styles {
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
-
-    <style>
-        /* PROFİL KARTI */
-        .profile-card {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-        }
-
-            .profile-card img {
-                width: 130px;
-                height: 130px;
-                border-radius: 50%;
-                object-fit: cover;
-                margin-right: 20px;
-                border: 3px solid #fff;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-
-        .profile-info h2 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-            color: #333;
-        }
-
-        .follow-stats {
-            display: flex;
-            justify-content: flex-start;
-            gap: 30px;
-            margin-top: 10px;
-        }
-
-            .follow-stats .stat p {
-                margin: 0;
-                font-weight: 600;
-                font-size: 16px;
-                text-align: center;
-            }
-
-        .btn-group-custom {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .yildizver {
-            font-size: 22px;
-            cursor: pointer;
-            color: black;
-        }
-
-        .product_description_area {
-            margin-top: 40px;
-        }
-
-        /* 🔥 PROFİL MOBILE RESPONSIVE TASARIM */
-        @@media (max-width: 768px) {
-            /* Profil kartı: dikey hizaya geçsin */
-            .profile-card {
-                flex-direction: column;
-                text-align: center;
-                padding: 20px;
-            }
-                /* Resim alanı ortalansın */
-                .profile-card .col-md-2 {
-                    width: 100%;
-                    margin-bottom: 15px;
-                }
-
-                .profile-card img {
-                    width: 120px !important;
-                    height: 120px !important;
-                    margin: 0 auto 10px auto;
-                }
-                /* Yıldızlar ortalansın */
-                .profile-card .mb-3 {
-                    text-align: center !important;
-                    width: 100%;
-                }
-            /* Bilgi alanı tam genişlik */
-            .profile-info {
-                width: 100%;
-                text-align: center;
-            }
-
-                .profile-info h2 {
-                    font-size: 22px;
-                    margin-top: 10px;
-                }
-            /* Takip – takipçi sayıları dikey hizalansın */
-            .follow-stats {
-                flex-direction: column;
-                gap: 10px;
-                margin-top: 15px;
-            }
-
-                .follow-stats .stat p {
-                    font-size: 15px;
-                }
-            /* Buton grubu alt alta gelsin */
-            .btn-group-custom {
-                justify-content: center;
-                flex-direction: column;
-                width: 100%;
-            }
-
-                .btn-group-custom button {
-                    width: 100%;
-                }
-            /* Yıldız verme butonları ortalansın */
-            .yildizver {
-                font-size: 28px;
-            }
-            /* Tab yapısı tam mobil uyumlu */
-            .nav-tabs .nav-link {
-                font-size: 14px;
-                padding: 10px 8px;
-                text-align: center;
-            }
-        }
-    </style>
-
-
-}
-
-@* @section scripts {
-    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-} *@
-
-<input type="hidden" id="profilicin" value="profil" />
-<input type="hidden" id="yazar_id" value="@Model.ID" />
-<p id="kural" style="display: none;">@ViewBag.isBildirimTakip</p>
-
 <div class="container py-5">
 
     <!-- PROFİL KARTI -->
     <div class="profile-card">
-        <div class="col-md-2 d-flex flex-column align-items-center">
-            <img src="@(!string.IsNullOrEmpty(Model?.Profile?.ProfilResimURl)
-                                                                                     ? $"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}"
-                                                                                     : Url.Content("~/lib/img/user.png"))"
-                 alt="Profil Resmi"
-                 class="img-fluid img-thumbnail mt-4 mb-2"
-                 style="width: 150px;" />
-            @{
-                Model.Stars.isToplam = false;
-            }
-            <div class="mb-3 mt-1   text-center">
-                @Html.Partial("_YildizGoster", @Model.Stars)
-            </div>
-        </div>
-        <div class="col-md-2"></div>
-        <div class="profile-info">
+         
+             <img src="@(
+    !string.IsNullOrWhiteSpace(Model?.Profile?.ProfilResimURl)
+        && Model.Profile.ProfilResimURl != "-1"
+        ? Url.Content($"https://herkesyazarolsun.com.tr/Belgeler/{Model.Profile.ProfilResimURl}")
+        : Url.Content("~/lib/img/user.png")
+)"
+     class="img-fluid rounded-circle"
+     width="130"
+     height="130"
+     style="object-fit:cover;" />
+
+
+
+        <div class="profile-info ms-4">
             <h2>@Model.USERNAME</h2>
-            <div class="follow-stats">
-                <div class="stat">
-                    <p>Takipler</p>
-                    <p>@Model.WriterFollowLoginList?.Where(p => p.isFollow == (int)Takip.TakipEt).Count()</p>
+
+            <div class="d-flex gap-4 mt-2">
+                <div>
+                    <strong>Takipler</strong>
+                    <div>@Model.WriterFollowLoginList?.Count(p => p.isFollow == (int)Takip.TakipEt)</div>
                 </div>
-                <div class="stat">
-                    <p>Takipçiler</p>
-                    <p>@Model.WriterFollowYazarList?.Where(p => p.isFollow == (int)Takip.TakipEt).Count()</p>
+                <div>
+                    <strong>Takipçiler</strong>
+                    <div>@Model.WriterFollowYazarList?.Count(p => p.isFollow == (int)Takip.TakipEt)</div>
                 </div>
             </div>
 
-            <div class="btn-group-custom">
-                @if (@ViewBag.LOGIN_USER_ID != @Model.ID && isGozlemciMod == "0")
-                {
-                    @if (!@ViewBag.IsTakip)
+            @if (ViewBag.LOGIN_USER_ID != Model.ID && isGozlemciMod == "0")
+            {
+                <div class="mt-3 d-flex gap-2 flex-wrap">
+                    @if (!ViewBag.IsTakip)
                     {
-                        <button type="button" class="btn btn-info" onclick="YazarTakip(1)">Takip Et</button>
+                        <button class="btn btn-info" onclick="YazarTakip(1)">Takip Et</button>
                     }
                     else
                     {
-                        <button type="button" class="btn btn-warning" onclick="YazarTakip(0)">Takip Ediliyor</button>
+                        <button class="btn btn-warning" onclick="YazarTakip(0)">Takip Ediliyor</button>
                     }
-                    <button type="button" class="btn btn-primary" onclick="YildizVer()">Yıldız Ver</button>
-                    <button type="button" class="btn btn-danger" onclick="YildizIptalEt()">İptal Et</button>
-                }
-
-
-            </div>
-            <br />
-            @if (@ViewBag.LOGIN_USER_ID != @Model.ID && isGozlemciMod == "0")
-            {
-                <div class="mt-2">
-                    @for (var i = 1; i <= 5; i++)
-                    {
-                        <i class="fa fa-star yildizver" data-adet="@i"></i>
-                    }
+                    <button class="btn btn-primary" onclick="YildizVer()">Yıldız Ver</button>
+                    <button class="btn btn-danger" onclick="YildizIptalEt()">İptal</button>
                 </div>
             }
-
         </div>
     </div>
-    @if (@ViewBag.LOGIN_USER_ID == @Model.ID)
-    {
-        <!-- ANALİZ ALANI - PROFESYONEL TASARIM -->
-        <div class="row mt-4">
 
-            <div class="col-12 mb-4">
-                <div class="card shadow-sm border-0 p-4">
-                    <h4 class="mb-2 text-dark fw-bold">
-                        Merhaba <strong>@Model.NAME @Model.SURNAME</strong> 👋
-                    </h4>
-                    <p class="text-muted mb-0">
-                        Size yıldız veren kullanıcıların istatistikleri aşağıda listelenmiştir.
-                    </p>
-                </div>
-            </div>
-            <br />
-
-            <div class="col-md-6 mb-4">
-                <div class="card shadow-sm border-0 p-4 h-100">
-                    <h3 class="fw-bold text-primary mb-3">⭐ En Fazla Yıldız Veren Kullanıcılar</h3>
-
-                    @{
-                        Model.Stars.isToplam = false;
-                    }
-                    <div class="mb-3">
-                        @Html.Partial("_YildizGoster", @Model.Stars)
-                    </div>
-
-                    <div class="mt-3">
-                        <span class="badge bg-primary p-2 px-3">
-                            Toplam: @Model.Stars.EnFazlaSitar
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <br />  <br />
-            <div class="col-md-6 mb-4">
-                <div class="card shadow-sm border-0 p-4 h-100">
-                    <h3 class="fw-bold text-success mb-3">📘 Yazara Ait Yıldızlar</h3>
-
-                    <div class="rating_list">
-                        <div class="col-sm-12">
-                            @{
-                                Model.Stars.isToplam = true;
-                            }
-                            @Html.Partial("_YildizGoster", @Model.Stars)
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    }
     @Html.Partial("_AlertMesaj", "profil")
 
+    <!-- 🔥 TAB ALANI -->
+    <section class="product_description_area mt-4">
 
-    <!-- PROFİL SEKME ALANI -->
-    <section class="product_description_area">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="hakkinda-tab" data-toggle="tab" href="#hakkinda" role="tab" onclick="Hakkinda()">Hakkında</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="devamedenkitaplar-tab" data-toggle="tab" href="#devamedenkitaplar" role="tab" onclick="DevamEdenKitaplar()">Devam Eden Kitapları</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="tamamlanankitaplar-tab" data-toggle="tab" href="#tamamlanankitaplar" role="tab" onclick="TamamlananKitaplar()">Tamamlanan Kitapları</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="yayinlanan-tab" data-toggle="tab" href="#yayinlanan" role="tab" onclick="YayinlananKitaplar()">Yayınlanan Kitapları</a>
-            </li>
+        <ul class="nav nav-tabs gap-2">
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link btn btn-light active"
+                data-bs-toggle="tab"
+                data-bs-target="#hakkinda"
+                type="button">
+            Hakkında
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link btn btn-light"
+                data-bs-toggle="tab"
+                data-bs-target="#devamedenkitaplar"
+                type="button"
+                onclick="DevamEdenKitaplar()">
+            Devam Eden
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link btn btn-light"
+                data-bs-toggle="tab"
+                data-bs-target="#tamamlanankitaplar"
+                type="button"
+                onclick="TamamlananKitaplar()">
+            Tamamlanan
+        </button>
+    </li>
+
+    <li class="nav-item" role="presentation">
+        <button class="nav-link btn btn-light"
+                data-bs-toggle="tab"
+                data-bs-target="#yayinlanan"
+                type="button"
+                onclick="YayinlananKitaplar()">
+            Yayınlanan
+        </button>
+    </li>
+
         </ul>
 
-        <div class="tab-content p-3" id="myTabContent">
-            <div class="tab-pane fade show active" id="hakkinda" role="tabpanel">
-                <div id="bilgi">@Model.ID.ToString() nolu yazar: @Model.NAME @Model.SURNAME</div>
-            </div>
-            <div class="tab-pane fade" id="devamedenkitaplar" role="tabpanel">
 
+        <div class="tab-content border p-3 border-top-0">
+            <div class="tab-pane fade show active" id="hakkinda">
+                @Model.NAME @Model.SURNAME
+            </div>
+            <div class="tab-pane fade" id="devamedenkitaplar">
                 <div id="devameden"></div>
             </div>
-            <div class="tab-pane fade" id="tamamlanankitaplar" role="tabpanel">
-
+            <div class="tab-pane fade" id="tamamlanankitaplar">
                 <div id="tamamlanan"></div>
             </div>
-            <div class="tab-pane fade" id="yayinlanan" role="tabpanel">
-
+            <div class="tab-pane fade" id="yayinlanan">
                 <div id="yayin"></div>
             </div>
         </div>
+
     </section>
-</div>
-<div class="spinner text-center" style="display:none;">
-    <i class="fa fa-spinner fa-spin fa-2x"></i>
+
 </div>
 
-
+@section scripts {
+@*
 <script>
-    $(document).ready(function() {
-        // URL'deki tüm hash’leri kaldır
-        if (window.location.hash) {
-            history.replaceState(null, null, window.location.href.split('#')[0]);
+    window.appConfig = {
+        yazarId: $("#yazar_id").val(),
+        profil: $("#profilicin").val(),
+        email: "@(Model.EMAIL ?? "")",
+        urls: {
+            writerStars: "@Url.Action(nameof(KisiController.PostWriterStars), "Kisi")",
+            writerFollow: "@Url.Action(nameof(KisiController.PostWriterFollow), "Kisi")",
+            mailNotify: "@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
+            kitapFiltre: "@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")"
         }
-
-        $('.nav-tabs .nav-link').on('click', function (e) {
-            e.preventDefault(); // URL’de # değişmesini engelle
-
-            // Tüm tab linklerinden aktif sınıfı kaldır
-            $('.nav-tabs .nav-link').removeClass('active');
-
-            // Tüm tab pane’lerden aktif ve show sınıflarını kaldır
-            $('.tab-pane').removeClass('active show');
-
-            // Tıklanan tab’a active sınıfını ekle
-            $(this).addClass('active');
-
-            // Hedef tab-pane’i aktif yap
-            var target = $(this).attr('href');
-            $(target).addClass('active show');
-
-            // Eğer onclick fonksiyonu varsa çalıştır
-            var onclickFn = $(this).attr('onclick');
-            if (onclickFn) {
-                eval(onclickFn);
-            }
-        });
-    });
+    };
 </script>
+
+<script src="~/js/profil.js"></script>*@
 
 
 <script>
@@ -640,3 +412,5 @@
         );
     }
 </script>
+
+}

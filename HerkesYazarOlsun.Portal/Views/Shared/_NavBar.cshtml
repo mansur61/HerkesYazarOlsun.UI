@@ -6,6 +6,36 @@
 }
 
 <style>
+.navbar-nav .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+    min-width: max-content; /* İçeriğin tamamını kapsasın */
+    max-width: 90vw; /* Mobilde taşmasın */
+    white-space: nowrap; /* Satır kırılmasını engelle */
+}
+    /* Navbar rengini override et */
+.navbar.bg-dark {
+    background-color: #00C4A0 !important;
+}
+
+/* Yazılar daha net görünsün diye */
+.navbar.bg-dark .nav-link,
+.navbar.bg-dark .navbar-brand,
+.navbar.bg-dark .navbar-toggler {
+    color: #ffffff !important;
+}
+
+/* Dropdown arka planı da uyumlu olsun */
+.navbar.bg-dark .dropdown-menu {
+    background-color: #00C4A0;
+}
+
+/* Dropdown item hover efekti */
+.navbar.bg-dark .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+
     /* Sadece giriş yapmış kullanıcı dropdown menüsü scroll */
     .scroll-dropdown {
         max-height: 300px; /* mobilde biraz daha kısa olabilir */
@@ -20,6 +50,12 @@
     {
         max-height: 80vh; /* viewport’a göre sınırlı */
         overflow-y: auto; /* navbar scrollu aktif */
+
+        .navbar-nav .dropdown-menu {
+            width: 100%;
+            max-width: 100%;
+        }
+
     }
 
     /* Dropdown menü scrollu collapse içinde çalışacak */
@@ -28,90 +64,70 @@
         display: block; /* mutlaka block */
     }
 
+    
+
     }
 </style>
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
     <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/Home/Index">
+        <img src="@Url.Content("~/lib/img/stack-of-books.png")"
+            alt="Logo"
+            style="height:28px; margin-right:8px;">
+        Yazar Olun
+    </a>
 
-        <!-- Header -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar" style="background-color:white;"></span>
-                <span class="icon-bar" style="background-color:white;"></span>
-                <span class="icon-bar" style="background-color:white;"></span>
-            </button>
-
-            <a class="navbar-brand" href="/Home/Index">Yazar Olun</a>
-        </div>
-
-        <!-- Menü -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="main-navbar">
-
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/Home/Index">Anasayfa</a></li>
-                <li><a href="/Home/Hakkimizda">Hakkımızda</a></li>
-                <li><a href="/Home/Iletisim">İletişim</a></li>
-
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item active"><a class="nav-link" href="/Home/Index">Anasayfa</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Home/Hakkimizda">Hakkımızda</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Home/Iletisim">İletişim</a></li>
                 @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                 {
-                    <li><a href="/Kisi/Profil">Profil</a></li>
-                    <li><a href="/Ayarlar/Ayarlar">Ayarlar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Kisi/Profil">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Ayarlar/Ayarlar">Ayarlar</a></li>
                 }
-               @*  @if (string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod != "0")
-                {
-                    <li><a href="/Account/CikisYap">Çıkış Yap</a></li>
-                    
-                } *@
             </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
                     @if (string.IsNullOrEmpty(User.GetEmail()))
                     {
                         if (isGozlemciMod != "0")
                         {
-                            <a href="/Account/CikisYap">Çıkış Yap</a>
+                            <a class="nav-link" href="/Account/CikisYap">Çıkış Yap</a>
                         }
                         else
                         {
-                            <!-- Giriş yapmamış: direkt link -->
-                            <a href="/Account/Giris">
+                            <a class="nav-link" href="/Account/Giris">
                                 Giriş Yap <span class="caret"></span>
                             </a>
                         }
-
                     }
                     else
                     {
-                        <!-- Giriş yapmış: dropdown -->
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-user"></i> @User.GetUserName()
-                            <span class="caret"></span>
                         </a>
-
-                        <ul class="dropdown-menu scroll-dropdown">
-                            @* <li><a href="/Account/Profil">Profil</a></li> *@
-
+                        <ul class="dropdown-menu scroll-dropdown" aria-labelledby="navbarDropdown">
                             @if (isGozlemciMod == "0")
                             {
-                                <li><a href="/Kitaplar/TumKitaplar?FavoriKitaplar=true">Favori Kitaplarım</a></li>
-                                <li><a href="/Kisi/TumYazarlar?FavoriYazarlar=true">Favori Yazarlarım</a></li>
-                                <li><a href="/Kitaplar/TumKitaplar?BitenKitaplar=true">Yazdığım/Tamamlanan Kitaplar</a></li>
-                                <li><a href="/Kitaplar/TumKitaplar?DevamEdenKitaplar=true">Henüz Tamamlanmayan Kitaplarım</a></li>
-                                <li><a href="/Kitaplar/TumKitaplar?YayinlananKitaplar=true">Yayınlanan Kitaplarım</a></li>
+                                <li><a class="dropdown-item" href="/Kitaplar/TumKitaplar?FavoriKitaplar=true">Favori Kitaplarım</a></li>
+                                <li><a class="dropdown-item" href="/Kisi/TumYazarlar?FavoriYazarlar=true">Favori Yazarlarım</a></li>
+                                <li><a class="dropdown-item" href="/Kitaplar/TumKitaplar?BitenKitaplar=true">Yazdığım/Tamamlanan Kitaplar</a></li>
+                                <li><a class="dropdown-item" href="/Kitaplar/TumKitaplar?DevamEdenKitaplar=true">Henüz Tamamlanmayan Kitaplarım</a></li>
+                                <li><a class="dropdown-item" href="/Kitaplar/TumKitaplar?YayinlananKitaplar=true">Yayınlanan Kitaplarım</a></li>
                             }
-
-                            <li><a href="/Account/CikisYap">Çıkış Yap</a></li>
+                            <li><a class="dropdown-item" href="/Account/CikisYap">Çıkış Yap</a></li>
                         </ul>
                     }
                 </li>
             </ul>
-
         </div>
     </div>
 </nav>
 
-<script src="~/js/hamburger.js"></script>
+<script src= "~/js/hamburger.js"></script>

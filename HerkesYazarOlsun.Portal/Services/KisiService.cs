@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
-    
+
     public class KisiService : BaseService
     {
         public Users GetKisiByTC(long tck)
@@ -36,8 +36,8 @@ namespace HerkesYazarOlsun.Portal.Services
             return result;
         }
 
-        
-        public Users GetKisiByUsername(string username )
+
+        public Users GetKisiByUsername(string username)
         {
             Task<string> jsonContent = GetData("api/Users/GetKisiByUsername?" + "username=" + username);
             Task.WaitAll(jsonContent);
@@ -48,7 +48,7 @@ namespace HerkesYazarOlsun.Portal.Services
 
         public ServiceResult<Users> GetKisiByMail(string mail)
         {
-            Task<string> jsonContent = GetData("api/Users/GetKisiByMail?" + "mail=" + mail,eposta:mail);
+            Task<string> jsonContent = GetData("api/Users/GetKisiByMail?" + "mail=" + mail, eposta: mail);
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<ServiceResult<Users>>(jsonContent.Result);
@@ -72,7 +72,7 @@ namespace HerkesYazarOlsun.Portal.Services
             var result = JsonConvert.DeserializeObject<VM_Stars>(jsonContent.Result);
             return result;
         }
-        
+
         public ServiceResult SaveOrUpdateAccountLogin(VM_LOGIN vmLogni)
         {
             string stringData = JsonConvert.SerializeObject(vmLogni);
@@ -88,7 +88,7 @@ namespace HerkesYazarOlsun.Portal.Services
             Task<string> jsonContent = PostData("api/Users/PostFavoriSaveWriter", stringData);
             Task.WaitAll(jsonContent);
 
-            var result = JsonConvert.DeserializeObject<ServiceResult> (jsonContent.Result);
+            var result = JsonConvert.DeserializeObject<ServiceResult>(jsonContent.Result);
             return result;
         }
 
@@ -138,7 +138,7 @@ namespace HerkesYazarOlsun.Portal.Services
             string stringData = JsonConvert.SerializeObject(arama);
             Task<string> jsonContent = PostData("api/Users/GetKisiler", stringData);
 
-           //Task<string> jsonContent = GetData("api/Users/GetKisiler");
+            //Task<string> jsonContent = GetData("api/Users/GetKisiler");
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<List<VM_USERS>>(jsonContent.Result);

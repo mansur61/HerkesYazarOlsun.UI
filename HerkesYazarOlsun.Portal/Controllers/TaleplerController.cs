@@ -8,11 +8,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
     public class TaleplerController : Controller
     {
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ServiceResult TalepKaydet(Talepler talepler)
         {
             ServiceResult result = new TaleplerService().TalepKaydet(talepler);
             return result;
         }
- 
+
     }
 }

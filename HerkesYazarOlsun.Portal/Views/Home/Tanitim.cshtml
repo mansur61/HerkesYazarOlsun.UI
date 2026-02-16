@@ -158,12 +158,29 @@
         }
 
         }
+@@media (max-width: 768px) {
+
+    .vh-100 {
+        height: auto !important;
+        min-height: auto !important;
+    }
+
+    .row.align-items-center {
+        padding: 30px 15px !important;
+    }
+
+    .row.align-items-center .col-md-4,
+    .row.align-items-center .col-md-8 {
+        margin-bottom: 20px;
+    }
+
+}
 
     </style>
 }
 
 <div class="center-logo-top">
-    <img src="@Url.Content("~/lib/img/book_2.png")" class="center-logo-top-img" />
+    <img src="@Url.Content( "~/lib/img/book_2.png")" class="center-logo-top-img" />
 </div>
 
 
@@ -194,7 +211,7 @@
         </div>
     </div>
     <div class="step-connector">
-        <img src="/lib/img/stack-of-books.png" class="connector-icon" />
+        <img src="~/lib/img/stack-of-books.png" class="connector-icon" />
         <div class="arrow-down"></div>
     </div>
     <br />
@@ -224,7 +241,7 @@
         </div>
     </div>
     <div class="step-connector">
-        <img src="/lib/img/stack-of-books.png" class="connector-icon" />
+        <img src="~/lib/img/stack-of-books.png" class="connector-icon" />
         <div class="arrow-down"></div>
     </div>
     <br />

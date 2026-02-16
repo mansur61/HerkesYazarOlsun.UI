@@ -17,35 +17,33 @@
 
     <script>(function (H) { H.className = H.className.replace(/\bno-js\b/, 'js') })(document.documentElement)</script>
 
-    <!-- font-awesome -->
-    <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="~/lib/fontawesome/css/all.min.css" rel="stylesheet" />
 
     <!-- Bootstrap core CSS -->
-
-    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
-
-    <link href="~/lib/bootstrap/dist/css/themify-icons.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/lineericaon_style.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/nice-select.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/nouislider.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Owl Carousel CSS -->
+    <link href="~/lib/owlcarousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
+    <!-- Nice Select CSS -->
+    <link href="~/lib/nice-select/css/nice-select.css" rel="stylesheet" />
+    <!-- noUiSlider CSS -->
+    <link href="~/lib/nouislider/nouislider.min.css" rel="stylesheet" />
     
     
     @RenderSection("Styles",false)
 
-    <!-- custom CSS -->
-    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" />
-
-    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/herkesyazarolsun-bootstrap.js"></script>
-    <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
-     
-   
-
-    <script src="~/lib/bootstrap/dist/js/skrollr.min.js"></script>
-    
-    <link rel="icon" type="image/png" href="@Url.Content("~/lib/img/stack-of-books.png")" />
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script>
+    <!-- Nice Select JS -->
+    <script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script>
+    <!-- noUiSlider JS -->
+    <script src="~/lib/nouislider/nouislider.min.js"></script>
+ 
+    <link rel="icon" type="image/png" href="@Url.Content( "~/lib/img/stack-of-books.png")" />
     @RenderSection("scripts",false)
 
     <style>
@@ -75,9 +73,20 @@
             border-left: 6px solid #e63946;
         }
     </style>
- 
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1543688286895371"
+     crossorigin="anonymous"></script>
+   
+      @RenderSection("Meta", required: false)
 </head>
 <body>
+<script>
+  if (window.jQuery) {
+    console.log("jQuery yüklü ✔", jQuery.fn.jquery);
+  } else {
+    console.error("jQuery YÜKLÜ DEĞİL ❌");
+  }
+</script>
+
     @Html.Partial("_Navbar")
     <br />
     @RenderBody()
