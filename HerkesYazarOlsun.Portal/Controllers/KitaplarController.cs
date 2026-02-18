@@ -819,7 +819,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.BookModel = vmBook;
 
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
-
+            ViewBag.LOGIN_USER_ID = Lid;
             ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder
             ViewBag.IsKitapYayin = Bildirim?.IsKitapYayin ?? false;//Birisi kitap yayınladığında bana bildirim yolla
             ViewBag.IsKitapYorum = Bildirim?.IsKitapYorum ?? false;//Birisi kitabıma yorum yaptığında bana e-posta gönder
