@@ -898,7 +898,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.isAnaSayfa = false;
             kitapDetay.Tip = arama.profilKitapTuru + "-" + arama.Tip;
 
-            arama.yazarIId = Lid;
+            /*if(arama.Tip == "tumkitaplar")
+            {
+                arama.yazarIId = Lid;
+            }*/
 
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();

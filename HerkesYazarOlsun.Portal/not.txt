@@ -35,10 +35,6 @@ dotnet publish -c Release \
 -p:UseAppHost=true \
 -o ./publish
 
-<<<<<<< HEAD
-bundan aldık publish 21.01.2026
-=======
->>>>>>> 131dbe6562952d2e730d562c19af8a0a586e3f9d
 
 dotnet publish HerkesYazarOlsun.Portal.csproj \
 -c Release \
