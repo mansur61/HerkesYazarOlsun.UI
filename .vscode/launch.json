@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
@@ -26,6 +27,26 @@
                 "/Views": "${workspaceFolder}/Views"
             }
         },
+        {
+            "name": "ASP.NET Core Debug (SAFE)",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "/usr/local/share/dotnet/dotnet",
+            "args": [
+              "run",
+              "--project",
+              "${workspaceFolder}/HerkesYazarOlsun.UI/HerkesYazarOlsun.Portal.csproj"
+            ],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "env": {
+              "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "serverReadyAction": {
+              "action": "openExternally",
+              "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            }
+          },
         {
             "name": ".NET Core Attach",
             "type": "coreclr",
