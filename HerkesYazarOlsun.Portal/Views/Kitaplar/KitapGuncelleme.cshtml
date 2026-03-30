@@ -42,7 +42,7 @@
     Model.IsWowBookEdit = true;
 }
 
- 
+
 @Html.Partial("_WowBookContent", @Model)
 
 @section scripts {
@@ -83,12 +83,12 @@
 
             // Eğer sayfa çevrildiğinde manuel olarak flip sound çalmak istersen
             var flipAudio = document.getElementById("flipSound");
-            book.on('turned', function() {
+            book.on('turned', function () {
                 flipAudio.play();
             });
         });
 
-        
+
     </script>
 
     <script src="~/wowbook/js/plugins.js"></script>
