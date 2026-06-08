@@ -172,17 +172,14 @@
                 btn.innerHTML = originalIcon;
 
                 if (data.state == 1) {
-                    $("#basarili-" + tip).css("display", "block");
-                    $("#basarili-" + tip + " #mesaj").html("Favorilerinize eklendi");
+                    console.log("Kitap favorilere eklendi");
                 } else {
-                    $("#uyari-" + tip).css("display", "block");
-                    $("#uyari-" + tip + " #mesaj").html(data.message);
+                    console.log("Hata: " + data.message);
                 }
             }
         ).fail(function () {
             btn.innerHTML = originalIcon;
-            $("#uyari-" + tip).css("display", "block");
-            $("#uyari-" + tip + " #mesaj").html("Sunucu hatası.");
+            console.log("Sunucu hatası");
         });
     }
 

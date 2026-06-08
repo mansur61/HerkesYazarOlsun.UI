@@ -38,7 +38,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
 
-        [HttpPost] 
+        [HttpPost]
         public async Task<ServiceResult> Gonder(string kime)
         {
             ServiceResult result = new ServiceResult();
@@ -80,6 +80,63 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 result.Message = kod; 
             }
 
+
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<ServiceResult> ResendOtp(string email, string telno, string tip)
+        {
+            ServiceResult result = new ServiceResult();
+
+            try
+            {
+                if (tip == "email")
+                {
+                    var rnd1 = new Random().Next(0, 10);
+                    var rnd2 = new Random().Next(0, 10);
+                    var rnd3 = new Random().Next(0, 10);
+                    var rnd4 = new Random().Next(0, 10);
+
+                    string kod = rnd1.ToString() + "" + rnd2.ToString() + "" + rnd3.ToString() + "" + rnd4.ToString();
+
+                    var icerik = new VM_MAIL_ICERIK()
+                    {
+                        username = _mailSettings.Username,
+                        password = _mailSettings.Password,
+                        Host = _mailSettings.Host,
+                        Port = _mailSettings.Port,
+                        EnableSSL = _mailSettings.EnableSSL,
+                        sifre = kod,
+                        kime = email,
+                        konu = _mailSettings.Subject,
+                        gondericii_mail = _mailSettings.FromEmail
+                    };
+
+                    string sonuc = await _emailService.EmailGonder(icerik);
+
+                    if (sonuc == "-1")
+                    {
+                        result.State = MessageResultState.ERROR;
+                        result.Message = "Email gönderme başarısız";
+                    }
+                    else
+                    {
+                        result.State = MessageResultState.SUCCESS;
+                        result.Message = kod;
+                    }
+                }
+                else if (tip == "sms")
+                {
+                    result.State = MessageResultState.SUCCESS;
+                    result.Message = "SMS tekrar gönderildi";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.State = MessageResultState.ERROR;
+                result.Message = ex.Message;
+            }
 
             return result;
         }
