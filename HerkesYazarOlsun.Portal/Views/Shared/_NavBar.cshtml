@@ -1,7 +1,7 @@
-﻿using HerkesYazarOlsun.Portal.Controllers;
-using HerkesYazarOlsun.Portal.Helpers.Extensions
+﻿@using HerkesYazarOlsun.Portal.Controllers;
+@using HerkesYazarOlsun.Portal.Helpers.Extensions
 
-{
+@{
     string isGozlemciMod = User.GetGozlemciMod();
 }
 
@@ -72,7 +72,7 @@ using HerkesYazarOlsun.Portal.Helpers.Extensions
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
     <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="/Home/Index">
-        <img src="Url.Content("~/lib/img/stack-of-books.png")"
+        <img src="@Url.Content("~/lib/img/stack-of-books.png")"
             alt="Logo"
             style="height:28px; margin-right:8px;">
         Yazar Olun
@@ -86,7 +86,7 @@ using HerkesYazarOlsun.Portal.Helpers.Extensions
                 <li class="nav-item active"><a class="nav-link" href="/Home/Index">Anasayfa</a></li>
                 <li class="nav-item"><a class="nav-link" href="/Home/Hakkimizda">Hakkımızda</a></li>
                 <li class="nav-item"><a class="nav-link" href="/Home/Iletisim">İletişim</a></li>
-                if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
+                @if (!string.IsNullOrEmpty(User.GetEmail()) && isGozlemciMod == "0")
                 {
                     <li class="nav-item"><a class="nav-link" href="/Kisi/Profil">Profil</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Ayarlar/Ayarlar">Ayarlar</a></li>
@@ -94,7 +94,7 @@ using HerkesYazarOlsun.Portal.Helpers.Extensions
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
-                    if (string.IsNullOrEmpty(User.GetEmail()))
+                    @if (string.IsNullOrEmpty(User.GetEmail()))
                     {
                         if (isGozlemciMod != "0")
                         {
@@ -110,10 +110,10 @@ using HerkesYazarOlsun.Portal.Helpers.Extensions
                     else
                     {
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-user"></i> User.GetUserName()
+                            <i class="fa fa-user"></i> @User.GetUserName()
                         </a>
                         <ul class="dropdown-menu scroll-dropdown" aria-labelledby="navbarDropdown">
-                            if (isGozlemciMod == "0")
+                            @if (isGozlemciMod == "0")
                             {
                                 <li><a class="dropdown-item" href="/Kitaplar/TumKitaplar?FavoriKitaplar=true">Favori Kitaplarım</a></li>
                                 <li><a class="dropdown-item" href="/Kisi/TumYazarlar?FavoriYazarlar=true">Favori Yazarlarım</a></li>
