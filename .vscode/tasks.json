@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.sln"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "format-razor",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "format",
+                "${workspaceFolder}/HerkesYazarOlsun.Portal/HerkesYazarOlsun.Portal.sln",
+                "--include",
+                "**/*.cshtml"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

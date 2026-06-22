@@ -1,20 +1,5 @@
 ﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
-@* @if(@Model.kitapSliderYometimAdi == "index")
-{
-    <p>geldi : @Model.kitapSliderYometimAdi</p>
-    int sliderdaGosterilecekKayit = 5;
-    Model.End = sliderdaGosterilecekKayit;
-    int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
-
-    int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
-    int start = 0;    
-
-    Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-    Model.Start = @start;
-}
-else *@
 @if (@Model.kitapSliderYometimAdi == "tumkitaplar")
 {
     int sliderdaGosterilecekKayit = ((Model.sliderdaGosterilecekKayit ?? 0) == 0) ? 

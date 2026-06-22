@@ -3,18 +3,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@* @section scripts{
-    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
-} *@
-@section Styles{
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/kitap_arama_style.css" rel="stylesheet" />
-}
-
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
-@using HerkesYazarOlsun.Portal.Controllers;
+@using HerkesYazarOlsun.Portal.Controllers; 
+@using HerkesYazarOlsun.Model.ViewModel;
 
- 
+
 @if (ViewBag.DevamEdenKitaplar != null && ViewBag.DevamEdenKitaplar)
 {
     <h3 style="margin: 50px auto;">Devam Eden Kitaplar</h3>
@@ -36,11 +29,8 @@ else
     <h3 style="margin: 50px auto;">Tüm Kitaplar</h3>
 }
 
-<h6><span>@Model.VMBooksList.Count()</span> Kayıt Var </h6>
 
-<hr />
-
-
+ 
 @Html.Partial("_KitapFiltreleme")
 
 @{
@@ -48,29 +38,58 @@ else
 }
 
 @Html.Partial("_AlertMesaj",@Model.Tip)
-
+ 
+<br/>
 
 <div id="tumkitaplar">
     @{
         Model.kitapSliderYometimAdi = "tumkitaplar";
-        
     }
 
-    @Html.Partial("_KitapSliderItemYonetimleri",@Model)
+    <h6><span>@Model.VMBooksList.Count()</span> Kayıt Var </h6>
 
-    @Html.Partial("Kitaplar",@Model)
+    <hr />
+
    
-    @Html.Partial("_PaginationButonlar",@Model.vM_PAGINATION_BUTTONS)
-   
+    @{ 
+
+          int perSlide = Model.sliderdaGosterilecekKayit != 0
+            ? Model.sliderdaGosterilecekKayit
+            : Convert.ToInt32(ViewBag.SliderdaGosterilecekKayit);
+
+        int total = Model.VMBooksList.Count;
+        int sliderSayisi = (int)Math.Ceiling((double)total / perSlide);
+        var butons = new  VM_PAGINATION_BUTTON{
+                sliderSayisi = sliderSayisi,
+                sliderSayiDivTagName = "tumkitaplar"
+        };
+        Model.vM_PAGINATION_BUTTONS = butons;
+        Model.isAnaSayfa = false;
+    } 
+      @Html.Partial("Kitaplar", @Model)
+
+    @Html.Partial("_PaginationButonlar", Model.vM_PAGINATION_BUTTONS)
 </div>
 
-<div id="arabutonfiltre"></div>
 
+<div id="arabutonfiltre"></div> 
+ 
 
+@section Scripts { 
+ 
+    <!-- SweetAlert2 JS dosyası ve Bootstrap JS dosyası -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+}
 
 <script>
 
     $("#arabutonfiltre").css("display", "none");
+
+    function Temizle(){ 
+        location.reload();
+                 
+    }
+
     function Ara() {
 
         var listelenecek_kayit_sayisi = $("#kayit_sayisi").val();
@@ -88,7 +107,24 @@ else
 
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
-            "KITAP_ADI": kitap_ara
+            "KITAP_ADI": kitap_ara,
+            "Tip": "tumkitaplar",
+            "BitenKitaplar": @(ViewBag.BitenKitaplar == null 
+                ? "null" 
+                : ViewBag.BitenKitaplar.ToString().ToLower()),
+
+            "FavoriKitaplar": @(ViewBag.FavoriKitaplar == null 
+                ? "null" 
+                : ViewBag.FavoriKitaplar.ToString().ToLower()),
+
+            "YayinlananKitaplar": @(ViewBag.YayinlananKitaplar == null 
+                ? "null" 
+                : ViewBag.YayinlananKitaplar.ToString().ToLower()),
+
+            "DevamEdenKitaplar": @(ViewBag.DevamEdenKitaplar == null 
+                ? "null" 
+                : ViewBag.DevamEdenKitaplar.ToString().ToLower())
+                    
         }, function (data) {
             if (data) {
                 $("#arabutonfiltre").html(data);
@@ -107,14 +143,6 @@ else
 
 </script>
 
-<script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery.nice-select.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery-ui.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/jquery.slicknav.js"></script>
-<script src="~/lib/bootstrap/dist/js/mixitup.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/kitap-arama.js"></script>
 
 
 

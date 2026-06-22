@@ -2,7 +2,7 @@
 using HerkesYazarOlsun.Model.Utils;
 using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
-using Newtonsoft.Json; 
+using Newtonsoft.Json;
 
 namespace HerkesYazarOlsun.Portal.Services
 {
@@ -61,11 +61,11 @@ namespace HerkesYazarOlsun.Portal.Services
                 }
 
                 // API'ye gönder
-                var response = await client.PostAsync("api/Settings/SaveOrUpdateAyarlar", form); 
+                var response = await client.PostAsync("api/Settings/SaveOrUpdateAyarlar", form);
 
                 var resultJson = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ServiceResult>(resultJson);
-                 
+
                 //if (result != null)
                 //{
                 //    result.State = MessageResultState.SUCCESS;
@@ -119,14 +119,14 @@ namespace HerkesYazarOlsun.Portal.Services
 
         public YayinAyarlari? GetYayinAyarlariByBookId(long id)
         {
-            Task<string> jsonContent = GetData("api/Settings/GetYayinAyarlariByBookId?id="+id);
+            Task<string> jsonContent = GetData("api/Settings/GetYayinAyarlariByBookId?id=" + id);
             Task.WaitAll(jsonContent);
 
             var result = JsonConvert.DeserializeObject<YayinAyarlari>(jsonContent.Result);
             return result;
         }
 
-        
+
 
     }
 }

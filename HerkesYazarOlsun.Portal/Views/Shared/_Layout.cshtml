@@ -1,12 +1,15 @@
 ﻿@{
     Layout = null;
 }
-
+ @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+    @{
+        var tokens = Antiforgery.GetAndStoreTokens(Context);
+    }
 <!DOCTYPE html>
 <html lang="en">
-@*class="no-js"*@
-
+     
 <head>
+     <meta name="csrf-token" content="@tokens.RequestToken" />
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,30 +20,39 @@
     <title>Herkes Yazar Olsun</title>
      
 
-    <!-- font-awesome -->
-    <link href="~/lib/bootstrap/dist/css/font-awesome.min.css" rel="stylesheet" />
-
-    <!-- Bootstrap core CSS tema için öenmli--->
-     <link href="~/lib/bootstrap/dist/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />  
-
-    <link href="~/lib/bootstrap/dist/css/themify-icons.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/lineericaon_style.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/nice-select.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/nouislider.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="~/lib/fontawesome/css/all.min.css" rel="stylesheet" />
+    <!-- Bootstrap core CSS -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Owl Carousel CSS -->
+    <link href="~/lib/owlcarousel/dist/assets/owl.carousel.min.css" rel="stylesheet" />
+    <!-- Nice Select CSS -->
+    <link href="~/lib/nice-select/css/nice-select.css" rel="stylesheet" />
+    <!-- noUiSlider CSS -->
+    <link href="~/lib/nouislider/nouislider.min.css" rel="stylesheet" />
     
     
-    @RenderSection("Styles",false)
-
-    <!-- custom CSS tema için öenmli-->
-    <link href="~/lib/bootstrap/dist/css/herkesyazarolsun_style.css" rel="stylesheet" /> 
-
-    <script src="~/lib/bootstrap/dist/js/jquery-1.10.2.js"></script>
+    @RenderSection("Styles",false) 
+    <!-- Custom CSS (if any) 
+    <link href="~/css/herkesyazarolsun-bootstrap.css" rel="stylesheet" />
+    <link href="~/css/herkesyazarolsun_style.css" rel="stylesheet" />
+-->
+    <!-- jQuery -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="~/lib/owlcarousel/dist/owl.carousel.min.js"></script>
+    <!-- Nice Select JS -->
+    <script src="~/lib/nice-select/js/jquery.nice-select.min.js"></script>
+    <!-- noUiSlider JS -->
+    <script src="~/lib/nouislider/nouislider.min.js"></script>
      
-    <script src="~/lib/bootstrap/dist/js/plugins.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-     
-    <script src="~/lib/bootstrap/dist/js/skrollr.min.js"></script> 
+    
+    <!-- Google AdSense Script -->
+    <!-- IMPORTANT: Kendi Google AdSense client ID'niz ile aşağıdaki satırı güncelleyiniz: ca-pub-XXXXXXXXXXXXXXXX -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" 
+        crossorigin="anonymous"></script>
     
     <!-- Google AdSense Script -->
     <!-- IMPORTANT: Kendi Google AdSense client ID'niz ile aşağıdaki satırı güncelleyiniz: ca-pub-XXXXXXXXXXXXXXXX -->
@@ -192,8 +204,12 @@
         }
 
     </style>
-    <link rel="icon" type="image/png" href="@Url.Content("~/lib/img/stack-of-books.png")" />
+    <link rel="icon" type="image/png" href="@Url.Content( "~/lib/img/stack-of-books.png")" />
      
+
+   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1543688286895371"
+     crossorigin="anonymous"></script>
+    @RenderSection("Meta", required: false)
      
 </head>
 <body>
@@ -210,6 +226,46 @@
     {
         @Html.Partial("_Footer")
     }
-   
+    
+   @Html.AntiForgeryToken()
+
+    <script>
+    $(function() {
+        // Öncelikli olarak formdaki __RequestVerificationToken input'unu kontrol et
+        let tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+        
+        let csrfToken = null;
+
+        if (tokenInput && tokenInput.value) {
+            csrfToken = tokenInput.value;
+             //console.log("Token formdan alındı:", csrfToken);
+        } else {
+            // Formda yoksa layout'tan alın
+            csrfToken = '@tokens.RequestToken';
+            //console.log("Token layout'tan alındı: Form a ekle otomatik", csrfToken);
+
+            // Formlarda eksikse, hidden input olarak ekle
+            $('form').each(function() {
+                if ($(this).find('input[name="__RequestVerificationToken"]').length === 0) {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: '__RequestVerificationToken',
+                        value: csrfToken
+                    }).appendTo(this);
+                }
+            });
+        }
+
+        // Tüm AJAX çağrılarına token ekle
+        $.ajaxSetup({
+            headers: { 'RequestVerificationToken': csrfToken }
+        });
+
+        // Test
+        console.log("AJAX ve form token hazır:", csrfToken);
+    });
+</script>
+
+
 </body>
 </html>

@@ -1,0 +1,51 @@
+﻿
+<div id="confirmOverlay" style="
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.55);
+       z-index:100005; /* Güncelle popup'ın üstüne çıkacak */
+
+    backdrop-filter:blur(2px);
+">
+    <div id="confirmBox" style="
+        width:360px;
+        margin:15% auto;
+        background:white;
+        border-radius:12px;
+        padding:20px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.25);
+        text-align:center;
+        font-family:Arial;
+    ">
+        <div id="confirmMessage" style="font-size:16px; margin-bottom:20px;"></div>
+
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button id="confirmOkBtn" style="
+                padding:10px 25px;
+                background:#3498db;
+                color:white;
+                border:none;
+                border-radius:6px;
+                cursor:pointer;
+                font-size:15px;
+                min-width:90px;
+            ">
+                Tamam
+            </button>
+
+            <button id="confirmCancelBtn" style="
+                padding:10px 25px;
+                background:#aaa;
+                color:white;
+                border:none;
+                border-radius:6px;
+                cursor:pointer;
+                font-size:15px;
+                min-width:90px;
+            ">
+                İptal
+            </button>
+        </div>
+    </div>
+</div>

@@ -77,7 +77,7 @@
         }
 
         /* Mobil uyumlu */
-        @@media(max - width: 768px)
+        @@media(max-width: 768px)
 
         {
             .connector-icon
@@ -113,7 +113,7 @@
             }
 
         /* Fade-in animasyonu */
-        @@keyframes fadeIn {
+        keyframes fadeIn {
             from
 
         {
@@ -129,7 +129,7 @@
         }
 
         /* Hafif yukarı-aşağı animasyon */
-        @@keyframes floatAnim {
+        keyframes floatAnim {
             0%, 100%
 
         {
@@ -143,7 +143,7 @@
         }
 
         /* Mobil uyum */
-        @@media(max - width: 768px)
+        media(max-width: 768px)
 
         {
             .center-logo-top-img
@@ -158,6 +158,23 @@
         }
 
         }
+media (max-width: 768px) {
+
+    .vh-100 {
+        height: auto !important;
+        min-height: auto !important;
+    }
+
+    .row.align-items-center {
+        padding: 30px 15px !important;
+    }
+
+    .row.align-items-center .col-md-4,
+    .row.align-items-center .col-md-8 {
+        margin-bottom: 20px;
+    }
+
+}
 
     </style>
 }
@@ -194,7 +211,7 @@
         </div>
     </div>
     <div class="step-connector">
-        <img src="/lib/img/stack-of-books.png" class="connector-icon" />
+        <img src="~/lib/img/stack-of-books.png" class="connector-icon" />
         <div class="arrow-down"></div>
     </div>
     <br />
@@ -224,7 +241,7 @@
         </div>
     </div>
     <div class="step-connector">
-        <img src="/lib/img/stack-of-books.png" class="connector-icon" />
+        <img src="~/lib/img/stack-of-books.png" class="connector-icon" />
         <div class="arrow-down"></div>
     </div>
     <br />

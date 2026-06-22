@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
- 
+
     public class HomeController : Controller
     {
         private IHttpContextAccessor _httpContextAccessor;
@@ -33,7 +33,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         public string SignInUrl { get { return $"/Account/Giris"; } }
- 
+
         [AllowAnonymous]
         public ActionResult Index()
         {
@@ -42,9 +42,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
             vM_BOOKS.Start = 0;
             vM_BOOKS.sliderdaGosterilecekKayit = DefaultSliderdaGosterilecekKayit;
 
-            string isGozlemciMod = User.GetGozlemciMod(); 
+            string isGozlemciMod = User.GetGozlemciMod();
+            // Kategorileri ViewBag'e ekle
+            var kategoriler = new BooksService().GetCategories();
+            ViewBag.Kategoriler = kategoriler;
+
             if (!string.IsNullOrEmpty(isGozlemciMod) && isGozlemciMod == "1") // gözlemci mod ile gelinmiş
-            { 
+            {
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
                 ViewBag.Duyurular = list;
                 List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
@@ -53,12 +57,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
 
             if (!string.IsNullOrEmpty(User.GetEmail()))
-            { 
+            {
                 List<VM_CAROUSEL_DUYURU> list = new CarouselDuyuruService().GetDuyurular();
                 ViewBag.Duyurular = list;
                 List<VM_SPONSORLAR> spnlist = new SponsorlarService().GetSponsorlar();
                 ViewBag.Sponsorlar = spnlist.Where(p => p.IS_DELETED != 1).ToList();
-                 
+
                 ViewBag.LOGIN_USER_ID = Lid;
                 ViewBag.YayinAyar = new AyarlarService().GetYyainAyarlari();
                 return View(vM_BOOKS);
@@ -76,6 +80,18 @@ namespace HerkesYazarOlsun.Portal.Controllers
             return View();
         }
         public ActionResult Sozlesme()
+        {
+            return View();
+        }
+        public ActionResult Blog()
+        {
+            return View();
+        }
+        public ActionResult YasalUyari()
+        {
+            return View();
+        }
+        public ActionResult GizlilikSozlezmesi()
         {
             return View();
         }
@@ -99,9 +115,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
         public ActionResult Dogrulama()
         {
             return View();
-        } 
+        }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult SaveRegister(VM_USERS user)
         {
             ServiceResult result = new ServiceResult();
@@ -127,8 +144,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
             }
 
             user.PASSWORD = EncryptionHelper.ComputeSHA256Hash(user.PASSWORD);
-              
-            result = new KisiService().PostKisiSave(user); 
+
+            result = new KisiService().PostKisiSave(user);
             return Json(result);
 
         }

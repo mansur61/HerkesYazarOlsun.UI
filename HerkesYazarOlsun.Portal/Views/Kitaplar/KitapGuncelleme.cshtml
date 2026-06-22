@@ -3,6 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.NavbarGoster = false;
 }
+@using HerkesYazarOlsun.Portal.Controllers;
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
+
 
 @section Styles {
     <style>
@@ -34,20 +37,16 @@
     <link href="~/wowbook/css/handheld.css" rel="stylesheet" />
     <link href="~/wowbook/css/handheld.css?v=2" rel="stylesheet" />
 }
-@using HerkesYazarOlsun.Portal.Controllers;
-@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 
 @{
     Model.IsWowBookEdit = true;
 }
 
 
-
 @Html.Partial("_WowBookContent", @Model)
 
 @section scripts {
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script>!window.jQuery && document.write(unescape('%3Cscript src="./js/libs/jquery-1.9.1.min.js"%3E%3C/script%3E'))</script>
+    <script src="~/lib/jquery/jquery.min.js"></script>
 
     <script src="~/wowbook/wow_book.min.js"></script>
 
@@ -84,12 +83,12 @@
 
             // Eğer sayfa çevrildiğinde manuel olarak flip sound çalmak istersen
             var flipAudio = document.getElementById("flipSound");
-            book.on('turned', function() {
+            book.on('turned', function () {
                 flipAudio.play();
             });
         });
 
-        
+
     </script>
 
     <script src="~/wowbook/js/plugins.js"></script>

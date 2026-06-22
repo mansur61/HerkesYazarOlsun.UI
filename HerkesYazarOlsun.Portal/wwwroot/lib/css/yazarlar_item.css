@@ -1,0 +1,136 @@
+/* PROFILE CARD */
+.profile-card {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 15px;
+    row-gap: 8px;
+
+    padding: 12px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    min-height: 140px;
+    align-items: start;
+}
+
+/* RESİM */
+.profile-card img {
+    grid-column: 1;
+    grid-row: 1;
+
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* HOVER ICONLAR */
+.hover-icons {
+    grid-column: 1;
+    grid-row: 2;
+
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+}
+
+.hover-icons li {
+    list-style: none;
+}
+
+.hover-icons li a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.hover-icons li a:hover {
+    background-color: rgba(0,0,0,0.15);
+}
+
+/* SAĞ BLOK */
+.profile-info {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-width: 0;
+}
+
+/* USERNAME */
+.profile-info h2 {
+    font-size: 16px;
+    margin: 0 0 6px 0;
+    font-weight: 600;
+    color: #333;
+    word-break: break-word;
+}
+
+.username span {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+/* YILDIZ */
+.follow-stats .stat {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.follow-stats .stat i {
+    font-size: 14px;
+}
+
+
+/* ========================= */
+/* 📱 RESPONSIVE (MOBİL) */
+/* ========================= */
+
+@media (max-width: 576px) {
+
+    .profile-card {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+        text-align: center;
+    }
+
+    .profile-card img {
+        grid-column: 1;
+        grid-row: 1;
+        margin: 0 auto;
+    }
+
+    .hover-icons {
+        grid-column: 1;
+        grid-row: 2;
+        justify-content: center;
+    }
+
+    .profile-info {
+        grid-column: 1;
+        grid-row: 3;
+        align-items: center;
+    }
+
+    .follow-stats {
+        margin-top: 6px;
+    }
+
+    .follow-stats .stat {
+        justify-content: center;
+    }
+}
