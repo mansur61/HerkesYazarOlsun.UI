@@ -6,70 +6,76 @@
 @using HerkesYazarOlsun.Portal.Services
 
 @{ 
-    int sliderdaGosterilecekKayit = Model.sliderdaGosterilecekKayit.Value;
-    Model.End = sliderdaGosterilecekKayit;
-    int kalan = (@Model.VMBooksList.Count() % sliderdaGosterilecekKayit);
-    int bolum = (@Model.VMBooksList.Count() / sliderdaGosterilecekKayit);
+    int sliderdaGosterilecekKayit = Model.sliderdaGosterilecekKayit
+        ?? (ViewBag.SliderdaGosterilecekKayit as int?)
+        ?? (ViewBag.DefaultSliderdaGosterilecekKayit as int?)
+        ?? 6;
 
-    int sliderSayisi = (@kalan == 0) ? bolum : (@bolum + 1);
+    if (sliderdaGosterilecekKayit == 0)
+    {
+        sliderdaGosterilecekKayit = 6;
+    }
+
+    var kitapCount = Model.VMBooksList?.Count() ?? 0;
+    Model.End = sliderdaGosterilecekKayit;
+    int kalan = (kitapCount % sliderdaGosterilecekKayit);
+    int bolum = (kitapCount / sliderdaGosterilecekKayit);
+
+    int sliderSayisi = kitapCount == 0 ? 0 : ((kalan == 0) ? bolum : (bolum + 1));
     int start = 0; 
      
-    Model.sliderdaGosterilecekKayit = @sliderdaGosterilecekKayit;
-    Model.Start = @start;
+    Model.sliderdaGosterilecekKayit = sliderdaGosterilecekKayit;
+    Model.Start = start;
 
+ }
  
-}
- 
-<div id="my-pics-@Model.Tip" class="carousel slide" data-ride="carousel"
-     style="width:100%;max-width:1200px;margin:5px auto;background-color:aliceblue;height:430px">
-   @*  <p>@Model.isAnaSayfa</p> *@
-
-    <ol class="carousel-indicators">
-        @for (int i = 0; i < @sliderSayisi; i++)
-        {
-            @if (i == 0)
+@if (Model?.VMBooksList != null && Model.VMBooksList.Count > 0)
+{
+    <div id="my-pics-@Model.Tip" class="carousel slide" data-bs-ride="carousel"
+         style="width:100%;max-width:1200px;margin:5px auto;background-color:aliceblue;height:430px">
+        <ol class="carousel-indicators" style="display:none;">
+            @for (int i = 0; i < @sliderSayisi; i++)
             {
-                <li data-target="#my-pics-@Model.Tip" data-slide-to="@i" class="active"></li>
+                @if (i == 0)
+                {
+                    <li data-bs-target="#my-pics-@Model.Tip" data-bs-slide-to="@i" class="active"></li>
+                }
+                else
+                {
+                    <li data-bs-target="#my-pics-@Model.Tip" data-bs-slide-to="@i"></li>
+                }
             }
-            else
-            {
-                <li data-target="#my-pics-@Model.Tip" data-slide-to="@i"></li>
-            }
+        </ol>
+        @{ 
+            int perSlide = sliderSayisi > 0
+                ? (int)Math.Ceiling((Model.VMBooksList?.Count ?? 0) / (double)sliderSayisi)
+                : sliderdaGosterilecekKayit;
         }
-    </ol>
-    @{ 
-        int perSlide = (int)Math.Ceiling(Model.VMBooksList.Count / (double)sliderSayisi);
-    }
-    <!-- Content -->
-    <div class="carousel-inner" role="listbox" style="width:100%">
-        @for (int i = 0; i < sliderSayisi; i++)
-        {
-            var slideModel = new VM_BOOKS_DETAIL
+        <div class="carousel-inner" role="listbox" style="width:100%">
+            @for (int i = 0; i < sliderSayisi; i++)
             {
-                VMBooksList = Model.VMBooksList.Skip(i * perSlide).Take(perSlide).ToList(),
-                Tip = Model.Tip,
-                isAnaSayfa = Model.isAnaSayfa
-            };
+                var slideModel = new VM_BOOKS_DETAIL
+                {
+                    VMBooksList = Model.VMBooksList.Skip(i * perSlide).Take(perSlide).ToList(),
+                    Tip = Model.Tip,
+                    isAnaSayfa = Model.isAnaSayfa
+                };
 
-            <div class="item @(i == 0 ? "active" : "")">
-                @Html.Partial("_KitaplarItem", slideModel)
-            </div>
-        }
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    @Html.Partial("_KitaplarItem", slideModel)
+                </div>
+            }
+        </div>
+
+        <a class="carousel-control-prev" style="width:44px;height:44px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);border-radius:50%;left:10px;opacity:1;" href="#my-pics-@Model.Tip" role="button" data-bs-target="#my-pics-@Model.Tip" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="filter:brightness(0) invert(1);"></span>
+            <span class="visually-hidden">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#my-pics-@Model.Tip" style="width:44px;height:44px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);border-radius:50%;right:10px;opacity:1;" role="button" data-bs-target="#my-pics-@Model.Tip" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="filter:brightness(0) invert(1);"></span>
+            <span class="visually-hidden">Next</span>
+        </a>
     </div>
 
-    <!-- Previous/Next controls -->
-    <a class="left carousel-control" style="width:80px;color:forestgreen" href="#my-pics-@Model.Tip" role="button" data-slide="prev">
-        <span class="icon-prev" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-
-    </a>
-    <a class="right carousel-control" href="#my-pics-@Model.Tip" style="width:80px;color:forestgreen" role="button" data-slide="next">
-        <span class="icon-next" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-
-    </a>
-</div>
-
-
-
-@Html.Partial("_AlertMesaj", @Model.Tip)
+    @Html.Partial("_AlertMesaj", Model.Tip)
+}

@@ -1,20 +1,21 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
+﻿@model object
 
+@using System.Linq
 @using HerkesYazarOlsun.Model.Entity
 @using HerkesYazarOlsun.Model.Utils
+@using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Controllers;
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
 @{
-    // int gosterilecekKayit = Model.sliderdaGosterilecekKayit.Value;
-    // int start = Model.Start ?? 0;
-    // int end = (Model.Start ?? 0) + gosterilecekKayit;
-    // var booksList = Model.VMBooksList?.Skip(start).Take(gosterilecekKayit).ToList();//OrderByDescending(p => p.ID).
- 
+    var viewModelAsBooksDetail = Model as VM_BOOKS_DETAIL;
+    var viewModelAsKitapItem = Model as VM_KitapItem;
+    var books = (viewModelAsBooksDetail?.VMBooksList != null)
+        ? viewModelAsBooksDetail.VMBooksList.Cast<dynamic>()
+        : (viewModelAsKitapItem?.Book != null ? new[] { viewModelAsKitapItem.Book } : Enumerable.Empty<dynamic>());
+    var tip = viewModelAsBooksDetail?.Tip ?? viewModelAsKitapItem?.Tip;
+    bool? isAnaSayfa = viewModelAsBooksDetail?.isAnaSayfa ?? viewModelAsKitapItem?.isAnaSayfa;
 
-}
-
-@{
     string isGozlemciMod = User.GetGozlemciMod();
 }
 
@@ -52,223 +53,341 @@
         justify-content: center;
     }
 
+    .product__item {
+        position: relative;
+        background-color: #f5f5f5;
+    }
 
+    .product__item__pic {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+    }
+
+    .product__item__pic__hover {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        gap: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+    }
+
+    .product__item:hover .product__item__pic__hover {
+        opacity: 1;
+    }
+
+    .product__item__pic__hover li {
+        display: inline-block;
+    }
+
+    .product__item__pic__hover a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        color: #333;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .product__item__pic__hover a:hover {
+        background-color: #ff6b6b;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .product__item__text {
+        padding: 10px;
+        background-color: white;
+    }
+
+    .product__item__text h6 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .product__item__text h6 a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .product__item__text h6 a:hover {
+        color: #ff6b6b;
+    }
+
+    .rating {
+        display: flex;
+        gap: 2px;
+    }
+
+    .rating i {
+        color: #ffc107;
+        font-size: 12px;
+    }
+
+    .discount-badge {
+        position: absolute !important;
+        top: 10px !important;
+        left: 10px !important;
+        z-index: 5;
+    }
 </style>
 
-
 <div class="books-wrapper">
-@foreach (var item in Model.VMBooksList)
-{
-    try
+    @foreach (var item in books)
     {
-        <input type="hidden" value="@item.ID" name="kId">
+        try
+        {
+            <input type="hidden" value="@item.ID" name="kId">
 
             <div class="col-6 col-sm-6 col-md-4 col-lg-3 book-item">
-
-
-            <div class="product__item" style="overflow:hidden;height:360px">
-
-                <div class="product__item__pic set-bg" data-setbg="https://herkesyazarolsun.com.tr/Belgeler/@item.ONKAPAKFOTOPATH">
-                    @if (!string.IsNullOrEmpty(item.Categori?.Name))
-                    {
-                        <div class="discount-badge" style="position:absolute; top:10px; left:10px; background-color:lightgreen; color:white; padding:5px 10px; font-size:12px; font-weight:bold; border-radius:5px;">
-                            @item.Categori.Name
-                        </div>
-                    }
-
-                    <ul class="product__item__pic__hover">
-                        @if (isGozlemciMod == "0")
+                <div class="product__item" style="overflow:hidden;height:360px">
+                    <div class="product__item__pic" 
+                         style="background-image: url('https://herkesyazarolsun.com.tr/Belgeler/@item.ONKAPAKFOTOPATH'); background-size: cover; background-position: center; width: 100%; height: 100%; background-color: #e9ecef;"
+                         onerror="this.style.backgroundImage='url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2RkZCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjEyIiBmaWxsPSIjYWFhIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=)'">
+                        @if (!string.IsNullOrEmpty(item.Categori?.Name))
                         {
-                            <li>
-                                <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(item.ID.ToString())", "@Model.Tip")'><i class="fa fa-heart"></i></a>
-                            </li>
+                            <div class="discount-badge" style="position:absolute; top:10px; left:10px; background-color:lightgreen; color:white; padding:5px 10px; font-size:12px; font-weight:bold; border-radius:5px;">
+                                @item.Categori.Name
+                            </div>
+                        }
 
-                            @if (!(@Model.isAnaSayfa ?? false) && item.YazarId == (int?)ViewBag.LOGIN_USER_ID)
+                        <ul class="product__item__pic__hover">
+                            @if (isGozlemciMod == "0")
                             {
-                                if (item.TAMAMLANDIMI)
-                                {
-                                    var yayinAyr = (ViewBag.YayinAyar != null && ViewBag.YayinAyar.Count > 0)
-                                        ? ViewBag.YayinAyar
-                                        : item.Categori?.CategoryYayinAyarlari;
+                                <li>
+                                    <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(item.ID.ToString())", "@tip")'><i class="fa fa-heart"></i></a>
+                                </li>
 
-                                    if (yayinAyr != null)
+                                @if (!(@isAnaSayfa ?? false) && item.YazarId == (int?)ViewBag.LOGIN_USER_ID)
+                                {
+                                    if (item.TAMAMLANDIMI)
                                     {
-                                        if (item.iSTATISTIK.ToplamBegeni >= yayinAyr.ToplamBegeni
-                                            && item.iSTATISTIK.ToplamYorum >= yayinAyr.ToplamYorum
-                                            && item.iSTATISTIK.ToplamYildiz >= yayinAyr.ToplamYildiz
-                                            && item.iSTATISTIK.ToplamDegerlendirme >= yayinAyr.ToplamDegerlendirme)
+                                        var yayinAyr = (ViewBag.YayinAyar != null && ViewBag.YayinAyar.Count > 0)
+                                            ? ViewBag.YayinAyar
+                                            : item.Categori?.CategoryYayinAyarlari;
+
+                                        if (yayinAyr != null)
                                         {
-                                            <li>
-                                                <a onclick='KitabiYayinaGonder("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip")'>
-                                                    <i class="fa fa-share"></i>
-                                                </a>
-                                            </li>
+                                            if (item.iSTATISTIK.ToplamBegeni >= yayinAyr.ToplamBegeni
+                                                && item.iSTATISTIK.ToplamYorum >= yayinAyr.ToplamYorum
+                                                && item.iSTATISTIK.ToplamYildiz >= yayinAyr.ToplamYildiz
+                                                && item.iSTATISTIK.ToplamDegerlendirme >= yayinAyr.ToplamDegerlendirme)
+                                            {
+                                                <li>
+                                                    <a onclick='KitabiYayinaGonder("@StringCipher.Encrypt(item.ID.ToString())","@tip")'>
+                                                        <i class="fa fa-share"></i>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                    }
+
+                                    <li id="delBtn_@item.ID" style="cursor: pointer;" onclick="deleteBook('@StringCipher.Encrypt(item.ID.ToString())','@tip','@item.ID')" aria-label="Sil">
+                                        <span class="trash-icon">&#x1F5D1;&#xFE0F;</span>
+                                    </li>
+                                }
+                            }
+
+                            <li><a href="/Kisi/Profil?pId=@StringCipher.Encrypt(item.YazarId.ToString())"><i class="fa fa-user"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="product__item__text" style="height:auto">
+                        <h6><a href="/Kitaplar/KitapDetay?kitap_id=@StringCipher.Encrypt(item.ID.ToString())">@item.Name</a></h6>
+                        <div class="row">
+                            <div class="rating hidden-sm col-sm-7">
+                                @{ 
+                                    int maxStar = 0;
+                                    if (item.BooksStars != null && item.BooksStars.Count > 0) {
+                                        foreach (var star in item.BooksStars) {
+                                            int starValue = (int)star.StarPuani;
+                                            if (starValue > maxStar) {
+                                                maxStar = starValue;
+                                            }
                                         }
                                     }
                                 }
 
-                                <li id="delBtn_@item.ID"
-                                    onclick='KitabiSil("@StringCipher.Encrypt(item.ID.ToString())","@Model.Tip","@item.ID")' aria-label="Sil">
-                                    <span class="trash-icon">&#x1F5D1;&#xFE0F;</span>
-                                </li>
-                            }
-                        }
-
-                        <li><a href="/Kisi/Profil?pId=@StringCipher.Encrypt(item.YazarId.ToString())"><i class="fa fa-user"></i></a></li>
-                    </ul>
-                </div>
-
-                <div class="product__item__text" style="height:auto">
-                    <h6><a href="/Kitaplar/KitapDetay?kitap_id=@StringCipher.Encrypt(item.ID.ToString())">@item.Name</a></h6>
-                    <div class="row">
-                        <div class="rating hidden-sm col-sm-7">
-                            @{
-                                var maxStar = (item.BooksStars?.Count > 0) ? item.BooksStars.Max(x => x.StarPuani) : 0;
-                            }
-
-                            @for (int i = 1; i <= 5; i++)
-                            {
-                                if (i <= maxStar)
+                                @for (int i = 1; i <= 5; i++)
                                 {
-                                    <i class="price-text-color fa fa-star"></i>
+                                    if (i <= maxStar)
+                                    {
+                                        <i class="price-text-color fa fa-star"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-star text-secondary"></i>
+                                    }
                                 }
-                                else
-                                {
-                                    <i class="fa fa-star text-secondary"></i>
-                                }
-                            }
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-       
+        }
+        catch (Exception ex)
+        {
+            <div style="border:1px solid red; color:red; margin:5px; padding:5px;">
+                <strong>Hata @item.ID:</strong> @ex.Message
+            </div>
+        }
     }
-    catch (Exception ex)
-    {
-        <div style="border:1px solid red; color:red; margin:5px; padding:5px;">
-            <strong>Hata @item.ID:</strong> @ex.Message
-        </div>
-    }
-}
- </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</div>
 
 <script>
+    if (!window.KitabiFavorilereEkle) {
+        window.KitabiFavorilereEkle = function(btn, kitapId, tip) {
+            const originalIcon = btn.innerHTML;
+            console.log("tip: " + tip);
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin text-primary"></i>';
 
-       function KitabiFavorilereEkle(btn, kitapId, tip) {
-        const originalIcon = btn.innerHTML; // eski ikon
-        console.log("tip: " + tip);
-        btn.innerHTML = '<i class="fa fa-spinner fa-spin text-primary"></i>'; 
-
-        $.post(
-            "@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")",
-            { "id": kitapId },
-            function (data) {
-                setTimeout(() => {   }, 200); // 200ms beklet
-                // Ajax tamamlanınca eski ikon geri dönsün
-                btn.innerHTML = originalIcon;
-
-                if (data.state == 1) {
-                    console.log("Kitap favorilere eklendi");
-                } else {
-                    console.log("Hata: " + data.message);
-                }
-            }
-        ).fail(function () {
-            btn.innerHTML = originalIcon;
-            console.log("Sunucu hatası");
-        });
-    }
-
- 
-    function KitabiYayinaGonder(kitapId, tip) {
-        console.log("tip: " + tip);
-        console.log("kitapId: " + kitapId);
-        $.post("@Url.Action(nameof(KitaplarController.KitabiYayinaGonder), "Kitaplar")", { "kitapid": kitapId }, function (data) {
-            console.log("data: " + data.state);
-            if (data.state == 1) {
-                $("#basarili-" + tip).css("display", "block");
-                $("#uyari-" + tip + " #mesaj").html("Tebrikler. Kitabınızı yayına alabilirsiniz. Bunun için ödeme sayfasına yönlendirileceksiniz.");
-                setTimeout(function () {
-                    window.location.href = "/OdemeSayfasi/Odeme?kitapId=" + kitapId;
-                }, 3000);
-            } else {
-                $("#uyari-" + tip).css("display", "block");
-                $("#uyari-" + tip + " #mesaj").html(data.message);
-
-            }
-        });
-    }
-
-     function KitabiSil(encId, tip, realId) {
-
-          console.log("tip: " + tip);
-        console.log("kitapId: " + realId);
-
-        const btn = document.getElementById("delBtn_" + realId);
-        const originalIcon = btn.innerHTML;
-
-        Swal.fire({
-            title: 'Emin misiniz?',
-            text: "Bu kitabı silmek istiyor musunuz?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Evet',
-            cancelButtonText: 'Hayır',
-            customClass: {
-                confirmButton: 'btn btn-danger',
-                cancelButton: 'btn btn-secondary'
-            }
-        }).then((result) => {
-
-            if (result.isConfirmed) {
-
-                // SPINNER BAŞLASIN
-                btn.innerHTML = '<i class="fa fa-spinner fa-spin text-primary"></i>';
-
-                $.post(
-                    "@Url.Action(nameof(KitaplarController.KitabiSil), "Kitaplar")",
-                    { "kitapid": encId },
-                    function (data) {
-
-                        console.log("data: " + data.state);
-
-                        // HER DURUMDA İKONU GERİ GETİR
-                        btn.innerHTML = originalIcon;
-
-                        if (data.state == 1) {
-
-                            // Başarılı
-                            $("#basarili-" + tip).css("display", "block");
-                            $("#uyari-" + tip + " #mesaj").html("Kitap Silindi");
-
-                            setTimeout(function () {
-                                window.location.reload();
-                            }, 3000);
-
-                        } else {
-
-                            // Hata
-                            $("#uyari-" + tip).css("display", "block");
-                            $("#uyari-" + tip + " #mesaj").html(data.message);
-                        }
-                    }
-                )
-                .fail(function () {
-
-                    // AJAX hata verirse de ikonu geri getir
+            $.post(
+                "@Url.Action(nameof(KitaplarController.KitabiFavorilereEkle), "Kitaplar")",
+                { "id": kitapId },
+                function (data) {
+                    setTimeout(function () {}, 200);
                     btn.innerHTML = originalIcon;
 
-                    $("#uyari-" + tip).css("display", "block");
-                    $("#uyari-" + tip + " #mesaj").html("Sunucu ile bağlantı kurulamadı.");
-                });
+                    if (data.state == 1) {
+                        showMessage('basarili', tip, "Kitap favorilere eklendi.");
+                    } else {
+                        showMessage('uyari', tip, data.message || "Favori eklenemedi.");
+                    }
+                }
+            ).fail(function () {
+                btn.innerHTML = originalIcon;
+                showMessage('uyari', tip, "Sunucu ile bağlantı kurulamadı.");
+            });
+        };
 
-            } else {
-                Swal.fire("İptal Edildi", "Silme işlemi iptal edildi.", "info");
+        window.KitabiYayinaGonder = function(kitapId, tip) {
+            console.log("tip: " + tip);
+            console.log("kitapId: " + kitapId);
+            $.post("@Url.Action(nameof(KitaplarController.KitabiYayinaGonder), "Kitaplar")", { "kitapid": kitapId }, function (data) {
+                console.log("data: " + data.state);
+                if (data.state == 1) {
+                    $("#basarili-" + tip).css("display", "block");
+                    $("#uyari-" + tip + " #mesaj").html("Tebrikler. Kitabınızı yayına alabilirsiniz. Bunun için ödeme sayfasına yönlendirileceksiniz.");
+                    setTimeout(function () {
+                        window.location.href = "/OdemeSayfasi/Odeme?kitapId=" + kitapId;
+                    }, 3000);
+                } else {
+                    $("#uyari-" + tip).css("display", "block");
+                    $("#uyari-" + tip + " #mesaj").html(data.message);
+                }
+            }).fail(function () {
+                $("#uyari-" + tip).css("display", "block");
+                $("#uyari-" + tip + " #mesaj").html("Sunucu hatası");
+            });
+        };
+
+        window.deleteBook = function(encId, tip, realId) {
+            KitabiSil(encId, tip, realId);
+        };
+
+        window.KitabiSil = async function(encId, tip, realId) {
+            const btn = document.getElementById(`delBtn_${realId}`);
+            
+            if (!btn) {
+                console.error(`Button not found: delBtn_${realId}`);
+                return;
             }
-        });
+
+            const originalIcon = btn.innerHTML;
+            const spinnerIcon = '<i class="fa fa-spinner fa-spin text-primary"></i>';
+
+            // Confirmation dialog
+            const { isConfirmed } = await Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Bu kitabı silmek istiyor musunuz?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Evet',
+                cancelButtonText: 'Hayır',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary'
+                }
+            });
+
+            if (!isConfirmed) {
+                await Swal.fire("İptal Edildi", "Silme işlemi iptal edildi.", "info");
+                return;
+            }
+
+            // Show spinner
+            btn.innerHTML = spinnerIcon;
+
+            try {
+                const response = await fetch(
+                    "@Url.Action(nameof(KitaplarController.KitabiSil), "Kitaplar")",
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ kitapid: encId })
+                    }
+                );
+
+                const data = await response.json();
+                btn.innerHTML = originalIcon;
+
+                if (data.state === 1) {
+                    // Success
+                    showMessage('basarili', tip, "Kitap Silindi");
+                    setTimeout(() => location.reload(), 3000);
+                } else {
+                    // Error from server
+                    showMessage('uyari', tip, data.message || "Bilinmeyen bir hata oluştu.");
+                }
+            } catch (error) {
+                console.error("Silme işlemi sırasında hata:", error);
+                btn.innerHTML = originalIcon;
+                showMessage('uyari', tip, "Sunucu ile bağlantı kurulamadı.");
+            }
+        };
+
+        function showMessage(type, category, message) {
+            const container = document.querySelector(`#${type}-${category}`);
+            const messageElement = container?.querySelector('#mesaj');
+            
+            if (container && messageElement) {
+                container.style.display = 'block';
+                messageElement.textContent = message;
+                return;
+            }
+
+            console.warn('showMessage: alert container not found for', type, category, 'falling back to alert');
+            if (type === 'basarili') {
+                alert('Başarılı: ' + message);
+            } else {
+                alert(message);
+            }
+        }
     }
 </script>

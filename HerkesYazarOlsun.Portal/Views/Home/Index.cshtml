@@ -79,15 +79,6 @@
 }
 
 
-<div class="row">
-    <div class="col-md-9">
-        <h3>
-            5 Yıldız Alan Kitaplar
-        </h3>
-    </div>
-</div>
-
-
 @{
     var yildizModel = new VM_BOOKS_DETAIL
     {
@@ -99,16 +90,19 @@
     };
 }
 
-@Html.Partial("_KitapSliderGosterimleri", yildizModel)
-
-<div class="row">
-    <div class="col-md-9">
-        <h3>
-            En Çok Yorum Alan 10 Kitaplar 
-        </h3>
+@if (yildizModel.VMBooksList != null && yildizModel.VMBooksList.Count > 0)
+{
+    <div class="row">
+        <div class="col-md-9">
+            <h3>
+                5 Yıldız Alan Kitaplar
+            </h3>
+        </div>
     </div>
-</div> 
- 
+
+    @Html.Partial("_KitapSliderGosterimleri", yildizModel)
+}
+
 @{
     var yorumModel = new VM_BOOKS_DETAIL
     {
@@ -121,9 +115,19 @@
     };
 }
 
-@Html.Partial("_KitapSliderGosterimleri", yorumModel)
+@if (yorumModel.VMBooksList != null && yorumModel.VMBooksList.Count > 0)
+{
+    <div class="row">
+        <div class="col-md-9">
+            <h3>
+                En Çok Yorum Alan 10 Kitaplar 
+            </h3>
+        </div>
+    </div>
 
- 
+    @Html.Partial("_KitapSliderGosterimleri", yorumModel)
+}
+
 @{
     var digerModel = new VM_BOOKS_DETAIL
     {
@@ -136,15 +140,18 @@
     };
 }
 
-<div class="row">
-    <div class="col-md-9">
-        <h3>
-            Diğer Kitaplar 
-        </h3>
+@if (digerModel.VMBooksList != null && digerModel.VMBooksList.Count > 0)
+{
+    <div class="row">
+        <div class="col-md-9">
+            <h3>
+                Diğer Kitaplar 
+            </h3>
+        </div>
     </div>
-</div>
 
-@Html.Partial("_KitapSliderGosterimleri", digerModel)
+    @Html.Partial("_KitapSliderGosterimleri", digerModel)
+}
 
  
 

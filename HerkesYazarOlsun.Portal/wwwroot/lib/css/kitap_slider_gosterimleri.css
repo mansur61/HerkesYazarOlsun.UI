@@ -1,7 +1,26 @@
- 
-    /* OWL ITEM ORTALAMA */
-#owl-BOOKS .item,
-[id^="owl-"] .item {
+/* Bootstrap Carousel Styles */
+.carousel {
+    background-color: #f8f9fa;
+}
+
+.carousel-item {
     display: flex;
     justify-content: center;
+    align-items: flex-start;
+    padding: 10px;
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    opacity: 0.7;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1;
 }
