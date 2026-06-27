@@ -175,6 +175,12 @@
                         }
 
                         <ul class="product__item__pic__hover">
+                            <li>
+                                <a href="/Kitaplar/KitapDetay?kitap_id=@StringCipher.Encrypt(item.ID.ToString())" title="Kitap detayına git">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </li>
+
                             @if (isGozlemciMod == "0")
                             {
                                 <li>
