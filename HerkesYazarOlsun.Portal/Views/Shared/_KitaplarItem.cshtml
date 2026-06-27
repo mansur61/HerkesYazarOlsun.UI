@@ -20,23 +20,6 @@
 }
 
 <style>
-    .trash-icon {
-        display: inline-block;
-        font-size: 18px;
-        padding: 6px 8px;
-        background-color: #fff; /* Beyaz arka plan */
-        border: 1px solid #ccc; /* Hafif gri border */
-        border-radius: 6px; /* Yuvarlatılmış köşeler */
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-    }
-
-        .trash-icon:hover {
-            background-color: #f8d7da; /* Silmeye yakın kırmızı ton hover */
-            border-color: #f5c6cb;
-            color: #a71d2a; /* Icon rengi değişir */
-            transform: scale(1.1); /* Hafif büyüme efekti */
-        }
 
     .book-item {
         flex: 0 0 50%; /* her satırda 2 adet */
@@ -76,11 +59,13 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        display: flex;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
         opacity: 0;
         transition: opacity 0.3s ease;
         z-index: 10;
+        width: auto;
     }
 
     .product__item:hover .product__item__pic__hover {
@@ -88,19 +73,21 @@
     }
 
     .product__item__pic__hover li {
-        display: inline-block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .product__item__pic__hover a {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         background-color: rgba(255, 255, 255, 0.9);
         border-radius: 50%;
         color: #333;
-        font-size: 18px;
+        font-size: 16px;
         transition: all 0.3s ease;
         text-decoration: none;
         cursor: pointer;
@@ -109,6 +96,27 @@
     .product__item__pic__hover a:hover {
         background-color: #ff6b6b;
         color: white;
+        transform: scale(1.1);
+    }
+
+    .trash-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        color: #333;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .trash-icon:hover {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #a71d2a;
         transform: scale(1.1);
     }
 
@@ -174,50 +182,50 @@
                             </div>
                         }
 
-                        <ul class="product__item__pic__hover">
+                    <ul class="product__item__pic__hover">
+                        <li>
+                            <a href="/Kitaplar/KitapDetay?kitap_id=@StringCipher.Encrypt(item.ID.ToString())" title="Kitap detayına git">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </li>
+
+                        @if (isGozlemciMod == "0")
+                        {
                             <li>
-                                <a href="/Kitaplar/KitapDetay?kitap_id=@StringCipher.Encrypt(item.ID.ToString())" title="Kitap detayına git">
-                                    <i class="fa fa-eye"></i>
-                                </a>
+                                <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(item.ID.ToString())", "@tip")'><i class="fa fa-heart"></i></a>
                             </li>
 
-                            @if (isGozlemciMod == "0")
+                            @if (!(@isAnaSayfa ?? false) && item.YazarId == (int?)ViewBag.LOGIN_USER_ID)
                             {
-                                <li>
-                                    <a onclick='KitabiFavorilereEkle(this,"@StringCipher.Encrypt(item.ID.ToString())", "@tip")'><i class="fa fa-heart"></i></a>
-                                </li>
-
-                                @if (!(@isAnaSayfa ?? false) && item.YazarId == (int?)ViewBag.LOGIN_USER_ID)
+                                if (item.TAMAMLANDIMI)
                                 {
-                                    if (item.TAMAMLANDIMI)
-                                    {
-                                        var yayinAyr = (ViewBag.YayinAyar != null && ViewBag.YayinAyar.Count > 0)
-                                            ? ViewBag.YayinAyar
-                                            : item.Categori?.CategoryYayinAyarlari;
+                                    var yayinAyr = (ViewBag.YayinAyar != null && ViewBag.YayinAyar.Count > 0)
+                                        ? ViewBag.YayinAyar
+                                        : item.Categori?.CategoryYayinAyarlari;
 
-                                        if (yayinAyr != null)
+                                    if (yayinAyr != null)
+                                    {
+                                        if (item.iSTATISTIK.ToplamBegeni >= yayinAyr.ToplamBegeni
+                                            && item.iSTATISTIK.ToplamYorum >= yayinAyr.ToplamYorum
+                                            && item.iSTATISTIK.ToplamYildiz >= yayinAyr.ToplamYildiz
+                                            && item.iSTATISTIK.ToplamDegerlendirme >= yayinAyr.ToplamDegerlendirme)
                                         {
-                                            if (item.iSTATISTIK.ToplamBegeni >= yayinAyr.ToplamBegeni
-                                                && item.iSTATISTIK.ToplamYorum >= yayinAyr.ToplamYorum
-                                                && item.iSTATISTIK.ToplamYildiz >= yayinAyr.ToplamYildiz
-                                                && item.iSTATISTIK.ToplamDegerlendirme >= yayinAyr.ToplamDegerlendirme)
-                                            {
-                                                <li>
-                                                    <a onclick='KitabiYayinaGonder("@StringCipher.Encrypt(item.ID.ToString())","@tip")'>
-                                                        <i class="fa fa-share"></i>
-                                                    </a>
-                                                </li>
-                                            }
+                                            <li>
+                                                <a onclick='KitabiYayinaGonder("@StringCipher.Encrypt(item.ID.ToString())","@tip")'>
+                                                    <i class="fa fa-share"></i>
+                                                </a>
+                                            </li>
                                         }
                                     }
-
-                                    <li id="delBtn_@item.ID" style="cursor: pointer;" onclick="deleteBook('@StringCipher.Encrypt(item.ID.ToString())','@tip','@item.ID')" aria-label="Sil">
-                                        <span class="trash-icon">&#x1F5D1;&#xFE0F;</span>
-                                    </li>
                                 }
+
+                                <li id="delBtn_@item.ID" style="cursor: pointer;" onclick="deleteBook('@StringCipher.Encrypt(item.ID.ToString())','@tip','@item.ID')" aria-label="Sil">
+                                    <span class="trash-icon">&#x1F5D1;&#xFE0F;</span>
+                                </li>
                             }
 
                             <li><a href="/Kisi/Profil?pId=@StringCipher.Encrypt(item.YazarId.ToString())"><i class="fa fa-user"></i></a></li>
+                        }
                         </ul>
                     </div>
 

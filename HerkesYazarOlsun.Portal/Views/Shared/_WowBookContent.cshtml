@@ -1,8 +1,8 @@
-﻿using HerkesYazarOlsun.Portal.Controllers
-using System.Text.RegularExpressions
-model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
+﻿@using HerkesYazarOlsun.Portal.Controllers
+@using System.Text.RegularExpressions
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 
-{
+@{
     string tip = "ilgilisayfaguncelle";
 }
 
@@ -33,7 +33,7 @@ model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
     z-index: 99999;
 }
 
-media (max-width: 768px) {
+@@media (max-width: 768px) {
     #guncelle {
         width: 95% !important;
         max-height: 90vh !important;
@@ -49,7 +49,7 @@ media (max-width: 768px) {
 .ql-editor { min-height: 200px !important; }
 </style>
 
-<input type="hidden" id="tip" value="tip" />
+<input type="hidden" id="tip" value="@tip" />
 
 <div id="container">
     <nav>
@@ -65,10 +65,10 @@ media (max-width: 768px) {
             <li><a id='fullscreen' href="#">Fullscreen</a></li>
             <li><a id='thumbs' href="#">Thumbs</a></li>
             <li>
-                <img src="Url.Content("~/wowbook/images/switch.png")"
+                <img src="@Url.Content("~/wowbook/images/switch.png")"
                      alt="Çıkış"
                      style="width:45px; height:45px; cursor:pointer;"
-                     onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=ViewBag.KITAPENC';" />
+                     onclick="window.location.href='/Kitaplar/KitapDetay?kitap_id=@ViewBag.KITAPENC';" />
             </li>
         </ul>
     </nav>
@@ -77,52 +77,52 @@ media (max-width: 768px) {
     <div id="main">
         <div id='features'>
             <div>
-                if (Model.BookModel.ONKAPAKFOTOPATH == "-1")
+                @if (Model.BookModel.ONKAPAKFOTOPATH == "-1")
                 {
                     <img src="~/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
                 }
                 else
                 { 
-                    <img src="https://herkesyazarolsun.com.tr/Belgeler/(ViewBag.VM_KITAP.ONKAPAKFOTOPATH)"
+                    <img src="https://herkesyazarolsun.com.tr/Belgeler/@ViewBag.VM_KITAP.ONKAPAKFOTOPATH"
                          alt="Sayfa resmi" width="100%" height="100%" />
                 }
             </div>
 
             <audio id="flipSound" style="display:none">
-                <source src="Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
+                <source src="@Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
             </audio>
 
             <h1>
                 <p style="font-size:40px;text-align:center;color:white">Önsöz</p>
-                <p style="font-size:20px;">Html.Raw(Model.BookModel.ONSOZ)</p>
+                <p style="font-size:20px;">@Html.Raw(Model.BookModel.ONSOZ)</p>
             </h1>
 
-            foreach (var item in Model.BookModel.BooksPageList)
+            @foreach (var item in Model.BookModel.BooksPageList)
             {
                 var temizHtml = Regex.Replace(item.PageWrite, "<img[^>]*>", "", RegexOptions.IgnoreCase);
-                temizHtml = Regex.Replace(temizHtml, "\|\|img_BooksPage\|\|", "", RegexOptions.IgnoreCase);
+                temizHtml = Regex.Replace(temizHtml, @"\|\|img_BooksPage\|\|", "", RegexOptions.IgnoreCase);
 
                 <div style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
-                    if (Model.IsWowBookEdit)
+                    @if (Model.IsWowBookEdit)
                     {
-                        <button class="btn btn-warning" onclick="KitabiGuncelle('item.ID')">Sayfayı Güncelle</button>
-                        <button class="btn btn-danger" onclick="SayfayiSil('item.ID')">Sayfayı Sil</button>
+                        <button class="btn btn-warning" onclick="KitabiGuncelle('@item.ID')">Sayfayı Güncelle</button>
+                        <button class="btn btn-danger" onclick="SayfayiSil('@item.ID')">Sayfayı Sil</button>
                     }
 
                     <div class='feature pagefx hardpage' style="width:350px">
-                        <p style="font-size:12px;">Html.Raw(temizHtml)</p>
+                        <p style="font-size:12px;">@Html.Raw(temizHtml)</p>
 
-                        if (item.PageWrite.Contains("||img_BooksPage||"))
+                        @if (item.PageWrite.Contains("||img_BooksPage||"))
                         {
                             if (!string.IsNullOrEmpty(item.PageFoto) && item.PageFoto != "PageFoto")
                             {
                                 <div class="resimWrapper" style="position:relative; margin-top:10px; display:inline-block;">
-                                    <img src="https://herkesyazarolsun.com.tr/Belgeler/item.PageFoto"
+                                    <img src="https://herkesyazarolsun.com.tr/Belgeler/@item.PageFoto"
                                          style="width:100%; height:auto; border-radius:4px;" />
-                                    if (Model.IsWowBookEdit)
+                                    @if (Model.IsWowBookEdit)
                                     {
                                         <button type="button" class="resimSilBtn"
-                                                onclick='resmiSil(this, Html.Raw(Json.Serialize(item)))'
+                                                onclick='resmiSil(this, @Html.Raw(Json.Serialize(item)))'
                                                 style="
                                                     position:absolute;
                                                     top:5px;
@@ -152,13 +152,13 @@ media (max-width: 768px) {
             </div>
 
             <div class='feature hardpage'>
-                if (ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH == "-1")
+                @if (ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH == "-1")
                 {
                     <img src="~/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
                 }
                 else
                 {
-                    <img src="https://herkesyazarolsun.com.tr/Belgeler/(ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH)"
+                    <img src="https://herkesyazarolsun.com.tr/Belgeler/@ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH"
                          alt="Arka Kapak" width="100%" height="100%" />
                 }
             </div>
@@ -181,21 +181,21 @@ media (max-width: 768px) {
         
     </form>
     <div class="row">
-            <div class="col-md-8">
-                Html.Partial("_AlertMesaj", tip)
-            </div>
-            <div class="col-md-4">
-                <div style="text-align:right; margin-top:10px;">
-                    <button type="button" class="btn btn-warning" onclick="Guncelle()">Güncelle</button>
-                    <button type="button" class="btn btn-info" onclick="KapatGuncelle()">Kapat</button>
-                </div>
+        <div class="col-md-8">
+            @Html.Partial("_AlertMesaj", tip)
+        </div>
+        <div class="col-md-4">
+            <div style="text-align:right; margin-top:10px;">
+                <button type="button" class="btn btn-warning" onclick="Guncelle()">Güncelle</button>
+                <button type="button" class="btn btn-info" onclick="KapatGuncelle()">Kapat</button>
             </div>
         </div>
+    </div>
 </div>
 
-Html.Partial("_ProgressOverlay")
-Html.Partial("_AlertOverlay")
-Html.Partial("_ConfirmOverlay")
+@Html.Partial("_ProgressOverlay")
+@Html.Partial("_AlertOverlay")
+@Html.Partial("_ConfirmOverlay")
 
 <script src="~/js/general.js"></script>
 <script>
@@ -204,9 +204,9 @@ Html.Partial("_ConfirmOverlay")
     });
 
     window.bookPagesData = {};
-    foreach (var item in Model.BookModel.BooksPageList)
+    @foreach (var item in Model.BookModel.BooksPageList)
     {
-        <text>window.bookPagesData["item.ID"] = Html.Raw(Json.Serialize(item));</text>
+        <text>window.bookPagesData["@item.ID"] = @Html.Raw(Json.Serialize(item));</text>
     }
 
     // --- Fonksiyonlar ---
@@ -273,7 +273,7 @@ Html.Partial("_ConfirmOverlay")
             if(!confirmed) return; // kullanıcı iptal ettiyse çık
             $("#progressOverlay").show();
             
-            $.post("Url.Action(nameof(KitaplarController.KitapSayfaSil), "Kitaplar")", { 
+            $.post("@Url.Action(nameof(KitaplarController.KitapSayfaSil), "Kitaplar")", { 
                 sayfaId: sayfaId
             })
             .done(data=>{
@@ -294,7 +294,7 @@ Html.Partial("_ConfirmOverlay")
     function Guncelle() {
         
          var form = document.getElementById("guncelleForm");
-           var id = $("#guncellenecekSayfaId").val();        // hidden input’tan al
+           var id = $("#guncellenecekSayfaId").val();        // hidden input'tan al
            if(!id) { console.error("Sayfa ID yok!"); return; }
 
            var sayfaIcerikItem = window.bookPagesData[id] || {};
