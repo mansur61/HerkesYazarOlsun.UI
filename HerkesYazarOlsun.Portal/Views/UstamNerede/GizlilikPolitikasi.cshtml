@@ -1,0 +1,106 @@
+@{
+    ViewData["Title"] = "UstamNerede Gizlilik Politikası";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="ustam-privacy-page py-5">
+    <div class="ustam-privacy-card">
+        <div class="ustam-privacy-header">
+            <span class="ustam-privacy-eyebrow">UstamNerede</span>
+            <h1>Gizlilik Politikası</h1>
+            <p>Son güncelleme: Eylül 2026</p>
+        </div>
+
+        <div class="ustam-privacy-content">
+            <p>
+                Bu Gizlilik Politikası, UstamNerede hizmetini kullanan müşterilerin ve ustaların
+                kişisel verilerinin nasıl toplandığını, kullanıldığını, saklandığını ve korunduğunu açıklar.
+            </p>
+
+            <h2>1. Veri Sorumlusu</h2>
+            <p>
+                Veri sorumlusu UstamNerede hizmetini sunan Emin Yazılım'dır. Sorularınız ve KVKK kapsamındaki
+                başvurularınız için <a href="mailto:ustamnerede@herkesyazarolsun.com.tr">ustamnerede@herkesyazarolsun.com.tr</a>
+                adresinden iletişime geçebilirsiniz.
+            </p>
+
+            <h2>2. Toplanan Veriler</h2>
+            <ul>
+                <li>Ad, soyad, telefon numarası ve e-posta adresi</li>
+                <li>Profil fotoğrafı, usta hizmet kategorileri, deneyim ve değerlendirme bilgileri</li>
+                <li>Müşteri iş talepleri, usta başvuruları ve uygulama içi mesajlar</li>
+                <li>İl, ilçe ve iş hizmetinin sunulması için gerekli adres bilgileri</li>
+                <li>Bildirim, cihaz ve teknik kullanım bilgileri</li>
+                <li>Abonelik planı, lisans başlangıç/bitiş tarihi, ödeme sağlayıcısı ve işlem kimliği</li>
+            </ul>
+
+            <h2>3. Kart ve Ödeme Bilgileri</h2>
+            <p>
+                Abonelik ödemeleri seçilen ödeme sağlayıcısı üzerinden gerçekleştirilir. Kart numarası ve CVV
+                bilgileri UstamNerede veritabanında saklanmaz. Bu bilgiler ödeme işlemi sırasında iyzico veya PayTR
+                gibi yetkili ödeme sağlayıcıları tarafından işlenebilir.
+            </p>
+            <p>
+                UstamNerede sisteminde yalnızca abonelik planı, lisans süresi, ödeme sağlayıcısı ve işlem kimliği
+                gibi lisans yönetimi için gerekli kayıtlar tutulur.
+            </p>
+
+            <h2>4. Verilerin Kullanım Amaçları</h2>
+            <ul>
+                <li>Müşteri ve usta hesaplarını oluşturmak ve yönetmek</li>
+                <li>İş taleplerini, başvuruları ve iletişim süreçlerini yürütmek</li>
+                <li>Abonelik lisansını ve reklam erişim kurallarını uygulamak</li>
+                <li>Bildirim, e-posta ve destek taleplerini yönetmek</li>
+                <li>Dolandırıcılığı, kötüye kullanımı ve güvenlik ihlallerini önlemek</li>
+                <li>Yasal yükümlülükleri yerine getirmek</li>
+            </ul>
+
+            <h2>5. Veri Paylaşımı</h2>
+            <p>
+                İletişim bilgileri, başvuru kabul edilmeden önce karşı tarafa gösterilmez. Başvuru kabul edildiğinde
+                hizmetin yürütülmesi için gerekli bilgiler ilgili müşteri ve usta ile paylaşılabilir.
+                Ödeme işlemleri için gerekli veriler, seçilen ödeme sağlayıcısına aktarılabilir.
+                Veriler yasal zorunluluklar dışında yetkisiz üçüncü kişilerle paylaşılmaz.
+            </p>
+
+            <h2>6. Saklama ve Güvenlik</h2>
+            <p>
+                Veriler, hesap ve hizmet ilişkisi devam ettiği sürece ve ilgili yasal saklama süreleri boyunca korunur.
+                Şifreler hash yöntemiyle saklanır, API iletişimi HTTPS üzerinden yapılır ve erişim yetkileri görev bazında
+                sınırlandırılır. İnternet üzerindeki hiçbir veri aktarımının tamamen risksiz olduğu garanti edilemez.
+            </p>
+
+            <h2>7. Kullanıcı Hakları</h2>
+            <p>
+                KVKK'nın 11. maddesi kapsamında kişisel verilerinizin işlenip işlenmediğini öğrenme, bilgi talep etme,
+                düzeltme, silme veya yok etme isteme ve kanuni şartlar dahilinde işlemeye itiraz etme haklarına sahipsiniz.
+                Başvurularınızı yukarıdaki e-posta adresine iletebilirsiniz.
+            </p>
+
+            <h2>8. Güncellemeler</h2>
+            <p>
+                Bu politika hizmet, teknik altyapı veya mevzuat değişiklikleri doğrultusunda güncellenebilir.
+                Güncel metin bu sayfada yayımlandığı tarihte geçerli olur.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .ustam-privacy-page { background: #f4f7fb; }
+    .ustam-privacy-card { max-width: 860px; margin: 0 auto; padding: 0; background: #fff; border: 1px solid #e1e8f0; border-radius: 10px; box-shadow: 0 8px 24px rgba(22, 42, 70, 0.08); overflow: hidden; }
+    .ustam-privacy-header { padding: 38px 42px 30px; background: #145da0; color: #fff; }
+    .ustam-privacy-eyebrow { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; opacity: .82; }
+    .ustam-privacy-header h1 { margin: 0 0 8px; font-size: 30px; font-weight: 700; }
+    .ustam-privacy-header p { margin: 0; font-size: 13px; opacity: .85; }
+    .ustam-privacy-content { padding: 38px 42px 44px; }
+    .ustam-privacy-content h2 { margin: 28px 0 9px; color: #145da0; font-size: 19px; font-weight: 700; }
+    .ustam-privacy-content p, .ustam-privacy-content li { color: #4c5968; font-size: 15px; line-height: 1.75; }
+    .ustam-privacy-content p { margin: 0 0 14px; }
+    .ustam-privacy-content ul { margin: 0 0 12px; padding-left: 22px; }
+    .ustam-privacy-content a { color: #145da0; font-weight: 600; }
+    @media (max-width: 576px) {
+        .ustam-privacy-header, .ustam-privacy-content { padding-left: 22px; padding-right: 22px; }
+        .ustam-privacy-header h1 { font-size: 25px; }
+    }
+</style>
