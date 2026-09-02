@@ -2,107 +2,80 @@
     position: sticky;
     top: 20px;
 }
-/* Sidebar list-group genel stil */
+
 .sidebar-sticky .list-group-item {
-color: #00C9A7;
-border-color: #00C9A7;
-background-color: #fff;
+    color: #00C9A7;
+    border-color: #00C9A7;
+    background-color: #fff;
 }
 
-/* Link rengi */
 .sidebar-sticky .list-group-item a {
-color: #00C9A7;
-text-decoration: none;
-font-weight: 500;
+    color: #00C9A7;
+    text-decoration: none;
+    font-weight: 500;
 }
 
-/* Hover efekti */
 .sidebar-sticky .list-group-item:hover {
-background-color: #00C9A7;
-color: #fff;
+    background-color: #00C9A7;
+    color: #fff;
 }
 
-/* Hover'da link rengi */
 .sidebar-sticky .list-group-item:hover a {
-color: #fff;
+    color: #fff;
 }
 
-/* Aktif (seçili) item varsa */
 .sidebar-sticky .list-group-item.active {
-background-color: #00C9A7;
-border-color: #00C9A7;
-color: #fff;
+    background-color: #00C9A7;
+    border-color: #00C9A7;
+    color: #fff;
 }
 
 .sidebar-sticky .list-group-item.active a {
-color: #fff;
+    color: #fff;
 }
 
-/* NAV CONTAINER */
-.owl-nav {
-position: absolute;
-top: 50%;
-width: 100%;
-transform: translateY(-50%);
-display: flex;
-justify-content: space-between;
-pointer-events: none;
+#myCarousel .carousel-control-prev,
+#myCarousel .carousel-control-next {
+    width: 44px;
+    height: 44px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.45);
+    border-radius: 50%;
+    opacity: 1;
 }
 
-/* BUTTONS */
-.owl-nav button {
-pointer-events: all;
-width: 44px;
-height: 44px;
-border-radius: 50%;
-background: rgba(0,0,0,0.6) !important;
-color: #fff !important;
-border: none !important;
-font-size: 22px !important;
-display: flex;
-align-items: center;
-justify-content: center;
-transition: all .25s ease;
+#myCarousel .carousel-control-prev {
+    left: 15px;
 }
 
-/* HOVER */
-.owl-nav button:hover {
-background: #0d6efd !important;
-transform: scale(1.1);
+#myCarousel .carousel-control-next {
+    right: 15px;
 }
 
-/* LEFT / RIGHT POSITION */
-.owl-prev {
-margin-left: -22px;
+#myCarousel .carousel-control-prev-icon,
+#myCarousel .carousel-control-next-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+    filter: brightness(0) invert(1);
 }
 
-.owl-next {
-margin-right: -22px;
+#myCarousel .carousel-indicators [data-bs-target] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 4px;
+    background-color: #fff;
 }
 
-/* DISABLED */
-.owl-nav button.disabled {
-opacity: 0.3;
-cursor: not-allowed;
+#myCarousel .carousel-indicators .active {
+    background-color: #00C9A7;
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
-.owl-nav button {
-width: 36px;
-height: 36px;
-font-size: 18px !important;
-}
-.owl-nav button span {
-display: none;
-}
-
-.owl-prev::before {
-content: "❮";
-}
-
-.owl-next::before {
-content: "❯";
-}
-
+    #myCarousel .carousel-control-prev,
+    #myCarousel .carousel-control-next {
+        width: 36px;
+        height: 36px;
+    }
 }

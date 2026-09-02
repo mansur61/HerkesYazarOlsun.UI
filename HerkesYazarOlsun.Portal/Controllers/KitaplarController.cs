@@ -57,6 +57,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 input.Katergoriler = kategoriler!;
                 input.IlgiiSayfaSayisi = 1;
             }
+             
+            
 
             if (input.isYazmayaDevamEt.HasValue && input.isYazmayaDevamEt.Value)//
             {
@@ -817,7 +819,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.BookModel = vmBook;
 
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
-
+            ViewBag.LOGIN_USER_ID = Lid;
             ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder
             ViewBag.IsKitapYayin = Bildirim?.IsKitapYayin ?? false;//Birisi kitap yayınladığında bana bildirim yolla
             ViewBag.IsKitapYorum = Bildirim?.IsKitapYorum ?? false;//Birisi kitabıma yorum yaptığında bana e-posta gönder
@@ -896,7 +898,10 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.isAnaSayfa = false;
             kitapDetay.Tip = arama.profilKitapTuru + "-" + arama.Tip;
 
-            arama.yazarIId = Lid;
+            /*if(arama.Tip == "tumkitaplar")
+            {
+                arama.yazarIId = Lid;
+            }*/
 
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();

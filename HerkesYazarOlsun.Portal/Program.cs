@@ -64,6 +64,29 @@ app.UseCustomStaticFiles(app.Environment);
 
 // 🔁 Core pipeline
 app.UseApplicationPipeline();
+
+app.MapGet("/app-ads.txt", (IConfiguration configuration) =>
+{
+    var appAds = configuration.GetSection("AppSettings:AppAds");
+    var domain = appAds["Domain"];
+    var publisherId = appAds["PublisherId"];
+    var relationship = appAds["Relationship"];
+    var certificationAuthorityId = appAds["CertificationAuthorityId"];
+
+    if (string.IsNullOrWhiteSpace(domain) ||
+        string.IsNullOrWhiteSpace(publisherId) ||
+        string.IsNullOrWhiteSpace(relationship) ||
+        string.IsNullOrWhiteSpace(certificationAuthorityId))
+    {
+        return Results.NotFound();
+    }
+
+    var appAdsContent = $"{domain}, {publisherId}, {relationship}, {certificationAuthorityId}";
+
+    return string.IsNullOrWhiteSpace(appAdsContent)
+        ? Results.NotFound()
+        : Results.Text(appAdsContent, "text/plain");
+});
  
 app.MapGet("/health", () => Results.Ok("OK"));
 

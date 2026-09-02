@@ -4,8 +4,6 @@ namespace HerkesYazarOlsun.Portal.Middlewares
     {
         public static WebApplication UseApplicationPipeline(this WebApplication app)
         {
-            app.UseHttpsRedirection();
-
             if (!app.Environment.IsDevelopment())
             {
                 //app.UseExceptionHandler("/Error"); GlobalExceptionMiddleware yazıldı bu yüzden kullanımdan alındı
