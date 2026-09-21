@@ -207,17 +207,14 @@
     <PackageReference Include="toastr" Version="2.1.1" />
   </ItemGroup>
 
-   <!--<ItemGroup>
-    <Reference Include="HerkesYazarOlsun.Model">
-      <HintPath>..\..\HerkesYazarOlsun\HerkesYazarOlsun.Model\bin\Debug\net8.0\HerkesYazarOlsun.Model.dll</HintPath>
-    </Reference>
+  <!--<ItemGroup>
+    <ItemGroup>
+    <PackageReference Include="HerkesYazarOlsun.Model" Version="1.0.0" />
+  </ItemGroup>
   </ItemGroup>-->
 
- <!--<ItemGroup>
-    <ProjectReference Include="..\..\HerkesYazarOlsun.Servis\HerkesYazarOlsun.Model\HerkesYazarOlsun.Model.csproj" />
-  </ItemGroup>-->
   <ItemGroup>
-    <PackageReference Include="HerkesYazarOlsun.Model" Version="1.0.0" />
+    <ProjectReference Include="../../HerkesYazarOlsun.Servis/HerkesYazarOlsun.Model/HerkesYazarOlsun.Model.csproj" />
   </ItemGroup>
 
   

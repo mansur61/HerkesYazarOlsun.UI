@@ -223,7 +223,10 @@
     function KitabiGuncelle(id) {
         $("#progressOverlay, #alertOverlay, #confirmOverlay").hide();
         $("#guncelle").show();
-        $('body').css('overflow', 'hidden');
+        // Mobilde body overflow'u kilitleme - sadece masaüstünde uygula
+        if (window.innerWidth > 768) {
+            $('body').css('overflow', 'hidden');
+        }
 
         if (!window.quill) {
             window.quill = new Quill('#sayfaYaiziyAlEditor', {
@@ -258,7 +261,7 @@
 
     function KapatGuncelle() {
         $("#guncelle").hide();
-        $('body').css('overflow', 'auto');
+        $('body').css('overflow', 'auto'); // hem masaüstü hem mobil güvenli
     }
 
     function resmiSil(btn, item) {

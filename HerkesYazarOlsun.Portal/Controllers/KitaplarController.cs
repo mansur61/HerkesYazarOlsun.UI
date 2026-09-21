@@ -854,8 +854,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
             kitapDetay.BookModel = new VM_BOOKS();
 
-            if (arama.FavoriYazarlar != null || arama.DevamEdenKitaplar != null ||
-                arama.FavoriKitaplar != null || arama.YayinlananKitaplar != null || arama.BitenKitaplar != null)
+            // yazarIId dışarıdan gelmemişse (yani doğrudan menüden gelinen kendi kütüphanesi sayfası),
+            // login kullanıcının ID'sini kullan. Profil sayfasından başkasının kitapları için
+            // yazarIId zaten parametre olarak gönderildiğinden üzerine yazılmaz.
+            if (!arama.yazarIId.HasValue &&
+                (arama.FavoriYazarlar != null || arama.DevamEdenKitaplar != null ||
+                 arama.FavoriKitaplar != null || arama.YayinlananKitaplar != null || arama.BitenKitaplar != null))
             {
                 arama.yazarIId = Lid;
             }
@@ -898,10 +902,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.isAnaSayfa = false;
             kitapDetay.Tip = arama.profilKitapTuru + "-" + arama.Tip;
 
-            /*if(arama.Tip == "tumkitaplar")
+            // Profil sayfası dışından (tumkitaplar gibi) gelen filtreleme isteklerinde
+            // yazarIId gönderilmemişse login kullanıcının ID'sini kullan.
+            // Profil sayfasından gelen isteklerde yazarIId zaten dolu gelir → üzerine yazılmaz.
+            if (!arama.yazarIId.HasValue &&
+                (arama.DevamEdenKitaplar != null || arama.BitenKitaplar != null ||
+                 arama.FavoriKitaplar != null || arama.YayinlananKitaplar != null))
             {
                 arama.yazarIId = Lid;
-            }*/
+            }
 
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();
