@@ -68,6 +68,7 @@ function showConfirm(message, callback) {
     const cancelBtn = document.getElementById("confirmCancelBtn");
 
     msg.innerHTML = message;
+    overlay.style.zIndex = 100010; 
     overlay.style.display = "block";
 
     okBtn.onclick = () => {

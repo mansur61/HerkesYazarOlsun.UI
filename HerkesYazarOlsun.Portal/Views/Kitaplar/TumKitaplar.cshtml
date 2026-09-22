@@ -108,6 +108,7 @@ else
         $.post("@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")", {
             "listelenecek_kayit_sayisi": listelenecek_kayit_sayisi,
             "KITAP_ADI": kitap_ara,
+            "Tip": "tumkitaplar",
             "BitenKitaplar": @(ViewBag.BitenKitaplar == null 
                 ? "null" 
                 : ViewBag.BitenKitaplar.ToString().ToLower()),

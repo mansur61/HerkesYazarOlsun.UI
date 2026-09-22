@@ -47,6 +47,30 @@
     @RenderSection("scripts",false)
 
     <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        body > div {
+            flex: 1;
+        }
+
+        footer {
+            margin-top: auto;
+            background-color: #333;
+            padding-top: 40px;
+            padding-bottom: 20px;
+        }
+
+        .footer-after {
+            background-color: #222;
+            padding: 20px 0;
+        }
 
         /* ============================
            ALERT MESAJ KUTULARI
