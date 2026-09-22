@@ -25,21 +25,20 @@ namespace HerkesYazarOlsun.Portal.Services
             var client = new GetHttpClientCustom().GetHttpClient();
             tckimlikno ??= _httpContextAccessor?.User.GetTcKimlikNo();
             var mail = _httpContextAccessor?.User.GetEmail();
-            //tckimlikno = tckimlikno.HasValue ? tckimlikno : _httpContextAccessor.User.GetTcKimlikNo();
-            //var birim_id = _httpContextAccessor.User.GetUserInfoByKey("birim_id");
-            //if (birim_id != 0)
-            //{
-            //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
-            //}
+            var jwt  = _httpContextAccessor?.User.GetJwtToken();
+
             client.DefaultRequestHeaders.Add("tckimlikno", tckimlikno.ToString());
 
             if (string.IsNullOrEmpty(mail))
-            {
                 mail = eposta;
-            }
 
             var ip = _httpContextAccessor?.User.GetIpAddress();
             client.DefaultRequestHeaders.Add("ip", ip);
+
+            // JWT token varsa Bearer olarak gönder
+            if (!string.IsNullOrEmpty(jwt))
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", jwt);
 
             client.BaseAddress = new Uri(UriService);
             client.DefaultRequestHeaders.Accept.Clear();
@@ -78,14 +77,15 @@ namespace HerkesYazarOlsun.Portal.Services
             var client = new GetHttpClientCustom().GetHttpClient();
             tckimlikno ??= _httpContextAccessor?.User.GetTcKimlikNo();
             var mail = _httpContextAccessor?.User.GetEmail();
-            //tckimlikno = tckimlikno.HasValue ? tckimlikno : _httpContextAccessor.User.GetTcKimlikNo();
-            //var birim_id = _httpContextAccessor.User.GetUserInfoByKey("birim_id");
-            //if (birim_id != 0)
-            //{
-            //    client.DefaultRequestHeaders.Add("birim_id", birim_id.ToString());
-            //}
+            var jwt  = _httpContextAccessor?.User.GetJwtToken();
+
             client.DefaultRequestHeaders.Add("tckimlikno", (tckimlikno != null) ? tckimlikno.ToString() : "0");
             client.DefaultRequestHeaders.Add("email", (mail != null) ? mail.ToString() : "");
+
+            // JWT token varsa Bearer olarak gönder
+            if (!string.IsNullOrEmpty(jwt))
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", jwt);
 
             client.BaseAddress = new Uri(UriService);
             client.DefaultRequestHeaders.Accept.Clear();
