@@ -109,8 +109,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 if (sonuc.State != MessageResultState.SUCCESS)
                     return Json(sonuc);
 
-                // 2. Servis Login endpoint'inden JWT token al
+                // 2. Servis Login endpoint'inden access + refresh token al
                 string jwtToken = "";
+                string refreshToken = "";
                 try
                 {
                     using var httpClient = new HttpClient();
@@ -120,8 +121,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     if (response.IsSuccessStatusCode)
                     {
                         var responseBody = await response.Content.ReadAsStringAsync();
-                        var tokenResult  = JsonConvert.DeserializeObject<dynamic>(responseBody);
-                        jwtToken = tokenResult?.token ?? "";
+                        var tokenResult = JsonConvert.DeserializeObject<dynamic>(responseBody);
+                        jwtToken = tokenResult?.token ?? tokenResult?.accessToken ?? "";
+                        refreshToken = tokenResult?.refreshToken ?? "";
                     }
                 }
                 catch (Exception ex)
@@ -150,9 +152,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
                     new Claim("user_id",      sonuc.Result.ID.ToString())
                 };
 
-                // JWT token varsa claim'e ekle → BaseService kullanabilsin
+                // Access + Refresh token cookie claim'leri set edilir.
                 if (!string.IsNullOrEmpty(jwtToken))
                     claims.Add(new Claim("jwt_token", jwtToken));
+
+                if (!string.IsNullOrEmpty(refreshToken))
+                    claims.Add(new Claim("refresh_token", refreshToken));
 
                 var identity  = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
@@ -160,7 +165,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 var props = new AuthenticationProperties
                 {
                     IsPersistent = login.RememberLogin,
-                    ExpiresUtc   = DateTime.UtcNow.AddDays(3),
+                    ExpiresUtc   = DateTime.UtcNow.AddDays(30),
                     AllowRefresh = true
                 };
 
