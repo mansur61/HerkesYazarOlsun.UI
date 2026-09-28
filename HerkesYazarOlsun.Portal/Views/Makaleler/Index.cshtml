@@ -1,13 +1,17 @@
 @model HerkesYazarOlsun.Model.ViewModel.MakaleSayfa
 @{ Layout = "~/Views/Shared/_Layout.cshtml"; ViewData["Title"] = "Makaleler"; }
-<section class="container py-4">
-<h1>Makaleler</h1>
+<section class="container py-4 article-area">
+<h1>@(ViewBag.Drafts == true ? "Makalelerim" : "Makaleler")</h1>
+@if (ViewBag.Drafts == true) { <a class="btn article-button mb-3" href="@Url.Action("Ekle")">Makale Ekle</a> }
+@if (TempData["MakaleBilgi"] is string bilgi) { <p role="status">@bilgi</p> }
 @if (Model.Items.Count == 0) { <p>Henüz makale yok.</p> }
 @foreach (var article in Model.Items) {
-    <article class="border rounded p-3 mb-3"><a href="@Url.Action("Oku", new { id = article.Id })">@article.Baslik</a><p>@article.Yazar</p></article>
+    <article class="border rounded p-3 mb-3"><a href="@Url.Action("Oku", new { id = article.Id })">@article.Baslik</a><p>@article.Yazar · @(article.YayinTarihi.HasValue ? "Yayınlandı" : "Taslak")</p></article>
 }
 <nav aria-label="Makale sayfaları">
 @if (Model.Page > 1) { <a class="btn btn-light" href="@Url.Action("Index", new { author = ViewBag.Author, drafts = ViewBag.Drafts, page = Model.Page - 1 })">Önceki</a> }
 @if (Model.HasMore) { <a class="btn btn-light" href="@Url.Action("Index", new { author = ViewBag.Author, drafts = ViewBag.Drafts, page = Model.Page + 1 })">Sonraki</a> }
 </nav>
 </section>
+
+@section Styles { <link href="~/css/articles.css" rel="stylesheet" /> }

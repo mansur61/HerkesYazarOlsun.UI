@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using HerkesYazarOlsun.Model.Entity;
@@ -62,10 +62,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             if (input.isYazmayaDevamEt.HasValue && input.isYazmayaDevamEt.Value)//
             {
-                if (input.IlgiiSayfaSayisi.HasValue && input.IlgiiSayfaSayisi.Value == 0)
-                {
-                    input.IlgiiSayfaSayisi = 2;
-                }
+                var savedPages = new BooksPagesService().GetPagesByBooks(bookID);
+                input.IlgiiSayfaSayisi = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(savedPages?.Count() ?? 0);
 
             }
             
@@ -680,9 +678,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 }
 
                 vmKitap.BookID = input.BookModel.ID ?? 0;
-                vmKitap.BooksPageCount = sayfaCount + 1;
+                vmKitap.BooksPageCount = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(sayfaCount);
                 vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId;
-                input.IlgiiSayfaSayisi = sayfaCount + 1;
+                input.IlgiiSayfaSayisi = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(sayfaCount);
 
             }
             else
@@ -740,8 +738,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
                         vmKitap.BookID = book.Result!.ID;
                         vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId;
-                        vmKitap.BooksPageCount = sayfaCount + 1;
-                        input.IlgiiSayfaSayisi = sayfaCount + 1;
+                        vmKitap.BooksPageCount = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(sayfaCount);
+                        input.IlgiiSayfaSayisi = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(sayfaCount);
                     }
                     else
                     {

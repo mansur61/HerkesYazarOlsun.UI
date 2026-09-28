@@ -1,4 +1,4 @@
-﻿@using HerkesYazarOlsun.Model.Utils
+@using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
@@ -84,7 +84,7 @@
                     <div class="step">
                         <h1>Kitabınızın Sayfalarını Oluşturunuz</h1>
                         <p>
-                            Kitapta Yazılan İlgili Sayfa No:
+                            Eklenecek Yeni Sayfa No:
                             <span id="sayfaSayisi" data-value="@Model.IlgiiSayfaSayisi"> 
                                 @Model.IlgiiSayfaSayisi
                             </span>
@@ -597,7 +597,7 @@
                      //console.log("veriGonder BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
 
                      var intSayi = parseInt(dataValue);
-                     $("#sayfaSayisi").html( response.result.booksPageCount -1);
+                     $("#sayfaSayisi").html( response.result.booksPageCount);
 
                      $("#kitapKatdetmeUyariDurumu").val("1");
                      spanElement.setAttribute('data-value', intSayi );

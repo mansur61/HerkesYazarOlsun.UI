@@ -14,6 +14,24 @@ public class MakalelerController(MakaleApiService api) : Controller
         return View(await api.List(author, drafts, page));
     }
     [Authorize]
+    public IActionResult Benim() => RedirectToAction(nameof(Index), new { author = User.GetLoginUserId(), drafts = true });
+    public async Task<IActionResult> Belge(Guid id)
+    {
+        var document = await api.Document(id);
+        if (document == null) return NotFound();
+        Response.Headers.CacheControl = "private, no-store";
+        return File(document.Value.Bytes, document.Value.ContentType, enableRangeProcessing: true);
+    }
+    [Authorize, HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Sil(Guid id)
+    {
+        if (User.GetGozlemciMod() != "0") return Forbid();
+        try { await api.Delete(id); }
+        catch (HttpRequestException) { TempData["MakaleHata"] = "Makale silinemedi. Lütfen tekrar deneyin."; return RedirectToAction(nameof(Oku), new { id }); }
+        TempData["MakaleBilgi"] = "Makale silindi.";
+        return RedirectToAction(nameof(Benim));
+    }
+    [Authorize]
     public IActionResult Ekle() => User.GetGozlemciMod() == "0" ? View() : Forbid();
     [Authorize, HttpPost, ValidateAntiForgeryToken, RequestSizeLimit(22 * 1024 * 1024)]
     public async Task<IActionResult> Ekle(string baslik, IFormFile? dosya)

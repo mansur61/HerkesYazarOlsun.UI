@@ -1,4 +1,4 @@
-﻿@using HerkesYazarOlsun.Portal.Controllers
+@using HerkesYazarOlsun.Portal.Controllers
 @using System.Text.RegularExpressions
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 
@@ -51,7 +51,10 @@
 
 <input type="hidden" id="tip" value="@tip" />
 
-<div id="container">
+            <audio id="flipSound" style="display:none">
+                <source src="@Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
+            </audio>
+<div id="container" data-total-pages="@HerkesYazarOlsun.Portal.Helpers.BookPagination.Total(Model.BookModel.BooksPageList.Count)">
     <nav>
         <ul>
             <li><a id='first' href="#">First page</a></li>
@@ -88,9 +91,7 @@
                 }
             </div>
 
-            <audio id="flipSound" style="display:none">
-                <source src="@Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
-            </audio>
+
 
             <h1>
                 <p style="font-size:40px;text-align:center;color:white">Önsöz</p>

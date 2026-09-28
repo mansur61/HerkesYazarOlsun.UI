@@ -1,17 +1,43 @@
 @model HerkesYazarOlsun.Model.Entity.Makale
 @{ ViewData["Title"] = Model.Baslik; Layout = "~/Views/Shared/_Layout.cshtml"; }
-<article class="container py-4" style="max-width:800px;overflow-wrap:anywhere">
-    <a href="@Url.Action("Index", "Home")">← Ana sayfa</a>
-    @if (TempData["MakaleHata"] is string hata) { <p role="alert" class="text-danger">@hata</p> }
-    <h1 class="mt-3">@Model.Baslik</h1>
-    <p>@Model.Yazar · @(Model.YayinTarihi?.ToLocalTime().ToString("dd.MM.yyyy") ?? "Taslak — henüz yayınlanmadı")</p>
-    @if (ViewBag.IsOwner == true && !Model.YayinTarihi.HasValue)
-    {
-        <form action="@Url.Action("Yayinla", "Makaleler")" method="post" class="mb-4">
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="id" value="@Model.Id" />
-            <button class="btn btn-success" type="submit">Yayınla</button>
-        </form>
-    }
-    <div style="white-space:pre-wrap;font-size:1.125rem;line-height:1.85">@Model.Metin</div>
+<article class="container-fluid py-4 article-area">
+    <div class="article-heading">
+        <a href="@Url.Action("Index", "Home")">← Ana sayfa</a>
+        @if (ViewBag.IsOwner == true) { <a href="@Url.Action("Benim")">Makalelerim</a> }
+        @if (TempData["MakaleHata"] is string hata) { <p role="alert" class="text-danger">@hata</p> }
+        <h1>@Model.Baslik</h1>
+        <p>@Model.Yazar · @(Model.YayinTarihi?.ToLocalTime().ToString("dd.MM.yyyy") ?? "Taslak — henüz yayınlanmadı")</p>
+        <div class="article-actions">
+            @if (ViewBag.IsOwner == true)
+            {
+                @if (!Model.YayinTarihi.HasValue)
+                {
+                    <form action="@Url.Action("Yayinla")" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button class="btn article-button" type="submit">Yayınla</button>
+                    </form>
+                }
+                <form action="@Url.Action("Sil")" method="post" data-confirm-delete>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button class="btn article-delete" type="submit">Makaleyi sil</button>
+                </form>
+            }
+            <a class="btn article-secondary" href="@Url.Action("Belge", new { id = Model.Id })" target="_blank" rel="noopener">Özgün belgeyi aç</a>
+        </div>
+    </div>
+    <section class="article-reader" id="article-reader" data-kind="@(Model.Uzanti == ".pdf" ? "pdf" : "text")" data-document-url="@Url.Action("Belge", new { id = Model.Id })" aria-label="Makale okuyucu">
+        <div class="article-toolbar">
+            <button type="button" data-prev disabled>Önceki</button>
+            <span data-status aria-live="polite">Yükleniyor…</span>
+            <button type="button" data-next disabled>Sonraki</button>
+            <label>Yakınlaştır <select data-zoom><option value="1">%100</option><option value="1.25">%125</option><option value="1.5">%150</option><option value="2">%200</option></select></label>
+        </div>
+        <p data-error role="alert" hidden>Belge görüntülenemedi. Özgün belgeyi açabilir veya sayfayı yenileyebilirsiniz.</p>
+        <div class="article-spread" data-spread></div>
+        @if (Model.Uzanti != ".pdf") { <div data-text hidden>@Model.Metin</div> }
+    </section>
 </article>
+@section Styles { <link href="~/css/articles.css" rel="stylesheet" /> }
+@section Scripts { <script type="module" src="~/js/article-reader.mjs"></script> }

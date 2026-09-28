@@ -35,10 +35,22 @@ public class MakaleApiService(IHttpClientFactory factory) : BaseService
             content.Add(new StreamContent(file.OpenReadStream()), "dosya", Path.GetFileName(file.FileName));
             return new HttpRequestMessage(HttpMethod.Post, "api/makaleler") { Content = content };
         });
-        if (response.StatusCode == HttpStatusCode.BadRequest) throw new InvalidDataException("Dosya okunamadı. Metin içeren, şifresiz .docx veya PDF yükleyin (en fazla 20 MB ve 200 PDF sayfası).");
+        if (response.StatusCode == HttpStatusCode.BadRequest) throw new InvalidDataException("Dosya okunamadı. Geçerli, şifresiz .docx veya PDF yükleyin (en fazla 20 MB ve 200 PDF sayfası).");
         if ((int)response.StatusCode == 429) throw new InvalidDataException("Yükleme işlemleri şu an yoğun. Lütfen biraz sonra tekrar deneyin.");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<Guid>();
+    }
+    public async Task<(byte[] Bytes, string ContentType)?> Document(Guid id)
+    {
+        using var response = await Send(() => new(HttpMethod.Get, $"api/makaleler/{id}/belge"));
+        if (response.StatusCode == HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return (await response.Content.ReadAsByteArrayAsync(), response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream");
+    }
+    public async Task Delete(Guid id)
+    {
+        using var response = await Send(() => new(HttpMethod.Delete, $"api/makaleler/{id}"));
+        response.EnsureSuccessStatusCode();
     }
     public async Task Publish(Guid id)
     {
