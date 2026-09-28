@@ -1,4 +1,5 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_USERS
+@inject HerkesYazarOlsun.Portal.Services.MakaleStore Makaleler
+@model HerkesYazarOlsun.Model.ViewModel.VM_USERS
 @using HerkesYazarOlsun.Model.Enums
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 @using HerkesYazarOlsun.Portal.Controllers
@@ -75,6 +76,20 @@
 
     @Html.Partial("_AlertMesaj", "profil")
 
+    <section class="my-4" aria-labelledby="makaleler-baslik">
+        <h2 id="makaleler-baslik">Makaleler</h2>
+        @{ var kendiProfili = User.Identity?.IsAuthenticated == true && ViewBag.LOGIN_USER_ID == Model.ID && isGozlemciMod == "0";
+           var makaleler = Makaleler.List(Model.ID, kendiProfili); }
+        @if (kendiProfili) { <a class="btn btn-primary mb-3" href="@Url.Action("Ekle", "Makaleler")">Makale Ekle (Word / PDF)</a> }
+        @if (makaleler.Count == 0) { <p>Henüz makale bulunmuyor.</p> }
+        @foreach (var makale in makaleler)
+        {
+            <div class="border rounded p-3 mb-2">
+                <a href="@Url.Action("Oku", "Makaleler", new { id = makale.Id })">@makale.Baslik</a>
+                <span> · @(makale.YayinTarihi.HasValue ? "Yayınlandı" : "Taslak")</span>
+            </div>
+        }
+    </section>
     <!-- 🔥 TAB ALANI -->
     <section class="product_description_area mt-4">
 

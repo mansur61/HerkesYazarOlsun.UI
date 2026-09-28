@@ -1,4 +1,4 @@
-﻿using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Middlewares;
@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<HerkesYazarOlsun.Portal.Services.MakaleStore>();
 // Configuration ayarları
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())

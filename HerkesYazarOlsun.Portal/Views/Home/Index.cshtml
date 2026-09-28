@@ -1,4 +1,5 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
+@inject HerkesYazarOlsun.Portal.Services.MakaleStore Makaleler
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
@@ -155,6 +156,21 @@
 
  
 
+<section class="container my-4" aria-labelledby="makaleler-baslik">
+    <h2 id="makaleler-baslik">Makaleler</h2>
+    @{ var makaleler = Makaleler.List(); }
+    @if (makaleler.Count == 0) { <p>Henüz yayınlanmış makale yok.</p> }
+    <div class="makale-slider owl-carousel">
+        @foreach (var makale in makaleler)
+        {
+            <a class="d-block border rounded p-4" style="min-height:180px;overflow-wrap:anywhere" href="@Url.Action("Oku", "Makaleler", new { id = makale.Id })">
+                <h3>@makale.Baslik</h3>
+                <p>@makale.Yazar</p>
+                <span>Makaleyi oku →</span>
+            </a>
+        }
+    </div>
+</section>
 @Html.Partial("_Sponsorlar")
 <br />
  
@@ -163,6 +179,7 @@
 @section Scripts {
 <script>
     $(function () {
+        $('.makale-slider').owlCarousel({ loop: false, margin: 16, nav: true, navText: ['Önceki', 'Sonraki'], dots: true, responsive: { 0: { items: 1 }, 768: { items: 2 }, 1100: { items: 3 } } });
         $('.kitap-slider').each(function () {
             $(this).owlCarousel({
                 loop: false,

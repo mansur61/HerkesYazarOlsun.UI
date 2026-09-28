@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Kitap Oku";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.NavbarGoster = false;
@@ -28,35 +28,12 @@
             padding: 2px;
         }
 
-        /* Mobil scroll düzeltmesi */
-        @@media (max-width: 768px) {
-            html, body {
-                overflow: auto !important;
-                -webkit-overflow-scrolling: touch;
-                height: auto !important;
-            }
-
-            #container {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                width: 100%;
-            }
-
-            #main {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            #features {
-                touch-action: pan-y pinch-zoom;
-            }
-        }
     </style>
     <link href="~/wowbook/css/style.css" rel="stylesheet" />
     <link href="~/wowbook/css/wow_book.css" rel="stylesheet" />
     <link href="~/wowbook/css/preview.css" rel="stylesheet" />
-    <link href="~/wowbook/css/handheld.css" rel="stylesheet" />
-    <link href="~/wowbook/css/handheld.css?v=2" rel="stylesheet" />
+
+    <link href="~/css/mobile-reader.css" rel="stylesheet" />
 
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 }
@@ -71,8 +48,10 @@
 
     <script src="~/wowbook/wow_book.min.js"></script>
 
+    <script src="~/js/mobile-reader.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            if (window.matchMedia('(max-width: 768px)').matches) { initMobileReader(); return; }
             var book = $('#features').wowBook({
                 height: 500,
                 width: 800,
@@ -108,31 +87,7 @@
                 flipAudio.play();
             });
 
-            // Mobilde wowBook touch engelini kaldır - sayfanın scroll edilebilmesi için
-            if (window.innerWidth <= 768) {
-                var bookContainer = document.getElementById('container');
-                if (bookContainer) {
-                    bookContainer.style.overflowX = 'auto';
-                    bookContainer.style.webkitOverflowScrolling = 'touch';
-                }
-                // Touch olaylarının sayfayı scroll etmesine izin ver
-                document.getElementById('features').addEventListener('touchstart', function(e) {
-                    // Yatay kaydırma için wowBook'a bırak, dikey için sayfanın scroll etmesine izin ver
-                    var touch = e.touches[0];
-                    this._startY = touch.clientY;
-                    this._startX = touch.clientX;
-                }, { passive: true });
 
-                document.getElementById('features').addEventListener('touchmove', function(e) {
-                    if (!this._startY || !this._startX) return;
-                    var diffX = Math.abs(e.touches[0].clientX - this._startX);
-                    var diffY = Math.abs(e.touches[0].clientY - this._startY);
-                    // Dikey scroll ise sayfanın scroll etmesine izin ver (preventDefault'u çağırma)
-                    if (diffY > diffX) {
-                        return; // dikey - sayfayı scroll ettir
-                    }
-                }, { passive: true });
-            }
         });
     </script>
 
