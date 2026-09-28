@@ -4,10 +4,37 @@
 <h1>@(ViewBag.Drafts == true ? "Makalelerim" : "Makaleler")</h1>
 @if (ViewBag.Drafts == true) { <a class="btn article-button mb-3" href="@Url.Action("Ekle")">Makale Ekle</a> }
 @if (TempData["MakaleBilgi"] is string bilgi) { <p role="status">@bilgi</p> }
+@if (TempData["MakaleHata"] is string hata) { <p role="alert" class="text-danger">@hata</p> }
 @if (Model.Items.Count == 0) { <p>Henüz makale yok.</p> }
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 article-grid">
 @foreach (var article in Model.Items) {
-    <article class="border rounded p-3 mb-3"><a href="@Url.Action("Oku", new { id = article.Id })">@article.Baslik</a><p>@article.Yazar · @(article.YayinTarihi.HasValue ? "Yayınlandı" : "Taslak")</p></article>
+    <div class="col">
+        <article class="article-card">
+            @if (ViewBag.Drafts == true)
+            {
+                <form class="article-card-delete" action="@Url.Action("Sil")" method="post" data-confirm-delete>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@article.Id" />
+                    <button class="article-icon-button" type="submit" aria-label="@article.Baslik makalesini sil" title="Makaleyi sil"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                </form>
+            }
+            <a class="article-card-link" href="@Url.Action("Oku", new { id = article.Id })">
+                <h2>@article.Baslik</h2>
+                <p>@article.Yazar</p>
+                <span class="article-card-status">@(article.YayinTarihi.HasValue ? "Yayınlandı" : "Taslak")</span>
+            </a>
+            @if (ViewBag.Drafts == true && !article.YayinTarihi.HasValue)
+            {
+                <form class="article-card-publish" action="@Url.Action("Yayinla")" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@article.Id" />
+                    <button class="btn article-button" type="submit">Yayınla</button>
+                </form>
+            }
+        </article>
+    </div>
 }
+</div>
 <nav aria-label="Makale sayfaları">
 @if (Model.Page > 1) { <a class="btn btn-light" href="@Url.Action("Index", new { author = ViewBag.Author, drafts = ViewBag.Drafts, page = Model.Page - 1 })">Önceki</a> }
 @if (Model.HasMore) { <a class="btn btn-light" href="@Url.Action("Index", new { author = ViewBag.Author, drafts = ViewBag.Drafts, page = Model.Page + 1 })">Sonraki</a> }
@@ -15,3 +42,4 @@
 </section>
 
 @section Styles { <link href="~/css/articles.css" rel="stylesheet" /> }
+@section Scripts { <script type="module" src="~/js/article-reader.mjs"></script> }

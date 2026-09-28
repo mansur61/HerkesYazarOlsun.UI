@@ -47,6 +47,16 @@
 #sayfaYaiziyAlEditor { height: 400px; }
 .ql-container { height: 100% !important; }
 .ql-editor { min-height: 200px !important; }
+.book-page-jump {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px auto;
+}
+.book-page-jump label { margin: 0; }
+.book-page-jump input { width: 80px; min-height: 40px; padding: 6px 8px; }
+.book-page-jump button { min-height: 40px; padding: 6px 14px; }
 </style>
 
 <input type="hidden" id="tip" value="@tip" />
@@ -76,12 +86,42 @@
         </ul>
     </nav>
 
+    <form id="bookPageJumpForm" class="book-page-jump">
+        <label for="bookPageNumber">Sayfa</label>
+        <input id="bookPageNumber" type="number" min="1"
+               max="@HerkesYazarOlsun.Portal.Helpers.BookPagination.Total(Model.BookModel.BooksPageList.Count)"
+               value="1" step="1" required />
+        <button type="submit">Git</button>
+    </form>
+
     <input type="hidden" id="guncellenecekSayfaId" />
     <div id="main">
         <div id='features'>
             <div>
                 @if (Model.BookModel.ONKAPAKFOTOPATH == "-1")
                 {
+            <script>
+                (function () {
+                    const form = document.getElementById('bookPageJumpForm');
+                    const pageInput = document.getElementById('bookPageNumber');
+                    const totalPages = Number(document.getElementById('container').dataset.totalPages);
+
+                    form.addEventListener('submit', function (event) {
+                        event.preventDefault();
+                        const pageNumber = Number(pageInput.value);
+                        if (!Number.isInteger(pageNumber) || pageNumber < 1 || pageNumber > totalPages) {
+                            pageInput.reportValidity();
+                            return;
+                        }
+
+                        if (typeof window.goToMobileBookPage === 'function') {
+                            window.goToMobileBookPage(pageNumber);
+                        } else {
+                            $('#features').wowBook('gotoPage', pageNumber - 1);
+                        }
+                    });
+                })();
+            </script>
                     <img src="~/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />
                 }
                 else

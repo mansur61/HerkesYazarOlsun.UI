@@ -8,6 +8,8 @@ function initMobileReader() {
     controls.innerHTML = '<a href="#">Kitaba dön</a><button type="button">Önceki</button><span aria-live="polite"></span><button type="button">Sonraki</button>';
     const exitImage = document.querySelector('#container nav img[onclick]');
     controls.querySelector('a').addEventListener('click', event => { event.preventDefault(); if (exitImage) exitImage.click(); });
+    const pageJumpForm = document.getElementById('bookPageJumpForm');
+    controls.appendChild(pageJumpForm);
     document.getElementById('container').prepend(controls);
     const buttons = controls.querySelectorAll('button');
     let current = 0;
@@ -18,9 +20,11 @@ function initMobileReader() {
         pages[current].classList.add('is-current');
         pages[current].scrollTop = 0;
         controls.querySelector('span').textContent = (current + 1) + ' / ' + pages.length;
+        pageJumpForm.querySelector('input').value = current + 1;
         buttons[0].disabled = current === 0;
         buttons[1].disabled = current === pages.length - 1;
     }
+    window.goToMobileBookPage = pageNumber => show(pageNumber - 1);
     buttons[0].addEventListener('click', () => show(current - 1));
     buttons[1].addEventListener('click', () => show(current + 1));
     show(0);

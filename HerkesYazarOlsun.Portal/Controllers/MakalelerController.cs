@@ -3,7 +3,7 @@ using HerkesYazarOlsun.Portal.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace HerkesYazarOlsun.Portal.Controllers;
-public class MakalelerController(MakaleApiService api) : Controller
+public class MakalelerController(MakaleApiService api, ILogger<MakalelerController> logger) : Controller
 {
     public async Task<IActionResult> Index(long? author, int page = 1, bool drafts = false)
     {
@@ -27,7 +27,18 @@ public class MakalelerController(MakaleApiService api) : Controller
     {
         if (User.GetGozlemciMod() != "0") return Forbid();
         try { await api.Delete(id); }
-        catch (HttpRequestException) { TempData["MakaleHata"] = "Makale silinemedi. Lütfen tekrar deneyin."; return RedirectToAction(nameof(Oku), new { id }); }
+        catch (HttpRequestException ex)
+        {
+            logger.LogWarning(ex, "Makale silinemedi. Makale kimliği: {ArticleId}, HTTP durumu: {StatusCode}", id, ex.StatusCode);
+            TempData["MakaleHata"] = ex.StatusCode switch
+            {
+                System.Net.HttpStatusCode.Unauthorized => "Oturumunuz sona ermiş. Yeniden giriş yapıp tekrar deneyin.",
+                System.Net.HttpStatusCode.Forbidden => "Bu makaleyi silme yetkiniz yok. Makalenin yazarı olan hesapla giriş yapın.",
+                System.Net.HttpStatusCode.NotFound => "Makale bulunamadı; listeyi yenileyin.",
+                _ => $"Makale silinemedi. Servis yanıtı: HTTP {(int?)ex.StatusCode ?? 0}. Lütfen tekrar deneyin."
+            };
+            return RedirectToAction(nameof(Benim));
+        }
         TempData["MakaleBilgi"] = "Makale silindi.";
         return RedirectToAction(nameof(Benim));
     }

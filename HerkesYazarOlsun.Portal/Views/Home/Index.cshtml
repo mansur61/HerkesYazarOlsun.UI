@@ -159,9 +159,9 @@
 
 <section class="container my-4 article-area" aria-labelledby="makaleler-baslik">
     <h2 id="makaleler-baslik">Makaleler</h2>
-        <a href="@Url.Action("Index", "Makaleler")">Tüm makaleler →</a>
     @{ var makaleSayfa = await Makaleler.List(); var makaleler = makaleSayfa.Items; }
-    @if (makaleler.Count == 0) { <p>Henüz yayınlanmış makale yok.</p> }
+    @if (makaleler.Count > 0)
+    {
     <div class="makale-slider owl-carousel">
         @foreach (var makale in makaleler)
         {
@@ -172,6 +172,7 @@
             </a>
         }
     </div>
+    }
 </section>
 @Html.Partial("_Sponsorlar")
 <br />

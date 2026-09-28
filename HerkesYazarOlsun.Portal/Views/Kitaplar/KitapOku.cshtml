@@ -59,6 +59,11 @@
                 hardcovers: true,
                 turnPageDuration: 1000,
                 numberedPages: [1, -2],
+                onShowPage: function (bookInstance) {
+                    window.requestAnimationFrame(function () {
+                        document.getElementById('bookPageNumber').value = bookInstance.currentPage + 1;
+                    });
+                },
                 controls: {
                     zoomIn: '#zoomin',
                     zoomOut: '#zoomout',

@@ -6,6 +6,17 @@
 .article-area .article-button:hover { background:#00ab8c; color:#102f29; }
 .article-secondary { border:1px solid #9acfc4; background:#eefaf6; border-radius:8px; }
 .article-delete { color:#9e2733; border:1px solid #dda0a7; background:#fff5f5; border-radius:8px; }
+.article-grid { margin-top:12px; }
+.article-card { position:relative; display:flex; flex-direction:column; min-height:190px; height:100%; padding:20px; border:1px solid #c9ded6; border-radius:8px; background:#fff; }
+.article-card-link { display:flex; flex:1; flex-direction:column; padding-right:34px; }
+.article-card-link h2 { margin:0 0 14px; font-size:1.15rem; line-height:1.35; }
+.article-card-link p { margin:auto 0 8px; color:#5c6965; }
+.article-card-status { color:#287b68; font-size:.9rem; }
+.article-card-delete { position:absolute; top:12px; right:12px; margin:0; }
+.article-icon-button { display:inline-flex; width:36px; height:36px; align-items:center; justify-content:center; border:1px solid #dda0a7; border-radius:6px; background:#fff5f5; color:#9e2733; }
+.article-icon-button:hover { background:#f9e1e3; }
+.article-card-publish { margin-top:16px; }
+.article-card-publish .article-button { padding:7px 14px; }
 .article-heading { max-width:1200px; margin:0 auto 20px; }
 .article-heading > a { display:inline-block; margin:0 16px 12px 0; }
 .article-heading h1 { font-size:clamp(1.5rem,3vw,2.25rem); }

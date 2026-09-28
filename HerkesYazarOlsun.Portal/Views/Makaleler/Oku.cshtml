@@ -4,26 +4,9 @@
     <div class="article-heading">
         <a href="@Url.Action("Index", "Home")">← Ana sayfa</a>
         @if (ViewBag.IsOwner == true) { <a href="@Url.Action("Benim")">Makalelerim</a> }
-        @if (TempData["MakaleHata"] is string hata) { <p role="alert" class="text-danger">@hata</p> }
         <h1>@Model.Baslik</h1>
         <p>@Model.Yazar · @(Model.YayinTarihi?.ToLocalTime().ToString("dd.MM.yyyy") ?? "Taslak — henüz yayınlanmadı")</p>
         <div class="article-actions">
-            @if (ViewBag.IsOwner == true)
-            {
-                @if (!Model.YayinTarihi.HasValue)
-                {
-                    <form action="@Url.Action("Yayinla")" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@Model.Id" />
-                        <button class="btn article-button" type="submit">Yayınla</button>
-                    </form>
-                }
-                <form action="@Url.Action("Sil")" method="post" data-confirm-delete>
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="id" value="@Model.Id" />
-                    <button class="btn article-delete" type="submit">Makaleyi sil</button>
-                </form>
-            }
             <a class="btn article-secondary" href="@Url.Action("Belge", new { id = Model.Id })" target="_blank" rel="noopener">Özgün belgeyi aç</a>
         </div>
     </div>
