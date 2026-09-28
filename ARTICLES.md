@@ -1,9 +1,41 @@
-# Makaleler
+# Makaleler: servis entegrasyonu
 
-Yazar kendi profilindeki Makale Ekle bağlantısıyla en fazla 20 MB .docx veya PDF yükler. Dosya metni taslak olarak açılır. Yayınla işleminden sonra makale Home/Index carousel'inde ve yazar profilinde görünür. Taslak okuma ve yayınlama sahiplik kontrolüyle korunur; POST işlemleri antiforgery doğrulaması kullanır.
+Portal artık yerel JSON/dosya deposu kullanmaz. `MakaleApiService`, mevcut API adresini ve JWT/refresh akışını kullanır. Word/PDF dosyası multipart olarak servise iletilir; metni serviste çıkarılır.
 
-Özgün belgeler ve JSON kayıtları web kökü dışında `App_Data/Makaleler` altında saklanır. Üretimde `Articles:StoragePath` (ortam değişkeni: `Articles__StoragePath`) kalıcı, uygulamanın yazabildiği bir dizine ayarlanmalı ve bu dizin yedeklenmelidir. Deploy sırasında silinmemelidir. Bu depolama tek portal süreci içindir; birden fazla replica için ortak veritabanı/depolama entegrasyonu gerekir.
+## Veriler ve eşzamanlı kullanım
 
-Okuma görünümü belgenin metnini gösterir; görseller ve Word/PDF sayfa düzeni aktarılmaz. Eski .doc formatı .docx olarak kaydedilmelidir. Taranmış, metinsiz veya şifreli PDF'ler kabul edilmez.
+- `Makaleler`: yazar, başlık, metin, taslak/yayın tarihi.
+- `MakaleBelgeler`: özgün Word/PDF içeriği; ayrı tablo, makaleye bire bir bağlı.
+- Belge ve makale tek `SaveChangesAsync` işlemiyle atomik kaydedilir. Birden fazla portal/API kopyası aynı veritabanını kullanabilir.
+- Liste API'si en fazla 50 özet döndürür (portal 12); metin ve belge liste sorgusunda alınmaz. Ana sayfa carousel'i son 12 makaleyi gösterir, Tüm makaleler bağlantısı sayfalı arşivi açar. Profil sahibi arşivde taslaklarını da görebilir.
+- Taslak erişimi ve yayınlama API'de doğrulanmış JWT `user_id` ile kontrol edilir. Yayınlama tekrarlandığında ilk yayın tarihi korunur.
+- API süreci başına en fazla iki belge işlenir; yoğunlukta 429 dönülür. Dosya 20 MB, PDF 200 sayfa, açılmış Word içeriği 50 MB ile sınırlıdır.
 
-Kontrol: `dotnet build HerkesYazarOlsun.Portal --no-restore` ve `node --test tests/mobile-reader.test.cjs`.
+Özgün belgeleri veritabanında tutmak disk paylaşımı gereksinimini kaldırır ve atomik kayıt sağlar; veritabanı/yedek boyutu dosyalarla büyür. Çok yüksek dosya hacminde belge tablosu nesne depolamasına taşınabilir.
+
+## Dağıtım
+
+Önce kullanılan veritabanına `AddMakaleler` migration'ı uygulanmalı, ardından servis ve portal birlikte yayınlanmalıdır. 28.09.2026 tarihinde kullanıcının talimatıyla canlı SQL Server `herkesya_` veritabanına `20260928070703_AddMakaleler` migration'ı başarıyla uygulandı. Test ve PostgreSQL veritabanlarına işlem yapılmadı. Servis/portal yayınlama bu işlem kapsamında yapılmadı.
+
+SQL Server için servis repo kökünde:
+
+```sh
+dotnet ef database update 20260928070703_AddMakaleler --project HerkesYazarOlsun.DataLayer --context SqlServerContext
+```
+
+Bağlantı yalnızca servis projesindeki `HerkesYazarOlsun/appsettings.json`, ortama ait `appsettings.{Environment}.json` ve ortam değişkenlerinden alınır. DataLayer ayar dosyası kaldırılmıştır. EF komutu repo veya servis dizininden çalıştırılabilir; çalışma dizini bağlantı kaynağını değiştirmez.
+
+PostgreSQL için `20260928070745_AddMakaleler` migration'ı eklendi. PostgreSQL'in önceki snapshot'ı mevcut modellerden eski olduğundan otomatik oluşan ilgisiz değişiklikler çıkarıldı; yalnızca iki makale tablosu ve indeksler eklenir. Diğer şema farkları bu iş kapsamında giderilmedi. PostgreSQL kullanılıyorsa mevcut şema/snapshot farkı ayrıca incelenerek migration SQL'i uygulanmalıdır; pending-model uyarısını genel olarak kapatmayın.
+
+Önceki `App_Data/Makaleler` klasörü artık okunmaz. Çalışma alanında aktarılacak eski kayıt bulunmadı. Başka ortamda eski dosyalar varsa silinmeden saklanmalı ve geçişten önce ayrıca aktarılmalıdır. `Articles:StoragePath` ayarı artık kullanılmaz.
+
+## Kontrol
+
+```sh
+dotnet build HerkesYazarOlsun.Portal --no-restore
+# Servis repo kökünde:
+dotnet build HerkesYazarOlsun/HerkesYazarOlsun.Service.csproj --no-restore
+dotnet run --project tests/ArticleChecks
+```
+
+Kontroller Word/PDF metin çıkarma, bozuk/metinsiz dosya reddi, taslak liste erişimi, sayfalama sınırı, ilişkiler ve migration kapsamını doğrular. Gerçek veritabanında eşzamanlı yük testi ve tarayıcıdan uçtan uca test ayrıca yapılmalıdır.

@@ -1,4 +1,4 @@
-@inject HerkesYazarOlsun.Portal.Services.MakaleStore Makaleler
+@inject HerkesYazarOlsun.Portal.Services.MakaleApiService Makaleler
 @model HerkesYazarOlsun.Model.ViewModel.VM_USERS
 @using HerkesYazarOlsun.Model.Enums
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
@@ -78,8 +78,9 @@
 
     <section class="my-4" aria-labelledby="makaleler-baslik">
         <h2 id="makaleler-baslik">Makaleler</h2>
+        <a href="@Url.Action("Index", "Makaleler", new { author = Model.ID, drafts = User.Identity?.IsAuthenticated == true && ViewBag.LOGIN_USER_ID == Model.ID && isGozlemciMod == "0" })">Tüm makaleler →</a>
         @{ var kendiProfili = User.Identity?.IsAuthenticated == true && ViewBag.LOGIN_USER_ID == Model.ID && isGozlemciMod == "0";
-           var makaleler = Makaleler.List(Model.ID, kendiProfili); }
+           var makaleSayfa = await Makaleler.List(Model.ID, kendiProfili); var makaleler = makaleSayfa.Items; }
         @if (kendiProfili) { <a class="btn btn-primary mb-3" href="@Url.Action("Ekle", "Makaleler")">Makale Ekle (Word / PDF)</a> }
         @if (makaleler.Count == 0) { <p>Henüz makale bulunmuyor.</p> }
         @foreach (var makale in makaleler)

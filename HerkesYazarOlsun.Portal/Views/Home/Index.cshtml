@@ -1,4 +1,4 @@
-@inject HerkesYazarOlsun.Portal.Services.MakaleStore Makaleler
+@inject HerkesYazarOlsun.Portal.Services.MakaleApiService Makaleler
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
@@ -158,7 +158,8 @@
 
 <section class="container my-4" aria-labelledby="makaleler-baslik">
     <h2 id="makaleler-baslik">Makaleler</h2>
-    @{ var makaleler = Makaleler.List(); }
+        <a href="@Url.Action("Index", "Makaleler")">Tüm makaleler →</a>
+    @{ var makaleSayfa = await Makaleler.List(); var makaleler = makaleSayfa.Items; }
     @if (makaleler.Count == 0) { <p>Henüz yayınlanmış makale yok.</p> }
     <div class="makale-slider owl-carousel">
         @foreach (var makale in makaleler)

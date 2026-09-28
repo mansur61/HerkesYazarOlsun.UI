@@ -1,4 +1,4 @@
-﻿using HerkesYazarOlsun.Portal.Helpers;
+using HerkesYazarOlsun.Portal.Helpers;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -84,7 +84,7 @@ namespace HerkesYazarOlsun.Portal.Services
             return (accessToken, nextRefreshToken);
         }
 
-        private async Task<HttpResponseMessage> SendWithRefreshRetryAsync(Func<HttpClient, Task<HttpResponseMessage>> requestFactory, HttpClient client)
+        protected async Task<HttpResponseMessage> SendWithRefreshRetryAsync(Func<HttpClient, Task<HttpResponseMessage>> requestFactory, HttpClient client)
         {
             var response = await requestFactory(client);
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)

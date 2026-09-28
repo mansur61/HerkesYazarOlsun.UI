@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<HerkesYazarOlsun.Portal.Services.MakaleStore>();
+builder.Services.AddScoped<HerkesYazarOlsun.Portal.Services.MakaleApiService>();
 // Configuration ayarları
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
