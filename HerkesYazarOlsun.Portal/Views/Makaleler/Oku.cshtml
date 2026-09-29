@@ -1,6 +1,6 @@
 @model HerkesYazarOlsun.Model.Entity.Makale
 @{ ViewData["Title"] = Model.Baslik; Layout = "~/Views/Shared/_Layout.cshtml"; }
-<article class="container-fluid py-4 article-area">
+<article class="container-fluid py-4 article-area article-page">
     <div class="article-heading">
         <a href="@Url.Action("Index", "Home")">← Ana sayfa</a>
         @if (ViewBag.IsOwner == true) { <a href="@Url.Action("Benim")">Makalelerim</a> }
@@ -12,9 +12,11 @@
     </div>
     <section class="article-reader" id="article-reader" data-kind="@(Model.Uzanti == ".pdf" ? "pdf" : "text")" data-document-url="@Url.Action("Belge", new { id = Model.Id })" aria-label="Makale okuyucu">
         <div class="article-toolbar">
-            <button type="button" data-prev disabled>Önceki</button>
-            <span data-status aria-live="polite">Yükleniyor…</span>
-            <button type="button" data-next disabled>Sonraki</button>
+            <div class="article-page-navigation" data-page-navigation role="group" aria-label="Makale sayfalarında gezinme">
+                <button type="button" data-prev aria-label="Önceki sayfaya git" disabled>Önceki</button>
+                <span data-status aria-live="polite">Yükleniyor…</span>
+                <button type="button" data-next aria-label="Sonraki sayfaya git" disabled>Sonraki</button>
+            </div>
             <label>Yakınlaştır <select data-zoom><option value="1">%100</option><option value="1.25">%125</option><option value="1.5">%150</option><option value="2">%200</option></select></label>
         </div>
         <p data-error role="alert" hidden>Belge görüntülenemedi. Özgün belgeyi açabilir veya sayfayı yenileyebilirsiniz.</p>

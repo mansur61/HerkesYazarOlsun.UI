@@ -1,6 +1,6 @@
 @model HerkesYazarOlsun.Model.ViewModel.MakaleSayfa
 @{ Layout = "~/Views/Shared/_Layout.cshtml"; ViewData["Title"] = "Makaleler"; }
-<section class="container py-4 article-area">
+<section class="container py-4 article-area article-page">
 <h1>@(ViewBag.Drafts == true ? "Makalelerim" : "Makaleler")</h1>
 @if (ViewBag.Drafts == true) { <a class="btn article-button mb-3" href="@Url.Action("Ekle")">Makale Ekle</a> }
 @if (TempData["MakaleBilgi"] is string bilgi) { <p role="status">@bilgi</p> }

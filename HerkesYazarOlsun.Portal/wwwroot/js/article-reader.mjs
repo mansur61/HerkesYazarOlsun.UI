@@ -9,6 +9,7 @@ if (root) {
     const status = root.querySelector('[data-status]');
     const previous = root.querySelector('[data-prev]');
     const next = root.querySelector('[data-next]');
+    const pageNavigation = root.querySelector('[data-page-navigation]');
     const zoom = root.querySelector('[data-zoom]');
     const narrow = window.matchMedia('(max-width: 768px)');
     let pdf, textPages, current = 1, count = 0, generation = 0;
@@ -25,6 +26,7 @@ if (root) {
     async function render() {
         const token = ++generation;
         const last = Math.min(count, current + perSpread() - 1);
+        pageNavigation.hidden = count <= perSpread();
         previous.disabled = current === 1; next.disabled = last === count;
         status.textContent = `${current === last ? current : current + '–' + last} / ${count}`;
         root.querySelector('[data-error]').hidden = true;

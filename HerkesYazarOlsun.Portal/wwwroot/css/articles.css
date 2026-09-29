@@ -1,4 +1,5 @@
 .article-area { --article-brand:#00c4a0; --article-ink:#174b43; overflow-wrap:anywhere; }
+.article-page { margin-top:24px; }
 .article-area a { color:var(--article-ink); text-decoration:none; }
 .article-area a:hover { color:#006653; text-decoration:none; }
 .article-area a:focus-visible, .article-area button:focus-visible { outline:3px solid #174b43; outline-offset:3px; }
@@ -17,6 +18,8 @@
 .article-icon-button:hover { background:#f9e1e3; }
 .article-card-publish { margin-top:16px; }
 .article-card-publish .article-button { padding:7px 14px; }
+.makale-slider .owl-nav { display:flex; justify-content:center; gap:20px; margin-top:16px; }
+.makale-slider .owl-nav button { margin:0; }
 .article-heading { max-width:1200px; margin:0 auto 20px; }
 .article-heading > a { display:inline-block; margin:0 16px 12px 0; }
 .article-heading h1 { font-size:clamp(1.5rem,3vw,2.25rem); }
@@ -24,6 +27,8 @@
 .article-actions form { margin:0; }
 .article-reader { max-width:1440px; margin:auto; background:#e9f3f0; border:1px solid #c9ded6; border-radius:12px; overflow:hidden; }
 .article-toolbar { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:12px; padding:12px; background:#d8eee7; }
+.article-page-navigation { display:flex; align-items:center; justify-content:center; gap:24px; }
+.article-page-navigation[hidden] { display:none; }
 .article-toolbar button, .article-toolbar select { border:1px solid #9acfc4; border-radius:7px; padding:8px 14px; background:#fff; color:#174b43; min-height:44px; }
 .article-toolbar button:disabled { opacity:.45; }
 .article-toolbar label { margin:0; }
