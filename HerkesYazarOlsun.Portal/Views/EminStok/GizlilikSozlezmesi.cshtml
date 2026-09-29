@@ -1,0 +1,166 @@
+@{
+    ViewData["Title"] = "Emin Stok - Gizlilik Politikası";
+    Layout = null; // Header ve Footer olmaması için Layout iptal edildi.
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emin Stok - Gizlilik Politikası</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .sozlesme-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .sozlesme-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .sozlesme-content h3 {
+            font-size: 18px;
+            margin-top: 25px;
+            color: #2980b9;
+            border-left: 4px solid #3498db;
+            padding-left: 12px;
+        }
+
+        .sozlesme-content p {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .sozlesme-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .sozlesme-content ul li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .sozlesme-content ul li::before {
+            content: "🔹";
+            position: absolute;
+            left: 0;
+        }
+
+        .footer-info {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        @@media (max-width: 600px) {
+            .sozlesme-container {
+                padding: 20px;
+            }
+            .sozlesme-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sozlesme-container">
+    <h2 class="sozlesme-title">🔐 EMN STOK GİZLİLİK POLİTİKASI</h2>
+
+    <div class="sozlesme-content">
+        <p><strong>Son Güncelleme:</strong> @DateTime.Now.ToString("dd.MM.yyyy")</p>
+
+        <p>
+            Bu Gizlilik Politikası, <strong>Emin Stok</strong> (“Uygulama”) tarafından kullanıcıların kişisel bilgilerinin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamak amacıyla hazırlanmıştır. Emin Stok, işletmelerin ve bireysel kullanıcıların stok takibi, envanter yönetimi ve mağaza süreçlerini dijitalleştiren bir mobil uygulamadır.
+        </p>
+
+        <h3>1. TOPLANAN BİLGİLER</h3>
+        <p>Uygulamayı kullandığınızda aşağıdaki bilgiler toplanabilir:</p>
+        <ul>
+            <li><strong>Hesap ve İşletme Bilgileri:</strong> Kayıt sırasında ve kullanım sürecinde paylaştığınız ad, soyad, e-posta adresi, telefon numarası ve işletme adresi bilgileri.</li>
+            <li><strong>Mağaza Bilgileri:</strong> Mağaza adı, nickname, iletişim (WhatsApp, Instagram, Facebook) bilgileri.</li>
+            <li><strong>Stok Verileri:</strong> Ürün bilgileri, barkodlar, fiyatlar ve envanter kayıtları.</li>
+            <li><strong>Medya Erişimi:</strong> Barkod tarama için kamera ve ürün görseli eklemek için galeri erişimi.</li>
+            <li><strong>Ödeme Bilgileri:</strong> Uygulama şu an için kredi kartı verisi toplamamaktadır. Gelecek sürümlerde uygulama içi satın alımlar veya abonelik işlemleri için kredi kartı bilgileriniz güvenli ödeme altyapıları (sanal pos vb.) üzerinden toplanabilir; ancak bu veriler doğrudan tarafımızca saklanmayacaktır.</li>
+        </ul>
+
+        <h3>2. BİLGİLERİN KULLANIM AMACI</h3>
+        <p>Toplanan bilgiler aşağıdaki amaçlarla kullanılmaktadır:</p>
+        <ul>
+            <li>Stok ve envanter yönetimi hizmetinin sunulması.</li>
+            <li>Verilerin cihazlar arasında senkronize edilmesi ve yedeklenmesi.</li>
+            <li>Kullanıcı hesaplarının yönetimi ve güvenliği (OTP doğrulama vb.).</li>
+            <li>Uygulama performansının artırılması ve hataların giderilmesi.</li>
+            <li>Yasal yükümlülüklerin yerine getirilmesi.</li>
+        </ul>
+
+        <h3>3. VERİ SAKLAMA POLİTİKASI</h3>
+        <p>
+            Emin Stok, verilerinizin güvenliğini ön planda tutar:
+        </p>
+        <ul>
+            <li><strong>Yerel Saklama:</strong> Verilerinizin bir kısmı çevrimdışı erişim için cihazınızda şifreli olarak saklanır.</li>
+            <li><strong>Bulut Saklama:</strong> Senkronizasyon özelliği aktif edildiğinde, verileriniz güvenli sunucularımızda barındırılır.</li>
+            <li><strong>Saklama Süresi:</strong> Kişisel verileriniz ve stok kayıtlarınız, hesabınız aktif olduğu sürece saklanır. Kullanılmayan veya silinen hesaplara ait veriler 2 yıl sonunda sistemlerimizden otomatik olarak temizlenir.</li>
+        </ul>
+
+        <h3>4. VERİ SİLME SÜRECİ VE KULLANICI HAKLARI</h3>
+        <p>
+            Kullanıcılar verilerini silme hakkına sahiptir:
+        </p>
+        <ul>
+            <li><strong>Manuel Silme:</strong> Uygulama içerisindeki "Ayarlar" menüsünden hesabınızı ve tüm verilerinizi kalıcı olarak silebilirsiniz.</li>
+            <li><strong>Silme Talebi:</strong> Verilerinizin sunucularımızdan tamamen kaldırılması için <strong>eminstok@@herkesyazarolsun.com.tr</strong> adresine talep gönderebilirsiniz.</li>
+            <li><strong>Süreç:</strong> Talebiniz onaylandıktan sonra 30 gün içerisinde tüm yedekleriniz dahil verileriniz kalıcı olarak silinir.</li>
+        </ul>
+
+        <h3>5. REKLAMLAR VE ÜÇÜNCÜ TARAFLAR</h3>
+        <p>
+            Uygulamada Google AdMob reklamları yer alabilir. Google, ilgi alanlarınıza göre reklam göstermek için cihaz reklam kimliğinizi kullanabilir. Verileriniz, yasal zorunluluklar dışında üçüncü taraflarla paylaşılmaz.
+        </p>
+
+        <h3>6. VERİ GÜVENLİĞİ</h3>
+        <p>
+            Emin Stok, verilerinizi korumak için SSL şifreleme ve modern güvenlik duvarları kullanır. Ancak, dijital dünyada %100 güvenlik garantisi verilemeyeceğini hatırlatırız.
+        </p>
+
+        <h3>7. İLETİŞİM</h3>
+        <p>
+            Gizlilik politikamız hakkındaki sorularınız için bize <strong>eminstok@@herkesyazarolsun.com.tr</strong> adresinden ulaşabilirsiniz.
+        </p>
+    </div>
+
+    <div class="footer-info">
+        &copy; @DateTime.Now.Year Emin Stok. Tüm hakları saklıdır.
+    </div>
+</div>
+
+</body>
+</html>

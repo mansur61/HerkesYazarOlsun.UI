@@ -58,6 +58,20 @@ namespace HerkesYazarOlsun.Portal.Helpers.Extensions
             return ip != null ? ip.Value : string.Empty;
         }
 
+        /// <summary>Login sırasında cookie'ye gömülen JWT token'ı döndürür.</summary>
+        public static string GetJwtToken(this ClaimsPrincipal user)
+        {
+            var token = user.Claims.FirstOrDefault(x => x.Type == "jwt_token");
+            return token?.Value ?? "";
+        }
+
+        /// <summary>Login sırasında cookie'ye gömülen refresh token'ı döndürür.</summary>
+        public static string GetRefreshToken(this ClaimsPrincipal user)
+        {
+            var token = user.Claims.FirstOrDefault(x => x.Type == "refresh_token");
+            return token?.Value ?? "";
+        }
+
         public static string GetUserInfo(this ClaimsPrincipal user, string key)
         {
             var data = user.Claims.Where(x => x.Type == key).FirstOrDefault();

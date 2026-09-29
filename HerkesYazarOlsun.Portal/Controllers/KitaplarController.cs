@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using HerkesYazarOlsun.Model.Entity;
@@ -57,13 +57,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 input.Katergoriler = kategoriler!;
                 input.IlgiiSayfaSayisi = 1;
             }
+             
+            
 
             if (input.isYazmayaDevamEt.HasValue && input.isYazmayaDevamEt.Value)//
             {
-                if (input.IlgiiSayfaSayisi.HasValue && input.IlgiiSayfaSayisi.Value == 0)
-                {
-                    input.IlgiiSayfaSayisi = 2;
-                }
+                var savedPages = new BooksPagesService().GetPagesByBooks(bookID);
+                input.IlgiiSayfaSayisi = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(savedPages?.Count() ?? 0);
 
             }
             
@@ -678,9 +678,9 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 }
 
                 vmKitap.BookID = input.BookModel.ID ?? 0;
-                vmKitap.BooksPageCount = sayfaCount + 1;
+                vmKitap.BooksPageCount = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(sayfaCount);
                 vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId;
-                input.IlgiiSayfaSayisi = sayfaCount + 1;
+                input.IlgiiSayfaSayisi = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(sayfaCount);
 
             }
             else
@@ -738,8 +738,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
                         vmKitap.BookID = book.Result!.ID;
                         vmKitap.BooksPageID = sayfaId == 0 ? 1 : sayfaId;
-                        vmKitap.BooksPageCount = sayfaCount + 1;
-                        input.IlgiiSayfaSayisi = sayfaCount + 1;
+                        vmKitap.BooksPageCount = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(sayfaCount);
+                        input.IlgiiSayfaSayisi = HerkesYazarOlsun.Portal.Helpers.BookPagination.Next(sayfaCount);
                     }
                     else
                     {
@@ -817,7 +817,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.BookModel = vmBook;
 
             var Bildirim = new BildirimlerService().GetBildirimlerByLoginId(Lid);
-
+            ViewBag.LOGIN_USER_ID = Lid;
             ViewBag.isTakip = Bildirim?.IsTakip ?? false; //Birisi beni takip ettiğinde bana e-posta gönder
             ViewBag.IsKitapYayin = Bildirim?.IsKitapYayin ?? false;//Birisi kitap yayınladığında bana bildirim yolla
             ViewBag.IsKitapYorum = Bildirim?.IsKitapYorum ?? false;//Birisi kitabıma yorum yaptığında bana e-posta gönder
@@ -852,8 +852,12 @@ namespace HerkesYazarOlsun.Portal.Controllers
             VM_BOOKS_DETAIL kitapDetay = new VM_BOOKS_DETAIL();
             kitapDetay.BookModel = new VM_BOOKS();
 
-            if (arama.FavoriYazarlar != null || arama.DevamEdenKitaplar != null ||
-                arama.FavoriKitaplar != null || arama.YayinlananKitaplar != null || arama.BitenKitaplar != null)
+            // yazarIId dışarıdan gelmemişse (yani doğrudan menüden gelinen kendi kütüphanesi sayfası),
+            // login kullanıcının ID'sini kullan. Profil sayfasından başkasının kitapları için
+            // yazarIId zaten parametre olarak gönderildiğinden üzerine yazılmaz.
+            if (!arama.yazarIId.HasValue &&
+                (arama.FavoriYazarlar != null || arama.DevamEdenKitaplar != null ||
+                 arama.FavoriKitaplar != null || arama.YayinlananKitaplar != null || arama.BitenKitaplar != null))
             {
                 arama.yazarIId = Lid;
             }
@@ -896,7 +900,15 @@ namespace HerkesYazarOlsun.Portal.Controllers
             kitapDetay.isAnaSayfa = false;
             kitapDetay.Tip = arama.profilKitapTuru + "-" + arama.Tip;
 
-            arama.yazarIId = Lid;
+            // Profil sayfası dışından (tumkitaplar gibi) gelen filtreleme isteklerinde
+            // yazarIId gönderilmemişse login kullanıcının ID'sini kullan.
+            // Profil sayfasından gelen isteklerde yazarIId zaten dolu gelir → üzerine yazılmaz.
+            if (!arama.yazarIId.HasValue &&
+                (arama.DevamEdenKitaplar != null || arama.BitenKitaplar != null ||
+                 arama.FavoriKitaplar != null || arama.YayinlananKitaplar != null))
+            {
+                arama.yazarIId = Lid;
+            }
 
             List<VM_BOOKS>? bookList = new BooksService().TumKitaplar(arama);
             //vM_BOOKS.Stars = new BooksService().GetMaxStarBooks();

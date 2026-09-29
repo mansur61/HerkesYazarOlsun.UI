@@ -1,4 +1,4 @@
-﻿using HerkesYazarOlsun.Model.ViewModel;
+using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Middlewares;
@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<HerkesYazarOlsun.Portal.Services.MakaleApiService>();
 // Configuration ayarları
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -64,6 +65,29 @@ app.UseCustomStaticFiles(app.Environment);
 
 // 🔁 Core pipeline
 app.UseApplicationPipeline();
+
+app.MapGet("/app-ads.txt", (IConfiguration configuration) =>
+{
+    var appAds = configuration.GetSection("AppSettings:AppAds");
+    var domain = appAds["Domain"];
+    var publisherId = appAds["PublisherId"];
+    var relationship = appAds["Relationship"];
+    var certificationAuthorityId = appAds["CertificationAuthorityId"];
+
+    if (string.IsNullOrWhiteSpace(domain) ||
+        string.IsNullOrWhiteSpace(publisherId) ||
+        string.IsNullOrWhiteSpace(relationship) ||
+        string.IsNullOrWhiteSpace(certificationAuthorityId))
+    {
+        return Results.NotFound();
+    }
+
+    var appAdsContent = $"{domain}, {publisherId}, {relationship}, {certificationAuthorityId}";
+
+    return string.IsNullOrWhiteSpace(appAdsContent)
+        ? Results.NotFound()
+        : Results.Text(appAdsContent, "text/plain");
+});
  
 app.MapGet("/health", () => Results.Ok("OK"));
 

@@ -15,6 +15,11 @@ namespace HerkesYazarOlsun.Portal.Middlewares
             provider.Mappings.TryAdd(".ogg", "audio/ogg");
             provider.Mappings.TryAdd(".wav", "audio/wav");
 
+            provider.Mappings[".mjs"] = "text/javascript";
+            provider.Mappings[".wasm"] = "application/wasm";
+            provider.Mappings[".pfb"] = "application/octet-stream";
+            provider.Mappings[".bcmap"] = "application/octet-stream";
+
             // wwwroot
             app.UseStaticFiles(new StaticFileOptions
             {

@@ -60,7 +60,7 @@
 
                         <div class="col-md-12 form-group">
                             <input type="number" class="form-control" id="telno" name="TELNO"
-                                   placeholder="Telefon Numarası" asp-for="TELNO">
+                                   placeholder="Telefon Numarası" asp-for="TELNO" required>
                         </div>
 
                         <div class="col-md-12 form-group">
@@ -135,13 +135,13 @@
             $("#loading").css("display", "none");
             if (data.state == 1) {
                 $("#basarili-" + register).css("display", "block");
-                $("#basarili-" + register + " #mesaj").html(data.message);
+                $("#basarili-" + register + " #mesaj").html("<strong>Kayıt Başarılı!</strong><br/>https://herkesyazarolsun.com.tr/Home/Dogrulama adresinden mail ve telefonunuzu doğrulayabilirsiniz. Sonradan Ayarlar sekmesinden de yapabilirsiniz.");
 
                 $("#bilgi-" + register).css("display", "none");
                 $("#uyari-" + register).css("display", "none");
 
                 setTimeout(function () {
-                    window.location.href = "/Home/Index";
+                    window.location.href = "/Home/Dogrulama";
                 }, 3000);
             }
             else if (data.state == 3) {
