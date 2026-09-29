@@ -55,7 +55,7 @@
                 <source src="@Url.Content("~/wowbook/sound/page-flip.mp3")" type="audio/mpeg" />
             </audio>
 <div id="container" data-total-pages="@HerkesYazarOlsun.Portal.Helpers.BookPagination.Total(Model.BookModel.BooksPageList.Count)">
-    <nav>
+    <nav class="book-reader-toolbar">
         <ul>
             <li><a id='first' href="#">First page</a></li>
             <li><a id='back' href="#">Back</a></li>

@@ -63,7 +63,7 @@ function initDesktopReaderNavigation(book) {
         jump.update(index + 1);
     }
     const jump = createReaderJump(book.pages.length, navigate);
-    document.querySelector('#container > nav').after(jump.form);
+    document.querySelector('#container > nav').append(jump.form);
     const previous = book.onShowPage;
     book.onShowPage = function (...args) {
         if (previous) previous.apply(this, args);
