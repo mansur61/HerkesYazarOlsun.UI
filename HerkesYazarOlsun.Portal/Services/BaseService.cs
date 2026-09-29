@@ -48,6 +48,7 @@ namespace HerkesYazarOlsun.Portal.Services
                 existingIdentity.NameClaimType,
                 existingIdentity.RoleClaimType));
 
+            httpContext.User = newPrincipal;
             await httpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 newPrincipal,
@@ -68,7 +69,7 @@ namespace HerkesYazarOlsun.Portal.Services
             using var client = new HttpClient();
             var payload = JsonConvert.SerializeObject(new { refreshToken });
             using var content = new StringContent(payload, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync($"{UriService.TrimEnd('/')}api/Users/RefreshToken", content);
+            var response = await client.PostAsync($"{UriService.TrimEnd('/')}/api/Users/RefreshToken", content);
 
             if (!response.IsSuccessStatusCode)
                 return (null, null);
@@ -92,6 +93,7 @@ namespace HerkesYazarOlsun.Portal.Services
                 var refreshedToken = await TryRefreshAccessTokenAsync();
                 if (!string.IsNullOrWhiteSpace(refreshedToken.AccessToken))
                 {
+                    response.Dispose();
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", refreshedToken.AccessToken);
                     response = await requestFactory(client);
                 }

@@ -49,7 +49,7 @@ public class MakaleApiService(IHttpClientFactory factory) : BaseService
     }
     public async Task Delete(Guid id)
     {
-        using var response = await Send(() => new(HttpMethod.Delete, $"api/makaleler/{id}"));
+        using var response = await Send(() => new(HttpMethod.Post, $"api/makaleler/{id}/sil"));
         response.EnsureSuccessStatusCode();
     }
     public async Task Publish(Guid id)

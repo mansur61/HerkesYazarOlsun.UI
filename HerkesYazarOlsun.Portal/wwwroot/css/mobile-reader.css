@@ -12,3 +12,15 @@ html.mobile-reading, html.mobile-reading body { height:100%; width:100%; margin:
 .mobile-reading #features img { max-width:100%; height:auto; object-fit:contain; }
 
 .mobile-reading #main, .mobile-reading #features, .mobile-reader-controls { box-sizing:border-box; }
+
+#features [data-book-page], #features [data-book-page] p, #features [data-book-page] span,
+#features .book-page-text, #features .book-page-text *, #features .book-preface *, #sayfaYaiziyAlEditor .ql-editor, #sayfaYaiziyAlEditor .ql-editor * {
+    font-family:"Times New Roman", Times, serif !important;
+}
+.book-preface { background:#fffdf7; color:#242424; padding:24px; overflow:auto; }
+.book-page-text { font-size:18px; line-height:1.7; }
+.reader-jump { display:flex; align-items:center; justify-content:center; gap:8px; padding:8px; margin:0; background:#fff; color:#242424; }
+.reader-jump input { width:75px; min-height:40px; border:1px solid #aaa; border-radius:5px; padding:4px; }
+.reader-jump button { min-height:40px; padding:8px 12px; background:#00c4a0; border:0; border-radius:5px; }
+.reader-jump [role="status"] { font-size:14px; }
+.mobile-reading .reader-jump { flex-wrap:wrap; }

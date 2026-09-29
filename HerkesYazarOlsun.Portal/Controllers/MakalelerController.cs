@@ -25,7 +25,7 @@ public class MakalelerController(MakaleApiService api, ILogger<MakalelerControll
     [Authorize, HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Sil(Guid id)
     {
-        if (User.GetGozlemciMod() != "0") return Forbid();
+        // Ownership is enforced by the API using the authenticated JWT author id.
         try { await api.Delete(id); }
         catch (HttpRequestException ex)
         {

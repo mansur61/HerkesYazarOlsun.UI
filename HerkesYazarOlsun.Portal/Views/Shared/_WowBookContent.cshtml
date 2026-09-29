@@ -97,7 +97,7 @@
     <input type="hidden" id="guncellenecekSayfaId" />
     <div id="main">
         <div id='features'>
-            <div>
+            <div data-book-page>
                 @if (Model.BookModel.ONKAPAKFOTOPATH == "-1")
                 {
             <script>
@@ -133,17 +133,17 @@
 
 
 
-            <h1>
-                <p style="font-size:40px;text-align:center;color:white">Önsöz</p>
-                <p style="font-size:20px;">@Html.Raw(Model.BookModel.ONSOZ)</p>
-            </h1>
+            <div data-book-page class="book-preface">
+                <h2>Önsöz</h2>
+                <div>@Html.Raw(Model.BookModel.ONSOZ)</div>
+            </div>
 
             @foreach (var item in Model.BookModel.BooksPageList)
             {
                 var temizHtml = Regex.Replace(item.PageWrite, "<img[^>]*>", "", RegexOptions.IgnoreCase);
                 temizHtml = Regex.Replace(temizHtml, @"\|\|img_BooksPage\|\|", "", RegexOptions.IgnoreCase);
 
-                <div style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
+                <div data-book-page data-page-id="@item.ID" style="overflow:auto; overflow-x:hidden; text-align:justify; padding-right:15px">
                     @if (Model.IsWowBookEdit)
                     {
                         <button class="btn btn-warning" onclick="KitabiGuncelle('@item.ID')">Sayfayı Güncelle</button>
@@ -151,7 +151,7 @@
                     }
 
                     <div class='feature pagefx hardpage' style="width:350px">
-                        <p style="font-size:12px;">@Html.Raw(temizHtml)</p>
+                        <div class="book-page-text">@Html.Raw(temizHtml)</div>
 
                         @if (item.PageWrite.Contains("||img_BooksPage||"))
                         {
@@ -188,11 +188,11 @@
                 </div>
             }
 
-            <div>
+            <div data-book-page>
                 <img src="~/wowbook/images/cover_last.png" alt="Arka Kapak" width="100%" height="100%" />
             </div>
 
-            <div class='feature hardpage'>
+            <div data-book-page class='feature hardpage'>
                 @if (ViewBag.VM_KITAP.ARKAKAPAKFOTOPATH == "-1")
                 {
                     <img src="~/lib/img/stack-of-books.png" alt="Sayfa resmi" width="100%" height="100%" />

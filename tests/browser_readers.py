@@ -31,15 +31,17 @@ ARTICLE = '''<!doctype html><meta charset="utf-8"><meta name="viewport" content=
 <select data-zoom><option value="1">100%</option><option value="2">200%</option></select></div><p data-error hidden>Hata</p><div class="article-spread" data-spread></div></section></div>
 <script type="module" src="/js/article-reader.mjs"></script>'''
 BOOK = '''<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/css/mobile-reader.css">
-<div id="container"><nav><img onclick="location.href='/book'" /></nav><div id="main"><div id="features"><div>Kapak</div>
-<div><button>Sayfayı Güncelle</button><div class="feature"><p>''' + ('Uzun kitap sayfası. ' * 1200) + '''</p></div></div><div>Arka kapak</div></div></div></div>
+<div id="container"><nav><img onclick="location.href='/book'" /></nav><div id="main"><div id="features"><div data-book-page>Kapak</div>
+<div data-book-page><button>Sayfayı Güncelle</button><div class="feature"><p>''' + ('Uzun kitap sayfası. ' * 1200) + '''</p></div></div><div data-book-page>Sayfa 3</div><div data-book-page>Sayfa 4 gerçek metin</div><div data-book-page>Arka kapak</div></div></div></div>
 <script src="/js/mobile-reader.js"></script><script>initMobileReader()</script>'''
+
+DESKTOP = '<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="/wowbook/css/wow_book.css"><link rel="stylesheet" href="/css/mobile-reader.css"><div id="container"><nav></nav><div id="features">' + ''.join(f'<div data-book-page><div class="book-page-text">Sayfa içeriği {n}</div></div>' for n in range(1, 9)) + '</div></div><script src="/lib/jquery/jquery.min.js"></script><script src="/wowbook/wow_book.min.js"></script><script src="/js/mobile-reader.js"></script><script>$(function(){ $("#features").wowBook({width:800,height:500,turnPageDuration:0,numberedPages:[0,-1],firstPageNumber:1}); initDesktopReaderNavigation($.wowBook("#features")); });</script>'
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs): super().__init__(*args, directory=str(ROOT), **kwargs)
     def log_message(self, *args): pass
     def do_GET(self):
-        fixtures = {'/article': ('text/html', ARTICLE.encode()), '/book': ('text/html', BOOK.encode()), '/sample.pdf': ('application/pdf', pdf_fixture())}
+        fixtures = {'/desktop': ('text/html', DESKTOP.encode()), '/article': ('text/html', ARTICLE.encode()), '/book': ('text/html', BOOK.encode()), '/sample.pdf': ('application/pdf', pdf_fixture())}
         if self.path in fixtures:
             kind, content = fixtures[self.path]; self.send_response(200); self.send_header('Content-Type', kind); self.end_headers(); self.wfile.write(content)
         else: super().do_GET()
@@ -72,7 +74,32 @@ with sync_playwright() as playwright:
     assert page.locator('.mobile-book-page.is-current').evaluate('(el) => el.scrollTop') == 300
     assert page.evaluate('document.documentElement.scrollHeight <= window.innerHeight')
     assert page.locator('.mobile-book-page.is-current button').inner_text() == 'Sayfayı Güncelle'
+    page.locator('.reader-jump input').fill('5')
+    page.locator('.reader-jump button').click()
+    assert page.locator('.mobile-book-page.is-current').inner_text() == 'Arka kapak'
+    page.locator('.reader-jump input').fill('4')
+    page.locator('.reader-jump button').click()
+    assert page.locator('.mobile-book-page.is-current').inner_text() == 'Sayfa 4 gerçek metin'
+    page.locator('.reader-jump input').fill('2')
+    page.locator('.reader-jump input').press('Enter')
+    assert 'Uzun kitap' in page.locator('.mobile-book-page.is-current').inner_text()
+    assert 'Times New Roman' in page.locator('.mobile-book-page.is-current p').evaluate('(el) => getComputedStyle(el).fontFamily')
+    page.locator('.reader-jump input').fill('999')
+    page.locator('.reader-jump button').click()
+    assert 'Uzun kitap' in page.locator('.mobile-book-page.is-current').inner_text()
     page.screenshot(path='/private/tmp/hyo-book-mobile.png')
+    page.set_viewport_size({'width':1280,'height':900})
+    page.goto(base + '/desktop')
+    page.locator('.reader-jump input').fill('4')
+    page.locator('.reader-jump button').click()
+    assert page.evaluate('$.wowBook("#features").currentPage') == 3
+    assert 'Sayfa içeriği 4' in page.evaluate('$.wowBook("#features").pages[3].text()')
+    page.locator('.reader-jump input').fill('8')
+    page.locator('.reader-jump input').press('Enter')
+    assert page.evaluate('$.wowBook("#features").currentPage') == 7
+    page.locator('.reader-jump input').fill('1')
+    page.locator('.reader-jump button').click()
+    assert page.evaluate('$.wowBook("#features").currentPage') == 0
     assert not errors, errors
     browser.close()
 server.shutdown()
