@@ -1,0 +1,13 @@
+Herkes Yazar Olsun — Windows/IIS Plesk güncellemesi — 30.10.2026
+
+Mevcut çalışan .NET 8 sitesini güncellemek içindir; boş siteye ilk kurulum değildir.
+1. Plesk üzerinden mevcut site dosyalarının yedeğini alın.
+2. Uygulamayı durdurun (veya site köküne geçici app_offline.htm koyun).
+3. ZIP içeriğini mevcut HerkesYazarOlsun.Portal.dll dosyasının bulunduğu uygulama köküne çıkarın; aynı adlı dosyaları değiştirin. ZIP'in içinde ek bir üst klasör yoktur.
+4. Mevcut appsettings.json, appsettings.Production.json, Belgeler klasörü ve sunucu ayarlarını koruyun. Bu ayarlar ve kullanıcı yüklemeleri ZIP'e dahil edilmedi.
+5. Uygulamayı başlatın; kullanıldıysa app_offline.htm dosyasını kaldırın.
+6. /health adresinde OK, ana sayfa, giriş ve bir kitabın okuma ekranını kontrol edin.
+
+Gereksinim: IIS ASP.NET Core Module V2 ve .NET 8 Hosting Bundle. Paket framework-dependent olup Windows sunucusu çalıştırma dosyalarını içerir; web.config Portal DLL'ini başlatır.
+Yapay zekâ anahtarı Plesk uygulama ortamında OPENAI_API_KEY olarak tanımlanabilir. Anahtar yoksa AI düğmeleri bilgilendirme verir; mikrofonla ve elle yazma çalışır. Anahtar geçersiz/süresi dolmuşsa kullanıcıya yönetici ayarlarını kontrol etmesi söylenir; mikrofon ve elle yazma kullanılabilir. Anahtar ZIP'e dahil edilmez.
+Kontrol: Release publish başarılı; Production ortamında yerel uygulama açıldı. /health, /Home/Tanitim ve /Account/Giris HTTP 200 döndürdü. AI anahtar uyarısı, mikrofonun kullanılabilir kalması ve ZIP bütünlüğü ayrıca kontrol edildi. Windows/IIS sunucusu ve gerçek kitap/API akışı bu bilgisayarda test edilmedi; sunucuya bağlı 500 hatası olmayacağı garanti edilemez.
