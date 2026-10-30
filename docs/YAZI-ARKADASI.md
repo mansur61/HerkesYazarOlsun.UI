@@ -15,9 +15,9 @@ HTTPS ve tarayıcı/işletim sistemi mikrofon izni gerekir. Konuşma tanıma tü
 
 ## İsteğe bağlı OpenAI desteği
 
-Anahtar yalnızca Portal sunucusunda tanımlanır. Tarayıcıya veya kaynak ZIP'e gerçek anahtar koymayın. `appsettings.json` içinde `WritingCompanion` ayarları bulunur; `ApiKey` bilerek boş bırakılmıştır.
+Anahtar yalnızca Portal sunucusunda tanımlanır. Tarayıcıya, kaynak depoya veya dağıtım ZIP'ine gerçek anahtar koymayın. Güvenli örnek ayarlar `appsettings.example.json` dosyasındadır; bu dosya uygulama tarafından otomatik yüklenmez ve gerçek anahtar içermez.
 
-Canlı ortamda gerçek anahtarı Plesk uygulama ortam değişkeni olarak `OPENAI_API_KEY` veya `WritingCompanion__ApiKey` adıyla tanımlayın ve uygulamayı yeniden başlatın. Alternatif olarak sunucuya özel `appsettings.Production.json` içinde `WritingCompanion:ApiKey` ayarlanabilir; bu dosyayı kaynak kontrolüne veya dağıtım ZIP'ine anahtarla eklemeyin. `WritingCompanion:ApiKey` boşsa `OPENAI_API_KEY` kullanılır.
+Canlı ortamda gerçek anahtarı Plesk uygulama ortam değişkeni olarak `OPENAI_API_KEY` adıyla tanımlayın ve uygulamayı yeniden başlatın. Anahtar JSON dosyasına yazılmaz. Uygulama `WritingCompanion:ApiKey` boşken `OPENAI_API_KEY` değerine geri döner.
 
 ```json
 "WritingCompanion": {
@@ -28,7 +28,7 @@ Canlı ortamda gerçek anahtarı Plesk uygulama ortam değişkeni olarak `OPENAI
 }
 ```
 
-Diğer ortam değişkenleri: `WritingCompanion__Enabled`, `WritingCompanion__Model`, `WritingCompanion__DailyRequestLimit`. Ayarlar eksikse mikrofon ve elle yazma çalışır; AI düğmeleri anahtar tanımlanana kadar devre dışıdır.
+Diğer ortam değişkenleri: `WritingCompanion__Enabled`, `WritingCompanion__Model`, `WritingCompanion__DailyRequestLimit`. Ayarlar eksikse mikrofon ve elle yazma çalışır; AI düğmeleri anahtar tanımlanana kadar devre dışıdır. Bir API anahtarı sohbete, loga veya depoya yanlışlıkla eklenirse onu ifşa olmuş kabul edin, sağlayıcıdan iptal edip yenisini oluşturun.
 
 Anahtar yoksa uygulama açılır, mikrofon ve elle yazma çalışır; AI düğmeleri devre dışıdır. AI için gerçek kullanıcı hesabıyla giriş gerekir, gözlemci hesabı kullanamaz. OpenAI hesabında API erişimi ve kullanılabilir bakiye gerekir.
 
