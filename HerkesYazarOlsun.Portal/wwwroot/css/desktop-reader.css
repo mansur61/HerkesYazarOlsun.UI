@@ -1,0 +1,59 @@
+/* Applied only by the desktop reader; the mobile reader keeps its own layout. */
+html.desktop-reading, html.desktop-reading body {
+    height: auto;
+    min-height: 100%;
+    overflow: auto;
+}
+.desktop-reading body > br { display: none; }
+.desktop-reading body > .container {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+}
+.desktop-reading #container {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    margin: 0;
+    padding: 16px 24px 24px;
+}
+.desktop-reading .book-reader-toolbar {
+    position: relative;
+    top: auto;
+    margin: 0 0 40px;
+    padding: 0;
+}
+.desktop-reading #main { width: 100%; }
+.desktop-reading .book-reader-toolbar .reader-jump {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: #fff;
+    color: #242424;
+    border: 1px solid #d6d0c7;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.desktop-reading .reader-jump label,
+.desktop-reading .reader-jump .reader-total {
+    color: #242424;
+    font-weight: 600;
+}
+.desktop-reading .reader-jump input {
+    background: #fff;
+    color: #242424;
+}
+.desktop-reading .reader-jump button {
+    background: #006b57;
+    color: #fff;
+}
+.desktop-reading #features [data-book-page] {
+    overflow: auto !important;
+    overflow-wrap: anywhere;
+}
+.desktop-reading #features [data-book-page] > .feature {
+    width: 100% !important;
+    height: auto;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+.desktop-reading #features img { max-width: 100%; object-fit: contain; }

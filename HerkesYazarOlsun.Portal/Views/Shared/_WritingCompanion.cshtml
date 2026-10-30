@@ -1,0 +1,57 @@
+@{
+    var writerId = User.FindFirst("user_id")?.Value ?? User.FindFirst("email")?.Value ?? "guest";
+    var writerScope = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(writerId)));
+}
+<dialog id="writing-companion" class="writing-companion" aria-labelledby="writing-companion-title" data-writer-scope="@writerScope">
+    <div class="wc-header">
+        <div><h2 id="writing-companion-title">Yazı Arkadaşım</h2><p>Sen anlat, birlikte yazalım.</p></div>
+        <button type="button" data-wc-close aria-label="Yazı arkadaşını kapat">✕</button>
+    </div>
+    <div class="wc-body">
+        <p class="wc-info">Sesli yazma yardımcısı: Soruları sırayla dinle, konuş veya yaz, kontrol edip forma ekle. Metnin sen onaylamadan forma eklenmez.</p>
+        <label for="wc-target">Hangi alanı dolduralım?</label>
+        <select id="wc-target"></select>
+        <p id="wc-question" class="wc-question"></p>
+        <div class="wc-actions">
+            <button type="button" data-wc-read>Soruyu dinle</button>
+            <label class="wc-check"><input id="wc-auto-read" type="checkbox" checked> Soruları seslendir</label>
+        </div>
+        <label for="wc-draft">Anlattıkların / taslağın</label>
+        <textarea id="wc-draft" rows="7" placeholder="Mikrofona basıp anlatabilir veya buraya yazabilirsin."></textarea>
+        <p id="wc-interim" class="wc-interim" aria-live="off"></p>
+        <label for="wc-category" id="wc-category-label" hidden>Kategori</label>
+        <select id="wc-category" hidden></select>
+        <p id="wc-count"></p>
+        <div class="wc-actions">
+            <button type="button" data-wc-mic aria-pressed="false">🎙 Konuşmaya başla</button>
+            <button type="button" data-wc-clear>Taslağı temizle</button>
+        </div>
+        <p id="wc-status" role="status" aria-live="polite"></p>
+        <section class="wc-ai" aria-labelledby="wc-ai-title">
+            <h3 id="wc-ai-title">Birlikte geliştirelim</h3>
+            <button type="button" data-wc-reset>Yeni konuşma</button>
+            <p id="wc-ai-status" role="status">Yapay zekâ desteği kontrol ediliyor…</p>
+            <div class="wc-actions">
+                <button type="button" data-wc-ai="ask" disabled>Bana soru sor</button>
+                <button type="button" data-wc-ai="draft" disabled>Taslağa dönüştür</button>
+                <button type="button" data-wc-ai="simplify" disabled>Daha sade yaz</button>
+                <button type="button" data-wc-ai="correct" disabled>Yazımı düzelt</button>
+            </div>
+            <div id="wc-ai-preview" hidden>
+                <label for="wc-ai-result">Önerilen taslak — düzenleyebilirsin</label>
+                <textarea id="wc-ai-result" rows="5"></textarea>
+                <button type="button" data-wc-ai-use>Bu taslağı seç</button>
+            </div>
+            <p class="wc-privacy">Bu düğmeleri kullandığında anlatımın, bu sekmedeki son konuşmaların ve formdaki metinler OpenAI'a gönderilir. Öneriyi kontrol edip seçebilirsin. Mikrofonu tek başına kullanmak OpenAI bağlantısı gerektirmez.</p>
+        </section>
+        <p class="wc-privacy">Ses tanıma, tarayıcının hizmetini kullanır; sesin tarayıcı sağlayıcısına gönderilebilir ve internet gerekebilir. Bu site ses kaydı saklamaz. Taslaklar bu sekmede korunur; kitabı kaydetmek için formdaki Kaydet düğmesini kullan.</p>
+        <p class="wc-info">Kapak görsellerini formdan ayrıca seçmelisin. Word/PDF dosyan bu yardımcıya gönderilmez.</p>
+    </div>
+    <div class="wc-footer">
+        <label class="wc-check" id="wc-append-label" hidden><input id="wc-append" type="checkbox" checked> Mevcut sayfanın sonuna ekle</label>
+        <div class="wc-actions">
+            <button type="button" data-wc-apply class="wc-primary">Onayla ve alana ekle</button>
+            <button type="button" data-wc-next>Bu alanı atla →</button>
+        </div>
+    </div>
+</dialog>

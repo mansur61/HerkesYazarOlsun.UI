@@ -1,4 +1,4 @@
-﻿@using HerkesYazarOlsun.Model.Utils
+@using HerkesYazarOlsun.Model.Utils
 @using HerkesYazarOlsun.Portal.Controllers;
 @model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL;
 
@@ -28,6 +28,7 @@
 
     <link href="~/lib/css/kitap_olustur.css" rel="stylesheet" />
     <link href="~/lib/css/kitap_on_bilgiler.css" rel="stylesheet" />
+    <link href="@Url.Content("~/css/writing-companion.css?v=20261030-1")" rel="stylesheet" />
 
 
 }
@@ -84,7 +85,7 @@
                     <div class="step">
                         <h1>Kitabınızın Sayfalarını Oluşturunuz</h1>
                         <p>
-                            Kitapta Yazılan İlgili Sayfa No:
+                            Eklenecek Yeni Sayfa No:
                             <span id="sayfaSayisi" data-value="@Model.IlgiiSayfaSayisi"> 
                                 @Model.IlgiiSayfaSayisi
                             </span>
@@ -96,6 +97,7 @@
 
                         <div class="mb-3">
                             <h5>İlgili Sayfayı Yazınız</h5>
+                            <button type="button" class="writing-companion-open" data-writing-open="page">🎙 Yazı Arkadaşım — Anlatarak yaz</button>
                             <div id="help" class="form-text text-info mb-2">1000 karakteri geçmeyiniz.</div>
                             <div class="container-pg border rounded p-1">
                                 <div id="sayfaYaziEditor"></div>
@@ -597,7 +599,7 @@
                      //console.log("veriGonder BOOKSID: " + $("#BOOKSID").val() + " BOOKPAGESID: " + $("#BOOKPAGESID").val());
 
                      var intSayi = parseInt(dataValue);
-                     $("#sayfaSayisi").html( response.result.booksPageCount -1);
+                     $("#sayfaSayisi").html( response.result.booksPageCount);
 
                      $("#kitapKatdetmeUyariDurumu").val("1");
                      spanElement.setAttribute('data-value', intSayi );
@@ -667,3 +669,6 @@
 
 </script>
 
+
+@Html.Partial("_WritingCompanion")
+<script src="@Url.Content("~/js/writing-companion.js?v=20261030-1")" defer></script>

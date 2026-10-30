@@ -1,4 +1,4 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_USERS
+@model HerkesYazarOlsun.Model.ViewModel.VM_USERS
 @using HerkesYazarOlsun.Model.Enums
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 @using HerkesYazarOlsun.Portal.Controllers
@@ -142,23 +142,6 @@
 </div>
 
 @section scripts {
-@*
-<script>
-    window.appConfig = {
-        yazarId: $("#yazar_id").val(),
-        profil: $("#profilicin").val(),
-        email: "@(Model.EMAIL ?? "")",
-        urls: {
-            writerStars: "@Url.Action(nameof(KisiController.PostWriterStars), "Kisi")",
-            writerFollow: "@Url.Action(nameof(KisiController.PostWriterFollow), "Kisi")",
-            mailNotify: "@Url.Action(nameof(EmailController.MailBilgilendirme), "Email")",
-            kitapFiltre: "@Url.Action(nameof(KitaplarController.AraButonFiltrelemeKitaplar), "Kitaplar")"
-        }
-    };
-</script>
-
-<script src="~/js/profil.js"></script>*@
-
 
 <script>
 

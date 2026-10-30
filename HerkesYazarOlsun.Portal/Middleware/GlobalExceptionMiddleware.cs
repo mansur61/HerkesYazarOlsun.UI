@@ -20,7 +20,12 @@ public class GlobalExceptionMiddleware
             _logger.LogError(ex, "Unhandled exception");
 
             context.Response.StatusCode = 500;
-            await context.Response.WriteAsJsonAsync(new { message = "Internal error" });
+            //await context.Response.WriteAsJsonAsync(new { message = "Internal error" });
+            await context.Response.WriteAsJsonAsync(new
+            {
+                message = ex.Message,
+                detail = ex.InnerException?.Message
+            });
         }
     }
 }

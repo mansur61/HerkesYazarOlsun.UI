@@ -1,0 +1,7 @@
+
+# Private article documents and metadata
+**/App_Data/Makaleler/
+
+# Test build outputs
+tests/**/bin/
+tests/**/obj/

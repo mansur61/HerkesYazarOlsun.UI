@@ -18,7 +18,8 @@ namespace HerkesYazarOlsun.Portal.Middlewares
                 if (cspList != null && cspList.Length > 0)
                 {
                     context.Response.Headers["Content-Security-Policy"]
-                        = string.Join("; ", cspList) + ";";
+                        = string.Join("; ", cspList.Select(directive => directive.Trim().StartsWith("script-src ")
+                            ? directive.Replace("script-src ", "script-src 'wasm-unsafe-eval' ") : directive)) + ";";
                 }
 
                 context.Response.Headers["X-Frame-Options"] = "DENY";

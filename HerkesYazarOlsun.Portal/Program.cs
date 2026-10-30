@@ -1,4 +1,6 @@
-﻿using HerkesYazarOlsun.Model.ViewModel;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
+using HerkesYazarOlsun.Model.ViewModel;
 using HerkesYazarOlsun.Portal.Helpers;
 using HerkesYazarOlsun.Portal.Helpers.Extensions;
 using HerkesYazarOlsun.Portal.Middlewares;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<HerkesYazarOlsun.Portal.Services.MakaleApiService>();
 // Configuration ayarları
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -27,6 +30,18 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IClaimsTransformation, UserClaimProvider>();
 builder.Services.Configure<VM_Mail_Settings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<HerkesYazarOlsun.Portal.Services.WritingCompanionService>(client => client.Timeout = TimeSpan.FromSeconds(45));
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("writing-companion", context => RateLimitPartition.GetFixedWindowLimiter(
+        context.User.FindFirst("user_id")?.Value ?? "anonymous",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = Math.Clamp(builder.Configuration.GetValue("WritingCompanion:DailyRequestLimit", 60), 1, 1000),
+            Window = TimeSpan.FromDays(1), QueueLimit = 0, AutoReplenishment = true
+        }));
+});
 
 builder.Services.AddAuthentication(options =>
 {
@@ -64,6 +79,30 @@ app.UseCustomStaticFiles(app.Environment);
 
 // 🔁 Core pipeline
 app.UseApplicationPipeline();
+app.UseRateLimiter();
+
+app.MapGet("/app-ads.txt", (IConfiguration configuration) =>
+{
+    var appAds = configuration.GetSection("AppSettings:AppAds");
+    var domain = appAds["Domain"];
+    var publisherId = appAds["PublisherId"];
+    var relationship = appAds["Relationship"];
+    var certificationAuthorityId = appAds["CertificationAuthorityId"];
+
+    if (string.IsNullOrWhiteSpace(domain) ||
+        string.IsNullOrWhiteSpace(publisherId) ||
+        string.IsNullOrWhiteSpace(relationship) ||
+        string.IsNullOrWhiteSpace(certificationAuthorityId))
+    {
+        return Results.NotFound();
+    }
+
+    var appAdsContent = $"{domain}, {publisherId}, {relationship}, {certificationAuthorityId}";
+
+    return string.IsNullOrWhiteSpace(appAdsContent)
+        ? Results.NotFound()
+        : Results.Text(appAdsContent, "text/plain");
+});
  
 app.MapGet("/health", () => Results.Ok("OK"));
 

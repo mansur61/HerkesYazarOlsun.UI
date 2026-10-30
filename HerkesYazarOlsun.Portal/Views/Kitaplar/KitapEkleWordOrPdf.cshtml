@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Kitap Arama";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.FooterGoster = false;
@@ -51,6 +51,7 @@
     
     <link href="~/lib/css/kitap_olustur.css" rel="stylesheet" />
     <link href="~/lib/css/kitap_on_bilgiler.css" rel="stylesheet" />
+    <link href="@Url.Content("~/css/writing-companion.css?v=20261030-1")" rel="stylesheet" />
 }
 
 <div class="container light-style flex-grow-1 py-4" style="margin-top:50px">
@@ -410,3 +411,6 @@
 
 
 </script>
+
+@Html.Partial("_WritingCompanion")
+<script src="@Url.Content("~/js/writing-companion.js?v=20261030-1")" defer></script>

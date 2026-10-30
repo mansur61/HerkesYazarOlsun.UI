@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.NavbarGoster = false;
@@ -34,15 +34,14 @@
     <link href="~/wowbook/css/style.css" rel="stylesheet" />
     <link href="~/wowbook/css/wow_book.css" rel="stylesheet" />
     <link href="~/wowbook/css/preview.css" rel="stylesheet" />
-    <link href="~/wowbook/css/handheld.css" rel="stylesheet" />
-    <link href="~/wowbook/css/handheld.css?v=2" rel="stylesheet" />
+    <link href="~/css/mobile-reader.css?v=20260929-2" rel="stylesheet" />
 }
 
 @{
     Model.IsWowBookEdit = true;
 }
 
- 
+
 @Html.Partial("_WowBookContent", @Model)
 
 @section scripts {
@@ -50,8 +49,10 @@
 
     <script src="~/wowbook/wow_book.min.js"></script>
 
+    <script src="~/js/mobile-reader.js?v=20260929-2"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            if (window.matchMedia('(max-width: 768px)').matches) { initMobileReader(); return; }
             var book = $('#features').wowBook({
                 height: 500,
                 width: 800,
@@ -81,14 +82,16 @@
                 }
             }).css({ 'display': 'none', 'margin': 'auto' }).fadeIn(1000);
 
+            initDesktopReaderNavigation($.wowBook('#features'));
+
             // Eğer sayfa çevrildiğinde manuel olarak flip sound çalmak istersen
             var flipAudio = document.getElementById("flipSound");
-            book.on('turned', function() {
+            book.on('turned', function () {
                 flipAudio.play();
             });
         });
 
-        
+
     </script>
 
     <script src="~/wowbook/js/plugins.js"></script>

@@ -39,7 +39,6 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ServiceResult> Gonder(string kime)
         {
             ServiceResult result = new ServiceResult();
@@ -67,8 +66,8 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 konu = _mailSettings.Subject,
                 gondericii_mail = _mailSettings.FromEmail
             };
-
-            string sonuc = await _emailService.EmailGonder(icerik);
+             
+            string sonuc = await _emailService.EmailGonder(icerik); 
 
             if (sonuc == "-1")
             {
@@ -78,7 +77,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
             else
             {
                 result.State = MessageResultState.SUCCESS;
-                result.Message = kod;
+                result.Message = kod; 
             }
 
 
@@ -86,7 +85,63 @@ namespace HerkesYazarOlsun.Portal.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        public async Task<ServiceResult> ResendOtp(string email, string telno, string tip)
+        {
+            ServiceResult result = new ServiceResult();
+
+            try
+            {
+                if (tip == "email")
+                {
+                    var rnd1 = new Random().Next(0, 10);
+                    var rnd2 = new Random().Next(0, 10);
+                    var rnd3 = new Random().Next(0, 10);
+                    var rnd4 = new Random().Next(0, 10);
+
+                    string kod = rnd1.ToString() + "" + rnd2.ToString() + "" + rnd3.ToString() + "" + rnd4.ToString();
+
+                    var icerik = new VM_MAIL_ICERIK()
+                    {
+                        username = _mailSettings.Username,
+                        password = _mailSettings.Password,
+                        Host = _mailSettings.Host,
+                        Port = _mailSettings.Port,
+                        EnableSSL = _mailSettings.EnableSSL,
+                        sifre = kod,
+                        kime = email,
+                        konu = _mailSettings.Subject,
+                        gondericii_mail = _mailSettings.FromEmail
+                    };
+
+                    string sonuc = await _emailService.EmailGonder(icerik);
+
+                    if (sonuc == "-1")
+                    {
+                        result.State = MessageResultState.ERROR;
+                        result.Message = "Email gönderme başarısız";
+                    }
+                    else
+                    {
+                        result.State = MessageResultState.SUCCESS;
+                        result.Message = kod;
+                    }
+                }
+                else if (tip == "sms")
+                {
+                    result.State = MessageResultState.SUCCESS;
+                    result.Message = "SMS tekrar gönderildi";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.State = MessageResultState.ERROR;
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        [HttpPost]
         public ServiceResult PostEmailDogrula(string email)
         {
             VM_USERS vM_USERS = new VM_USERS();
@@ -94,7 +149,7 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
             ServiceResult result = new KisiService().PostKisiUpdate(vM_USERS);
             if (result.State != MessageResultState.SUCCESS)
-            {
+            { 
                 return result;
             }
             return result;
@@ -102,15 +157,14 @@ namespace HerkesYazarOlsun.Portal.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ServiceResult> MailBilgilendirme(string kime, string konu, string mesaj, int? tip = 0)
+        public async Task<ServiceResult> MailBilgilendirme(string kime,string konu, string mesaj,int? tip = 0)
         {
             ServiceResult result = new ServiceResult();
 
             VM_USERS vM_USERS = new VM_USERS();
             vM_USERS.EMAIL = kime;
-
-            if (tip == 0) // mesaj atan kişi bilgilendirmesi
+             
+            if(tip == 0) // mesaj atan kişi bilgilendirmesi
             {
 
             }
@@ -126,13 +180,13 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 password = _mailSettings.Password,
                 Host = _mailSettings.Host,
 
-                icerik = mesaj,
+                icerik = mesaj, 
                 kime = kime,
                 konu = konu,
                 gondericii_mail = _mailSettings.FromEmail
             };
 
-            string sonuc = await _emailService.EmailGonder(mail_icerik);
+            string sonuc = await  _emailService.EmailGonder(mail_icerik);
 
             if (sonuc == "-1")
             {

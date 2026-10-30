@@ -1728,6 +1728,7 @@ window.Modernizr = function (d, l, u) {
         touchSupport: function () {
             var a = this;
             a.elem.bind("touchstart.wowbook", function (c) {
+                if (d(c.target).closest("#guncelle").length) return;
                 var b = c.originalEvent.touches;
                 1 < b.length || (a._touchStarted = {
                     x: b[0].pageX,
@@ -1737,20 +1738,23 @@ window.Modernizr = function (d, l, u) {
                 },
                 a._touchStarted.inHandle && a.pageEdgeDragStart(a._untouch(c)))
             });
-            d(document).on("touchmove.wowbook", function (c) {
+            document.addEventListener("touchmove", function (c) {
+                if (d(c.target).closest("#guncelle").length) return;
                 if (a._touchStarted) {
-                    var b = c.originalEvent.touches;
+                    var e = c.originalEvent || c;
+                    var b = e.touches;
                     a._touchEnded = {
                         x: b[0].pageX,
                         y: b[0].pageY,
-                        timestamp: c.originalEvent.timeStamp
+                        timestamp: e.timeStamp
                     };
                     if (a._touchStarted.inHandle) return a.pageEdgeDrag(a._untouch(c));
                     20 < Math.abs(a._touchEnded.x - a._touchStarted.x) && c.preventDefault();
                     c.preventDefault()
                 }
-            });
+            }, { passive: false });
             d(document).on("touchend.wowbook touchcancel.wowbook", function (c) {
+                if (d(c.target).closest("#guncelle").length) return;
                 if (a._touchStarted) { ! a._touchEnded && d(c.target).hasClass("wowbook-handle") && (c = d(c.target).data("corner"), "r" === c && a.advance(), "l" === c && a.back());
                     var b = a._touchStarted,
                         e = a._touchEnded || a._touchStarted;

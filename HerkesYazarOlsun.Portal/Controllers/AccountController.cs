@@ -8,6 +8,8 @@ using System.Security.Claims;
 using HerkesYazarOlsun.Model.Utils;
 using Microsoft.AspNetCore.Authorization;
 using HerkesYazarOlsun.Model.Entity;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace HerkesYazarOlsun.Portal.Controllers
 {
@@ -83,7 +85,6 @@ namespace HerkesYazarOlsun.Portal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Giris(VM_LOGIN login)
         {
-            // Log klasörü: hem localde hem plesk httpdocs altında çalışır
             var logFolder = Path.Combine(_environment.WebRootPath, "herkesyazarolsun_log");
             if (!Directory.Exists(logFolder))
                 Directory.CreateDirectory(logFolder);
@@ -93,50 +94,82 @@ namespace HerkesYazarOlsun.Portal.Controllers
                 if (!ModelState.IsValid)
                     return View();
 
-                // Kullanıcıyı mail ile getir
+                // 1. Servisten kullanıcıyı getir (mevcut davranış korunuyor)
                 ServiceResult<Users> sonuc = new KisiService().GetKisiByMail(login.email ?? "");
 
                 if (sonuc == null || sonuc.Result == null)
                 {
-                    var json = new
+                    return Json(new
                     {
                         Message = "Bir eksiklik var lütfen geliştiricinize başvurunuz veya giriş için kayıt yaptırdığınızdan emin olunuz !",
                         State = MessageResultState.ERROR
-                    };
-                    return Json(json);
+                    });
                 }
 
-                if (sonuc.State == MessageResultState.SUCCESS)
+                if (sonuc.State != MessageResultState.SUCCESS)
+                    return Json(sonuc);
+
+                // 2. Servis Login endpoint'inden access + refresh token al
+                string jwtToken = "";
+                string refreshToken = "";
+                try
                 {
-                    List<Claim> claims = new List<Claim>();
-
-                    var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
-                             ?? HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
-
-                    // headers içine yazmaya gerek yok aslında ama senin kodunu bozmadım
-                    HttpContext.Request.Headers["email"] = sonuc.Result.EMAIL ?? "";
-
-                    claims.Add(new Claim("telno", sonuc.Result.TELNO ?? ""));
-                    claims.Add(new Claim("tckimlikno", "0"));
-                    claims.Add(new Claim("uygulama_id", "1")); // WEB
-                    claims.Add(new Claim("email", sonuc.Result.EMAIL ?? ""));
-                    claims.Add(new Claim("ip", ip));
-                    claims.Add(new Claim("adi", sonuc.Result.NAME ?? ""));
-                    claims.Add(new Claim("soyadi", sonuc.Result.SURNAME ?? ""));
-                    claims.Add(new Claim("username", sonuc.Result.USERNAME ?? ""));
-
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var principal = new ClaimsPrincipal(identity);
-
-                    var props = new AuthenticationProperties
+                    using var httpClient = new HttpClient();
+                    var loginPayload = JsonConvert.SerializeObject(new { email = login.email, RememberLogin = login.RememberLogin });
+                    var content = new StringContent(loginPayload, Encoding.UTF8, "application/json");
+                    var response = await httpClient.PostAsync($"{Helpers.AppSettings.ApiPath}api/Users/Login", content);
+                    if (response.IsSuccessStatusCode)
                     {
-                        IsPersistent = login.RememberLogin, // modelden geleni kullan
-                        ExpiresUtc = DateTime.UtcNow.AddDays(3),
-                        AllowRefresh = true
-                    };
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
+                        var responseBody = await response.Content.ReadAsStringAsync();
+                        var tokenResult = JsonConvert.DeserializeObject<dynamic>(responseBody);
+                        jwtToken = tokenResult?.token ?? tokenResult?.accessToken ?? "";
+                        refreshToken = tokenResult?.refreshToken ?? "";
+                    }
                 }
+                catch (Exception ex)
+                {
+                    // JWT alınamazsa cookie auth ile devam et, logla
+                    var logFile = Path.Combine(logFolder, $"jwt_error_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+                    await System.IO.File.WriteAllTextAsync(logFile, ex.ToString());
+                }
+
+                // 3. Cookie claim'leri oluştur
+                var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault()
+                         ?? HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
+
+                HttpContext.Request.Headers["email"] = sonuc.Result.EMAIL ?? "";
+
+                var claims = new List<Claim>
+                {
+                    new Claim("telno",        sonuc.Result.TELNO    ?? ""),
+                    new Claim("tckimlikno",   "0"),
+                    new Claim("uygulama_id",  "1"),
+                    new Claim("email",        sonuc.Result.EMAIL    ?? ""),
+                    new Claim("ip",           ip),
+                    new Claim("adi",          sonuc.Result.NAME     ?? ""),
+                    new Claim("soyadi",       sonuc.Result.SURNAME  ?? ""),
+                    new Claim("username",     sonuc.Result.USERNAME ?? ""),
+                    new Claim("user_id",      sonuc.Result.ID.ToString())
+                };
+
+                // Access + Refresh token cookie claim'leri set edilir.
+                if (!string.IsNullOrEmpty(jwtToken))
+                    claims.Add(new Claim("jwt_token", jwtToken));
+
+                if (!string.IsNullOrEmpty(refreshToken))
+                    claims.Add(new Claim("refresh_token", refreshToken));
+
+                var identity  = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                var props = new AuthenticationProperties
+                {
+                    IsPersistent = login.RememberLogin,
+                    ExpiresUtc   = DateTime.UtcNow.AddDays(30),
+                    AllowRefresh = true
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, props);
 
                 return Json(sonuc);
             }

@@ -1,4 +1,5 @@
-﻿@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
+@inject HerkesYazarOlsun.Portal.Services.MakaleApiService Makaleler
+@model HerkesYazarOlsun.Model.ViewModel.VM_BOOKS_DETAIL
 @using HerkesYazarOlsun.Model.ViewModel
 @using HerkesYazarOlsun.Portal.Helpers.Extensions
 
@@ -17,6 +18,7 @@
 
 @section Styles {
        <link href="~/lib/css/index.css" rel="stylesheet" />
+       <link href="~/css/articles.css" rel="stylesheet" />
 }
 <br />
 <div class="container-fluid mt-3 mb-15">
@@ -79,15 +81,6 @@
 }
 
 
-<div class="row">
-    <div class="col-md-9">
-        <h3>
-            5 Yıldız Alan Kitaplar
-        </h3>
-    </div>
-</div>
-
-
 @{
     var yildizModel = new VM_BOOKS_DETAIL
     {
@@ -99,16 +92,19 @@
     };
 }
 
-@Html.Partial("_KitapSliderGosterimleri", yildizModel)
-
-<div class="row">
-    <div class="col-md-9">
-        <h3>
-            En Çok Yorum Alan 10 Kitaplar 
-        </h3>
+@if (yildizModel.VMBooksList != null && yildizModel.VMBooksList.Count > 0)
+{
+    <div class="row">
+        <div class="col-md-9">
+            <h3>
+                5 Yıldız Alan Kitaplar
+            </h3>
+        </div>
     </div>
-</div> 
- 
+
+    @Html.Partial("_KitapSliderGosterimleri", yildizModel)
+}
+
 @{
     var yorumModel = new VM_BOOKS_DETAIL
     {
@@ -121,9 +117,19 @@
     };
 }
 
-@Html.Partial("_KitapSliderGosterimleri", yorumModel)
+@if (yorumModel.VMBooksList != null && yorumModel.VMBooksList.Count > 0)
+{
+    <div class="row">
+        <div class="col-md-9">
+            <h3>
+                En Çok Yorum Alan 10 Kitaplar 
+            </h3>
+        </div>
+    </div>
 
- 
+    @Html.Partial("_KitapSliderGosterimleri", yorumModel)
+}
+
 @{
     var digerModel = new VM_BOOKS_DETAIL
     {
@@ -136,18 +142,38 @@
     };
 }
 
-<div class="row">
-    <div class="col-md-9">
-        <h3>
-            Diğer Kitaplar 
-        </h3>
+@if (digerModel.VMBooksList != null && digerModel.VMBooksList.Count > 0)
+{
+    <div class="row">
+        <div class="col-md-9">
+            <h3>
+                Diğer Kitaplar 
+            </h3>
+        </div>
     </div>
-</div>
 
-@Html.Partial("_KitapSliderGosterimleri", digerModel)
+    @Html.Partial("_KitapSliderGosterimleri", digerModel)
+}
 
  
 
+@{ var makaleSayfa = await Makaleler.List(); var makaleler = makaleSayfa.Items; }
+@if (makaleler.Count > 0)
+{
+<section class="container my-4 article-area" aria-labelledby="makaleler-baslik">
+    <h2 id="makaleler-baslik">Makaleler</h2>
+    <div class="makale-slider owl-carousel">
+        @foreach (var makale in makaleler)
+        {
+            <a class="d-block border rounded p-4" style="min-height:180px;overflow-wrap:anywhere" href="@Url.Action("Oku", "Makaleler", new { id = makale.Id })">
+                <h3>@makale.Baslik</h3>
+                <p>@makale.Yazar</p>
+                <span>Makaleyi oku →</span>
+            </a>
+        }
+    </div>
+</section>
+}
 @Html.Partial("_Sponsorlar")
 <br />
  
@@ -156,6 +182,7 @@
 @section Scripts {
 <script>
     $(function () {
+        $('.makale-slider').owlCarousel({ loop: false, margin: 16, nav: true, navText: ['<span aria-hidden="true">&#10094;</span><span class="visually-hidden">Önceki makaleler</span>', '<span aria-hidden="true">&#10095;</span><span class="visually-hidden">Sonraki makaleler</span>'], dots: true, responsive: { 0: { items: 1 }, 768: { items: 2 }, 1100: { items: 3 } } });
         $('.kitap-slider').each(function () {
             $(this).owlCarousel({
                 loop: false,

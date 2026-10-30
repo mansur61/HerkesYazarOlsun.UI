@@ -136,9 +136,37 @@
             return;
         }
         document.getElementById("resend").innerHTML = `Kodu Alamadınız mı?
-                      <span class="font-weight-bold text-color cursor" onclick="timer(60)">Tekrar Gönder
+                      <span class="font-weight-bold text-color cursor" onclick="ResendKodu()">Tekrar Gönder
                       </span>`;
     }
+
+    function ResendKodu() {
+        var tip = "@Model.tip";
+        var mail = "@Model.mail";
+        var telno = "@Model.telno";
+
+        $.post("@Url.Action(nameof(EmailController.ResendOtp), "Email")", 
+            { "email": mail, "telno": telno, "tip": tip },
+            function (data) {
+                if (data.state == 1) {
+                    $("#otpmesaj").css("display", "block");
+                    $("#otpmesaj").css("color", "green");
+                    $("#otpmesaj").html("Kod başarıyla gönderildi. Lütfen kontrol ediniz.");
+                    timerOn = true;
+                    timer(60);
+                } else {
+                    $("#otpmesaj").css("display", "block");
+                    $("#otpmesaj").css("color", "red");
+                    $("#otpmesaj").html(data.message || "Kod gönderme başarısız.");
+                }
+            }
+        ).fail(function () {
+            $("#otpmesaj").css("display", "block");
+            $("#otpmesaj").css("color", "red");
+            $("#otpmesaj").html("Sunucu hatası.");
+        });
+    }
+
     timer(60);
 
     function kontrolEt() {
